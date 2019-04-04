@@ -22,9 +22,6 @@
     "autoload": {
         "psr-4" : {
             "Simplex\\" : "src/"
-        },
-        "files": [
-            "src/functions.php"
-        ]
+        }
     }
 }

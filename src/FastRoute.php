@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Simplex;
 
 use FastRoute\Dispatcher;
+use FastRoute\RouteCollector;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -13,7 +14,7 @@ use Middlewares\Utils\Traits\HasResponseFactory;
 
 /**
  * Routing Middleware that uses nikic/fastroute
- * Based on Middlewares\FastRoute with the addition of additionl route parameter outside of route patterns
+ * Based on Middlewares\FastRoute with the addition of routes definition processing and additionl route parameters outside of route patterns
  *
  * @author vuk <info@vuk.bg.it>
  */
@@ -33,11 +34,37 @@ class FastRoute implements MiddlewareInterface
 
     /**
      * Set the Dispatcher instance and optionally the response factory to return the error responses.
-     * @param Dispatcher $router
+     * @param string $environment: 'development': no cache used | any other value routes are cached
+     * @param array $routes: array of routes definition
+     * @param string $tmpFolderPath: to store cache file when cache is used
      * @param ResponseFactoryInterface $responseFactory
      */
-    public function __construct(Dispatcher $router, ResponseFactoryInterface $responseFactory = null)
+    public function __construct(string $environment, array $routes, string $tmpFolderPath = null, ResponseFactoryInterface $responseFactory = null)
     {
+        //set routes caching
+        switch($environment) {
+            case 'development':
+                $fastRouteDispatcherClass = 'FastRoute\simpleDispatcher';
+                $fastRouteCacheOptions = [];
+            break;
+            default:
+                $fastRouteDispatcherClass = 'FastRoute\cachedDispatcher';
+                $fastRouteCacheOptions = [
+                    'cacheFile' => $tmpFolderPath . '/fastroute.cache', /* required */
+                    'cacheDisabled' => false,     /* optional, enabled by default */
+                ];
+            break;
+        }
+        //router instance
+        $router = $fastRouteDispatcherClass(
+            function (RouteCollector $r) use ($routes) {
+                //add routes
+                foreach ($routes as $route) {
+                    $r->addRoute($route['method'], $route['route'], $route['handler']);
+                }
+            },
+            $fastRouteCacheOptions
+        );
         $this->router = $router;
         $this->responseFactory = $responseFactory ?: Factory::getResponseFactory();
     }
@@ -51,28 +78,31 @@ class FastRoute implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
+        //get current matching route (/if any)
         $route = $this->router->dispatch($request->getMethod(), rawurldecode($request->getUri()->getPath()));
-
+        //handle errors
         if ($route[0] === Dispatcher::NOT_FOUND) {
             return $this->createResponse(404);
         }
-
         if ($route[0] === Dispatcher::METHOD_NOT_ALLOWED) {
             return $this->createResponse(405)->withHeader('Allow', implode(', ', $route[1]));
         }
+        //store parameters
         $parameters = [];
+        //static parameters hard coded into route definition
         if(isset($route[1][1])) {
             foreach ($route[1][1] as $name => $value) {
                 $parameters[$name] = $value;
             }
         }
+        //route pattern parameters (overrides static ones with same name)
         foreach ($route[2] as $name => $value) {
             $parameters[$name] = $value;
         }
         $request = $request->withAttribute('parameters', (object) $parameters);
-
+        //set handler
         $request = $this->setHandler($request, $route[1][0]);
-
+        //call handler
         return $handler->handle($request);
     }
 
