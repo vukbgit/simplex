@@ -9,6 +9,15 @@
 	}
     ],
     "require": {
+        "php-di/php-di": "^6.0",
+        "zendframework/zend-diactoros": "^2.1",
+        "nikic/fast-route": "^1.0",
+        "middlewares/utils": "^2.1",
+        "middlewares/request-handler": "^1.4",
+        "filp/whoops": "^2.3",
+        "digitalnature/php-ref": "^1.2",
+        "narrowspark/http-emitter": "^0.7.0",
+        "oscarotero/middleland": "^1.0"
     },
     "autoload": {
         "psr-4" : {
