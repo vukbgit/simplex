@@ -6,7 +6,7 @@ namespace Simplex\Controller;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
-use Simplex\slugToPSR1Name;
+use function Simplex\slugToPSR1Name;
 
 /*
 * Extends the ControllerAbstract class adding CRUDL (https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) funcionalities:
@@ -31,27 +31,22 @@ abstract class ControllerWithCRUDLAbstract extends ControllerAbstract
      */
     public function __invoke(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        //do all the jobs performed by ControllerAbstract on invocation
-        $response = parent::__invoke($request, $handler);
-        //get model name
+        //store request
+        $this->storeRequest($request);
         $modelSlug = $this->routeParameters->model ?? null;
         //model name is set ino route
         if($modelSlug) {
             //get model
-            $modelName = slugToPSR1Name($modelSlug, 'x');
-            /*$this->model = $this->container->get();
-            //check method existence
-            if(method_exists($this, $methodName)) {
-                //call method
-                call_user_func([$this, $methodName]);
-            } else {
-                throw new \Exception(sprintf('current route is associated to action \'%s\' but method \'%s\' of class %s does not exist', $this->action, $methodName, static::class));
-            }*/
+            $modelName = slugToPSR1Name($modelSlug, 'c');
+            $this->model = $this->DIContainer->get($modelName);
         //model name is NOT set ino route
         } else {
             throw new \Exception('current route *MUST* pass a \'model\' parameter');
         }
-        return $response;
+        //handle action
+        $this->handleActionExecution();
+        //return response
+        return $this->response;
     }
 
     /**
@@ -70,6 +65,7 @@ abstract class ControllerWithCRUDLAbstract extends ControllerAbstract
     protected function list()
     {
         //get model list
+        ~r($this->model);
         //render
         $this->renderTemplate();
     }

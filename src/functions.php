@@ -15,14 +15,14 @@ if (!function_exists('Simplex\slugToPSR1Name')) {
         switch ($type) {
             case 'class':
             case 'c':
-                // code...
+                return str_replace(' ', '', ucwords(str_replace('-', ' ', $slug)));
             break;
             case 'method':
             case 'm':
-                // code...
+                return lcfirst(str_replace(' ', '', ucwords(str_replace('-', ' ', $slug))));
             break;
             default:
-                throw new \Exception(sprintf('Type \'%s\' is not handled', $type));
+                throw new \Exception(sprintf('function Simplex\slugToPSR1Name: type parameter \'%s\' value is not handled', $type));
             break;
         }
     }

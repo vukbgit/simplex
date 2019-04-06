@@ -8,6 +8,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Container\ContainerInterface;
 use Twig\Environment;
+use function Simplex\slugToPSR1Name;
 
 /*
 * In this context controller means a class that:
@@ -78,15 +79,36 @@ abstract class ControllerAbstract
      */
     public function __invoke(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
+        //store request
+        $this->storeRequest($request);
+        //handle action
+        $this->handleActionExecution();
+        //return response
+        return $this->response;
+    }
+
+    /**
+    * Stores request and related informations
+    * @param ServerRequestInterface $request
+    */
+    protected function storeRequest(ServerRequestInterface $request)
+    {
         //store request and its parameters
         $this->request = $request;
         $this->routeParameters = $request->getAttributes()['parameters'];
         //store route action
         $this->action = $this->routeParameters->action ?? null;
+    }
+
+    /**
+    * Handles action execution
+    */
+    protected function handleActionExecution()
+    {
         //action is set
         if($this->action) {
             //build method name
-            $methodName = $this->buildMethodName($this->action);
+            $methodName = slugToPSR1Name($this->action, 'method');
             //method exists
             if(method_exists($this, $methodName)) {
                 //call method
@@ -99,19 +121,6 @@ abstract class ControllerAbstract
         } else {
             throw new \Exception('current route *MUST* pass an \'action\' parameter or __invoke() method should be overridden into concrete class');
         }
-        //return response
-        return $this->response;
-    }
-
-    /**
-    * Build method name from route action
-    * @param string $action
-    *
-    * @return string
-    */
-    private function buildMethodName(string $action) : string
-    {
-        return lcfirst(str_replace(' ', '', ucwords(str_replace('-', ' ', $action))));
     }
 
     /**
