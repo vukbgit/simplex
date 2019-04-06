@@ -22,7 +22,7 @@
                 * __simplex__: top level namespace folder for application files, every class defined inside has base namespace _Simplex\Local_
                     * __config__: configuration files to be customized
                         * __di-container.php__: definitions for classes to be instanciated
-                        * __environment.php__: environment constants
+                        * __constants.php__: environment constants
                         * __middleware.php__: middelware queue to be processed by the dispatcher
                         * __routes.php__: routes definitions
             * __share__: files installed through Composer
