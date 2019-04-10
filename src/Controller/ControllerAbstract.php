@@ -40,9 +40,15 @@ abstract class ControllerAbstract
 
     /**
     * @var Environment
-    * Twig environment
+    * Template engine
     */
-    protected $twig;
+    protected $template;
+
+    /**
+    * @var array
+    * parameters to be passed to template engine
+    */
+    protected $templateParameters = [];
 
     /**
     * @var object
@@ -62,11 +68,11 @@ abstract class ControllerAbstract
     * @param ResponseInterface $response
     * @param Environment $twigEnvironment
     */
-    public function __construct(ContainerInterface $DIContainer, ResponseInterface $response, Environment $twigEnvironment)
+    public function __construct(ContainerInterface $DIContainer, ResponseInterface $response, Environment $templateEngine) 
     {
         $this->DIContainer = $DIContainer;
         $this->response = $response;
-        $this->twig = $twigEnvironment;
+        $this->templateEngine = $templateEngine;
     }
 
     /**
@@ -79,8 +85,8 @@ abstract class ControllerAbstract
      */
     public function __invoke(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        //store request
-        $this->storeRequest($request);
+        //before action execution
+        $this->doBeforeActionExecution($request);
         //handle action
         $this->handleActionExecution();
         //return response
@@ -101,6 +107,16 @@ abstract class ControllerAbstract
     }
 
     /**
+    * Performs some operations before action execution
+    * @param ServerRequestInterface $request
+    */
+    protected function doBeforeActionExecution(ServerRequestInterface $request)
+    {
+        //store request
+        $this->storeRequest($request);
+    }
+
+    /**
     * Handles action execution
     */
     protected function handleActionExecution()
@@ -115,12 +131,32 @@ abstract class ControllerAbstract
                 call_user_func([$this, $methodName]);
             //method does NOT exist
             } else {
-                throw new \Exception(sprintf('current route is associated to action \'%s\' but method \'%s\' of class %s does not exist', $this->action, $methodName, static::class));
+                throw new \Exception(sprintf('current route is associated to action "%s" but method "%s" of class "%s" does not exist', $this->action, $methodName, static::class));
             }
         //action is NOT set
         } else {
-            throw new \Exception('current route *MUST* pass an \'action\' parameter or __invoke() method should be overridden into concrete class');
+            throw new \Exception('current route MUST pass an "action" parameter or __invoke() method should be overridden into concrete class');
         }
+    }
+
+    /**
+    * pass a parameter to the template angine
+    * @param string $parameterName
+    * @param mixed $parameterValue
+    */
+    protected function setTemplateParameter(string $parameterName, $parameterValue)
+    {
+        $this->templateParameters[$parameterName] = $parameterValue;
+    }
+
+    /**
+    * short alias for the - much used - setTemplateParameter method
+    * @param string $parameterName
+    * @param mixed $parameterValue
+    */
+    protected function stp(string $parameterName, $parameterValue)
+    {
+        $this->setTemplateParameter($parameterName, $parameterValue);
     }
 
     /**
@@ -140,7 +176,7 @@ abstract class ControllerAbstract
             $templatePath = sprintf('%s/%s.%s',$templatesFolder , $this->action, TEMPLATES_EXTENSION);
         }
         //render template and get HTML
-        $html = $this->twig->render($templatePath);
+        $html = $this->templateEngine->render($templatePath, $this->templateParameters);
         //send HTML to response
         $response = $this->response->withHeader('Content-Type', 'text/html');
         $response->getBody()

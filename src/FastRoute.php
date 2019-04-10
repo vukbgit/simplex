@@ -20,6 +20,9 @@ use Middlewares\Utils\Traits\HasResponseFactory;
  */
 class FastRoute implements MiddlewareInterface
 {
+    /*
+    * needed to create responses
+    */
     use HasResponseFactory;
 
     /**

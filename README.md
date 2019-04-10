@@ -1,6 +1,7 @@
 ## Conventions ##
 
 * __application__: the customized installation of Simplex for the specific project/domain
+* __action__: the specific logic associated to a route, i.e. 'list' and 'save-form', every route must set an 'action' parameter
 * files structure:
     * root level application files:
         * composer.json:
@@ -20,11 +21,10 @@
         * __private__: all files that CANNOT be accessed by browser
             * __local__: files developed for the application
                 * __simplex__: top level namespace folder for application files, every class defined inside has base namespace _Simplex\Local_
-                    * __config__: configuration files to be customized
-                        * __di-container.php__: definitions for classes to be instanciated
+                    * __config__: configuration files for whole application to be customized
+                        * __db.php__: database configuration, returns a PHP object (see file for details)
                         * __constants.php__: environment constants
-                        * __middleware.php__: middelware queue to be processed by the dispatcher
-                        * __routes.php__: routes definitions
+                        * __middleware.php__: middelware queue to be processed by the dispatcher (see file for details)
             * __share__: files installed through Composer
                 * __simplex__: shared Simplex modules used by application
                     * bin: currently specific to my environment, __TODO__: make them useful for others...
@@ -39,3 +39,18 @@
 
 * __/.htaccess__:
     * set ENVIRONMENT variable
+
+## General Structure ##
+
+Simplex extends the classes namespace logic to every file in the application;: the __local namespace__ starts from the folder defined into _private/local/simplex/config/constants.php_ LOCAL_DIR constant (defaults to _private/local/simplex_) and is called by default _Simplex\Local_.
+
+Into this folder the classes are arranged as the typical application, by business domain logic (i.e. the _News_ folder for all classes related to news, the _Customer_ folder, etc). But also every other file with different purpose (configuration files, html templates) should follow this logic; so there is no grouping by function first (a top _config_ folder, a top _views_ folder, etc.), but instead by namespace/business logic first (so _/News/config_ and _News/templates_ folders).
+
+This is because tipically application developement proceeds by domain logic: adding the News functionality means adding at least a News class, some News configuration (routes and DI container definitions) and some Nes views (HTML templates for backend and frontend); if all of these files are scattered through local folder subfolders the it's harder to develope,  mantain and "clone" functionalities to be used as draft for new ones
+
+## Add a page ##
+
+Eache page needs a __route__ definition, which calls an __handler__ which is a callable, tipically a class defined into local namesapace, so it needs a DI container definition
+
+* __route__:
+* __DI container definitions__:

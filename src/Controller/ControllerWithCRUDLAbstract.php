@@ -22,50 +22,76 @@ abstract class ControllerWithCRUDLAbstract extends ControllerAbstract
     protected $model;
 
     /**
-     * Get invoked by request handler
-     *
-     * @param ServerRequestInterface $request
-     * @param RequestHandlerInterface $handler
-     *
-     * @return ResponseInterface
-     */
-    public function __invoke(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    * @var array
+    * default hierarchy for shared enterprise templates (patternfly templates stored into templates/enterprise), it can be overridden using the setEnterpriseTemplatesParent method
+    */
+    protected $enterpriseTemplatesParents = [
+        'action' => 'enterprise/authenticated.twig',
+        'authenticated' => 'enterprise/area.twig',    //this value raise a twig error and must be set by concrete class
+        'area' => 'application.twig'    //this value raise a twig error and must be set by concrete class
+    ];
+
+    /**
+    * Performs some operations before action execution
+    * @param ServerRequestInterface $request
+    */
+    protected function doBeforeActionExecution(ServerRequestInterface $request)
     {
-        //store request
-        $this->storeRequest($request);
+        //ControllerAbstract jobs
+        parent::doBeforeActionExecution($request);
+        //store model
+        $this->storeModel();
+        //set specific CRUDL template parameters
+        $this->setTemplateParameter('enterpriseTemplatesParents', $this->enterpriseTemplatesParents);
+    }
+
+    /**
+     * Stores model passed by action
+     */
+    protected function storeModel()
+    {
         $modelSlug = $this->routeParameters->model ?? null;
         //model name is set ino route
         if($modelSlug) {
             //get model
-            $modelName = slugToPSR1Name($modelSlug, 'c');
+            $modelName = slugToPSR1Name($modelSlug, 'class');
             $this->model = $this->DIContainer->get($modelName);
         //model name is NOT set ino route
         } else {
-            throw new \Exception('current route *MUST* pass a \'model\' parameter');
+            throw new \Exception('current route *MUST* pass a "model" parameter');
         }
-        //handle action
-        $this->handleActionExecution();
-        //return response
-        return $this->response;
     }
 
     /**
-     * Processes action associated to the route
+     * Sets a parent template for one of the shared enterpise templates
+     * @param string $templateLevel: level whose parent is being set, possible values (so far):
+     *  - ac(tion): templates for predefined actions (list, save-form, delete-form)
+     *  - au(thenticated): template for the post-authenticated user
+     *  - ar(ea): template for the whole area
      */
-    protected function getModel()
+    protected function setEnterpriseTemplatesParent(string $templateLevel, string $parentTemplatePath)
     {
-        //get model list
-        //render
-        $this->renderTemplate();
+        $templateLevels = [
+            'ac' => 'action',
+            'au' => 'authenticated',
+            'ar' => 'area'
+        ];
+        $templateLevel = $templateLevels[$templateLevel] ?? $templateLevel;
+        $this->enterpriseTemplatesParents[$templateLevel] = $parentTemplatePath;
     }
 
+    /************************
+    * DEFAULT CRUDL ACTIONS *
+    ************************/
+
     /**
-     * Processes action associated to the route
+     * Lists records
      */
     protected function list()
     {
         //get model list
-        ~r($this->model);
+        $records = $this->model->getList();
+        $this->stp('records', $records);
         //render
         $this->renderTemplate();
     }
