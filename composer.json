@@ -19,12 +19,17 @@
         "narrowspark/http-emitter": "^0.7.0",
         "oscarotero/middleland": "^1.0",
         "twig/twig": "^2.0",
-        "usmanhalalit/pixie": "2.*@dev"
+        "usmanhalalit/pixie": "2.*@dev",
+        "nette/finder": "^2.5",
+        "aura/auth": "^2.0"
     },
     "autoload": {
         "psr-4" : {
             "Simplex\\" : "src/"
         },
         "files": ["src/functions.php"]
+    },
+    "scripts": {
+        "post-update-cmd": "php -r \"copy('drafts', '/private');\""
     }
 }
