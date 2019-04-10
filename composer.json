@@ -28,10 +28,5 @@
             "Simplex\\" : "src/"
         },
         "files": ["src/functions.php"]
-    },
-     "scripts": {
-        "post-package-install": [
-            "Simplex\\ComposerScript\\Installer::postPackageInstall"
-        ]
     }
 }
