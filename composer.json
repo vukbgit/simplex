@@ -29,7 +29,9 @@
         },
         "files": ["src/functions.php"]
     },
-    "scripts": {
-        "post-update-cmd": "php -r \"copy('drafts', '/private');\""
+     "scripts": {
+        "post-install-cmd": [
+            "ComposerScript\\Installer::postInstall"
+        ]
     }
 }
