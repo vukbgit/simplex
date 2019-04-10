@@ -60,7 +60,6 @@ Create the composer project running on command line in the root folder:
                     * __config__: configuration files for whole application to be customized
                         * __db.php__: database configuration, returns a PHP object (see file for details)
                         * __constants.php__: environment constants
-                        * __middleware.php__: middelware queue to be processed by the dispatcher (see file for details)
             * __share__: files installed through Composer
                 * __simplex__: shared Simplex modules used by application
                     * bin: currently specific to my environment, __TODO__: make them useful for others...
