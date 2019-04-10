@@ -1,3 +1,39 @@
+## Installation ##
+
+Create a composer.json in the root folder:
+
+    {
+        "type": "project",
+        "name": "simplex",
+        "description": "Simplex dev app",
+        "license": "MIT",
+        "require": {
+            "vukbgit/simplex": "^0.1.0-dev"
+        },
+        "config": {
+            "vendor-dir": "private/share"
+        },
+        "autoload": {
+            "psr-4": {
+                "Simplex\\Local\\": "private/local/simplex"
+            }
+        },
+        "scripts": {
+           "post-create-project-cmd": [
+               "SlowProg\\CopyFile\\ScriptHandler::copy"
+           ]
+       },
+       "extra": {
+           "copy-file": {
+               "private/share/vukbgit/simplex/drafts": "private/local/simplex"
+           }
+       }
+    }
+
+Create the composer project running on command line in the root folder:
+
+    composer create-project
+
 ## Conventions ##
 
 * __application__: the customized installation of Simplex for the specific project/domain
