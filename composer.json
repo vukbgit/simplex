@@ -30,8 +30,8 @@
         "files": ["src/functions.php"]
     },
      "scripts": {
-        "post-install-cmd": [
-            "ComposerScript\\Installer::postInstall"
+        "post-package-install": [
+            "Simplex\\ComposerScript\\Installer::postPackageInstall"
         ]
     }
 }
