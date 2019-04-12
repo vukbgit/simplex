@@ -57,6 +57,12 @@ abstract class ControllerAbstract
     protected $routeParameters;
 
     /**
+    * @var object
+    * object with current language specifications
+    */
+    protected $language;
+
+    /**
     * @var string
     * action passed by route
     */
@@ -68,7 +74,7 @@ abstract class ControllerAbstract
     * @param ResponseInterface $response
     * @param Environment $twigEnvironment
     */
-    public function __construct(ContainerInterface $DIContainer, ResponseInterface $response, Environment $templateEngine) 
+    public function __construct(ContainerInterface $DIContainer, ResponseInterface $response, Environment $templateEngine)
     {
         $this->DIContainer = $DIContainer;
         $this->response = $response;
@@ -107,6 +113,18 @@ abstract class ControllerAbstract
     }
 
     /**
+    * Gets language
+    */
+    protected function setLanguage()
+    {
+        $languageCode = $this->routeParameters->lang ?? null;
+        $languagesConfigFilePath = sprintf('%s/languages.json', LOCAL_CONFIG_DIR);
+        $languages = json_decode(file_get_contents($languagesConfigFilePath));
+        $this->language = $languages->$languageCode ?? current($languages);
+        $this->setTemplateParameter('language', $this->language);
+    }
+
+    /**
     * Performs some operations before action execution
     * @param ServerRequestInterface $request
     */
@@ -114,6 +132,8 @@ abstract class ControllerAbstract
     {
         //store request
         $this->storeRequest($request);
+        //check language
+        $this->setLanguage();
     }
 
     /**
@@ -173,7 +193,7 @@ abstract class ControllerAbstract
             //eliminate namespace first 2 elements (Simplex\Local) and last one (current class name)
             //and add templates default directory
             $templatesFolder = implode('/', array_merge(array_slice($classPath, 2, count($classPath) - 3), ['templates']));
-            $templatePath = sprintf('%s/%s.%s',$templatesFolder , $this->action, TEMPLATES_EXTENSION);
+            $templatePath = sprintf('%s/%s.%s', $templatesFolder, $this->action, TEMPLATES_EXTENSION);
         }
         //render template and get HTML
         $html = $this->templateEngine->render($templatePath, $this->templateParameters);

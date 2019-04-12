@@ -74,6 +74,9 @@ Create the composer project running on command line in the root folder:
 
 * __/.htaccess__:
     * set ENVIRONMENT variable
+* install __yarn__ packages: preferred location:
+
+    yarn install --modules-folder public/share
 
 ## General Structure ##
 

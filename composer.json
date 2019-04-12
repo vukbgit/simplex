@@ -4,9 +4,9 @@
     "description": "Simplex",
     "license": "MIT",
     "authors": [
-	{
+       {
             "name": "vuk"
-	}
+       }
     ],
     "require": {
         "php-di/php-di": "^6.0",
@@ -29,5 +29,9 @@
             "Simplex\\" : "src/"
         },
         "files": ["src/functions.php"]
-    }
+    },
+    "bin": [
+        "bin/composer",
+        "bin/yarn"
+    ]
 }
