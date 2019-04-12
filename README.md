@@ -25,7 +25,7 @@ Create a composer.json in the root folder:
        },
        "extra": {
            "copy-file": {
-               "private/share/vukbgit/simplex/drafts": "private/local/simplex"
+               "private/share/vukbgit/simplex/drafts/": "."
            }
        }
     }
