@@ -3,7 +3,12 @@
 * ENVIRONMENT *
 **************/
 //development | production or any other value set into root .htaccess file
-define('ENVIRONMENT', getenv('REDIRECT_ENVIRONMENT'));
+if(getenv('REDIRECT_ENVIRONMENT')) {
+    define('ENVIRONMENT', getenv('REDIRECT_ENVIRONMENT'));
+} else {
+    echo 'No evironment defined, you must set up root .htaccess';
+    exit;
+}
 define('SHARE_DIR', 'private/share/vukbgit/simplex/src');
 define('LOCAL_DIR', 'private/local/simplex');
 define('SHARE_CONFIG_DIR', sprintf('%s/config', SHARE_DIR));
