@@ -55,21 +55,47 @@ Create the composer project running on command line in the root folder:
 
 Simplex will:
 
-* install itself and the other required composer libraries 
+* install the required composer libraries (including itself)
+* copy in the root directory some files
+* make symlinks in the root directory to some shell scripts
+* build the filesystem structure for the local application with some ready draft files
 
-    ## Post-Installation Jobs ##
+For details see _Filesystem structure_ below
 
-    * __/.htaccess__:
-        * set ENVIRONMENT variable
-    * install __yarn__ packages: preferred location:
+## Post-Installation Jobs ##
 
-        yarn install --modules-folder public/share
+* __/.htaccess__:
+    * set ENVIRONMENT variable
+* install __yarn__ packages: preferred location:
+
+    yarn install --modules-folder public/share
 
 
-## Conventions ##
+## Simplex Logic overview ##
 
+A bit of terminology:
+
+* __root__: the top folder of the Simplex installation, usually the top folder in the web accessible part of the site web space
 * __application__: the customized installation of Simplex for the specific project/domain
+* __environment__: in which the current request is handled, based usually on the requested domain, takes usually values of development or production
 * __action__: the specific logic associated to a route, i.e. 'list' and 'save-form', every route must set an 'action' parameter
+
+Conventions:
+
+* in the following explanation files are written in _italic_
+* for each file is always given the path from the root, without leading slash
+
+This is the flow into the application:
+
+* _.htacces_
+    * sets a PHP environment variable base on the domain to decide the current environment
+    * intercepts every request and redirects to _index.php_
+* _index.php_:
+    * requires Composer autoload
+    * requires _private/local/simplex/config/constants.php_ that imports some constants
+    * set up the error handling based on the environment
+    * instances a Dipendency Injector Container
+
 * files structure:
     * root level application files:
         * composer.json:
@@ -117,3 +143,16 @@ Eache page needs a __route__ definition, which calls an __handler__ which is a c
 
 * __route__:
 * __DI container definitions__:
+
+## Considerations ##
+
+* I choose not to use any framework because I want to be 100% in control of the flow inside the application
+* Simplex third party classes for almost every specialized task (DI container, routing, dispatching, emitting...)
+* I coded some components into Simplex only when I couldn't find an external library to accomplish some task the way I needed: for example I wrote the nikic/fastroute middleware to be able to pass custom route parameters
+* design choices: I tried to document myself, mostly seeking "no framework" suggestions (see references below), and taking a look to existing frameworks (although I am no expert in this field because I started structuring my code for re-use since 2000); I want Simplex to be up-to-date but also to be, well, simple and there is no agreement on every topic, for example [the use of a DI Container](https://hackernoon.com/you-dont-need-a-dependency-injection-container-10a5d4a5f878). Therefore I made my (very questionable) choices, keeping __always__ in mind the I needed a tool to build web applications in the fastest and flexible way
+* So I ended up with a framework myself?! Honestly I do not know
+
+## References ##
+
+* [https://github.com/PatrickLouys/no-framework-tutorial]
+* [https://kevinsmith.io/modern-php-without-a-framework#properly-sending-responses]
