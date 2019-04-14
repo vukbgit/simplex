@@ -1,5 +1,7 @@
 # Simplex #
 
+Simplex is a tool for developing PHP/HTML/CSS web application
+
 The goal of Simplex is to provide:
 
 * the structure for a PHP web application that is a compromise between:
@@ -16,6 +18,13 @@ To do so Simplex relies on:
 * [Yarn](https://yarnpkg.com) for all the [NPM](https://npmjs.com) packages:
     * [bootstrap 4](https://getbootstrap.com)
     * [jquery](http://jquery.com/)
+
+## Requirements ##
+
+* [PHP 7.1+](https://www.php.net/downloads.php)
+* ssh access to web space with:
+    * [sass](https://sass-lang.com/) 3.5.2+.
+    * [yarn](https://yarnpkg.com)
 
 ## Installation ##
 
