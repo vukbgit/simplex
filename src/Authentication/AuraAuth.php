@@ -66,7 +66,7 @@ class AuraAuth implements MiddlewareInterface
             $failureURL = $requestParameters->authentication->failureURL ?? null;
             //redirect on failure
             if($failureURL) {
-                $response = $response->withHeader('Location', '/backend/login');
+                $response = $response->withHeader('Location', $failureURL);
                 //set status to "Found" "The requested resource resides temporarily under a different URI" (https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html)
                 $response = $response->withStatus('302');
             } else {

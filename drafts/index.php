@@ -25,7 +25,7 @@ switch(ENVIRONMENT) {
     case 'development':
         $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
     break;
-    default:
+    case 'production':
         $whoops->pushHandler(new \Simplex\ErrorHandler);
     break;
 }
@@ -44,35 +44,27 @@ switch(ENVIRONMENT) {
 }
 $DIContainerBuilder->useAutowiring(false);
 $DIContainerBuilder->useAnnotations(false);
-$DIContainerBuilder->addDefinitions(require sprintf('%s/config/di-container.php', SHARE_DIR));
+$DIContainerBuilder->addDefinitions(require sprintf('%s/di-container.php', SHARE_CONFIG_DIR));
 $DIContainer = $DIContainerBuilder->build();
 /*****************************************
 * REQUEST HANDLER CONTAINER / DISPATCHER
 * middleware queue is injected by DIContainer from
-* private/local/simplex/config/middleware.php
+* SHARE_CONFIG_DIR/middleware.php
 *****************************************/
 $dispatcher = $DIContainer->get('dispatcher');
 $response = $dispatcher->dispatch(ServerRequestFactory::fromGlobals());
 /**************
 * HTTP ERRORS *
 **************/
-/*$HTTPStatusCode = $response->getStatusCode();
+$HTTPStatusCode = $response->getStatusCode();
 if($HTTPStatusCode !== 200) {
     $pathToErrorFile = sprintf('%s/%s.html', ERROR_DIR, $HTTPStatusCode);
     $response->getBody()
         ->write(file_get_contents($pathToErrorFile));
-}*/
+}
 /*****************************
 * SEND RESPONSE TO WEBSERVER *
 *****************************/
 //~r($response->getStatusCode());
 $emitter = $DIContainer->get('emitter');
 $emitter->emit($response);
-/*foreach ($response->getHeaders() as $name => $values) {
-    foreach ($values as $value) {
-        @header(sprintf('%s: %s', $name, $value), false);
-    }
-}
-// output body
-echo $response->getBody();
-*/

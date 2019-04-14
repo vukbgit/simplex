@@ -1,6 +1,8 @@
 # Simplex #
 
-Simplex is a tool for developing PHP/HTML/CSS web application
+## Introduction ##
+
+Simplex is a tool for developing PHP/HTML/CSS web applications. In short, it sets up an handy environment so you hopefully only have to code files specific the the project business logic: PHP (classes and some configuration file), HTML ([Twig](https://twig.symfony.com/doc/2.x/) templates) and CSS or [sass](https://sass-lang.com/)
 
 The goal of Simplex is to provide:
 
@@ -19,12 +21,15 @@ To do so Simplex relies on:
     * [bootstrap 4](https://getbootstrap.com)
     * [jquery](http://jquery.com/)
 
+_NOTE ON THIS DOCUMENT_: I will try to be clear and write down all the details to understand and use Simplex, for future-me, any possible colleague and anyone else interested benefit
+
 ## Requirements ##
 
 * [PHP 7.1+](https://www.php.net/downloads.php)
-* ssh access to web space with:
-    * [sass](https://sass-lang.com/) 3.5.2+.
-    * [yarn](https://yarnpkg.com)
+* ssh access to web space: on a shared hosting it's hard to use composer, you have to develop locally and commit, but I really suggest to find a provider who can give you ssh access once I tried the power & comfort of the ssh shell I rented my own virtual machine and never turned back to shared hosting...
+* even if not strictly required I strongly suggest to have also:
+    * [yarn](https://yarnpkg.com): to install javascript and css libraries
+    * [sass](https://sass-lang.com/) 3.5.2+.: to compile css with variables, mixings and many other useful additions
 
 ## Installation ##
 
@@ -78,6 +83,7 @@ For details see _Filesystem structure_ below
 * install __yarn__ packages: preferred location:
 
     yarn install --modules-folder public/share
+* __TODO__
 
 
 ## Simplex Logic overview ##
@@ -102,8 +108,22 @@ This is the flow into the application:
 * _index.php_:
     * requires Composer autoload
     * requires _private/local/simplex/config/constants.php_ that imports some constants
-    * set up the error handling based on the environment
-    * instances a Dipendency Injector Container
+    * set up the __Error Handler__ based on the environment
+    * instances a __[Dipendency Injector Container]__(https://github.com/php-fig/container) loading definitions from _private/share/vukbgit/simplex/config/di-container.php_
+    * the __DI Container__ instances the __Dispatcher__ (which is another name for a [request handler](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-15-request-handlers.md#21-psrhttpserverrequesthandlerinterface))
+    * the dispatcher load the __middleware queue__ from _private/share/vukbgit/simplex/config/middleware.php_ which is basically composed by:
+        * the __Router__ which loads routes definitions from any file named "routes.php" stored under the _private/local/simplex_ folder (even in subdirectories); the route definition must contain an "action" parameter (_private/local/simplex/config/route.php_ contains more details about routes definitions)
+        * the Simplex __Authentication__ middleware that:
+            * fires conditionally if an "authentication" parameter is found inside the current route definition
+            * if fired checks whether the ueser is currently authenticated, otherwise redirects to a configured url
+        * the __Request Handler__ (no, not the dispatcher, there is a bit of naming confusion), which is responsible for the processing of the current route, invokes the __Route Handler__ (a local class) specified into the route definition which must inherit from one of the Simplex\Controller abstract classes
+        * the __Route Handler__:
+            * stores all of the request parameters and the response object into class properties
+            * calls a method named after the "action" route parameter
+            * this method performs all the tasks needed by the action and usually renders a template injecting HTML code into the response
+        * the __Dispatcher__ returns the response to the _index.php_ scope
+    * the HHTP status code of the response is checked and if different from 200 (which means "everything went fine") gets the appropriate HTML code from a _private/share/vukbgit/simplex/src/errors/_ file and injects it into the response
+    * the __Emitter__ is instantiated and returns the response to the browser
 
 * files structure:
     * root level application files:
