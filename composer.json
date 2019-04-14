@@ -31,7 +31,8 @@
         "files": ["src/functions.php"]
     },
     "bin": [
-        "bin/composer",
-        "bin/yarn"
+        "bin/composer.sh",
+        "bin/yarn.sh",
+        "bin/sass.sh"
     ]
 }

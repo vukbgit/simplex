@@ -1,4 +1,0 @@
-#!/bin/bash
-phpVersion=7.2.6
-command=$*
-/opt/php-$phpVersion/bin/php /usr/local/bin/composer $command
