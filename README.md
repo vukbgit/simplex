@@ -1,3 +1,22 @@
+# Simplex #
+
+The goal of Simplex is to provide:
+
+* the structure for a PHP web application that is a compromise between:
+    * the most simplicity
+    * the latest standards and practices (as far as I can tell)
+* a quick and easy way to get started developing code for the application
+
+To do so Simplex relies on:
+* [Composer](https://getcomposer.org) packages (by means of [Packagist](https://packagist.org/) packages):
+    * Simplex itself is a composer package that:
+        * takes care of installing the required libraries (for at least the minimum functionalities)
+        * creates the basic starting structure for the application with some draft files almost ready to be used but that can be deleted, modified and integrated at need
+    * other selected composer packages are integrated to create the application core engine
+* [Yarn](https://yarnpkg.com) for all the [NPM](https://npmjs.com) packages:
+    * [bootstrap 4](https://getbootstrap.com)
+    * [jquery](http://jquery.com/)
+
 ## Installation ##
 
 Create a composer.json in the root folder:
@@ -32,7 +51,20 @@ Create a composer.json in the root folder:
 
 Create the composer project running on command line in the root folder:
 
-    composer create-project
+        composer create-project
+
+Simplex will:
+
+* install itself and the other required composer libraries 
+
+    ## Post-Installation Jobs ##
+
+    * __/.htaccess__:
+        * set ENVIRONMENT variable
+    * install __yarn__ packages: preferred location:
+
+        yarn install --modules-folder public/share
+
 
 ## Conventions ##
 
@@ -70,13 +102,6 @@ Create the composer project running on command line in the root folder:
             * __share__: files installed through npm, Yarn, etc
                 all the npm, Yarn and every other third-part sources libraries used by the application
 
-## Post-Installation Jobs ##
-
-* __/.htaccess__:
-    * set ENVIRONMENT variable
-* install __yarn__ packages: preferred location:
-
-    yarn install --modules-folder public/share
 
 ## General Structure ##
 

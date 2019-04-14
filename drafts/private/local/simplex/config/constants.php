@@ -32,3 +32,7 @@ define('SHARE_TEMPLATES_DIR', 'private/share/vukbgit/simplex/src/templates');
 define('LOCAL_TEMPLATES_DIR', LOCAL_DIR);
 //twig template files extension
 define('TEMPLATES_EXTENSION', 'twig');
+/********
+* LOCAL *
+********/
+define('APPLICATION', null);

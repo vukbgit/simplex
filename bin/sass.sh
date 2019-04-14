@@ -1,15 +1,21 @@
 #!/bin/bash
-#get id to process
-id=$1
-source="private/local/simplex/config/sass"
+#turn argoments into an array of ids to compile
+ids=( "$@" )
+source="private/local/simplex/config/sass.config"
 #read file into an array
-scssFiles=( `cat $source `)
+#scssFiles=( `cat $source`)
+mapfile scssFiles < $source
 #loop file rows
 for row in "${scssFiles[@]}"; do
+    #skip comments row starting with #
+    if [[ ${row:0:1} == "#" ]]; then
+        continue
+    fi
     #break row into an array
     IFS=':' read -ra scssFileDefinition <<< "$row"
-    #check if row correspndes to the id to process
-    if [ "$id" = "${scssFileDefinition[0]}" ]; then
+    #check if row correspondes to the id to process
+    #if [ "$id" = "${scssFileDefinition[0]}" ]; then
+    if [[ " ${ids[*]} " == *" ${scssFileDefinition[0]} "* ]]; then
         #get target path
         target=${scssFileDefinition[2]}
         #break target path into an array

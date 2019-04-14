@@ -69,6 +69,12 @@ abstract class ControllerAbstract
     protected $action;
 
     /**
+    * @var string
+    * page title, content of the title tag, mandatory for template rendering
+    */
+    protected $pageTitle;
+
+    /**
     * Constructor
     * @param ContainerInterface $DIContainer
     * @param ResponseInterface $response
@@ -180,11 +186,25 @@ abstract class ControllerAbstract
     }
 
     /**
+    * sets page title
+    * @param string $pageTitle
+    */
+    protected function setPageTitle(string $pageTitle)
+    {
+        $this->pageTitle = $pageTitle;
+        $this->setTemplateParameter('pageTitle', $pageTitle);
+    }
+
+    /**
     * Renders template
     * @param string $templatePath: if null, into current namespace will be searched into 'templates' subfolder a template named after $this->action
     */
     protected function renderTemplate(string $templatePath = null)
     {
+        //check page title
+        if(!$this->pageTitle) {
+            throw new \Exception('Page has no title, uset setPageTitle() method to set it');
+        }
         //build default path into calling class namespace
         if(!$templatePath) {
             //turn namespace into an array
