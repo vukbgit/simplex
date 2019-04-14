@@ -2,21 +2,21 @@
 
 ## Introduction ##
 
-Simplex is a tool for developing PHP/HTML/CSS web applications. In short, it sets up an handy environment so you hopefully only have to code files specific the the project business logic: PHP (classes and some configuration file), HTML ([Twig](https://twig.symfony.com/doc/2.x/) templates) and CSS or [sass](https://sass-lang.com/)
+Simplex is a tool for developing PHP/HTML/CSS web applications. In short, it sets up a handy environment so you hopefully only have to code files specific to the project business logic: PHP (classes and some configuration file), HTML ([Twig](https://twig.symfony.com/doc/2.x/) templates) and CSS or [SCSS](https://sass-lang.com/).
 
 The goal of Simplex is to provide:
 
 * the structure for a PHP web application that is a compromise between:
-    * the most simplicity
-    * the latest standards and practices (as far as I can tell)
+    * simplicity
+    * the latest standards and practices (as far as I know)
 * a quick and easy way to get started developing code for the application
 
 To do so Simplex relies on:
-* [Composer](https://getcomposer.org) packages (by means of [Packagist](https://packagist.org/) packages):
-    * Simplex itself is a composer package that:
+* [Composer](https://getComposer.org) packages (by means of [Packagist](https://packagist.org/) packages):
+    * Simplex itself is a Composer package that:
         * takes care of installing the required libraries (for at least the minimum functionalities)
         * creates the basic starting structure for the application with some draft files almost ready to be used but that can be deleted, modified and integrated at need
-    * other selected composer packages are integrated to create the application core engine
+    * other selected Composer packages are integrated to create the application core engine
 * [Yarn](https://yarnpkg.com) for all the [NPM](https://npmjs.com) packages:
     * [bootstrap 4](https://getbootstrap.com)
     * [jquery](http://jquery.com/)
@@ -26,14 +26,14 @@ _NOTE ON THIS DOCUMENT_: I will try to be clear and write down all the details t
 ## Requirements ##
 
 * [PHP 7.1+](https://www.php.net/downloads.php)
-* ssh access to web space: on a shared hosting it's hard to use composer, you have to develop locally and commit, but I really suggest to find a provider who can give you ssh access once I tried the power & comfort of the ssh shell I rented my own virtual machine and never turned back to shared hosting...
+* ssh access to web space: on a shared hosting it's hard to use Composer (and Yarn and Sass), you have to develop locally and commit, but I really suggest to find a provider who can give you ssh access, once I tried the power & comfort of the ssh shell I rented my own virtual machine and never turned back to shared hosting again...
 * even if not strictly required I strongly suggest to have also:
-    * [yarn](https://yarnpkg.com): to install javascript and css libraries
-    * [sass](https://sass-lang.com/) 3.5.2+.: to compile css with variables, mixings and many other useful additions
+    * [Yarn](https://yarnpkg.com): to install javascript and css libraries
+    * [Sass](https://sass-lang.com/) 3.5.2+.: to compile css with variables, mixings and many other useful additions
 
 ## Installation ##
 
-Create a composer.json in the root folder:
+Create a Composer.json in the root folder:
 
     {
         "type": "project",
@@ -63,13 +63,13 @@ Create a composer.json in the root folder:
        }
     }
 
-Create the composer project running on command line in the root folder:
+Create the Composer project running on command line in the root folder:
 
-        composer create-project
+        Composer create-project
 
 Simplex will:
 
-* install the required composer libraries (including itself)
+* install the required Composer libraries (including itself)
 * copy in the root directory some files
 * make symlinks in the root directory to some shell scripts
 * build the filesystem structure for the local application with some ready draft files
@@ -92,8 +92,8 @@ A bit of terminology:
 
 * __root__: the top folder of the Simplex installation, usually the top folder in the web accessible part of the site web space
 * __application__: the customized installation of Simplex for the specific project/domain
-* __environment__: in which the current request is handled, based usually on the requested domain, takes usually values of development or production
-* __action__: the specific logic associated to a route, i.e. 'list' and 'save-form', every route must set an 'action' parameter
+* __environment__: in which the current request is handled, based usually on the requested domain, takes usually the values of "development" or "production"
+* __action__: the specific logic associated to a route, i.e. 'list' and 'save-form', every route must set an 'action' parameter and it should be formatted as a [slug](https://en.wikipedia.org/wiki/Clean_URL#Slug)
 
 Conventions:
 
@@ -107,7 +107,7 @@ This is the flow into the application:
     * intercepts every request and redirects to _index.php_
 * _index.php_:
     * requires Composer autoload
-    * requires _private/local/simplex/config/constants.php_ that imports some constants
+    * requires _private/local/simplex/config/constants.php_ that imports some constants (see file for details)
     * set up the __Error Handler__ based on the environment
     * instances a __[Dipendency Injector Container]__(https://github.com/php-fig/container) loading definitions from _private/share/vukbgit/simplex/config/di-container.php_
     * the __DI Container__ instances the __Dispatcher__ (which is another name for a [request handler](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-15-request-handlers.md#21-psrhttpserverrequesthandlerinterface))
@@ -127,11 +127,11 @@ This is the flow into the application:
 
 * files structure:
     * root level application files:
-        * composer.json:
+        * Composer.json:
             * sets vendor directory to _private/share_
             * sets autoload application directory to _private/local/simplex_ mapping this path to _Simplex\Local_ namespace
             * requires Composer libraries
-        * composer.lock
+        * Composer.lock
         * README.md
         * .htaccess:
             * sets environment variables that are readable int PHP code
