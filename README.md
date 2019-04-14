@@ -109,14 +109,14 @@ This is the flow into the application:
     * requires Composer autoload
     * requires _private/local/simplex/config/constants.php_ that imports some constants (see file for details)
     * set up the __Error Handler__ based on the environment
-    * instances a __[Dipendency Injector Container](https://github.com/php-fig/container)__ loading definitions from _private/share/vukbgit/simplex/config/di-container.php_
+    * instances a __[Dipendency Injector Container](https://github.com/php-fig/container)__ loading definitions from _private/share/vukbgit/simplex/config/di-container.php_ (see file for details)
     * the __DI Container__ instances the __Dispatcher__ (which is another name for a [request handler](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-15-request-handlers.md#21-psrhttpserverrequesthandlerinterface))
     * the dispatcher load the __middleware queue__ from _private/share/vukbgit/simplex/config/middleware.php_ which is basically composed by:
         * the __Router__ which loads routes definitions from any file named "routes.php" stored under the _private/local/simplex_ folder (even in subdirectories); the route definition must contain an "action" parameter (_private/local/simplex/config/route.php_ contains more details about routes definitions)
         * the Simplex __Authentication__ middleware that:
             * fires conditionally if an "authentication" parameter is found inside the current route definition
-            * if fired checks whether the ueser is currently authenticated, otherwise redirects to a configured url
-        * the __Request Handler__ (no, not the dispatcher, there is a bit of naming confusion), which is responsible for the processing of the current route, invokes the __Route Handler__ (a local class) specified into the route definition which must inherit from one of the Simplex\Controller abstract classes
+            * if fired checks whether the user is currently authenticated, otherwise redirects to a configured url
+        * the __Request Handler__ (no, not the __dispatcher__ from above, there is a bit of naming confusion in this field...), which is responsible for the processing of the current route, invokes the __Route Handler__ (a local class) specified into the route definition which must inherit from one of the Simplex\Controller abstract classes
         * the __Route Handler__:
             * stores all of the request parameters and the response object into class properties
             * calls a method named after the "action" route parameter
