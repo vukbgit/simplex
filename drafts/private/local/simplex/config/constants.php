@@ -23,7 +23,7 @@ define('ERROR_DIR', sprintf('%s/errors', SHARE_DIR));
 /********
 * DEBUG *
 ********/
-define('TECH_EMAIL', 'info@vuk.bg.it');
+define('TECH_EMAIL', null);
 /************
 * TEMPLATES *
 ************/

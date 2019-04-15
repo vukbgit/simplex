@@ -100,7 +100,7 @@ Conventions:
 * in the following explanation files are written in _italic_
 * for each file is always given the path from the root, without leading slash
 
-This is the flow into the application:
+### Application Flow ###
 
 * _.htacces_
     * sets a PHP environment variable base on the domain to decide the current environment
@@ -127,59 +127,58 @@ This is the flow into the application:
 
 ## Folders & Files Structure ##
 
-Here are folders and files as installed fromo Simplex, from the installation root folder:
+Simplex extends the classes namespace logic to every file in the application;: the __local namespace__ starts from the folder defined into _private/local/simplex/config/constants.php_ LOCAL_DIR constant (defaults to _private/local/simplex_) and is named by default _Simplex\Local_.
+
+Into this folder the classes are arranged as the typical application, by business domain logic (i.e. the _News_ folder for all classes related to news, the _Customer_ folder, etc). But also every other file with different purpose (configuration files, html templates) should follow this logic; so there is no grouping by function first (a top _config_ folder, a top _views_ folder, etc.), but instead by namespace/business logic first (so _/News/config_ and _News/templates_ folders).
+
+This is because typically application developement proceeds by domain logic: adding the News functionality means adding at least a News class, some News configuration (routes and DI container definitions) and some Nes views (HTML templates for backend and frontend); if all of these files are scattered through local folder subfolders the it's harder to develope,  mantain and "clone" functionalities to be used as draft for new ones
+
+So here are folders and files as installed from Simplex, from the installation root folder:
 
 * __private__: all files that CANNOT be directly accessed by browser
     * __local__: files developed for the application
         * __simplex__: top level namespace folder for application files, every class defined inside has base namespace _Simplex\Local_
+            * __bin__: created at installation time for useful bash scripts
+                * __composer.sh__: allows to used composer with a PHP version different from the default one used by default by the PHP CLI application, useful on a system with multiple PHP versions installed; it's a good idea to soft link it into root
             * __config__: configuration files for whole application to be customized
-                * __db.php__: database configuration, returns a PHP object (see file for details)
-                * __constants.php__: environment constants
+                * __constants.php__: environment constants, quite self explanatory, some of them should be set right after installation; NOTE: most of the regards paths Simplex uses for inclusions, it shouldn't be necessary to change them
+                * __db.php__: database configuration, returns a PHP object, to be compiled if application uses a database (see file for details)
+                * __di-container.php__: definition to be used by the DI Container to instantiate the classes used by the application; it integrates __private/local/share/vukbgit/simplex/src/configdi-container.php/__ which stores the definitions for classes used by the Simplex angine
+                * __languages.json__: languages used by the application, indexed by a custom key (the one proposed is the ISO-639-1 two letters code); if the route passes a "language" parameter, language is searched for otherwise first one defined (defaults to English) it's used
+                * __sass.config__: custom format file to speed up Sass files compilation using the _sass.sh_ script: you can define for each file to be compiled a custom id (any string) and source and destination paths, so you you ca use the shell and call from the root folder `sass file-id` to compile the minified CSS version
+            * __sass__: some scss empty drafts to help compile Bootstrap and some application css
+            * __templates__: some ready to use and customize Twig templates
     * __share__: files installed through Composer and possibly other third-part libraries from other sources
         * __vukbgit__
-            * __simplex__: shared Simplex modules used by application
+            * __simplex__: shared Simplex modules used by application, some explanations about the less obvious ones:
                 * __bin__: bash scripts, some of the soft linked into root at installation composer project creation time
-                * __drafts__: folders and files copied into _local/simplex_ at installation time to be ready to use and/or to be customized
+                * __drafts__: folders and files copied at installation time to be ready to use and/or to be customized
                 * __src__: classes and other files used by Simplex at runtime
+                    * __config__: configuration files
+                        * __di-container.php__: definition to be used by the DI Container to instantiate the classes used by the Simplex engine; it is integrated by ANY file with the same name found under the __private/local/simplex__ folder
+                        * __middleware.php__: middleware queue to be processed by the Dispatcher, at the moment it is not customizable
+                    * __errors__: HTML files to be displayed in case of HTTP errors raised by the request
+                    * __templates__: ready to use Twig templates for backend areas with CRUDL functionalities
         * all the other Composer libraries used by the application
 * __public__: all files that CAN be accessed by browser
-    * .htaccess: redirects ALL requests beginning with "public/" to _index.php_ except the ones for files really existing into filesystem (css, js, etc.)
-    * __local__: files developed for the application
-    * __share__: files installed through npm, Yarn, etc
-        all the npm, Yarn and every other third-part sources libraries used by the application
-
-* root level application files:
-    * Composer.json:
-        * sets vendor directory to _private/share_
-        * sets autoload application directory to _private/local/simplex_ mapping this path to _Simplex\Local_ namespace
-        * requires Composer libraries
-    * Composer.lock
-    * README.md
-    * .htaccess:
-        * sets environment variables that are readable int PHP code
-            * based on domain:
-                * ENVIRONMENT: development | production
-            * how to read them: Apache renames them prepending 'REDIRECT_' (since every route is redirected to public/index.php), so use for example ``
-        * redirects ALL requests for the root directory to public/index.php
-    * index.php: application bootstrap file, beeing into site root all PHP includes in every file work with absolute path form site root
-* two folders:
-
-
-
-## General Structure ##
-
-Simplex extends the classes namespace logic to every file in the application;: the __local namespace__ starts from the folder defined into _private/local/simplex/config/constants.php_ LOCAL_DIR constant (defaults to _private/local/simplex_) and is called by default _Simplex\Local_.
-
-Into this folder the classes are arranged as the typical application, by business domain logic (i.e. the _News_ folder for all classes related to news, the _Customer_ folder, etc). But also every other file with different purpose (configuration files, html templates) should follow this logic; so there is no grouping by function first (a top _config_ folder, a top _views_ folder, etc.), but instead by namespace/business logic first (so _/News/config_ and _News/templates_ folders).
-
-This is because tipically application developement proceeds by domain logic: adding the News functionality means adding at least a News class, some News configuration (routes and DI container definitions) and some Nes views (HTML templates for backend and frontend); if all of these files are scattered through local folder subfolders the it's harder to develope,  mantain and "clone" functionalities to be used as draft for new ones
-
-## Add a page ##
-
-Eache page needs a __route__ definition, which calls an __handler__ which is a callable, tipically a class defined into local namesapace, so it needs a DI container definition
-
-* __route__:
-* __DI container definitions__:
+    * __local__: files developed for the application such as compiled css files and javascript files
+    * __share__: libraries installed through npm, Yarn, and any other third-part javascript and css asset
+    * __.htaccess__: redirects ALL requests beginning with "public/" to _index.php_ except the ones for files really existing into filesystem (css, js, etc.)
+* __.htaccess__: root Apache directives
+    * sets environment variables that are readable into PHP code
+        * based on domain:
+            * ENVIRONMENT: development | production
+        * how to read them: Apache renames them prepending 'REDIRECT_' (since every route is redirected to public/index.php), so use for example `getenv('REDIRECT_ENVIRONMENT')`
+    * redirects ALL requests for the root directory to public/index.php
+* __composer.json__:
+    * sets vendor directory to _private/share_
+    * sets bin directory to _./_ so that symlinks are created into root for some shell scripts
+    * sets autoload application directory to _private/local/simplex_ mapping this path to _Simplex\Local_ namespace
+    * requires the Simplex package (which takes care of requiring the other needed packages)
+* __index.php__: application bootstrap file, since it is stored into site root all PHP includes in every file work with absolute path form site root, see "Application Flow" above for details
+* __package.json__: npm/Yarn configuration file, requires Bootstrap, jQuery and popper.js lates plus [patternfly 4](https://pf4.patternfly.org), customize at need
+* __sass.sh__: soft link to the helper script _private/share/vukbgit/simplex/bin/sass.sh_ to compile Sass files, see the _private/local/simplex/config/sass.config_ explanation above for details
+* __yarn.sh__: soft link to the helper script _private/share/vukbgit/simplex/bin/yarn.sh_ to manage yarn packages into _public/share_ folder (instead of the predefined node_modules one), call it `./yarn.sh yarn-command`, i.e `./yarn.sh install foolibrary` to perform the installation into _local/share/foolibrary_
 
 ## Considerations ##
 
