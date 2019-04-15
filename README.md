@@ -72,9 +72,9 @@ Simplex will:
 * install the required Composer libraries (including itself)
 * copy in the root directory some files
 * make symlinks in the root directory to some shell scripts
-* build the filesystem structure for the local application with some ready draft files
+* build the folders structure for the local application with some ready draft files
 
-For details see _Filesystem structure_ below
+For details see _Folders & Files structure_ below
 
 ## Post-Installation Jobs ##
 
@@ -116,7 +116,7 @@ This is the flow into the application:
         * the Simplex __Authentication__ middleware that:
             * fires conditionally if an "authentication" parameter is found inside the current route definition
             * if fired checks whether the user is currently authenticated, otherwise redirects to a configured url
-        * the __Request Handler__ (no, not the __dispatcher__ from above, there is a bit of naming confusion in this field...), which is responsible for the processing of the current route, invokes the __Route Handler__ (a local class) specified into the route definition which must inherit from one of the Simplex\Controller abstract classes
+        * the __Request Handler__ (no, not the __Dispatcher__ from above, there is a bit of naming confusion in this field...), which is responsible for the processing of the current route, invokes the __Route Handler__ (a local class) specified into the route definition which must inherit from one of the Simplex\Controller abstract classes
         * the __Route Handler__:
             * stores all of the request parameters and the response object into class properties
             * calls a method named after the "action" route parameter
@@ -125,37 +125,45 @@ This is the flow into the application:
     * the HHTP status code of the response is checked and if different from 200 (which means "everything went fine") gets the appropriate HTML code from a _private/share/vukbgit/simplex/src/errors/_ file and injects it into the response
     * the __Emitter__ is instantiated and returns the response to the browser
 
-* files structure:
-    * root level application files:
-        * Composer.json:
-            * sets vendor directory to _private/share_
-            * sets autoload application directory to _private/local/simplex_ mapping this path to _Simplex\Local_ namespace
-            * requires Composer libraries
-        * Composer.lock
-        * README.md
-        * .htaccess:
-            * sets environment variables that are readable int PHP code
-                * based on domain:
-                    * ENVIRONMENT: development | production
-                * how to read them: Apache renames them prepending 'REDIRECT_' (since every route is redirected to public/index.php), so use for example ``
-            * redirects ALL requests for the root directory to public/index.php
-        * index.php: application bootstrap file, beeing into site root all PHP includes in every file work with absolute path form site root
-    * two folders:
-        * __private__: all files that CANNOT be accessed by browser
-            * __local__: files developed for the application
-                * __simplex__: top level namespace folder for application files, every class defined inside has base namespace _Simplex\Local_
-                    * __config__: configuration files for whole application to be customized
-                        * __db.php__: database configuration, returns a PHP object (see file for details)
-                        * __constants.php__: environment constants
-            * __share__: files installed through Composer
-                * __simplex__: shared Simplex modules used by application
-                    * bin: currently specific to my environment, __TODO__: make them useful for others...
-                * all the other Composer libraries used by the application
-        * __public__: all files that CAN be accessed by browser
-            * .htaccess: redirects ALL requests except the ones for files really existing into filesystem (css, js, etc.) for the public directory to index.php
-            * __local__: files developed for the application
-            * __share__: files installed through npm, Yarn, etc
-                all the npm, Yarn and every other third-part sources libraries used by the application
+## Folders & Files Structure ##
+
+Here are folders and files as installed fromo Simplex, from the installation root folder:
+
+* __private__: all files that CANNOT be directly accessed by browser
+    * __local__: files developed for the application
+        * __simplex__: top level namespace folder for application files, every class defined inside has base namespace _Simplex\Local_
+            * __config__: configuration files for whole application to be customized
+                * __db.php__: database configuration, returns a PHP object (see file for details)
+                * __constants.php__: environment constants
+    * __share__: files installed through Composer and possibly other third-part libraries from other sources
+        * __vukbgit__
+            * __simplex__: shared Simplex modules used by application
+                * __bin__: bash scripts, some of the soft linked into root at installation composer project creation time
+                * __drafts__: folders and files copied into _local/simplex_ at installation time to be ready to use and/or to be customized
+                * __src__: classes and other files used by Simplex at runtime
+        * all the other Composer libraries used by the application
+* __public__: all files that CAN be accessed by browser
+    * .htaccess: redirects ALL requests beginning with "public/" to _index.php_ except the ones for files really existing into filesystem (css, js, etc.)
+    * __local__: files developed for the application
+    * __share__: files installed through npm, Yarn, etc
+        all the npm, Yarn and every other third-part sources libraries used by the application
+
+* root level application files:
+    * Composer.json:
+        * sets vendor directory to _private/share_
+        * sets autoload application directory to _private/local/simplex_ mapping this path to _Simplex\Local_ namespace
+        * requires Composer libraries
+    * Composer.lock
+    * README.md
+    * .htaccess:
+        * sets environment variables that are readable int PHP code
+            * based on domain:
+                * ENVIRONMENT: development | production
+            * how to read them: Apache renames them prepending 'REDIRECT_' (since every route is redirected to public/index.php), so use for example ``
+        * redirects ALL requests for the root directory to public/index.php
+    * index.php: application bootstrap file, beeing into site root all PHP includes in every file work with absolute path form site root
+* two folders:
+
 
 
 ## General Structure ##
