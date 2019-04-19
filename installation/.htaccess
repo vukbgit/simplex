@@ -1,0 +1,6 @@
+#ENVIRONMENT
+SetEnvIf Host ^dev-domain\.ltd$ ENVIRONMENT=development
+SetEnvIf Host ^prod-domain\.ltd$ ENVIRONMENT=production
+Options +FollowSymlinks
+RewriteEngine on
+RewriteRule ^(.*)$ index.php [NC]

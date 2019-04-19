@@ -19,6 +19,7 @@
         "narrowspark/http-emitter": "^0.7.0",
         "oscarotero/middleland": "^1.0",
         "twig/twig": "^2.0",
+        "twig/extension": "^1.5",
         "usmanhalalit/pixie": "2.*@dev",
         "nette/finder": "^2.5",
         "aura/auth": "^2.0",

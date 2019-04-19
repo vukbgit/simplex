@@ -26,7 +26,7 @@ abstract class ModelAbstract
     * @param QueryBuilderHandler $query
     * @param object $config
     */
-    public function __construct(QueryBuilderHandler $query, object $config)
+    public function __construct(QueryBuilderHandler $query, \stdClass $config)
     {
         $this->query = $query;
         $this->config = $config;

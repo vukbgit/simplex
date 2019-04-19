@@ -1,0 +1,8 @@
+{
+    "name": "simplex",
+    "description": "Simplex dev app",
+    "license": "MIT",
+    "dependencies": {
+        "@patternfly/patternfly": "latest"
+    }
+}

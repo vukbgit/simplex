@@ -13,7 +13,7 @@ use function Simplex\slugToPSR1Name;
 * - handling of list, create-form, update-form, delete-form, create, update and delete actions
 * - requires route to pass a 'model' parameter, a class with the same name will be looked for in current namespace
 */
-abstract class ControllerWithCRUDLAbstract extends ControllerAbstract
+abstract class ControllerWithCRUDLAbstract extends ControllerWithTemplateAbstract
 {
     /**
     * @var mixed

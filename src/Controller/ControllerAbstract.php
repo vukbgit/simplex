@@ -39,18 +39,6 @@ abstract class ControllerAbstract
     protected $DIContainer;
 
     /**
-    * @var Environment
-    * Template engine
-    */
-    protected $template;
-
-    /**
-    * @var array
-    * parameters to be passed to template engine
-    */
-    protected $templateParameters = [];
-
-    /**
     * @var object
     * values extracted from route parsing
     */
@@ -69,22 +57,14 @@ abstract class ControllerAbstract
     protected $action;
 
     /**
-    * @var string
-    * page title, content of the title tag, mandatory for template rendering
-    */
-    protected $pageTitle;
-
-    /**
     * Constructor
     * @param ContainerInterface $DIContainer
     * @param ResponseInterface $response
-    * @param Environment $twigEnvironment
     */
-    public function __construct(ContainerInterface $DIContainer, ResponseInterface $response, Environment $templateEngine)
+    public function __construct(ContainerInterface $DIContainer, ResponseInterface $response)
     {
         $this->DIContainer = $DIContainer;
         $this->response = $response;
-        $this->templateEngine = $templateEngine;
     }
 
     /**
@@ -127,7 +107,6 @@ abstract class ControllerAbstract
         $languagesConfigFilePath = sprintf('%s/languages.json', LOCAL_CONFIG_DIR);
         $languages = json_decode(file_get_contents($languagesConfigFilePath));
         $this->language = $languages->$languageCode ?? current($languages);
-        $this->setTemplateParameter('language', $this->language);
     }
 
     /**
@@ -163,63 +142,5 @@ abstract class ControllerAbstract
         } else {
             throw new \Exception('current route MUST pass an "action" parameter or __invoke() method should be overridden into concrete class');
         }
-    }
-
-    /**
-    * pass a parameter to the template angine
-    * @param string $parameterName
-    * @param mixed $parameterValue
-    */
-    protected function setTemplateParameter(string $parameterName, $parameterValue)
-    {
-        $this->templateParameters[$parameterName] = $parameterValue;
-    }
-
-    /**
-    * short alias for the - much used - setTemplateParameter method
-    * @param string $parameterName
-    * @param mixed $parameterValue
-    */
-    protected function stp(string $parameterName, $parameterValue)
-    {
-        $this->setTemplateParameter($parameterName, $parameterValue);
-    }
-
-    /**
-    * sets page title
-    * @param string $pageTitle
-    */
-    protected function setPageTitle(string $pageTitle)
-    {
-        $this->pageTitle = $pageTitle;
-        $this->setTemplateParameter('pageTitle', $pageTitle);
-    }
-
-    /**
-    * Renders template
-    * @param string $templatePath: if null, into current namespace will be searched into 'templates' subfolder a template named after $this->action
-    */
-    protected function renderTemplate(string $templatePath = null)
-    {
-        //check page title
-        if(!$this->pageTitle) {
-            throw new \Exception('Page has no title, uset setPageTitle() method to set it');
-        }
-        //build default path into calling class namespace
-        if(!$templatePath) {
-            //turn namespace into an array
-            $calledClass = get_called_class();
-            $classPath = explode('\\', $calledClass);
-            //eliminate namespace first 2 elements (Simplex\Local) and last one (current class name)
-            //and add templates default directory
-            $templatesFolder = implode('/', array_merge(array_slice($classPath, 2, count($classPath) - 3), ['templates']));
-            $templatePath = sprintf('%s/%s.%s', $templatesFolder, $this->action, TEMPLATES_EXTENSION);
-        }
-        //render template and get HTML
-        $html = $this->templateEngine->render($templatePath, $this->templateParameters);
-        //send HTML to response
-        $response = $this->response->withHeader('Content-Type', 'text/html');
-        $response->getBody()
-            ->write($html);
     }
 }

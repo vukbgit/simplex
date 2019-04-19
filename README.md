@@ -58,7 +58,7 @@ Create a Composer.json in the root folder:
        },
        "extra": {
            "copy-file": {
-               "private/share/vukbgit/simplex/drafts/": "."
+               "private/share/vukbgit/simplex/installation/": "."
            }
        }
     }
@@ -139,7 +139,7 @@ So here are folders and files as installed from Simplex, from the installation r
     * __local__: files developed for the application
         * __simplex__: top level namespace folder for application files, every class defined inside has base namespace _Simplex\Local_
             * __bin__: created at installation time for useful bash scripts
-                * __composer.sh__: allows to used composer with a PHP version different from the default one used by default by the PHP CLI application, useful on a system with multiple PHP versions installed; it's a good idea to soft link it into root
+                * __composer.sh__: allows to use composer with a PHP version different from the default one used by default by the PHP CLI application, useful on a system with multiple PHP versions installed; it's a good idea to soft link it into root
             * __config__: configuration files for whole application to be customized
                 * __constants.php__: environment constants, quite self explanatory, some of them should be set right after installation; NOTE: most of the regards paths Simplex uses for inclusions, it shouldn't be necessary to change them
                 * __db.php__: database configuration, returns a PHP object, to be compiled if application uses a database (see file for details)
@@ -147,12 +147,17 @@ So here are folders and files as installed from Simplex, from the installation r
                 * __languages.json__: languages used by the application, indexed by a custom key (the one proposed is the ISO-639-1 two letters code); if the route passes a "language" parameter, language is searched for otherwise first one defined (defaults to English) it's used
                 * __sass.config__: custom format file to speed up Sass files compilation using the _sass.sh_ script: you can define for each file to be compiled a custom id (any string) and source and destination paths, so you you ca use the shell and call from the root folder `sass file-id` to compile the minified CSS version
             * __sass__: some scss empty drafts to help compile Bootstrap and some application css
+                * __application.scss__: rules for the whole application
+                * __bootstrap-variables.scss__: it is included BEFORE the file with the _variables.scss_ shipped with Bootstrap to override Bootstrap built-in variables
+                * __bootstrap.scss__: main file to compile Bootstrap css, includes only the most commonly used components, uncomment lines to include other functionalities; _private/local/simplex/config/sass.config_ already contains configuration to compile this file by means of the root _sass.sh_ file, just executing in the shell  './sass.sh bs'
+                * __functions.scss__: definitions for some useful Sass functions
+                * __variables.scss__: Sass variables to be used by the application
             * __templates__: some ready to use and customize Twig templates
     * __share__: files installed through Composer and possibly other third-part libraries from other sources
         * __vukbgit__
             * __simplex__: shared Simplex modules used by application, some explanations about the less obvious ones:
                 * __bin__: bash scripts, some of the soft linked into root at installation composer project creation time
-                * __drafts__: folders and files copied at installation time to be ready to use and/or to be customized
+                * __installation__: folders and files copied at installation time eady to be used and/or to be customized
                 * __src__: classes and other files used by Simplex at runtime
                     * __config__: configuration files
                         * __di-container.php__: definition to be used by the DI Container to instantiate the classes used by the Simplex engine; it is integrated by ANY file with the same name found under the __private/local/simplex__ folder
