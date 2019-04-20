@@ -5,7 +5,7 @@ use function DI\create;
 use function DI\get;
 //MINIMAL FUNCTIONALITIES
 use Psr\Container\ContainerInterface;
-use Simplex\FastRoute;
+use Simplex\FastRouteMiddleware;
 use Zend\Diactoros\response;
 use Middlewares\RequestHandler;
 use Middleland\Dispatcher;
@@ -15,8 +15,8 @@ use Narrowspark\HttpEmitter\SapiEmitter;
 use Twig\Loader\FilesystemLoader;
 use Twig\Environment;
 //query builder
-use \Pixie\QueryBuilder\QueryBuilderHandler;
 use \Pixie\Connection;
+use \Simplex\PixieExtended;
 //authentication
 use \Simplex\Authentication;
 //to get LOCAL CLASSES
@@ -32,7 +32,7 @@ return array_merge(
             return $c;
         },
         //router
-        'simplexFastRoute' => create(FastRoute::class)
+        'simplexFastRouteMiddleware' => create(FastRouteMiddleware::class)
             ->constructor(ENVIRONMENT, get('routes'), TMP_DIR),
         'routes' => function() {
             //search routes definitions into local namespace
@@ -71,10 +71,10 @@ return array_merge(
             }
             return $config[ENVIRONMENT];
         },
-        'queryBuilderConnection' => create(Connection::class)
+        'pixieConnection' => create(Connection::class)
             ->constructor('mysql', get('dbConfig')),
-        'queryBuilder' => create(QueryBuilderHandler::class)
-            ->constructor(get('queryBuilderConnection')),
+        'queryBuilder' => create(PixieExtended::class)
+            ->constructor(get('pixieConnection')),
         //authentication
         'simplexAuraAuth' => create(Authentication\AuraAuth::class)
             ->constructor(get('DIContainer')),

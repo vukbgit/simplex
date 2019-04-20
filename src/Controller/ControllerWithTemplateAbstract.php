@@ -50,6 +50,7 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
     {
         parent::__construct($DIContainer, $response);
         $this->template = $templateEngine;
+        $this->template->addExtension(new \Twig_Extensions_Extension_I18n());
     }
 
     /**
@@ -103,6 +104,17 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         $filter = new \Twig\TwigFilter($name, $function);
         $this->template->addFilter($filter);
     }
+
+    /**
+    * Adds a template function
+    * @param Callable $function
+    */
+    protected function addTemplateFunction(string $name, Callable $function)
+    {
+        $filter = new \Twig\TwigFunction($name, $function);
+        $this->template->addFunction($filter);
+    }
+
     /**
     * Renders template
     * @param string $templatePath: if null, into current namespace will be searched into 'templates' subfolder a template named after $this->action

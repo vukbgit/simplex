@@ -4,9 +4,9 @@
 #}
 {% macro menuVoices(navigation, currentSection) %}
 <ul class="navbar-nav justify-content-center">
-{% for voice in navigation %}
-   <li class="nav-item d-flex flex-column justify-content-center{% if voice.section == currentSection %} active{% endif %}">
-       <a class="nav-link" href="{{ voice.url }}"{% if voice.target%}{{ 'target="%s"'|format(voice.target) }}{% endif %}>
+{% for section, voice in navigation %}
+<li class="nav-item d-flex flex-column justify-content-center{{ section == currentSection ? ' active' }}">
+       <a class="nav-link" href="{{ voice.url }}"{{ voice.target ? ' target="%s"'|format(voice.target) }}>
        {{ voice.label }}
        </a>
    </li>
@@ -16,8 +16,7 @@
 
 {# Builds a Bootstrap navigation bar horizontal with centered logo above and menu voices vertically and horizontally centered into the collapsasble navbar strip
 @param string id: for the root navbar container
-@param array navigation: voices, each an object with:
-    * section: corresponds to the first level menu voice, for active item selection
+@param array navigation: voices, each an object indexed by section (the first level menu voice, for active item selection) with:
     * url
     * label
     * target

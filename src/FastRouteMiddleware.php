@@ -18,7 +18,7 @@ use Middlewares\Utils\Traits\HasResponseFactory;
  *
  * @author vuk <info@vuk.bg.it>
  */
-class FastRoute implements MiddlewareInterface
+class FastRouteMiddleware implements MiddlewareInterface
 {
     /*
     * needed to create responses

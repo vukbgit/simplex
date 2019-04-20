@@ -1,7 +1,7 @@
 <?php
 return [
     //routes parser
-    $DIContainer->get('simplexFastRoute'),
+    $DIContainer->get('simplexFastRouteMiddleware'),
     //authentication
     [
         function($request) {
