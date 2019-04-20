@@ -25,7 +25,7 @@ _NOTE ON THIS DOCUMENT_: I will try to be clear and write down all the details t
 
 ## Requirements ##
 
-* [PHP 7.1+](https://www.php.net/downloads.php)
+* [PHP 7.1+](https://www.php.net/downloads.php) with the PHP [gettext](http://www.php.net/gettext) extension enabled (beacuse every piece of text is considered as a translation even in a mono language application)
 * ssh access to web space: on a shared hosting it's hard to use Composer (and Yarn and Sass), you have to develop locally and commit, but I really suggest to find a provider who can give you ssh access, once I tried the power & comfort of the ssh shell I rented my own virtual machine and never turned back to shared hosting again...
 * even if not strictly required I strongly suggest to have also:
     * [Yarn](https://yarnpkg.com): to install javascript and css libraries
