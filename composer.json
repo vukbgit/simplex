@@ -35,6 +35,9 @@
     },
     "bin": [
         "bin/yarn.sh",
-        "bin/sass.sh"
+        "bin/sass.sh",
+        "bin/git-init.sh",
+        "bin/git-pull.sh",
+        "bin/git-push-all.sh"
     ]
 }
