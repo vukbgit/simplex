@@ -24,12 +24,12 @@ abstract class ModelAbstract
     /**
     * Constructor
     * @param QueryBuilderHandler $query
-    * @param object $config
+    * @param strong $configPath
     */
-    public function __construct(PixieExtended $query, \stdClass $config)
+    public function __construct(PixieExtended $query, string $configPath)
     {
         $this->query = $query;
-        $this->config = $config;
+        $this->config = require($configPath);
     }
 
     /**
@@ -63,5 +63,14 @@ abstract class ModelAbstract
             }
         }
         return $this->query->get();
+    }
+    
+    /**
+    * Gets a record
+    * @param array $where: array of arrays, each with 2 elements (field name and value, operator defaults to '=') or 3 elements (field name, operator, value)
+    */
+    public function first(array $where = [])
+    {
+        return current($this->get($where));
     }
 }

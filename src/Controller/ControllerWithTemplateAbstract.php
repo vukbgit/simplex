@@ -8,6 +8,8 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Container\ContainerInterface;
 use Twig\Environment;
+use Aptoma\Twig\Extension\MarkdownExtension;
+use Aptoma\Twig\Extension\MarkdownEngine;
 use function Simplex\slugToPSR1Name;
 
 /*
@@ -50,7 +52,11 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
     {
         parent::__construct($DIContainer, $response);
         $this->template = $templateEngine;
+        //internationalization
         $this->template->addExtension(new \Twig_Extensions_Extension_I18n());
+        //markdown support
+        $markdownEngine = new MarkdownEngine\MichelfMarkdownEngine();
+        $this->template->addExtension(new MarkdownExtension($markdownEngine));
     }
 
     /**
@@ -80,11 +86,22 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
     protected function doBeforeActionExecution(ServerRequestInterface $request)
     {
         parent::doBeforeActionExecution($request);
-        //set template parameters
+        //set common template parameters
+        $this->setCommonTemplateParameters();
+    }
+
+    /**
+    * sets common template parameters
+    * @param string $pageTitle
+    */
+    protected function setCommonTemplateParameters()
+    {
+        $this->setTemplateParameter('environment', ENVIRONMENT);
+        $this->setTemplateParameter('application', APPLICATION);
         $this->setTemplateParameter('language', $this->language);
         $this->setTemplateParameter('routeParameters', $this->routeParameters);
     }
-
+    
     /**
     * sets page title
     * @param string $pageTitle
