@@ -1,3 +1,3 @@
 #!/bin/bash
-private/share/bin/clean-cache
+private/share/vukbgit/simplex/bin/clean-cache.sh
 git pull
