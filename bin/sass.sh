@@ -1,6 +1,7 @@
 #!/bin/bash
 #turn argoments into an array of ids to compile
 ids=( "$@" )
+argsNum=${#ids[@]}
 source="private/local/simplex/config/sass.config"
 #read file into an array
 #scssFiles=( `cat $source`)
@@ -15,7 +16,7 @@ for row in "${scssFiles[@]}"; do
     IFS=':' read -ra scssFileDefinition <<< "$row"
     #check if row correspondes to the id to process
     #if [ "$id" = "${scssFileDefinition[0]}" ]; then
-    if [[ " ${ids[*]} " == *" ${scssFileDefinition[0]} "* ]]; then
+    if [[ " ${ids[*]} " == *" ${scssFileDefinition[0]} "* ]] || [ "$argsNum" == 0 ]; then
         #get target path
         target=${scssFileDefinition[2]}
         #break target path into an array
