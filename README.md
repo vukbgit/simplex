@@ -71,9 +71,9 @@ Create the Composer project running on command line in the root folder:
 
 Simplex will:
 
-* install the required Composer libraries (including itself)
-* copy in the root directory some files
-* make symlinks in the root directory to some shell scripts
+* install itself and the other required Composer libraries
+* copy in the root directory some files 
+* make symlinks in the root directory to some shell scripts (Composer vendor binaries)
 * build the folders structure for the local application with some ready draft files
 
 For details see _Folders & Files structure_ below
