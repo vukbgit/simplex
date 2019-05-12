@@ -25,6 +25,7 @@ _NOTE ON THIS DOCUMENT_: I will try to be clear and write down all the details t
 
 ## Requirements ##
 
+* [Apache 2.4+ webserver](http://httpd.apache.org/): althoungh not strictly necessary for the core engine, .htaccess files are used for basic routing and domain based environment detection
 * [PHP 7.1+](https://www.php.net/downloads.php) with the PHP [gettext](http://www.php.net/gettext) extension enabled (beacuse every piece of text is considered as a translation even in a mono language application)
 * ssh access to web space: on a shared hosting it's hard to use Composer (and Yarn and Sass), you have to develop locally and commit, but I really suggest to find a provider who can give you ssh access, once I tried the power & comfort of the ssh shell I rented my own virtual machine and never turned back to shared hosting again...
 * even if not strictly required I strongly suggest to have also:
@@ -65,7 +66,7 @@ Create a Composer.json in the root folder:
 
 Create the Composer project running on command line in the root folder:
 
-        Composer create-project
+        composer create-project
 
 Simplex will:
 
