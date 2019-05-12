@@ -5,6 +5,12 @@
     "dependencies": {
         "@patternfly/patternfly": "latest",
         "bootstrap": "latest",
-        "jquery": "latest"
+        "jquery": "latest",
+        "parsleyjs": "^2.9.0",
+        "jquery.safemail": "^1.0.2",
+        "moment": "^2.24.0",
+        "moment-timezone": "^0.5.25",
+        "tempusdominus-bootstrap-4": "^5.1.2",
+        "tempusdominus-core": "^5.0.3"
     }
 }
