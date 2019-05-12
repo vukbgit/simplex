@@ -5,9 +5,6 @@
     "dependencies": {
         "@patternfly/patternfly": "latest",
         "bootstrap": "latest",
-        "jquery": "latest",
-        "popper.js": "latest",
-        "slick-carousel": "^1.8.1",
-        "jquery.safemail": "^1.0.2"
+        "jquery": "latest"
     }
 }
