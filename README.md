@@ -39,13 +39,14 @@ Create a Composer.json in the root folder:
     {
         "type": "project",
         "name": "simplex",
-        "description": "Simplex dev app",
+        "description": "Simplex app",
         "license": "MIT",
         "require": {
             "vukbgit/simplex": "^0.1.0-dev"
         },
         "config": {
-            "vendor-dir": "private/share"
+            "vendor-dir": "private/share",
+            "bin-dir": "./"
         },
         "autoload": {
             "psr-4": {
