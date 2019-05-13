@@ -103,7 +103,7 @@ For details see _Folders & Files structure_ below
     * edit the file if needed to include/exclude packages
     * install packages: you can use the _yarn.sh_ symlink from the root folder:
         
-                composer create-project
+            composer create-project
         
     * packages are installed under _\public\share\node_modules_
 * __TODO__
