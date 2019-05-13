@@ -104,6 +104,7 @@ For details see _Folders & Files structure_ below
     * install packages: you can use the _yarn.sh_ symlink from the root folder:
         
         ./yarn.sh install
+        
     * packages are installed under _\public\share\node_modules_
 * __TODO__
 
