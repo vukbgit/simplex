@@ -155,7 +155,7 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
             //eliminate namespace first 2 elements (Simplex\Local) and last one (current class name)
             //and add templates default folder
             $templatesFolder = implode('/', array_merge(array_slice($classPath, 2, count($classPath) - 3), [TEMPLATES_DEFAULT_FOLDER]));
-            $templatePath = sprintf('%s/%s.%s', $templatesFolder, $this->action, TEMPLATES_EXTENSION);
+            $templatePath = sprintf('@local/%s/%s.%s', $templatesFolder, $this->action, TEMPLATES_EXTENSION);
         }
         //render template and get HTML
         $html = $this->template->render($templatePath, $this->templateParameters);
