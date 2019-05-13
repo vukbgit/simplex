@@ -89,7 +89,7 @@ For details see _Folders & Files structure_ below
             
         * _domain\.ltd_ must be replaced by a valid domain name (beware the escaped dot)
         * _value_ can be either _development_ or _production_ and Simplex expects to have at least one domain mapped to _production_
-* local __composer__ bash script: if your system has multiple PHP versions installed it can be useful to have a shortcut to use composer with a version different from the system default one; file _private\local\simplex\bin\composer.sh_ can be set with the path to the righe PHP binary and softlinked into root folder
+* local __composer__ bash script: if your system has multiple PHP versions installed it can be useful to have a shortcut to use composer with a version different from the system default one; file _private\local\simplex\bin\composer.sh_ can be set with the path to the right PHP binary and softlinked into root folder
 * install __yarn__ packages:
     * the _public\share\package.json_ file contains some NPM packages for:
         * backends or enterprise web applications (ERP):
