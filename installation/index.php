@@ -49,7 +49,7 @@ $DIContainer = $DIContainerBuilder->build();
 /*****************************************
 * REQUEST HANDLER CONTAINER / DISPATCHER
 * middleware queue is injected by DIContainer from
-* SHARE_CONFIG_DIR/middleware.php
+* MIDDLEWARE_QUEUE_PATH
 *****************************************/
 $dispatcher = $DIContainer->get('dispatcher');
 $response = $dispatcher->dispatch(ServerRequestFactory::fromGlobals());

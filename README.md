@@ -89,8 +89,9 @@ For details see _Folders & Files structure_ below
             
         * _domain\.ltd_ must be replaced by a valid domain name (beware the escaped dot)
         * _value_ can be either _development_ or _production_ and Simplex expects to have at least one domain mapped to _production_
+* local __composer__ bash script: if your system has multiple PHP versions installed it can be useful to have a shortcut to use composer with a version different from the system default one; file _private\local\simplex\bin\composer.sh_ can be set with the path to the righe PHP binary and softlinked into root folder
 * install __yarn__ packages:
-    * the _\public\share\package.json_ file contains some NPM packages for:
+    * the _public\share\package.json_ file contains some NPM packages for:
         * backends or enterprise web applications (ERP):
             * [patternfly 4](https://pf4.patternfly.org): a "UI framework for enterprise web applications" based on jQuery and Bootstrap 4, Simplex use it for backend building in the provided backend drafts
             * [parsleyjs](http://parsleyjs.org/): form validation
@@ -103,10 +104,12 @@ For details see _Folders & Files structure_ below
     * edit the file if needed to include/exclude packages
     * install packages: you can use the _yarn.sh_ symlink from the root folder:
         
-            composer create-project
+            ./yarn.sh install
         
-    * packages are installed under _\public\share\node_modules_
-* __TODO__
+    * packages are installed under \public\share\node_modules_
+* local __configuration__: file _private\local\simplex\config\constants.php_ defines some PHP constants, most of them regard paths and it should not be necessary to modify them unless you plan to change the filesystem structure Simplex relies on; informations to be set for the local application (tech email, application name...) are grouped into the _LOCAL_ block at the top of the script
+* __database__ configuration: in case application connects to a database edit file _private\local\simplex\config\db.php_; database accounts are organized by _ENVIRONMENT_ constant values (see __.htacces__ above), so you can have different accounts for developement and production
+* __languages__: file _private\local\simplex\config\langauges.json_ defines used languages, contains by default definitions for English and Italian, add as many as required
 
 
 ## Simplex Logic overview ##
@@ -134,27 +137,27 @@ Conventions:
     * set up the __Error Handler__ based on the environment
     * instances a __[Dipendency Injector Container](https://github.com/php-fig/container)__ loading definitions from _private/share/vukbgit/simplex/config/di-container.php_ (see file for details)
     * the __DI Container__ instances the __Dispatcher__ (which is another name for a [request handler](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-15-request-handlers.md#21-psrhttpserverrequesthandlerinterface))
-    * the dispatcher load the __middleware queue__ from _private/share/vukbgit/simplex/config/middleware.php_ which is basically composed by:
+    * the dispatcher loads the __middleware queue__ from the MIDDLEWARE_QUEUE_PATH constant value (defaults to _private/share/vukbgit/simplex/config/middleware.php_), Simplex default queue is composed by:
         * the __Router__ which loads routes definitions from any file named "routes.php" stored under the _private/local/simplex_ folder (even in subdirectories); the route definition must contain an "action" parameter (_private/local/simplex/config/route.php_ contains more details about routes definitions)
         * the Simplex __Authentication__ middleware that:
             * fires conditionally if an "authentication" parameter is found inside the current route definition
             * if fired checks whether the user is currently authenticated, otherwise redirects to a configured url
-        * the __Request Handler__ (no, not the __Dispatcher__ from above, there is a bit of naming confusion in this field...), which is responsible for the processing of the current route, invokes the __Route Handler__ (a local class) specified into the route definition which must inherit from one of the Simplex\Controller abstract classes
+        * the __Request Handler__ (no, not the __Dispatcher__ from above, there is a bit of naming confusion on this matter...), which is responsible for processing the current route, invokes the __Route Handler__ (a local class) specified into the route definition which must inherit from one of the Simplex\Controller abstract classes
         * the __Route Handler__:
             * stores all of the request parameters and the response object into class properties
             * calls a method named after the "action" route parameter
             * this method performs all the tasks needed by the action and usually renders a template injecting HTML code into the response
         * the __Dispatcher__ returns the response to the _index.php_ scope
-    * the HHTP status code of the response is checked and if different from 200 (which means "everything went fine") gets the appropriate HTML code from a _private/share/vukbgit/simplex/src/errors/_ file and injects it into the response
+    * the HTTP status code of the response is checked and if different from 200 (which means "everything went fine") gets the appropriate HTML code from a _private/share/vukbgit/simplex/src/errors/_ file and injects it into the response
     * the __Emitter__ is instantiated and returns the response to the browser
 
 ## Folders & Files Structure ##
 
 Simplex extends the classes namespace logic to every file in the application;: the __local namespace__ starts from the folder defined into _private/local/simplex/config/constants.php_ LOCAL_DIR constant (defaults to _private/local/simplex_) and is named by default _Simplex\Local_.
 
-Into this folder the classes are arranged as the typical application, by business domain logic (i.e. the _News_ folder for all classes related to news, the _Customer_ folder, etc). But also every other file with different purpose (configuration files, html templates) should follow this logic; so there is no grouping by function first (a top _config_ folder, a top _views_ folder, etc.), but instead by namespace/business logic first (so _/News/config_ and _News/templates_ folders).
+Into this folder the classes are arranged as the typical application, by business domain logic (i.e. the _News_ folder for all classes related to news, the _Customer_ folder, etc). But also every other file with different purpose (configuration files, html templates, SASS files...) should follow this logic; so there is no grouping by function first (a top _config_ folder, a top _views_ folder, etc.), but instead by namespace/business logic first (so _/News/config_ and _News/templates_ folders).
 
-This is because typically application developement proceeds by domain logic: adding the News functionality means adding at least a News class, some News configuration (routes and DI container definitions) and some Nes views (HTML templates for backend and frontend); if all of these files are scattered through local folder subfolders the it's harder to develope,  mantain and "clone" functionalities to be used as draft for new ones
+This is because typically application developement proceeds by domain logic: adding the News functionality means adding at least a News class, some News configuration (routes and DI container definitions) and some News views (HTML templates for backend and frontend); if all of these files are scattered through local folder subfolders I find it harder to develope,  mantain and "clone" functionalities to be used as draft for new ones
 
 So here are folders and files as installed from Simplex, from the installation root folder:
 
@@ -162,11 +165,11 @@ So here are folders and files as installed from Simplex, from the installation r
     * __local__: files developed for the application
         * __simplex__: top level namespace folder for application files, every class defined inside has base namespace _Simplex\Local_
             * __bin__: created at installation time for useful bash scripts
-                * __composer.sh__: allows to use composer with a PHP version different from the default one used by default by the PHP CLI application, useful on a system with multiple PHP versions installed; it's a good idea to soft link it into root
+                * __composer.sh__: allows to use composer with a PHP version different from the system default one used by the PHP CLI application, useful on a system with multiple PHP versions installed; it's a good idea to soft link it into root
             * __config__: configuration files for whole application to be customized
                 * __constants.php__: environment constants, quite self explanatory, some of them should be set right after installation; NOTE: most of the regards paths Simplex uses for inclusions, it shouldn't be necessary to change them
                 * __db.php__: database configuration, returns a PHP object, to be compiled if application uses a database (see file for details)
-                * __di-container.php__: definition to be used by the DI Container to instantiate the classes used by the application; it integrates __private/local/share/vukbgit/simplex/src/configdi-container.php/__ which stores the definitions for classes used by the Simplex angine
+                * __di-container.php__: definition to be used by the DI Container to instantiate the classes used by the application; it integrates __private/local/share/vukbgit/simplex/src/config/di-container.php/__ which stores the definitions for classes used by the Simplex engine
                 * __languages.json__: languages used by the application, indexed by a custom key (the one proposed is the ISO-639-1 two letters code); if the route passes a "language" parameter, language is searched for otherwise first one defined (defaults to English) it's used
                 * __sass.config__: custom format file to speed up Sass files compilation using the _sass.sh_ script: you can define for each file to be compiled a custom id (any string) and source and destination paths, so you you ca use the shell and call from the root folder `sass file-id` to compile the minified CSS version
             * __sass__: some scss empty drafts to help compile Bootstrap and some application css
@@ -180,18 +183,20 @@ So here are folders and files as installed from Simplex, from the installation r
         * __vukbgit__
             * __simplex__: shared Simplex modules used by application, some explanations about the less obvious ones:
                 * __bin__: bash scripts, some of the soft linked into root at installation composer project creation time
-                * __installation__: folders and files copied at installation time eady to be used and/or to be customized
+                * __installation__: folders and files copied at installation time ready to be used and/or to be customized
                 * __src__: classes and other files used by Simplex at runtime
                     * __config__: configuration files
                         * __di-container.php__: definition to be used by the DI Container to instantiate the classes used by the Simplex engine; it is integrated by ANY file with the same name found under the __private/local/simplex__ folder
-                        * __middleware.php__: middleware queue to be processed by the Dispatcher, at the moment it is not customizable
+                        * __middleware.php__: middleware queue to be processed by the Dispatcher, can be overridden setting _MIDDLEWARE_QUEUE_PATH_ value into _private\local\simplex\config\constants.php_
                     * __errors__: HTML files to be displayed in case of HTTP errors raised by the request
                     * __templates__: ready to use Twig templates for backend areas with CRUDL functionalities
         * all the other Composer libraries used by the application
 * __public__: all files that CAN be accessed by browser
     * __local__: files developed for the application such as compiled css files and javascript files
     * __share__: libraries installed through npm, Yarn, and any other third-part javascript and css asset
+        * __package.json__: npm/Yarn configuration file, requires Bootstrap, jQuery and popper.js lates plus [patternfly 4](https://pf4.patternfly.org), customize at need
     * __.htaccess__: redirects ALL requests beginning with "public/" to _index.php_ except the ones for files really existing into filesystem (css, js, etc.)
+* __.gitignore__: in a developement/production flow I commit file to a private repository form the developement site and pull them into the production one; this .gitignore file excludes some Simplex folders/files from commit
 * __.htaccess__: root Apache directives
     * sets environment variables that are readable into PHP code
         * based on domain:
@@ -204,16 +209,15 @@ So here are folders and files as installed from Simplex, from the installation r
     * sets autoload application directory to _private/local/simplex_ mapping this path to _Simplex\Local_ namespace
     * requires the Simplex package (which takes care of requiring the other needed packages)
 * __index.php__: application bootstrap file, since it is stored into site root all PHP includes in every file work with absolute path form site root, see "Application Flow" above for details
-* __package.json__: npm/Yarn configuration file, requires Bootstrap, jQuery and popper.js lates plus [patternfly 4](https://pf4.patternfly.org), customize at need
 * __sass.sh__: soft link to the helper script _private/share/vukbgit/simplex/bin/sass.sh_ to compile Sass files, see the _private/local/simplex/config/sass.config_ explanation above for details
 * __yarn.sh__: soft link to the helper script _private/share/vukbgit/simplex/bin/yarn.sh_ to manage yarn packages into _public/share_ folder (instead of the predefined node_modules one), call it `./yarn.sh yarn-command`, i.e `./yarn.sh install foolibrary` to perform the installation into _local/share/foolibrary_
 
 ## Considerations ##
 
 * I choose not to use any framework because I want to be 100% in control of the flow inside the application
-* Simplex third party classes for almost every specialized task (DI container, routing, dispatching, emitting...)
+* Simplex uses third party classes for almost every specialized task (DI container, routing, dispatching, emitting...)
 * I coded some components into Simplex only when I couldn't find an external library to accomplish some task the way I needed: for example I wrote the nikic/fastroute middleware to be able to pass custom route parameters
-* design choices: I tried to document myself, mostly seeking "no framework" suggestions (see references below), and taking a look to existing frameworks (although I am no expert in this field because I started structuring my code for re-use since 2000); I want Simplex to be up-to-date but also to be, well, simple and there is no agreement on every topic, for example [the use of a DI Container](https://hackernoon.com/you-dont-need-a-dependency-injection-container-10a5d4a5f878). Therefore I made my (very questionable) choices, keeping __always__ in mind the I needed a tool to build web applications in the fastest and flexible way
+* design choices: I tried to search documentation, mostly seeking "no framework" suggestions (see references below), and taking a look to existing frameworks (although I am no expert in this field because I started structuring my code for re-use since 2000); I want Simplex to be up-to-date but also to be, well, simple and there is no agreement on every topic, for example [the use of a DI Container](https://hackernoon.com/you-dont-need-a-dependency-injection-container-10a5d4a5f878). Therefore I made my (very questionable) choices, keeping __always__ in mind the I needed a tool to build web applications in the fastest and most flexible way
 * So I ended up with a framework myself?! Honestly I do not know
 
 ## References ##

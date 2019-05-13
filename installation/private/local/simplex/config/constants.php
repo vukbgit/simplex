@@ -1,4 +1,11 @@
 <?php
+/********
+* LOCAL *
+********/
+//included into exceptions message
+define('TECH_EMAIL', null);
+//used to set page title tag in some templates
+define('APPLICATION', null);
 /**************
 * ENVIRONMENT *
 **************/
@@ -13,6 +20,7 @@ define('SHARE_DIR', 'private/share/vukbgit/simplex/src');
 define('LOCAL_DIR', 'private/local/simplex');
 define('SHARE_CONFIG_DIR', sprintf('%s/config', SHARE_DIR));
 define('LOCAL_CONFIG_DIR', sprintf('%s/config', LOCAL_DIR));
+define('MIDDLEWARE_QUEUE_PATH', sprintf('%s/middleware.php', SHARE_CONFIG_DIR));
 /*****************
 * CACHE & ERRORS *
 *****************/
@@ -20,10 +28,6 @@ define('LOCAL_CONFIG_DIR', sprintf('%s/config', LOCAL_DIR));
 define('TMP_DIR', '../tmp');
 //folder with HTTP errors pages
 define('ERROR_DIR', sprintf('%s/errors', SHARE_DIR));
-/********
-* DEBUG *
-********/
-define('TECH_EMAIL', null);
 /************
 * TEMPLATES *
 ************/
@@ -32,7 +36,3 @@ define('SHARE_TEMPLATES_DIR', 'private/share/vukbgit/simplex/src/templates');
 define('LOCAL_TEMPLATES_DIR', LOCAL_DIR);
 //twig template files extension
 define('TEMPLATES_EXTENSION', 'twig');
-/********
-* LOCAL *
-********/
-define('APPLICATION', null);

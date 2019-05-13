@@ -43,7 +43,7 @@ return array_merge(
             ->constructor(get('DIContainer')),
         //dispatcher
         'middlevareQueue' => function(ContainerInterface $DIContainer) {
-            return require sprintf('%s/middleware.php', SHARE_CONFIG_DIR);
+            return require MIDDLEWARE_QUEUE_PATH;
         },
         'dispatcher' => create(Dispatcher::class)
             ->constructor(get('middlevareQueue'), get('DIContainer')),
