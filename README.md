@@ -108,9 +108,12 @@ For details see _Folders & Files structure_ below
         
     * packages are installed under \public\share\node_modules_
 * local __configuration__: file _private\local\simplex\config\constants.php_ defines some PHP constants, most of them regard paths and it should not be necessary to modify them unless you plan to change the filesystem structure Simplex relies on; informations to be set for the local application (tech email, application name...) are grouped into the _LOCAL_ block at the top of the script
-* __database__ configuration: in case application connects to a database edit file _private\local\simplex\config\db.php_; database accounts are organized by _ENVIRONMENT_ constant values (see __.htacces__ above), so you can have different accounts for developement and production
+* __database__ configuration: in case application connects to a database edit file _private\local\simplex\config\db.php_; database accounts are organized by _ENVIRONMENT_ constant values (see __.htacces__ above), so you can have different accounts for development and production
 * __languages__: file _private\local\simplex\config\langauges.json_ defines used languages, contains by default definitions for English and Italian, add as many as required
 
+## Backend Development ##
+
+* 
 
 ## Simplex Logic overview ##
 
@@ -157,13 +160,15 @@ Simplex extends the classes namespace logic to every file in the application;: t
 
 Into this folder the classes are arranged as the typical application, by business domain logic (i.e. the _News_ folder for all classes related to news, the _Customer_ folder, etc). But also every other file with different purpose (configuration files, html templates, SASS files...) should follow this logic; so there is no grouping by function first (a top _config_ folder, a top _views_ folder, etc.), but instead by namespace/business logic first (so _/News/config_ and _News/templates_ folders).
 
-This is because typically application developement proceeds by domain logic: adding the News functionality means adding at least a News class, some News configuration (routes and DI container definitions) and some News views (HTML templates for backend and frontend); if all of these files are scattered through local folder subfolders I find it harder to develope,  mantain and "clone" functionalities to be used as draft for new ones
+This is because typically application development proceeds by domain logic: adding the News functionality means adding at least a News class, some News configuration (routes and DI container definitions) and some News views (HTML templates for backend and frontend); if all of these files are scattered through local folder subfolders I find it harder to develope,  mantain and "clone" functionalities to be used as draft for new ones
 
 So here are folders and files as installed from Simplex, from the installation root folder:
 
 * __private__: all files that CANNOT be directly accessed by browser
     * __local__: files developed for the application
         * __simplex__: top level namespace folder for application files, every class defined inside has base namespace _Simplex\Local_
+            * __Backend__: frontend namespace draft folder
+            * __Frontend__: frontend namespace draft folder
             * __bin__: created at installation time for useful bash scripts
                 * __composer.sh__: allows to use composer with a PHP version different from the system default one used by the PHP CLI application, useful on a system with multiple PHP versions installed; it's a good idea to soft link it into root
             * __config__: configuration files for whole application to be customized
@@ -196,7 +201,7 @@ So here are folders and files as installed from Simplex, from the installation r
     * __share__: libraries installed through npm, Yarn, and any other third-part javascript and css asset
         * __package.json__: npm/Yarn configuration file, requires Bootstrap, jQuery and popper.js lates plus [patternfly 4](https://pf4.patternfly.org), customize at need
     * __.htaccess__: redirects ALL requests beginning with "public/" to _index.php_ except the ones for files really existing into filesystem (css, js, etc.)
-* __.gitignore__: in a developement/production flow I commit file to a private repository form the developement site and pull them into the production one; this .gitignore file excludes some Simplex folders/files from commit
+* __.gitignore__: in a development/production flow I commit file to a private repository form the development site and pull them into the production one; this .gitignore file excludes some Simplex folders/files from commit
 * __.htaccess__: root Apache directives
     * sets environment variables that are readable into PHP code
         * based on domain:

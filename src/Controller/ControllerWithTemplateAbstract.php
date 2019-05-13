@@ -142,6 +142,11 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         if(!$this->pageTitle) {
             throw new \Exception('Page has no title, uset setPageTitle() method to set it');
         }
+        //add templates paths
+        $loader = $this->template->getLoader();
+        $loader->addPath(SHARE_TEMPLATES_DIR, 'share');
+        $loader->addPath(LOCAL_TEMPLATES_DIR, 'local');
+        $this->template->setLoader($loader);
         //build default path into calling class namespace
         if(!$templatePath) {
             //turn namespace into an array

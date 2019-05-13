@@ -57,10 +57,9 @@ return array_merge(
         /***********************************
         * START ADDITIONAL FUNCTIONALITIES *
         ***********************************/
-        //template engine
-        'templatesFolder' => [LOCAL_TEMPLATES_DIR, SHARE_TEMPLATES_DIR],
+        //template engine, templates path are set into Simplex\ControllerWithTemplateAbstract::renderTemplate
         'twigFilesystemLoader' => create(FilesystemLoader::class)
-            ->constructor(get('templatesFolder')),
+            ->constructor(),
         'templateEngine' => create(Environment::class)
             ->constructor(get('twigFilesystemLoader')),
         //query builder
@@ -78,7 +77,7 @@ return array_merge(
         //authentication
         'simplexAuraAuth' => create(Authentication\AuraAuth::class)
             ->constructor(get('DIContainer')),
-        'login' => create(Authentication\Login::class)
+        'simplexLogin' => create(Authentication\Login::class)
             ->constructor(
                 get('DIContainer'),
                 get('response'),
