@@ -81,10 +81,30 @@ For details see _Folders & Files structure_ below
 ## Post-Installation Jobs ##
 
 * __/.htaccess__:
-    * set ENVIRONMENT variable
-* install __yarn__ packages: preferred location:
-
-    yarn install --modules-folder public/share
+    * set ENVIRONMENT variable:
+        * using `SetEnvIf` directive you can set an enviromental varible name _ENVIRONMENT_ which can be read inside PHP scripts as a constant with `getenv('REDIRECT_ENVIRONMENT')`
+        * value is based on requested domain and the format is:
+            
+            SetEnvIf Host ^domain\.ltd$ ENVIRONMENT=value
+            
+        * _domain\.ltd_ must be replaced by a valid domain name (beware the escaped dot)
+        * _value_ can be either _development_ or _production_ and Simplex expects to have at least one domain mapped to _production_
+* install __yarn__ packages:
+    * the _\public\share\package.json_ file contains some NPM packages for:
+        * backends or enterprise web applications (ERP):
+            * [patternfly 4](https://pf4.patternfly.org): a "UI framework for enterprise web applications" based on jQuery and Bootstrap 4, Simplex use it for backend building in the provided backend drafts
+            * [parsleyjs](http://parsleyjs.org/): form validation
+            * [moment](https://momentjs.com/) for dates and time manipulation
+            * [tempus dominus](https://tempusdominus.github.io/bootstrap-4/) for date/time pickers
+        * frontend
+            * [bootstrap 4](https://getbootstrap.com)
+            * [jquery](http://jquery.com/)
+            * [jquery.safemail](https://github.com/leftclickcomau/jquery.safemail) for obfuscating email
+    * edit the file if needed to include/exclude packages
+    * install packages: you can use the _yarn.sh_ symlink from the root folder:
+        
+        ./yarn.sh install
+    * packages are installed under _\public\share\node_modules_
 * __TODO__
 
 
