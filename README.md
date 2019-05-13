@@ -73,7 +73,7 @@ Simplex will:
 
 * install itself and the other required Composer libraries
 * copy in the root directory some files 
-* make symlinks in the root directory to some shell scripts (Composer vendor binaries)
+* make symlinks in the root directory to some shell scripts ([Composer vendor binaries](https://getcomposer.org/doc/articles/vendor-binaries.md))
 * build the folders structure for the local application with some ready draft files
 
 For details see _Folders & Files structure_ below
