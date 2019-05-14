@@ -16,26 +16,27 @@ if(getenv('REDIRECT_ENVIRONMENT')) {
     echo 'No evironment defined, you must set up root .htaccess';
     exit;
 }
-define('SHARE_DIR', 'private/share/vukbgit/simplex/src');
-define('LOCAL_DIR', 'private/local/simplex');
-define('SHARE_CONFIG_DIR', sprintf('%s/config', SHARE_DIR));
-define('LOCAL_CONFIG_DIR', sprintf('%s/config', LOCAL_DIR));
+define('PRIVATE_SHARE_DIR', 'private/share/vukbgit/simplex/src');
+define('PRIVATE_LOCAL_DIR', 'private/local/simplex');
+define('SHARE_CONFIG_DIR', sprintf('%s/config', PRIVATE_SHARE_DIR));
+define('LOCAL_CONFIG_DIR', sprintf('%s/config', PRIVATE_LOCAL_DIR));
 define('MIDDLEWARE_QUEUE_PATH', sprintf('%s/middleware.php', SHARE_CONFIG_DIR));
+define('PUBLIC_SHARE_DIR', 'public/share');
 /*****************
 * CACHE & ERRORS *
 *****************/
 //temporary files folder (i.e. for caching)
 define('TMP_DIR', '../tmp');
 //folder with HTTP errors pages
-define('ERROR_DIR', sprintf('%s/errors', SHARE_DIR));
+define('ERROR_DIR', sprintf('%s/errors', PRIVATE_SHARE_DIR));
 /************
 * TEMPLATES *
 ************/
 //folder where Twig template engine starts looking for templates files
 //namespaced into twig as @share
-define('SHARE_TEMPLATES_DIR', 'private/share/vukbgit/simplex/src/templates');
+define('SHARE_TEMPLATES_DIR', 'private/share/vukbgit/simplex/src');
 //namespaced into twig as @local
-define('LOCAL_TEMPLATES_DIR', LOCAL_DIR);
+define('LOCAL_TEMPLATES_DIR', PRIVATE_LOCAL_DIR);
 //twig template files extension
 define('TEMPLATES_EXTENSION', 'twig');
 //twig folder to search for default action template, path from the controller folder

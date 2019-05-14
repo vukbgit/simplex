@@ -10,6 +10,7 @@ use Psr\Container\ContainerInterface;
 use Twig\Environment;
 use Aptoma\Twig\Extension\MarkdownExtension;
 use Aptoma\Twig\Extension\MarkdownEngine;
+use CodeZero\Cookie\VanillaCookie
 use function Simplex\slugToPSR1Name;
 
 /*
@@ -98,6 +99,7 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
     {
         $this->setTemplateParameter('environment', ENVIRONMENT);
         $this->setTemplateParameter('application', APPLICATION);
+        $this->setTemplateParameter('publicShareDir', PUBLIC_SHARE_DIR);
         $this->setTemplateParameter('language', $this->language);
         $this->setTemplateParameter('routeParameters', $this->routeParameters);
     }

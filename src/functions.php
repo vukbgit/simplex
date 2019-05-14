@@ -30,6 +30,22 @@ if (!function_exists('Simplex\slugToPSR1Name')) {
     }
 }
 
+if (!function_exists('Simplex\requireFromFiles')) {
+    /**
+    * Searches a folder for files by file name pattern and requires them
+    * @param string $folder: to search recursively into
+    * @param string $pattern: file name to search for, * can be used
+    */
+    function requireFromFiles(string $folder, string $pattern)
+    {
+        foreach (Finder::findFiles($pattern)->from($folder) as $file) {
+            $filePath = $file->__toString();
+            require $filePath;
+        }
+        return $return;
+    }
+}
+
 if (!function_exists('Simplex\mergeArrayFromFiles')) {
     /**
     * Searches a folder for files by file name pattern, expectes an array returned by file inclusion, merges all returned arrays

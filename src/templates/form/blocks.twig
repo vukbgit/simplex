@@ -1,0 +1,25 @@
+{% block validationAssets %}
+<!-- Parsley.js -->
+<script src="{{ '/%s/node_modules/parsleyjs/dist/parsley.min.js'|format(publicShareDir) }}"></script>
+<script src="{{ '/%s/node_modules/parsleyjs/dist/i18n/%s.js'|format(publicShareDir, attribute(language, 'ISO-639-1')) }}"></script>
+<style media="screen" href="{{ '/%s/node_modules/parsleyjs/src/parsley.css'|format(publicShareDir) }}">
+</style>
+<script type="text/javascript">
+/* This global callbacks will be called for any field that fails/passes validation.
+Setting aria-invalid triggers Patternfly formatting
+*/
+window.Parsley.on('field:error', function() {
+    this.$element.attr('aria-invalid', true);
+});
+window.Parsley.on('field:success', function() {
+    // This global callback will be called for any field that fails validation.
+    this.$element.attr('aria-invalid', false);
+});
+</script>
+{% endblock %}
+
+{% block parsleyInitForm %}
+data-parsley-validate
+data-parsley-focus="first"{# focus first invalid field on validation error #}
+data-parsley-error-template="<p class='pf-c-form__helper-text pf-m-error'></p>"
+{% endblock %}

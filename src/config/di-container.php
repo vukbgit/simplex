@@ -36,7 +36,7 @@ return array_merge(
             ->constructor(ENVIRONMENT, get('routes'), TMP_DIR),
         'routes' => function() {
             //search routes definitions into local namespace
-            return mergeArrayFromFiles(LOCAL_DIR, 'routes.php');
+            return mergeArrayFromFiles(PRIVATE_LOCAL_DIR, 'routes.php');
         },
         //request handler middleware
         'requestHandler' => create(RequestHandler::class)
@@ -75,18 +75,11 @@ return array_merge(
         'queryBuilder' => create(PixieExtended::class)
             ->constructor(get('pixieConnection')),
         //authentication
-        'simplexAuraAuth' => create(Authentication\AuraAuth::class)
-            ->constructor(get('DIContainer')),
-        'simplexLogin' => create(Authentication\Login::class)
-            ->constructor(
-                get('DIContainer'),
-                get('response'),
-                get('templateEngine')
-        ),
+        'simplexAuthenticationMiddleware' => create(Authentication\Middleware::class)
         /**********************************
         * STOP ADDITIONAL FUNCTIONALITIES *
         **********************************/
     ],
     //search definitions into local namespace
-    mergeArrayFromFiles(LOCAL_DIR, 'di-container.php')
+    mergeArrayFromFiles(PRIVATE_LOCAL_DIR, 'di-container.php')
 );

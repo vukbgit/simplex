@@ -1,0 +1,18 @@
+{% extends '@local/templates/application.twig' %}
+
+{% use '@share/templates/blocks.twig' %}
+
+{% block head %}
+    {{ parent }}
+    {% block jQueryAssets %}
+        {{ parent() }}
+    {% endblock %}
+    <script>
+    $(document).ready(function(){
+        {% block documentReady %}
+        {% endblock %}
+    });
+    </script>
+    <!-- Patternfly -->
+    <link rel="stylesheet" href="/public/local/simplex/ERP/css/patternfly.min.css">
+{% endblock %}

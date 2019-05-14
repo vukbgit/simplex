@@ -1,3 +1,5 @@
+{% import '@share/templates/macros.twig' as shareMacros %}
+
 <!doctype html>
 <html lang="{{ attribute(language, 'ISO-639-1') }}">
 <head>
@@ -5,11 +7,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>{{ pageTitle }}</title>
+{{ shareMacros.favicon('/public/local/corporate/favicon') }}
 {% block head %}
 {% endblock %}
 </head>
-<body>
-<h1>application</h1>
+<body{% block boyAttributes %}{% endblock %}>
 {% block body %}
 {% endblock %}
 </body>
