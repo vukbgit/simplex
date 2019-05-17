@@ -10,7 +10,7 @@ use Psr\Container\ContainerInterface;
 use Twig\Environment;
 use Aptoma\Twig\Extension\MarkdownExtension;
 use Aptoma\Twig\Extension\MarkdownEngine;
-use CodeZero\Cookie\VanillaCookie
+use CodeZero\Cookie\VanillaCookie;
 use function Simplex\slugToPSR1Name;
 
 /*
