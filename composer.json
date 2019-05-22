@@ -32,7 +32,10 @@
         "psr-4" : {
             "Simplex\\" : "src/"
         },
-        "files": ["src/functions.php"]
+        "files": [
+            "src/functions.php",
+            "src/global-functions.php"
+        ]
     },
     "bin": [
         "bin/yarn.sh",
