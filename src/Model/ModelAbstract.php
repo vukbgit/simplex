@@ -29,9 +29,29 @@ abstract class ModelAbstract
     public function __construct(PixieExtended $query, string $configPath)
     {
         $this->query = $query;
-        $this->config = require($configPath);
+        $this->loadConfig($configPath);
     }
 
+    /**
+    * Loads and check config
+    * @param strong $configPath
+    */
+    private function loadConfig($configPath)
+    {
+        //check path
+        if(!is_file($configPath)) {
+            throw new \Exception(sprintf('configuration file \'%s\' for model %s is not a valid path', $configPath, self::class));
+        }
+        $config = require($configPath);
+        if(!is_object($config)) {
+            throw new \Exception(sprintf('configuration file \'%s\' for model %s must return an object', $configPath, self::class));
+        }
+        if(!isset($config->table)) {
+            throw new \Exception(sprintf('configuration loaded from file \'%s\' for model %s must contain a \'table\' property', $configPath, self::class));
+        }
+        $this->config = $config;
+    }
+    
     /**
     * Return the view or at least table defined
     */

@@ -1,0 +1,124 @@
+//include local variables
+@import "../../../../../../local/simplex/sass/variables.scss";
+@import "../../../../../../local/simplex/sass/bootstrap-variables.scss";
+//include bootstrap variables
+@import "../../../../../../../public/share/node_modules/bootstrap/scss/functions";
+@import "../../../../../../../public/share/node_modules/bootstrap/scss/variables";
+
+#navbar-top {
+    height:$navBarHeight;
+    #sidebar-hat {
+        width:$sideBarWidth;
+        height:$navBarHeight;
+        background-color: rgba(0, 0, 0, .25);
+    }
+    .navbar-brand {
+        height:$navBarHeight;
+        padding-top:0;
+        padding-bottom:0;
+        padding-left:1rem;
+        line-height:$navBarHeight;
+        h1 {
+            display:inline-block;
+            color:$navbar-dark-active-color;
+        }
+        img {
+            $logoMargin: 5px;
+            height:$navBarHeight - ($logoMargin * 2);
+            margin:$logoMargin 0 $logoMargin ($logoMargin * 2);
+            vertical-align: top;
+        }
+    }
+}
+#sidebar {
+    width:$sideBarWidth;
+    transition: width $sideBarTransitionDuration;
+    &.closed {
+        width:0;
+    }
+}
+.sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100; /* Behind the navbar */
+    padding: $navBarHeight 0 0; /* Height of navbar */
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+}
+.sidebar-sticky {
+    position: relative;
+    top: 0;
+    height: calc(100vh - $navBarHeight);
+    padding-top: .5rem;
+    overflow-x: hidden;
+    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+}
+@supports ((position: -webkit-sticky) or (position: sticky)) {
+    .sidebar-sticky {
+        position: -webkit-sticky;
+        position: sticky;
+    }
+}
+main {
+    margin-left:$sideBarWidth;
+    transition: margin-left $sideBarTransitionDuration;
+    padding-top:$navBarHeight;
+    &.wide {
+        margin-left:0;
+    }
+}
+/* hamburgers override*/
+$hamburger-layer-height        : 4px !default;
+$hamburger-layer-spacing       : 6px !default;
+//correct hamburger vertical alignment error (due to bottom spacing)
+#sidebar-hat {
+    .hamburger {
+        margin-top:$hamburger-layer-spacing / 2;
+    }
+}
+$hamburger-height: $hamburger-layer-height * 3 + $hamburger-layer-spacing * 3;
+$hamburger-padding-y: ($navBarHeight - $hamburger-height) / 2;
+$hamburger-layer-color         : #fff !default;
+$hamburger-types: (
+  //3dx,
+  //3dx-r,
+  //3dy,
+  //3dy-r,
+  //3dxy,
+  //3dxy-r,
+  //arrow,
+  //arrow-r,
+  //arrowalt,
+  //arrowalt-r,
+  //arrowturn,
+  //arrowturn-r,
+  //boring,
+  collapse,
+  //collapse-r,
+  //elastic,
+  //elastic-r,
+  //emphatic,
+  //emphatic-r,
+  //minus,
+  //slider,
+  //slider-r,
+  //spin,
+  //spin-r,
+  //spring,
+  //spring-r,
+  //stand,
+  //stand-r,
+  //squeeze,
+  //vortex,
+  //vortex-r
+) !default;
+.hamburger {
+    &:focus {
+        outline:0;
+    }
+}
+@import "../../../../../../../public/share/node_modules/hamburgers/_sass/hamburgers/hamburgers.scss";
+.pf-c-page__sidebar--closed {
+    width:0;
+}

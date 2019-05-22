@@ -1,0 +1,23 @@
+{# extends local area template #}
+{% extends '@local/%s/%s/%s.twig'|format(slugToPSR1Name(area, 'class'), templatesDefaultFolder, area) %}
+
+{% use '@share/templates/blocks.twig' %}
+
+{% block head %}
+    {{ parent() }}
+    {% block cookiesAssets %}
+        {{ parent() }}
+    {% endblock %}
+    <!-- ERP assets -->
+    <link rel="stylesheet" href="/public/share/simplex/Erp/css/erp.min.css">
+    <script type="text/javascript" src="/public/share/simplex/Erp/js/erp.js"></script>
+    <!-- Fontello icons -->
+    <link rel="stylesheet" href="/public/share/simplex/Erp/Fontello/css/fontello.css">
+    <!-- global jQuery document ready block -->
+    <script>
+    $(document).ready(function(){
+        {% block documentReady %}
+        {% endblock %}
+    });
+    </script>
+{% endblock %}

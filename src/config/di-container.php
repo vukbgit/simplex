@@ -14,6 +14,7 @@ use Narrowspark\HttpEmitter\SapiEmitter;
 //template engine
 use Twig\Loader\FilesystemLoader;
 use Twig\Environment;
+use CodeZero\Cookie\VanillaCookie;
 //query builder
 use \Pixie\Connection;
 use \Simplex\PixieExtended;
@@ -62,6 +63,11 @@ return array_merge(
             ->constructor(),
         'templateEngine' => create(Environment::class)
             ->constructor(get('twigFilesystemLoader')),
+        //cookie manager
+        'encrypter' => create(DefaultEncrypter::class)
+            ->constructor(ENCRYPTION_KEY),
+        'cookieManager' => create(VanillaCookie::class)
+            ->constructor(get('encrypter')),
         //query builder
         'dbConfig' => function(){
             $config = require sprintf('%s/db.php', LOCAL_CONFIG_DIR);
@@ -76,6 +82,7 @@ return array_merge(
             ->constructor(get('pixieConnection')),
         //authentication
         'simplexAuthenticationMiddleware' => create(Authentication\Middleware::class)
+            ->constructor(get('cookieManager')),
         /**********************************
         * STOP ADDITIONAL FUNCTIONALITIES *
         **********************************/

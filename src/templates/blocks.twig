@@ -1,4 +1,25 @@
-{% block jQueryAssets %}
+{% block jsFrameworkAssets %}
 <!-- jQuery -->
-<script src="{{ '/%s/node_modules/jquery/dist/jquery.min.js'|format(publicShareDir) }}"></script>
+<script src="{{ 'jquery/dist/jquery.min.js'|pathToYarnAsset }}"></script>
+{% endblock %}
+
+{% block cssFrameworkAssets %}
+<!-- Bootstrap -->
+<link rel="stylesheet" href="/public/local/simplex/css/bootstrap.min.css">
+<script src="{{ 'bootstrap/dist/js/bootstrap.bundle.min.js'|pathToYarnAsset }}"></script>
+{% endblock %}
+
+{% block simplexAssets %}
+<!-- Simplex -->
+<link rel="stylesheet" href="/public/share/simplex/css/simplex.min.css">
+{% endblock %}
+
+{% block cookiesAssets %}
+<!-- js-cookie -->
+<script src="{{ 'js-cookie/src/js.cookie.js'|pathToYarnAsset }}"></script>
+<script type="text/javascript">
+    //cookie default duration in minutes
+    var cookieDurationMinutes = {{ cookieDuration }};
+    var cookieDurationDays = cookieDurationMinutes / 1440;
+</script>
 {% endblock %}

@@ -1,3 +1,117 @@
-{% macro focusField(id) %}
-    $('#{{ id }}').focus();
+{# sets field attributes based on config
+@param hash config: hash with following properties
+{
+    'name': '',
+    'id': '',
+    'placeholder': ''|trans,
+    'autofocus': true,
+    'autocomplete': '',
+    'class': '',
+    'validation': {
+        'required': true,
+        'pattern': ''
+    }
+}
+#}
+{% macro fieldSetAttributes(config) %}
+    {% set validation = config.validation ?? {} %}
+    {# common #}
+    name="{{ config.name }}"
+    id="{{ config.id ?? config.name }}"
+    {% if config.placeholder %}
+    placeholder="{{ config.placeholder }}"
+    {% endif %}
+    {% if config.autofocus %}
+    autofocus="" 
+    {% endif %}
+    {% if config.autocomplete %}
+    autocomplete="{{ config.autocomplete }}" 
+    {% endif %}
+    {# merge classes #}
+    {% set classes = ['form-control']|merge([config.class]) %}
+    class="{{ classes|join(' ') }}"
+    {# validation #}
+    {% if validation %}
+        {% if validation.required %}
+        required="" 
+        {% endif %}
+        {% if validation.pattern %}
+        pattern="{{ validation.pattern }}" 
+        {% endif %}
+        {% if validation.validityStates %}
+            {% for validityState, validityStateProperties in validation.validityStates %}
+                {% if validityStateProperties.invalid %}
+                    {{ 'data-validity-state-%s-invalid="true"'|format(validityState) }}
+                {% endif %}
+                {% if validityStateProperties.message %}
+                    {{ 'data-validity-state-%s-message=%s'|format(validityState, validityStateProperties.message|escape('html_attr')) }}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% endif %}
+{% endmacro %}
+
+{# displays a field validation message
+@param string type: text | email
+@param hash config: hash for field properties (see fieldSetAttributes macro explanation)
+#}
+{% macro displayFieldValidationMessage(validation) %}
+    {% if validation.invalidMessage %}
+<div class="invalid-tooltip">
+  {{ validation.invalidMessage }}
+</div>
+    {% endif %}
+{% endmacro %}
+
+{# displays an input field given the type, useful when type is condition dependant
+@param string type: text | email
+@param hash config: hash for field properties (see fieldSetAttributes macro explanation)
+#}
+{% macro displayInput(type, config) %}
+    {% import _self as selfMacros %}
+    {% set config = parseFieldConfig(config) %}
+    <input 
+    type="{{ type }}"
+    {{ selfMacros.fieldSetAttributes(config) }}
+    >
+    {#{ selfMacros.displayFieldValidationMessage(config.validation) }#}
+{% endmacro %}
+
+{# displays an input field given the type, useful when type is condition dependant
+@param string type: text | email
+@param hash config: hash for field properties (see fieldSetAttributes macro explanation)
+#}
+{% macro displayInputbyTipe(type, config) %}
+    {% import _self as selfMacros %}
+    {% if type == 'text' %}
+        {{ selfMacros.displayInputText(config) }}
+    {% elseif type == 'email' %}
+        {{ selfMacros.displayInputEmail(config) }}
+    {% elseif type == 'password' %}
+        {{ selfMacros.displayInputPassword(config) }}
+    {% endif %}
+{% endmacro %}
+
+{# displays an input text field
+@param hash config: hash for field properties (see fieldSetAttributes macro explanation)
+#}
+{% macro displayInputText(config) %}
+    {% import _self as selfMacros %}
+    {{ selfMacros.displayInput('text', config) }}
+{% endmacro %}
+
+{# displays an input email field
+@param hash config: hash for field properties (see fieldSetAttributes macro explanation)
+#}
+{% macro displayInputEmail(config) %}
+    {% import _self as selfMacros %}
+    {{ selfMacros.displayInput('email', config) }}
+{% endmacro %}
+
+{# displays an input password field
+@param hash config: hash for field properties (see fieldSetAttributes macro explanation)
+#}
+{% macro displayInputPassword(config) %}
+    {% import _self as selfMacros %}
+    {{ selfMacros.displayInput('password', config) }}
 {% endmacro %}

@@ -5,7 +5,7 @@
 //included into exceptions message
 define('TECH_EMAIL', null);
 //used to set page title tag in some templates
-define('APPLICATION', null);
+define('BRAND', null);
 /**************
 * ENVIRONMENT *
 **************/

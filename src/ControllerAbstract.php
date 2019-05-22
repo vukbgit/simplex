@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Simplex\Controller;
+namespace Simplex;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -45,6 +45,12 @@ abstract class ControllerAbstract
     protected $routeParameters;
 
     /**
+    * @var string
+    * current application area
+    */
+    protected $area;
+
+    /**
     * @var object
     * object with current language specifications
     */
@@ -79,10 +85,31 @@ abstract class ControllerAbstract
     {
         //before action execution
         $this->doBeforeActionExecution($request);
-        //handle action
-        $this->handleActionExecution();
+        //verify authentication
+        if($this->verifyAuthentication($request)) {
+            //handle action
+            $this->handleActionExecution();
+        }
         //return response
         return $this->response;
+    }
+
+    /**
+    * Performs some operations before action execution
+    * @param ServerRequestInterface $request
+    */
+    protected function doBeforeActionExecution(ServerRequestInterface $request)
+    {
+        //store request
+        $this->storeRequest($request);
+        //check route parameters
+        $this->checkRouteParameters(['action', 'area']);
+        //store area
+        $this->area = $this->routeParameters->area;
+        //store route action
+        $this->action = $this->routeParameters->action;
+        //check language
+        $this->setLanguage();
     }
 
     /**
@@ -94,12 +121,23 @@ abstract class ControllerAbstract
         //store request and its parameters
         $this->request = $request;
         $this->routeParameters = $request->getAttributes()['parameters'];
-        //store route action
-        $this->action = $this->routeParameters->action ?? null;
     }
 
     /**
-    * Gets language
+    * Checks mandatory route parameters
+    * @param array $mandatoryParameters array of mandatory parameters to be searched into $this->routeParameters
+    */
+    protected function checkRouteParameters(array $mandatoryParameters)
+    {
+        foreach ($mandatoryParameters as $parameter) {
+            if(!isset($this->routeParameters->$parameter) || !$this->routeParameters->$parameter) {
+                throw new \Exception(sprintf('Current route definition MUST contain a \'handler\'[1]->%s parameter', $parameter));
+            }
+        }
+    }
+    
+    /**
+    * Gets & sets language
     */
     protected function setLanguage()
     {
@@ -110,17 +148,58 @@ abstract class ControllerAbstract
     }
 
     /**
-    * Performs some operations before action execution
-    * @param ServerRequestInterface $request
+    * Checks if authenticaion is needed and is valid
+    * @return bool
     */
-    protected function doBeforeActionExecution(ServerRequestInterface $request)
+    protected function verifyAuthentication(): bool
     {
-        //store request
-        $this->storeRequest($request);
-        //check language
-        $this->setLanguage();
+        $requestAttributes = $this->request->getAttributes();
+        //no autentication needed
+        if(!isset($requestAttributes['parameters']->authentication)) {
+            return true;
+        } else {
+            return $requestAttributes['authenticationResult']->{$this->area}->authenticated;
+        }
     }
-
+    
+    /**
+    * Return authenticated user data (if any)
+    * @return mixed, object with user data or null
+    */
+    protected function getAuthenticatedUserData()
+    {
+        if($this->verifyAuthentication()) {
+            return $this->request->getAttributes()['userData'];
+        } else {
+            return null;
+        }
+    }
+    
+    /**
+    * Checks whether current user has a certain permission
+    * @param string $permission
+    * @return bool
+    */
+    protected function checkPermission(string $permission): bool
+    {
+        return in_array($permission, $this->getAuthenticatedUserData()->permissions);
+    }
+    
+    /**
+    * Checks whether current user has at least one permission among one set
+    * @param array $permissions
+    * @return bool
+    */
+    protected function checkAtLeastOnePermission(array $permissions): bool
+    {
+        foreach ((array) $permissions as $permission) {
+            if($this->checkPermission($permission)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     /**
     * Handles action execution
     */

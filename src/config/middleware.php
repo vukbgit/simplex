@@ -11,5 +11,5 @@ return [
         $DIContainer->get('simplexAuthenticationMiddleware'),
     ],
     //handler of the request
-    $DIContainer->get('requestHandler')
+    $DIContainer->get('requestHandler'),
 ];

@@ -1,18 +1,19 @@
 <?php
 declare(strict_types=1);
-/***********
-* COMPOSER *
-***********/
-require_once 'private/share/autoload.php';
 /**********************
 * IMPORTED NAMESPACES *
 **********************/
 use DI\ContainerBuilder;
 use Zend\Diactoros\ServerRequestFactory;
+use function Simplex\requireFromFiles;
+/***********
+* COMPOSER *
+***********/
+require_once 'private/share/autoload.php';
 /**************
 * ENVIRONMENT *
 **************/
-require 'private/local/simplex/config/constants.php';
+requireFromFiles('private/local/simplex', 'constants.php');
 /*****************
 * ERROR HANDLING *
 *****************/
@@ -57,7 +58,8 @@ $response = $dispatcher->dispatch(ServerRequestFactory::fromGlobals());
 * HTTP ERRORS *
 **************/
 $HTTPStatusCode = $response->getStatusCode();
-if($HTTPStatusCode !== 200) {
+//error happened without redirection
+if($HTTPStatusCode !== 200 && !$response->hasHeader('Location')) {
     $pathToErrorFile = sprintf('%s/%s.html', ERROR_DIR, $HTTPStatusCode);
     $response->getBody()
         ->write(file_get_contents($pathToErrorFile));
