@@ -54,9 +54,8 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
         if(!defined('AREA_NAVIGATION_PATH') || !is_file(AREA_NAVIGATION_PATH)) {
             throw new \Exception('constant AREA_NAVIGATION_PATH *MUST* be defined for current area and must be a valid path');
         }
-        pippo();
-        exit;
         $loadedNavigation = require AREA_NAVIGATION_PATH;
+        xx($loadedNavigation);
         $this->loadNavigationLevel($loadedNavigation);
     }
     

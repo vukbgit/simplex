@@ -15,7 +15,7 @@
         "middlewares/utils": "^2.1",
         "middlewares/request-handler": "^1.4",
         "filp/whoops": "^2.3",
-        "digitalnature/php-ref": "^1.2",
+        "kint-php/kint": "^3.2",
         "narrowspark/http-emitter": "^0.7.0",
         "oscarotero/middleland": "^1.0",
         "twig/twig": "^2.0",
