@@ -1,1 +1,56 @@
 {% extends '@share/Erp/templates/page.twig' %}
+
+{% block head %}
+    {{ parent() }}
+    <!-- ERP table style -->
+    <link rel="stylesheet" href="/public/share/simplex/Erp/css/table.min.css">
+{% endblock %}
+
+{% block pageContent %}
+    {{ parent() }}
+    {% block tableIntro %}
+    {% endblock %}
+    {% block tableNavBar %}
+<nav class="navbar navbar-light bg-light">
+        {% block tableFilter %}
+        {% set fieldsFilter = attribute(attribute(areaCookie, subject), 'filter') ?? null %}
+    <form method="post" action="" class="form-inline">
+        <input type="hidden" name="modifier" value="filter">
+        <input name="filter" value="{{ fieldsFilter }}" type="search"
+        class="form-control form-control-sm mr-sm-2" placeholder="{{ 'Filter'|trans }}" aria-label="{{ 'Filter'|trans }}">
+        <button class="btn btn-sm btn-outline-success my-2 my-sm-0" type="submit">{{ 'Filter'|trans }}</button>
+    </form>
+        {% endblock tableFilter %}
+</nav>
+    {% endblock tableNavBar %}
+<table class="table table-hover table-responsive-sm erp-table">
+    <caption>{{- attribute(modelGlobalActionsNavigationLabels, currentNavigationVoice.modelGlobalActions) -}}</caption>
+    <thead class="thead-light">
+        <tr>
+    {% block tableHeaders %}
+    {% endblock %}
+    {# record visible actions header #}
+    {% if navigations.recordVisibleActions|length %}
+        <th colspan="{{ navigations.recordVisibleActions|length }}"></th>
+    {% endif %}
+        </tr>
+    </thead>
+    <tbody>
+    {# ROWS LOOP #}
+    {% for record in records %}
+        <tr>
+        {% block rowFields %}
+        {% endblock %}
+        {% for voiceKey, voiceProperties in navigations.recordVisibleActions %}
+            <td>
+            {{parseRoutePattern(voiceProperties.route, _context, record)}}
+                {#<a href="{{ parseRoutePattern(voiceProperties.route, _context, record) }}">
+            {{- attribute(recordActionsNavigationLabels, voiceKey) -}}
+                </a>#}
+            </td>
+        {% endfor %}
+        </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock pageContent %}

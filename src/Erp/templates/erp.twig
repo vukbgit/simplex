@@ -1,5 +1,5 @@
-{# extends local area template #}
-{% extends '@local/%s/%s/%s.twig'|format(slugToPSR1Name(area, 'class'), templatesDefaultFolder, area) %}
+{# extends local model template #}
+{% extends pathToSubjectTemplate ?? pathToAreaTemplate %}
 
 {% use '@share/templates/blocks.twig' %}
 
@@ -13,11 +13,10 @@
     <script type="text/javascript" src="/public/share/simplex/Erp/js/erp.js"></script>
     <!-- Fontello icons -->
     <link rel="stylesheet" href="/public/share/simplex/Erp/Fontello/css/fontello.css">
-    <!-- global jQuery document ready block -->
-    <script>
-    $(document).ready(function(){
-        {% block documentReady %}
-        {% endblock %}
-    });
-    </script>
 {% endblock %}
+
+{# labels #}
+{% set tableLabels = {
+    'sort-asc': 'sort ascending'|trans,
+    'sort-desc': 'sort descending'|trans,
+} %}

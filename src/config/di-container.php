@@ -14,7 +14,7 @@ use Narrowspark\HttpEmitter\SapiEmitter;
 //template engine
 use Twig\Loader\FilesystemLoader;
 use Twig\Environment;
-use CodeZero\Cookie\VanillaCookie;
+use Simplex\VanillaCookieExtended;
 //query builder
 use \Pixie\Connection;
 use \Simplex\PixieExtended;
@@ -66,7 +66,7 @@ return array_merge(
         //cookie manager
         'encrypter' => create(DefaultEncrypter::class)
             ->constructor(ENCRYPTION_KEY),
-        'cookieManager' => create(VanillaCookie::class)
+        'cookieManager' => create(VanillaCookieExtended::class)
             ->constructor(get('encrypter')),
         //query builder
         'dbConfig' => function(){

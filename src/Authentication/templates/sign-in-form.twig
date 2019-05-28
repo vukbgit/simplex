@@ -33,7 +33,7 @@
                             'message': "Please insert username"|trans
                         },
                         'bad-input': {
-                            'invalid': cookies.authenticationReturnCode == 2,
+                            'invalid': areaCookie.authenticationReturnCode == 2,
                             'message': "Wrong username"|trans
                         }
                     }
@@ -59,7 +59,7 @@
                             'message': passwordConfig.message|default('')
                         },
                         'bad-input': {
-                            'invalid': cookies.authenticationReturnCode == 3,
+                            'invalid': areaCookie.authenticationReturnCode == 3,
                             'message': "Wrong password"|trans
                         }
                     }

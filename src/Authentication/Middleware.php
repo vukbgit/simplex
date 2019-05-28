@@ -7,7 +7,7 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
-use CodeZero\Cookie\VanillaCookie;
+use Simplex\VanillaCookieExtended;
 use function Simplex\slugToPSR1Name;
 
 /**
@@ -25,7 +25,7 @@ class Middleware implements MiddlewareInterface
     protected $authFactory;
     
     /**
-    * @var VanillaCookie
+    * @var VanillaCookieExtended
     * cookies manager
     */
     protected $cookie;
@@ -51,9 +51,9 @@ class Middleware implements MiddlewareInterface
     
     /**
     * Constructor
-    * @param VanillaCookie $cookie
+    * @param VanillaCookieExtended $cookie
     */
-    public function __construct(VanillaCookie $cookie)
+    public function __construct(VanillaCookieExtended $cookie)
     {
         session_start();
         $this->cookie = $cookie;
@@ -112,9 +112,9 @@ class Middleware implements MiddlewareInterface
         }
         //cookies
         if(!$authenticationResult->authenticated) {
-            $this->cookie->store('authenticationReturnCode', $authenticationResult->returnCode, COOKIE_DURATION, $this->area);
+            $this->cookie->setAreaCookie($this->area, 'authenticationReturnCode', $authenticationResult->returnCode);
         } else {
-            $this->cookie->store('authenticationReturnCode', null, COOKIE_DURATION, $this->area);
+            $this->cookie->setAreaCookie($this->area, 'authenticationReturnCode', null);
         }
         //handle result
         return $response;
@@ -184,16 +184,16 @@ class Middleware implements MiddlewareInterface
                 }
             }
         }
-        //set user role
-        $this->setUserRole($authenticationParameters);
-        //load role permissions
-        $this->loadPermissionsRoles($authenticationParameters);
-        //set authentication status
         switch ($returnCode) {
             //success
             case 4:
+                //set user role
+                $this->setUserRole($authenticationParameters);
+                //load role permissions
+                $this->loadPermissionsRoles($authenticationParameters);
+                //set authentication status
                 //redirect
-                $location =  $this->cookie->get('signInRequestedUrl') ?? $authenticationParameters->urls->successDefault;
+                $location = $this->cookie->getAreaCookie($this->area, 'signInRequestedUrl') ?? $authenticationParameters->urls->successDefault;
                 $this->setAuthenticationStatus(true, 4, $location);
             break;
             //failure

@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace Simplex\Model;
 
 use Simplex\PixieExtended;
+use function Simplex\getInstanceNamespace;
+use function Simplex\getInstancePath;
 
 /*
 * class that rapresents a model, an atomic structure of data stored in a database
@@ -24,27 +26,28 @@ abstract class ModelAbstract
     /**
     * Constructor
     * @param QueryBuilderHandler $query
-    * @param strong $configPath
+    * @param string $configPath
     */
-    public function __construct(PixieExtended $query, string $configPath)
+    public function __construct(PixieExtended $query)
     {
         $this->query = $query;
-        $this->loadConfig($configPath);
+        $this->loadConfig();
     }
 
     /**
     * Loads and check config
-    * @param strong $configPath
     */
-    private function loadConfig($configPath)
+    private function loadConfig()
     {
+        //config file must be into class-folder/config/model.php
+        $configPath = sprintf('%s/config/model.php', getInstancePath($this));
         //check path
         if(!is_file($configPath)) {
-            throw new \Exception(sprintf('configuration file \'%s\' for model %s is not a valid path', $configPath, self::class));
+            throw new \Exception(sprintf('configuration file \'%s\' for model %s is not a valid path', $configPath, getInstanceNamespace($this)));
         }
         $config = require($configPath);
         if(!is_object($config)) {
-            throw new \Exception(sprintf('configuration file \'%s\' for model %s must return an object', $configPath, self::class));
+            throw new \Exception(sprintf('configuration file \'%s\' for model %s must return an object', $configPath, getInstanceNamespace($this)));
         }
         if(!isset($config->table)) {
             throw new \Exception(sprintf('configuration loaded from file \'%s\' for model %s must contain a \'table\' property', $configPath, self::class));
@@ -92,5 +95,13 @@ abstract class ModelAbstract
     public function first(array $where = [])
     {
         return current($this->get($where));
+    }
+    
+    /**
+    * Ouputs last sql
+    */
+    public function sql()
+    {
+        return $this->query->sql();
     }
 }

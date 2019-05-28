@@ -120,6 +120,7 @@ abstract class ControllerAbstract
     {
         //store request and its parameters
         $this->request = $request;
+        //xx($this->request->getUri()->getPath());
         $this->routeParameters = $request->getAttributes()['parameters'];
     }
 
@@ -221,5 +222,14 @@ abstract class ControllerAbstract
         } else {
             throw new \Exception('current route MUST pass an "action" parameter or __invoke() method should be overridden into concrete class');
         }
+    }
+    
+    /**
+    * Checks whether a given path corresponds to the current route
+    * @param string $path
+    */
+    protected function isPathCurrentRoute(string $path)
+    {
+        return $path == $this->request->getUri()->getPath();
     }
 }

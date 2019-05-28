@@ -1,7 +1,7 @@
 {% block validationAssets %}
 {#<!-- Parsley.js -->
-<script src="{{ 'parsleyjs/dist/parsley.min.js'|pathToYarnAsset }}"></script>
-<script src="{{ 'parsleyjs/dist/i18n/%s.js'|format(attribute(language, 'ISO-639-1'))|pathToYarnAsset }}"></script>
+<script src="{{ 'parsleyjs/dist/parsley.min.js'|pathToNpmAsset }}"></script>
+<script src="{{ 'parsleyjs/dist/i18n/%s.js'|format(attribute(language, 'ISO-639-1'))|pathToNpmAsset }}"></script>
 <style media="screen" href="{{ '/%s/node_modules/parsleyjs/src/parsley.css'|format(publicShareDir) }}">
 </style>
 <script type="text/javascript">

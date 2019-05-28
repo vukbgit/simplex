@@ -1,22 +1,24 @@
 {% block jsFrameworkAssets %}
 <!-- jQuery -->
-<script src="{{ 'jquery/dist/jquery.min.js'|pathToYarnAsset }}"></script>
-{% endblock %}
-
-{% block cssFrameworkAssets %}
-<!-- Bootstrap -->
-<link rel="stylesheet" href="/public/local/simplex/css/bootstrap.min.css">
-<script src="{{ 'bootstrap/dist/js/bootstrap.bundle.min.js'|pathToYarnAsset }}"></script>
+<script src="{{ 'jquery/dist/jquery.min.js'|pathToNpmAsset }}"></script>
+<!-- global jQuery document ready block -->
+<script>
+$(document).ready(function(){
+    {% block documentReady %}
+    {% endblock %}
+});
+</script>
 {% endblock %}
 
 {% block simplexAssets %}
 <!-- Simplex -->
+<script src="/public/share/simplex/js/simplex.js"></script>
 <link rel="stylesheet" href="/public/share/simplex/css/simplex.min.css">
 {% endblock %}
 
 {% block cookiesAssets %}
 <!-- js-cookie -->
-<script src="{{ 'js-cookie/src/js.cookie.js'|pathToYarnAsset }}"></script>
+<script src="{{ 'js-cookie/src/js.cookie.js'|pathToNpmAsset }}"></script>
 <script type="text/javascript">
     //cookie default duration in minutes
     var cookieDurationMinutes = {{ cookieDuration }};

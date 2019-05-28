@@ -30,6 +30,32 @@ if (!function_exists('Simplex\slugToPSR1Name')) {
     }
 }
 
+if (!function_exists('Simplex\PSR1NameToSlug')) {
+    /**
+    * Turns a word in PSR1 standard (https://www.php-fig.org/psr/psr-1/) for class names, method names and such to slug notation
+    * @param string $slug: term in slug form to be translated
+    * @param string $type: the type of element to translate to, so far c(lass) | m(ethod)
+    *
+    * @return string
+    */
+    function slugToPSR1Name(string $slug, string $type) : string
+    {
+        switch ($type) {
+            case 'class':
+            case 'c':
+                return str_replace(' ', '', ucwords(str_replace('-', ' ', $slug)));
+            break;
+            case 'method':
+            case 'm':
+                return lcfirst(str_replace(' ', '', ucwords(str_replace('-', ' ', $slug))));
+            break;
+            default:
+                throw new \Exception(sprintf('function Simplex\slugToPSR1Name: type parameter \'%s\' value is not handled', $type));
+            break;
+        }
+    }
+}
+
 if (!function_exists('Simplex\requireFromFiles')) {
     /**
     * Searches a folder for files by file name pattern and requires them
@@ -81,5 +107,40 @@ if (!function_exists('Simplex\mergeObjects')) {
     function mergeObjects(object $object1, object $object2) : object
     {
         return (object) array_merge((array) $object1, (array) $object2);
+    }
+}
+
+if (!function_exists('Simplex\getInstanceNamespace')) {
+    /**
+    * Gets namespace of a class defined into Simplex\Local
+    * @param mixed $instance
+    * @param bool $fromWithinSimplex: whteher first part of namespace is to be truncated
+    *
+    * @return object
+    */
+    function getInstanceNamespace($instance, bool $fromWithinSimplex = false) : string
+    {
+        $reflection = new \ReflectionClass($instance);
+        $namespace = $reflection->getName();
+        $search = [sprintf('\%s', $reflection->getShortName())];
+        if($fromWithinSimplex) {
+            $search[] = 'Simplex\Local\\';
+        }
+        return str_replace($search, '', $namespace);
+    }
+}
+
+if (!function_exists('Simplex\getInstancePath')) {
+    /**
+    * Gets namespace of a class defined into Simplex\Local
+    * @param mixed $instance
+    * @param bool $fromWithinSimplex: whteher first part of namespace is to be truncated
+    *
+    * @return object
+    */
+    function getInstancePath($instance) : string
+    {
+        $namespace = getInstanceNamespace($instance, true);
+        return sprintf('private/local/simplex/%s', str_replace('\\', '/', $namespace));
     }
 }

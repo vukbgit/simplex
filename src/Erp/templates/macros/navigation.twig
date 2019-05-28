@@ -1,0 +1,66 @@
+{##
+# Displays a voice into sidebar navigation
+# @param string voiceKey: slugged voice key, as loaded from PHP navigation definition file
+# @param object voiceProperties: object With voice properties, as loaded from PHP navigation definition file
+# @param object navigationLabels: object With voices labels, indexed by voiceKey
+# @param string parentId: html id of parent nav tag
+# @param int level: navigation level (starting from 1)
+##}
+{% macro displaySidebarVoice(voiceKey, voiceProperties, navigationLabels, parentId, level) %}
+    {% import _self as selfMacros %}
+    {% set voiceId = 'voice-%s-%d'|format(voiceKey, level) %}
+    {% set voiceLabelId = '%s-label'|format(voiceId) %}
+    {% if voiceProperties.navigation %}
+        {% set subLevelId = '%s-sublevel'|format(voiceId) %}
+    {% endif %}
+        <div class="nav-item d-block" id="{{ voiceId }}">
+            <a
+            href="{{ voiceProperties.route|default('#') }}"
+            id="{{ voiceLabelId }}"
+            class="nav-link {{ 'pl-%d'|format(level) }}
+        {%- if voiceProperties.isActive %} active text-white{% endif -%}
+            "
+            {%- if voiceProperties.navigation -%}
+            data-toggle="collapse" aria-expanded="{{ voiceProperties.isActive ? 'true' : 'false' }}" data-target="#{{ subLevelId }}" aria-controls="{{ subLevelId }}"
+            {%- endif -%}
+            >
+    {%- if voiceProperties.icon -%}
+                <i class="{{ voiceProperties.icon }} mr-3"></i>
+    {%- endif -%}
+    {# labels have been set in the area template #}
+                {{- attribute(navigationLabels, voiceKey) -}}
+    {%- if voiceProperties.isActive %}
+                <span class="sr-only">({% trans 'current' %})</span>
+    {%- endif -%}
+            </a>
+    {% if voiceProperties.navigation %}
+<nav class="nav flex-column flex-nowrap collapse{% if voiceProperties.isActive %} show{% endif %}" id="{{ subLevelId }}"
+             aria-labelledby="{{ voiceLabelId }}" data-parent="#{{ parentId }}">
+        {% for voiceKey, voiceProperties in voiceProperties.navigation %}
+            {{ selfMacros.displaySidebarVoice(voiceKey, voiceProperties, navigationLabels, subLevelId, level + 1) }}
+        {% endfor %}
+            </ul>
+    {% endif %}
+        </div>
+{% endmacro %}
+
+{##
+# Displays model global actions navigation
+# @param array navigation: the navigation array containing objects With actions properties, as loaded from PHP navigation definition file
+# @param object navigationLabels: object With voices labels, indexed by voiceKey
+##}
+{% macro displaySubjectGlobalActionsNavigation(navigation, navigationLabels) %}
+    {% if navigation|length %}
+    <nav>
+        <ul class="nav nav-tabs">
+            {% for voiceKey, voiceProperties in navigation %}
+            <li class="nav-item">
+                <a class="nav-link{% if voiceProperties.isActive %} active{% endif %}" href="{{ voiceProperties.route|default('#') }}">
+                {{- attribute(navigationLabels, voiceKey) -}}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </nav>
+    {% endif %}
+{% endmacro %}

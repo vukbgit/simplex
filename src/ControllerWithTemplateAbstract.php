@@ -10,8 +10,8 @@ use Psr\Container\ContainerInterface;
 use Twig\Environment;
 use Aptoma\Twig\Extension\MarkdownExtension;
 use Aptoma\Twig\Extension\MarkdownEngine;
-use CodeZero\Cookie\VanillaCookie;
 use Simplex\ControllerAbstract;
+use Simplex\VanillaCookieExtended;
 use function Simplex\slugToPSR1Name;
 
 /*
@@ -33,7 +33,7 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
     protected $template;
     
     /**
-    * @var VanillaCookie
+    * @var VanillaCookieExtended
     * cookies manager
     */
     protected $cookie;
@@ -45,19 +45,25 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
     protected $templateParameters = [];
 
     /**
-    * @var string
-    * page title, content of the title tag, mandatory for template rendering
+    * @var array
+    * navigations
     */
-    protected $pageTitle;
+    protected $navigations = [];
+    
+    /**
+    * @var array
+    * currently selected voice key into navigations, indexed by navigation since each route can be set into different anvigations with different keys
+    */
+    protected $currentNavigationVoice = [];
 
     /**
     * Constructor
     * @param ContainerInterface $DIContainer
     * @param ResponseInterface $response
     * @param Environment $twigEnvironment
-    * @param VanillaCookie $cookie
+    * @param VanillaCookieExtended $cookie
     */
-    public function __construct(ContainerInterface $DIContainer, ResponseInterface $response, Environment $templateEngine, VanillaCookie $cookie)
+    public function __construct(ContainerInterface $DIContainer, ResponseInterface $response, Environment $templateEngine, VanillaCookieExtended $cookie)
     {
         parent::__construct($DIContainer, $response);
         $this->template = $templateEngine;
@@ -68,6 +74,23 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         $markdownEngine = new MarkdownEngine\MichelfMarkdownEngine();
         $this->template->addExtension(new MarkdownExtension($markdownEngine));
     }
+
+    /**
+    * Performs some operations before action execution
+    * @param ServerRequestInterface $request
+    */
+    protected function doBeforeActionExecution(ServerRequestInterface $request)
+    {
+        parent::doBeforeActionExecution($request);
+        //build common template helpers
+        $this->buildCommonTemplateHelpers();
+        //set common template parameters
+        $this->setCommonTemplateParameters();
+    }
+
+    /***********
+    * TEMPLATE *
+    ***********/
 
     /**
     * pass a parameter to the template angine
@@ -90,19 +113,6 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
     }
 
     /**
-    * Performs some operations before action execution
-    * @param ServerRequestInterface $request
-    */
-    protected function doBeforeActionExecution(ServerRequestInterface $request)
-    {
-        parent::doBeforeActionExecution($request);
-        //build common template helpers
-        $this->buildCommonTemplateHelpers();
-        //set common template parameters
-        $this->setCommonTemplateParameters();
-    }
-    
-    /**
     * Build common template helpers
     */
     protected function buildCommonTemplateHelpers()
@@ -111,20 +121,47 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         $this->addTemplateFunction(
             'dump',
             function($var){
-                if(ENVIRONMENT == 'development') {
-                    r($var);
-                }
+                x($var);
             },
             ['is_safe' => ['html']]
         );
-        //turns a slug into PSR1 format (class or method name)
-        $this->addTemplateFunction('slugToPSR1Name', function(string $slug, string $type){
-            return slugToPSR1Name($slug, $type);
-        });
         //returns path to yarn packages asset
-        $this->addTemplateFilter('pathToYarnAsset', function(string $path){
+        $this->addTemplateFilter('pathToNpmAsset', function(string $path){
             return sprintf('/%s/node_modules/%s', PUBLIC_SHARE_DIR, $path);
         });
+        //checks whether a given path is the requested URI  path
+        //returns path to yarn packages asset
+        $this->addTemplateFilter('isPathCurrentRoute', function($path){
+            return $this->isPathCurrentRoute($path);
+        });
+        //parses a route pattern
+        $this->addTemplateFunction(
+            'parseRoutePattern',
+            function(string $routePattern, array $containers = []){
+                //get route pattern placeholders
+                preg_match_all('/\{([a-z0-9_]+)\}/', $routePattern, $placeholders);
+                $placeholders = $placeholders[1];
+                //loop placeholders to find replacements
+                $replacements = [];
+                foreach ($placeholders as $placeholderIndex => $placeholder) {
+                    $placeholders[$placeholderIndex] = sprintf('/{(%s)}/', $placeholder);
+                    //loop conteiners
+                    foreach ($containers as $container) {
+                        $container = (object) $container;
+                        //placeholder value found
+                        if(isset($container->$placeholder)) {
+                            $replacements[$placeholderIndex] = $container->$placeholder;
+                            break;
+                        }
+                        //default placeholder value is null
+                        $replacements[$placeholderIndex] = null;
+                    }
+                }
+                $route = preg_replace($placeholders, $replacements, $routePattern);
+                return $route;
+            },
+            ['is_variadic' => true]
+        );
         //parses the config object for a form field that uses templates/form/macros 
         $this->addTemplateFunction('parseFieldConfig', function(array $config){
             //turn into objects
@@ -161,8 +198,8 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         $this->setTemplateParameter('area', $this->area);
         $this->setTemplateParameter('language', $this->language);
         $this->setTemplateParameter('routeParameters', $this->routeParameters);
-        $this->setTemplateParameter('templatesDefaultFolder', TEMPLATES_DEFAULT_FOLDER);
-        $this->setTemplateParameter('cookies', $_COOKIE);
+        $this->setTemplateParameter('pathToAreaTemplate', sprintf('@local/%s/%s/%s.twig', slugToPSR1Name($this->area, 'class'), TEMPLATES_DEFAULT_FOLDER, $this->area));
+        $this->setTemplateParameter('areaCookie', $this->getAreaCookie());
         $this->setTemplateParameter('cookieDuration', COOKIE_DURATION);
     }
     
@@ -212,10 +249,100 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
             $templatePath = sprintf('@local/%s/%s.%s', $templatesFolder, $this->action, TEMPLATES_EXTENSION);
         }
         //render template and get HTML
+        $this->setTemplateParameter('test', $this->cookie->get('test'));
         $html = $this->template->render($templatePath, $this->templateParameters);
         //send HTML to response
         $response = $this->response->withHeader('Content-Type', 'text/html');
         $response->getBody()
             ->write($html);
+    }
+    
+    /*************
+    * NAVIGATION *
+    *************/
+    
+    /**
+     * Loads area navigation from a file
+     * @param string $path: pat to file which return an array of navigations
+     */
+    protected function loadNavigation(string $path)
+    {
+        $this->navigations = array_merge($this->navigations, require $path);
+        foreach ($this->navigations as $navigationName => &$navigation) {
+            $this->loadNavigationLevel($navigationName, $navigation);
+        }
+        $this->setTemplateParameter('navigations', $this->navigations);
+    }
+    
+    /**
+     * Loads a navigation level
+     * @param string $navigationName
+     * @param array $navigationLevel
+     * @param object $parentVoiceProperties: object with properties of curent level's parent
+     */
+    protected function loadNavigationLevel(string $navigationName, array &$loadedNavigationLevel, object &$parentVoiceProperties = null)
+    {
+        foreach ($loadedNavigationLevel as $voiceKey => $voiceProperties) {
+            //check voice permission
+            if(isset($voiceProperties->permissions) && !$this->checkAtLeastOnePermission($voiceProperties->permissions)) {
+                unset($loadedNavigationLevel[$voiceKey]);
+                continue;
+            }
+            if($parentVoiceProperties) {
+                $voiceProperties->parent =& $parentVoiceProperties;
+            }
+            //check if its current route
+            if(isset($voiceProperties->route) && $this->isPathCurrentRoute($voiceProperties->route)) {
+                $voiceProperties->isActive = true;
+                $this->currentNavigationVoice[$navigationName] = $voiceKey;
+                if($parentVoiceProperties) {
+                    $this->setNavigationVoiceParentsActive($parentVoiceProperties);
+                }
+            }
+            //check sub level
+            if(isset($voiceProperties->navigation)) {
+                $this->loadNavigationLevel($navigationName, $voiceProperties->navigation, $voiceProperties);
+            }
+        }
+    }
+    
+    /**
+     * Sets recursevely voice parent as active
+     * @parm object $parentVoiceProperties
+     */
+    protected function setNavigationVoiceParentsActive(object $parentVoiceProperties)
+    {
+        $parentVoiceProperties->isActive = true;
+        if(isset($parentVoiceProperties->parent)) {
+            $this->setNavigationVoiceParentsActive($parentVoiceProperties->parent);
+        }
+    }
+    
+    /**********
+    * COOKIES *
+    **********/
+    
+    /**
+    * Sets a cookie into current area cookies portion
+    * @param string $propertyName: name of property to be set into area cookie
+    * @param mixed $propertyValue: value of property to be set into area cookie
+    */
+    protected function setAreaCookie(string $propertyName, $propertyValue)
+    {
+        //set area cookie
+        $this->cookie->setAreaCookie($this->area, $propertyName, $propertyValue);
+        $areaCookie = $this->cookie->getAreaCookie($this->area);
+        //update template parameter
+        $this->setTemplateParameter('areaCookie', $areaCookie);
+    }
+    
+    /**
+    * Gets current area cookie as an object
+    * @param string $propertyName: optional property yo be returned
+    * @return object the whole area cookie
+    */
+    protected function getAreaCookie(string $propertyName = null)
+    {
+        return $this->cookie->getAreaCookie($this->area, $propertyName);
     }
 }

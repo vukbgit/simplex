@@ -25,7 +25,7 @@ class Controller extends ControllerWithTemplateAbstract
         $templatePath = sprintf('@local/%s/%s/sign-in-form.twig', slugToPSR1Name($this->area, 'class'), TEMPLATES_DEFAULT_FOLDER);
         $this->renderTemplate($templatePath);
         //delete sign in  cookie
-        $this->cookie->store('authenticationReturnCode', null, COOKIE_DURATION, $this->routeParameters->area);
+        $this->cookie->setAreaCookie($this->area, 'authenticationReturnCode', null);
     }
     
     /**
