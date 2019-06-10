@@ -63,7 +63,7 @@ Create a Composer.json in the root folder:
         "description": "Simplex app",
         "license": "MIT",
         "require": {
-            "vukbgit/simplex": "^1.0.0-dev"
+            "vukbgit/simplex": "^1.1.0"
         },
         "config": {
             "vendor-dir": "private/share",
