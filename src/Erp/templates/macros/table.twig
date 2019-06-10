@@ -19,13 +19,11 @@
     {% set buttonTitle = attribute(context.tableLabels, 'sort-%s'|format(reverseDirection)) %}
 <th>
     <div class="d-flex align-items-center">
-        <span>
-            {{ attribute(context.fieldsLabels, fieldName) }}
-        </span>
         <form action="" method="post">
             <input type="hidden" name="modifier" value="sort">
             <input type="hidden" name="field" value="{{ fieldName }}">
             <input type="hidden" name="direction" value="{{ reverseDirection }}">
+            <button type="submit" title="{{ buttonTitle }}" class="font-weight-bold">{{ attribute(context.fieldsLabels, fieldName) }}</button>
             <button type="submit" class="{{ buttonClass }}" title="{{ buttonTitle }}"></button>
         </form>
     </div>

@@ -4,4 +4,9 @@
         background-color:transparent;
         padding:0;
     }
+    td {
+        &.record-action {
+            width:1%;
+        }
+    }
 }

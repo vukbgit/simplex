@@ -13,6 +13,7 @@ use Aptoma\Twig\Extension\MarkdownEngine;
 use Simplex\ControllerAbstract;
 use Simplex\VanillaCookieExtended;
 use function Simplex\slugToPSR1Name;
+use function Simplex\PSR1NameToSlug;
 
 /*
 * In this context controller means a class that:
@@ -81,6 +82,7 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
     */
     protected function doBeforeActionExecution(ServerRequestInterface $request)
     {
+        //parent jobs
         parent::doBeforeActionExecution($request);
         //build common template helpers
         $this->buildCommonTemplateHelpers();
@@ -115,7 +117,7 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
     /**
     * Build common template helpers
     */
-    protected function buildCommonTemplateHelpers()
+    private function buildCommonTemplateHelpers()
     {
         //dumps var in development environment
         $this->addTemplateFunction(
@@ -131,37 +133,9 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         });
         //checks whether a given path is the requested URI  path
         //returns path to yarn packages asset
-        $this->addTemplateFilter('isPathCurrentRoute', function($path){
-            return $this->isPathCurrentRoute($path);
+        $this->addTemplateFilter('isNavigationRouteCurrentRoute', function($path){
+            return $this->isNavigationRouteCurrentRoute($path);
         });
-        //parses a route pattern
-        $this->addTemplateFunction(
-            'parseRoutePattern',
-            function(string $routePattern, array $containers = []){
-                //get route pattern placeholders
-                preg_match_all('/\{([a-z0-9_]+)\}/', $routePattern, $placeholders);
-                $placeholders = $placeholders[1];
-                //loop placeholders to find replacements
-                $replacements = [];
-                foreach ($placeholders as $placeholderIndex => $placeholder) {
-                    $placeholders[$placeholderIndex] = sprintf('/{(%s)}/', $placeholder);
-                    //loop conteiners
-                    foreach ($containers as $container) {
-                        $container = (object) $container;
-                        //placeholder value found
-                        if(isset($container->$placeholder)) {
-                            $replacements[$placeholderIndex] = $container->$placeholder;
-                            break;
-                        }
-                        //default placeholder value is null
-                        $replacements[$placeholderIndex] = null;
-                    }
-                }
-                $route = preg_replace($placeholders, $replacements, $routePattern);
-                return $route;
-            },
-            ['is_variadic' => true]
-        );
         //parses the config object for a form field that uses templates/form/macros 
         $this->addTemplateFunction('parseFieldConfig', function(array $config){
             //turn into objects
@@ -186,16 +160,29 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         $this->addTemplateFunction('checkPermission', function(string $permission){
             return $this->checkPermission($permission);
         });
+        //casts object ot array (to iterate)
+        $this->addTemplateFilter('objectToArray', function($object): array{
+            return (array) $object;
+        });
+        //wrapper for vsprintf()
+        $this->addTemplateFilter('formatArray', function(string $format, $args): string{
+            if(is_array($args) && !empty($args)) {
+                return vsprintf($format, $args);
+            } else {
+                return $format;
+            }
+        });
     }
     
     /**
     * Sets common template parameters
     */
-    protected function setCommonTemplateParameters()
+    private function setCommonTemplateParameters()
     {
         $this->setTemplateParameter('environment', ENVIRONMENT);
         $this->setTemplateParameter('brand', BRAND);
         $this->setTemplateParameter('area', $this->area);
+        $this->setTemplateParameter('action', $this->action);
         $this->setTemplateParameter('language', $this->language);
         $this->setTemplateParameter('routeParameters', $this->routeParameters);
         $this->setTemplateParameter('pathToAreaTemplate', sprintf('@local/%s/%s/%s.twig', slugToPSR1Name($this->area, 'class'), TEMPLATES_DEFAULT_FOLDER, $this->area));
@@ -262,15 +249,36 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
     *************/
     
     /**
+    * Checks whether a given navigation route corresponds to the current route
+    * @param string $path
+    */
+    protected function isNavigationRouteCurrentRoute(string $route)
+    {
+        //replace route placeholder (which will be substituted by record fields values) with regexp pattern
+        $textPattern = '[0-9a-z-_]';
+        $patterns = [
+            sprintf('~{%s+}~', $textPattern)
+        ];
+        $replacements = [
+            sprintf('%s+', $textPattern)
+        ];
+        $routePattern = sprintf('~%s~', preg_replace($patterns , $replacements , $route));
+        //match the route stripped of placeholders against current one
+        $matches = preg_match($routePattern, $this->request->getUri()->getPath());
+        return $matches;
+    }
+    
+    /**
      * Loads area navigation from a file
      * @param string $path: pat to file which return an array of navigations
      */
     protected function loadNavigation(string $path)
     {
-        $this->navigations = array_merge($this->navigations, require $path);
-        foreach ($this->navigations as $navigationName => &$navigation) {
+        $navigations = require $path;
+        foreach ($navigations as $navigationName => &$navigation) {
             $this->loadNavigationLevel($navigationName, $navigation);
         }
+        $this->navigations = array_merge($this->navigations, $navigations);
         $this->setTemplateParameter('navigations', $this->navigations);
     }
     
@@ -292,7 +300,7 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
                 $voiceProperties->parent =& $parentVoiceProperties;
             }
             //check if its current route
-            if(isset($voiceProperties->route) && $this->isPathCurrentRoute($voiceProperties->route)) {
+            if(isset($voiceProperties->route) && $this->isNavigationRouteCurrentRoute($voiceProperties->route)) {
                 $voiceProperties->isActive = true;
                 $this->currentNavigationVoice[$navigationName] = $voiceKey;
                 if($parentVoiceProperties) {
@@ -317,7 +325,6 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
             $this->setNavigationVoiceParentsActive($parentVoiceProperties->parent);
         }
     }
-    
     /**********
     * COOKIES *
     **********/

@@ -1,17 +1,31 @@
 {% import '@share/templates/macros.twig' as shareMacros %}
 
+{% use '@share/templates/blocks.twig' %}
+
 <!doctype html>
 <html lang="{{ attribute(language, 'ISO-639-1') }}">
 <head>
-<!-- Required meta tags -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>{{ pageTitle }}</title>
+<title>
+{% block pageTitle %}{{ brand }}{% endblock %}
+</title>
 {{ shareMacros.favicon('/public/local/corporate/favicon') }}
+{% block jsFrameworkAssets %}
+    {{ parent() }}
+{% endblock %}
+{# bootsrap may differ between application areas, so it is included into area template #}
+<script>
+//application level variables
+var area = '{{ area }}';
+</script>
+{% block simplexAssets %}
+    {{ parent() }}
+{% endblock %}
 {% block head %}
 {% endblock %}
 </head>
-<body{% block boyAttributes %}{% endblock %}>
+<body class="{% block bodyClass %}{% endblock %}" id="{% block bodyId %}{% endblock %}">
 {% block body %}
 {% endblock %}
 </body>

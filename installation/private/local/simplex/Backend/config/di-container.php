@@ -8,7 +8,15 @@ declare(strict_types=1);
 use function DI\create;
 use function DI\get;
 //LOCAL CLASSES
+//Authentication
+use \Simplex\Authentication;
 //definitions array
 return [
-    
+    'backendAuthenticationController' => create(Authentication\Controller::class)
+        ->constructor(
+            get('DIContainer'),
+            get('response'),
+            get('templateEngine'),
+            get('cookieManager')
+    ),
 ];

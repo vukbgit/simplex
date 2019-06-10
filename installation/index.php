@@ -13,6 +13,7 @@ require_once 'private/share/autoload.php';
 /**************
 * ENVIRONMENT *
 **************/
+//include from local namespace all of constants definition files
 requireFromFiles('private/local/simplex', 'constants.php');
 /*****************
 * ERROR HANDLING *

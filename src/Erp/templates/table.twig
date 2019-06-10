@@ -23,7 +23,7 @@
         {% endblock tableFilter %}
 </nav>
     {% endblock tableNavBar %}
-<table class="table table-hover table-responsive-sm erp-table">
+<table class="table table-sm table-hover table-responsive-sm erp-table">
     <caption>{{- attribute(modelGlobalActionsNavigationLabels, currentNavigationVoice.modelGlobalActions) -}}</caption>
     <thead class="thead-light">
         <tr>
@@ -42,11 +42,10 @@
         {% block rowFields %}
         {% endblock %}
         {% for voiceKey, voiceProperties in navigations.recordVisibleActions %}
-            <td>
-            {{parseRoutePattern(voiceProperties.route, _context, record)}}
-                {#<a href="{{ parseRoutePattern(voiceProperties.route, _context, record) }}">
-            {{- attribute(recordActionsNavigationLabels, voiceKey) -}}
-                </a>#}
+            <td class="record-action">
+                <a href="{{ parseRecordActionRoute(voiceProperties.route, record) }}">
+            {{- attribute(actionsLabels, voiceKey) -}}
+                </a>
             </td>
         {% endfor %}
         </tr>

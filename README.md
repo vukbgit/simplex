@@ -28,10 +28,30 @@ _NOTE ON THIS DOCUMENT_: I will try to be clear and write down all the details t
 
 * [Apache 2.4+ webserver](http://httpd.apache.org/): althoungh not strictly necessary for the core engine, .htaccess files are used for basic routing and domain based environment detection
 * [PHP 7.1+](https://www.php.net/downloads.php) with the PHP [gettext](http://www.php.net/gettext) extension enabled (beacuse every piece of text is considered as a translation even in a mono language application)
-* ssh access to web space: on a shared hosting it's hard to use Composer (and Yarn and Sass), you have to develop locally and commit, but I really suggest to find a provider who can give you ssh access, once I tried the power & comfort of the ssh shell I rented my own virtual machine and never turned back to shared hosting again...
+* ssh access to web space: on a shared hosting it's hard to use Composer (and Yarn and Sass), you have to develop locally and commit, but I really suggest to find a provider who can give you ssh access; once I tried the power & comfort of the ssh shell I rented my own virtual machine and never turned back to shared hosting again...
 * even if not strictly required I strongly suggest to have also:
     * [Yarn](https://yarnpkg.com): to install javascript and css libraries
     * [Sass](https://sass-lang.com/) 3.5.2+.: to compile css with variables, mixings and many other useful additions
+
+## Terminology ##
+
+    * __root__: the top folder of the Simplex installation, usually the top folder in the web accessible part of the site web space
+    * __application__: the customized installation of Simplex for the specific project/domain
+    * __environment__: in which the current request is handled, based usually on the requested domain, takes usually the values of "development" or "production"
+    * __area__: a part of the application matching a set of routes having properties, requirements and behaviours in common, i.e "Backend", "Frontend", "Cron", every route must set an 'area' parameter and it should be formatted as a [slug](https://en.wikipedia.org/wiki/Clean_URL#Slug)
+    * __subject__: into an ERP area, a subject is the name of the system formed by:
+        * a controller
+        * a set of routes handled by the controller
+        * the set of actions corresponding to these routes
+        * the controller methods corresponding to these actions
+        * the model each of this actions operate on
+    * __action__: the specific logic associated to a route, i.e. 'list' or 'save-form', every route must set an 'action' parameter and it should be formatted as a [slug](https://en.wikipedia.org/wiki/Clean_URL#Slug)
+
+    Conventions:
+
+    * in the following explanation files are written in _italic_
+    * for each file is always given the path from the root, without leading slash
+
 
 ## Installation ##
 
@@ -120,29 +140,122 @@ For details see _Folders & Files structure_ below
 * css compilation
     * simplex
     * bootsrap
+* bash scripts settings:
+    * _private/share/vukbgit/simplex/bin/clean-cache.sh_ took for granted that the tmp folder to clean is located one level above web root folder (the same path set into _private\local\simplex\config\constants.php_ for the TMP_DIR constant); since bash script is not aware of that settings this value is hard coded, and you should change it manually in this file for the cleaning operation to be successful
 
-## Backend / ERP Development TODO ##
+## Area set up ##
 
-Simplex include an ERP namespace and uses it to build backends and ERP applications
-* login form route
-* methods:
-    * htpasswd: create password file for example in _private/local/simplex/Backend/config/.htpasswd_
+* every route must be associated to an area (see "Terminology")
+* an area needs at least some configuration files and probably a template and a css file
+* Simplex provides two starting areas, Backend and Frontend, to be tweaked and used as-is or as drafts for other areas
+
+### Backend / ERP ###
+
+Simplex include an ERP namespace and uses it to build backends and ERP applications, here are the step to configure the provided Backend area:
+* _private/local/simplex_
+    * _Backend_
+        * _config_
+            * _constants.php_:
+                * AREA_NAVIGATION_PATH: path to file with navigation menu definition, dfefaults to _private/local/simplex/Backend/config/navigation.php_
+            * _di-container.php_: DI container definitions, shipped with just the authentication controller definition, it should not be necessary to modifiy or add definitions here, unless you have a class to be used across the whole area
+            * _navigation.php_: navigation menus definition, return an array with one ore more menus definitions to be shared among area's pages, see file for format details
+            * _premissions-roles_: map between permissions keys and area users roles (as defined into the authentication system), only necessary if you want to restrict access to some actions to some role
+            * _route.php_: definitions for area routes not related to some specific subject (i.e. sign in form)m shipped with default sign in form, sign in and sign out routes; contains some hard coded paths to authentication realted files that should not be necessary to change
+            * _users-roles_: map between users names and roles, it is decoupled from authentication system (and user retrival data) to be as flexible as possible
+            * _variables_: area level variables (such as slugged area name and default authentication object to be used in area routes), included into subjects di-container.php and routes.php specific file
+        * _sass_:
+            * _bootstrap.scss_: Bootstrap 4 components to be included in Bootstrap area style sheet, preset for minimal standard functionalities (menu, form, tables...), customize and recompile at need
+        * _templates_: sign-in form and area shared template, used mainly to store translations and logo path, to be customized
+    * _SubjectGroup_: subjects namespece can be organized into levels, useful when there are more the ten subjects at play
+        * _Subject_: sdubjec level fiels, every type of file regarding the subject should be stored into its folder
+            * _config_:
+                * _crudl.php_: definitions for CRUDL functionalities, such as input filters to be used to grab fields values from save form or whether to use field to filter displayed table records
+                * _di-container.php_: DI container definitions, shipped with just the controller and model definitions, it should be enough for standard subjects
+                * _model-php_: model configuration (table. view. pruimary key)
+                * _navigation.php_: definition for navigation associated to subject actions, shipped with default CRUDL actions (list, insert, update and delete), it should be enough for standard subjects
+                * _routes.php_: definition for routes associated to subject actions, shipped with one definition that covers default CRUDL actions (list, insert, update and delete), and any action identified by one slugged action key and an optional primary key value, it should be enough for standard subjects
+                * _variables_: subject level variables (such as subject namespace and slugged subject name )
+            * _templates_: subject related templates, shape up subject UI and provide translations
+                * _crudl-form.twig_: HTML for subject insert, update and delete forms by using macros defined into _private/share/vukbgit/simplex/src/templates/form/macros.twig_ or by writing HTML code directly
+                * _list.twig_: template for subject records list, defaults to table, it's necessary to set up table headers and cells
+                * _subject.twig_: contains subject labels
+            * _Controller.php_: base subject controller class, extends _Simplex\Erp\ControllerAbstract_, correct namespace must be set but already inherits all of the methods needed by CRUDL operations, to be extended for additional actions (with protected methods named after the PSR1 form of the slugged action name)
+            * _Model.php_: base subject model class, extends _Simplex\Model\ModelAbstract_, correct namespace must be set but already inherits all of the methods needed by CRUDL operations, to be extended for additional actions (with protected methods named after the PSR1 form of the slugged action name)
+    * _bin_: shell scripts, it can be useful to soft link them into web root
+        * _composer.sh_: to use composer with a PHP versione different from the system default one
+    * _config_: application configuration files
+        * _constants.php_: application brand label and tech email (to be showed into exceltions) must be set, other values are meinly paths that should not be necessary to change
+        * _db.php_: database account settings
+        * _languages.json_: languages available to application, first one is used as default, shipped with Italian (default for most of my applications) and English, customize at need
+        * _sass.config_: used by the web root _sass.sh_ bash script to speed up SASS files compilation, shipped with some ready to use common paths, see file for details on format
+    * _docs_: this folder might contain useful text files
+        * _views.sql_: databases views definition, I usually keep them here since I find it more handy for editing
+    * _sass_: application level SASS files
+        * _application.scss_: rules to be applied to the whole applications
+        * _bootstrap-variables.scss_: to override Bootstrap variables, included into bootstrap.scss BEFORE the Bootstrap own variables file
+        * _bootstrap.css_: this file can be used to compile an application level bootstrap file if there is no need to have area level ones
+        * _functions.scss_: SASS functions
+        * _variables.scss_: application specific SASS variables i.e. colors or some specific ERP settings (navbars dimensions)
+    * _templates_:
+        * _application.twig_: ready to use top level application template
+* _public_
+    * _local_: folder for application files accessible by browsers, will be filled at least by compiled CSS files and probabily by much more application assets
+    * _share_
+        * _package.json_: default NPM packages
+        * _yarn.sh_: symlinked from web root to handle Yarn commands
+    * _.htaccess_: Apache configuration file, grants access to real files (CSS, Javascript, imagess, etc) and redirects every other request to index.php
+
+* compile SASS files
+* authentication:
+    * by apache htpasswd:
+        * htpasswd: create password file for example in _private/local/simplex/Backend/config/.htpasswd_
 
         htpasswd -cB -C10 .htpasswd your-username
+        
+## Development to Production ##
 
-## Simplex Logic overview TODO ##
+If you keep separate development and production environment and manage pubblication through a git repository you can use some bash scripts soft linked into web root at installation time:
+* development environemnt:
+    *_git-init.sh_: interactive script that asks for repository URL, git user email and git user name, sets up the repository, makes first significative commit and pushes it to repository
+    *_git-push-all.sh_: push all changes made since last commit; if you nedd to push only some changes you must add, commit and push manually
+* production environment:
+    * _git-pull.sh_: besides pulling automatically cleans DI container and templates cache but beware of tmp folder path, see _intallation > bash scripts settings_ above
 
-A bit of terminology:
+## Simplex Logic overview ##
 
-* __root__: the top folder of the Simplex installation, usually the top folder in the web accessible part of the site web space
-* __application__: the customized installation of Simplex for the specific project/domain
-* __environment__: in which the current request is handled, based usually on the requested domain, takes usually the values of "development" or "production"
-* __action__: the specific logic associated to a route, i.e. 'list' and 'save-form', every route must set an 'action' parameter and it should be formatted as a [slug](https://en.wikipedia.org/wiki/Clean_URL#Slug)
+### Logical Structure ###
 
-Conventions:
-
-* in the following explanation files are written in _italic_
-* for each file is always given the path from the root, without leading slash
+* __Simplex\ControllerAbstract__: basic controller for a route that does not display a page
+    * has DI container and response object as injected dipendencies 
+    * route MUST pass 'action' (in slug form) and 'area' parameters
+    * stores request and its parameters parameters
+    * sets language
+    * executes the method named after the PSR1 translation of the action parameter slug
+* __Simplex\ControllerWithTemplateAbstract__: controller for a route that displays a page
+    * extends Simplex\ControllerAbstract so inherits its properties and functionalities plus the following
+    * has template engine and cookies manager as injected dipendencies 
+    * builds some template helpers
+    * passes to template some constants and variables as parameters
+* __Simplex\Erp\ControllerAbstract__: controller for a route into an ERP area of the application
+    * extends Simplex\ControllerWithTemplateAbstract so inherits its properties and functionalities plus the following
+    * identifies the current __subject__ (see "Terminology" above):
+        * all the files relative to a subject MUST be in the same folder, inside the _Simplex\Local _ namespace
+        * the subject name is the name of the folder files are into (which is the name of the last part of the subject's files namespace) turned from PSR1 format to slug (with every upper case letter prepended by hypen and turned to lower case, i.e. 'NewsCategories' > 'news-categories')
+        * stores the subject under _$this->subject_
+    * instances and injects the mandatory __model__:
+        * there MUST be a class defined into subject namespace that:
+            * is named 'Model'
+            * must extend Simplex\Model\ModelAbstract
+            * must have a configuration file under _subject-namespace\config\model.php_
+        * stores the model under _$this->model_
+    * loads CRUDL config which is mandatory for ERP and contains informations for the CRUDL interface to be exposed (such as the input filters to be used with each model field) and must be saved into a _subject-namespace\config\crudl.php_
+    * gets users options for the subject from cookies (options are set into cookie from the UI) and stores them into _$this->userOptions_
+    * loads navigations:
+        * load area navigations (side bar menu) from the file _area-namespace\config\navigation.php_
+        * load subject navigations (globa actions tabs, table record action links) from the file _subject-namespace\config\navigation.php_
+        * each route contained into navigations voices is tested against current URL to check whether it's the currently selected one
+    * builds some ERP specific template helpers
+    * passes to template some ERP specific constants and variables as parameters
 
 ### Application Flow ###
 
@@ -182,7 +295,7 @@ So here are folders and files as installed from Simplex, from the installation r
 * __private__: all files that CANNOT be directly accessed by browser
     * __local__: files developed for the application
         * __simplex__: top level namespace folder for application files, every class defined inside has base namespace _Simplex\Local_
-            * __Backend__: frontend namespace draft folder
+            * __Backend__: backend namespace draft folder
             * __Frontend__: frontend namespace draft folder
             * __bin__: created at installation time for useful bash scripts
                 * __composer.sh__: allows to use composer with a PHP version different from the system default one used by the PHP CLI application, useful on a system with multiple PHP versions installed; it's a good idea to soft link it into root

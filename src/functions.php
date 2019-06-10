@@ -7,7 +7,7 @@ use \Nette\Utils\Finder;
 if (!function_exists('Simplex\slugToPSR1Name')) {
     /**
     * Turns a word in slug notation (route part) into a form as defined by PSR1 standard (https://www.php-fig.org/psr/psr-1/) for class names, method names and such
-    * @param string $slug: term in slug form to be translated
+    * @param string $slug: term in slug form to be translated into PSR1
     * @param string $type: the type of element to translate to, so far c(lass) | m(ethod)
     *
     * @return string
@@ -33,26 +33,20 @@ if (!function_exists('Simplex\slugToPSR1Name')) {
 if (!function_exists('Simplex\PSR1NameToSlug')) {
     /**
     * Turns a word in PSR1 standard (https://www.php-fig.org/psr/psr-1/) for class names, method names and such to slug notation
-    * @param string $slug: term in slug form to be translated
-    * @param string $type: the type of element to translate to, so far c(lass) | m(ethod)
+    * @param string $psr1: term in PSR1 form to be translated into slug
     *
     * @return string
     */
-    function slugToPSR1Name(string $slug, string $type) : string
+    function PSR1NameToSlug(string $psr1) : string
     {
-        switch ($type) {
-            case 'class':
-            case 'c':
-                return str_replace(' ', '', ucwords(str_replace('-', ' ', $slug)));
-            break;
-            case 'method':
-            case 'm':
-                return lcfirst(str_replace(' ', '', ucwords(str_replace('-', ' ', $slug))));
-            break;
-            default:
-                throw new \Exception(sprintf('function Simplex\slugToPSR1Name: type parameter \'%s\' value is not handled', $type));
-            break;
-        }
+        $pattern = '/(?<!^)([A-Z]{1,1})/';
+        return strtolower(preg_replace_callback(
+            $pattern,
+            function($matches) {
+                return sprintf('-%s', strtolower($matches[0]));
+            },
+            $psr1
+        ));
     }
 }
 

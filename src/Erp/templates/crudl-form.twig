@@ -1,0 +1,29 @@
+{% extends '@share/Erp/templates/page.twig' %}
+
+{% use '@share/templates/form/blocks.twig' %}
+
+{% import '@share/Erp/templates/macros/crudl-form.twig' as crudlFormMacros %}
+
+{% block head %}
+    {{ parent() }}
+    {% block validationAssets %}
+        {{ parent() }}
+    {% endblock %}
+{% endblock %}
+
+{% block pageContent %}
+    {{ parent() }}
+    {% set nextAction = action|replace({'-form': null})  %}
+    {% set nextActionRoute = buildRouteToActionFromRoot(nextAction) %}
+    <form method="post" action="{{ nextActionRoute }}"
+    id="save-form" class="needs-validation"
+    >
+    {# primary key field(s) #}
+    {{ crudlFormMacros.displayPrimaryKeyInputs(_context, model) }}
+    {# model input fields #}
+    {% block modelInputs %}
+    {% endblock %}
+    {# buttons #}
+    {{ crudlFormMacros.displayDefaultButtons(_context) }}
+    </form>
+{% endblock pageContent %}

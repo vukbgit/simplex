@@ -43,9 +43,23 @@
     </nav>
     {# main content #}
     <main role="main" class="{% if sideBarClosed %} wide{% endif %}">
-        <h2 class="h3 my-3">{{- attribute(areaNavigationLabels, currentNavigationVoice.area) -}}</h2>
+<h2 class="h3 my-3">{{- subjectLabel }} &raquo; {% block actionLabel %}{{ attribute(actionsLabels, action) }}{% endblock %}</h2>
         {# model global actions navigation #}
-        {{ navigationMacros.displaySubjectGlobalActionsNavigation(navigations.globalActions, globalActionsNavigationLabels) }}
+        {{ navigationMacros.displaySubjectGlobalActionsNavigation(_context, navigations.globalActions, globalActionsLabels) }}
+        {# subject alerts #}
+        {% for severity, alerts in attribute(attribute(areaCookie, subject), 'alerts')|objectToArray %}
+            <div class="alert {{ 'alert-%s'|format(severity) }} alert-dismissible fade show" role="alert">
+            {% set severityAlerts = [] %}
+            {% for alert in alerts %}
+                {% set severityAlerts = severityAlerts|merge([attribute(alertMessages, alert.code)|formatArray(alert.data)]) %}
+            {% endfor %}
+            {{ severityAlerts|join('<br>')|raw }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="{{ 'Close'|trans }}">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+        {% endfor %}
+        {{ resetSubjectAlerts() }}
         {% block pageContent %}
         {% endblock %}
     </main>

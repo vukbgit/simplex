@@ -1,4 +1,17 @@
+{% extends '@share/Erp/templates/erp.twig' %}
+
+{% use '@share/templates/form/blocks.twig' %}
+
 {% import '@share/templates/form/macros.twig' as formMacros %}
+
+{% block head %}
+    {{ parent() }}
+    {% block validationAssets %}
+        {{ parent() }}
+    {% endblock %}
+    <!-- sign in assets -->
+    <link rel="stylesheet" href="/public/share/simplex/Authentication/css/sign-in.min.css">
+{% endblock %}
 
 {# variables used into signInForm block that must/can be set in the calling scope
 - logoPath
@@ -6,7 +19,7 @@
 - usernameFieldType: text (default) | email
 - passwordConfig : {pattern: regular-expression, message: 'the-message'|trans}
 #}
-
+{% block body %}
 <div class="container-fluid d-flex align-items-center py-5 text-center">
     <form class="mx-auto needs-validation" id="form-sign-in" method="post" action="{{ routeParameters.signInUrl }}">
     {% if logoPath %}
@@ -77,3 +90,4 @@
         {#<p class="mt-5 mb-3 text-muted">© 2017-2019</p>#}
     </form>
 </div>
+{% endblock %}

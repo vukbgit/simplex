@@ -15,16 +15,25 @@
 * Parameters defined into route pattern overload handler parameters with the same name
 */
 //handlers namespaces
-use Simplex\Local\Frontend;
+use Simplex\Authentication;
+use Simplex\Local\Partners;
+use function Simplex\slugToPSR1Name;
+//import area variables
+require sprintf('%s/Backend/config/variables.php', PRIVATE_LOCAL_DIR);
+//import subject variables
+require 'variables.php';
+//import model configuration
+$modelConfig = require 'model.php';
 //definitions array
 return [
     [
-        'method' => 'GET',
-        'route' => '[/]',
+        'method' => ['GET','POST'],
+        'route' => sprintf('/%s/{subject:%s}/{action}[/{%s}]', $area, $subject, implode('/', $modelConfig->primaryKey)),
         'handler' => [
-            Frontend\Controller::class,
+            sprintf('%s-controller', $subject),
             [
-                'action' => 'home'
+                'area' => $area,
+                'authentication' => $authentication
             ]
         ]
     ]

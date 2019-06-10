@@ -111,7 +111,7 @@ abstract class ControllerAbstract
         //check language
         $this->setLanguage();
     }
-
+    
     /**
     * Stores request and related informations
     * @param ServerRequestInterface $request
@@ -225,11 +225,12 @@ abstract class ControllerAbstract
     }
     
     /**
-    * Checks whether a given path corresponds to the current route
-    * @param string $path
+    * Redirects to a route
+    * @param string $route
     */
-    protected function isPathCurrentRoute(string $path)
+    protected function redirect(string $route)
     {
-        return $path == $this->request->getUri()->getPath();
+        $this->response = $this->response->withHeader('Location', $route);
+        $this->response = $this->response->withStatus('302');
     }
 }

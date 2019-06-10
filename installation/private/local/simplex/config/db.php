@@ -7,10 +7,12 @@ return [
     'development' => [
         'driver' => 'mysql',
         'host' => 'localhost',
-        'username' => '',
-        'password' => '',
-        'database' => '',
+        'username' => 'c2_dev',
+        'password' => '6tfcvgy7',
+        'database' => 'c2_liabergamo',
         'charset'   => 'utf8',
-        'collation' => 'utf8_unicode_ci'
+        'collation' => 'utf8_unicode_ci',
+        /*'options'   => array( // PDO constructor options, optional
+        )*/
     ]
 ];

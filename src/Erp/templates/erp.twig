@@ -15,7 +15,19 @@
     <link rel="stylesheet" href="/public/share/simplex/Erp/Fontello/css/fontello.css">
 {% endblock %}
 
-{# labels #}
+{# messages & labels #}
+{% set actionsLabels = {
+    'list': 'list'|trans,
+    'insert-form': 'insert'|trans,
+    'update-form': 'update'|trans,
+    'delete-form': 'delete'|trans,
+    'cancel': 'cancel'|trans
+} %}
+{% set alertMessages = {
+    'save_success': 'Record saved'|trans,
+    'delete_success': 'Record deleted'|trans,
+    'SQLSTATE_23000': 'There is already another record with the same %s'|trans
+} %}
 {% set tableLabels = {
     'sort-asc': 'sort ascending'|trans,
     'sort-desc': 'sort descending'|trans,

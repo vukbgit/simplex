@@ -64,10 +64,8 @@ return array_merge(
         'templateEngine' => create(Environment::class)
             ->constructor(get('twigFilesystemLoader')),
         //cookie manager
-        'encrypter' => create(DefaultEncrypter::class)
-            ->constructor(ENCRYPTION_KEY),
         'cookieManager' => create(VanillaCookieExtended::class)
-            ->constructor(get('encrypter')),
+            ->constructor(),
         //query builder
         'dbConfig' => function(){
             $config = require sprintf('%s/db.php', LOCAL_CONFIG_DIR);
@@ -77,7 +75,7 @@ return array_merge(
             return $config[ENVIRONMENT];
         },
         'pixieConnection' => create(Connection::class)
-            ->constructor('mysql', get('dbConfig')),
+            ->constructor('mysql', get('dbConfig'), 'QB'),
         'queryBuilder' => create(PixieExtended::class)
             ->constructor(get('pixieConnection')),
         //authentication

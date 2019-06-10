@@ -49,14 +49,14 @@
 # @param array navigation: the navigation array containing objects With actions properties, as loaded from PHP navigation definition file
 # @param object navigationLabels: object With voices labels, indexed by voiceKey
 ##}
-{% macro displaySubjectGlobalActionsNavigation(navigation, navigationLabels) %}
+{% macro displaySubjectGlobalActionsNavigation(context, navigation) %}
     {% if navigation|length %}
-    <nav>
+    <nav class="mb-3">
         <ul class="nav nav-tabs">
             {% for voiceKey, voiceProperties in navigation %}
             <li class="nav-item">
-                <a class="nav-link{% if voiceProperties.isActive %} active{% endif %}" href="{{ voiceProperties.route|default('#') }}">
-                {{- attribute(navigationLabels, voiceKey) -}}
+        <a href="{{ voiceProperties.route|default('#') }}" class="nav-link{% if voiceProperties.isActive %} active{% endif %} text-capitalize">
+                {{- attribute(context.actionsLabels, voiceKey) -}}
                 </a>
             </li>
             {% endfor %}

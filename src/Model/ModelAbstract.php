@@ -34,6 +34,10 @@ abstract class ModelAbstract
         $this->loadConfig();
     }
 
+    /*********
+    * CONFIG *
+    *********/
+
     /**
     * Loads and check config
     */
@@ -56,12 +60,76 @@ abstract class ModelAbstract
     }
     
     /**
-    * Return the view or at least table defined
+    * Returns the config object
+    */
+    public function getConfig()
+    {
+        return $this->config;
+    }
+    
+    /**
+    * Returns the table defined
+    */
+    public function table()
+    {
+        return $this->config->table;
+    }
+    
+    /**
+    * Returns the view or at least table defined
     */
     public function view()
     {
         return $this->config->view ?? $this->config->table;
     }
+
+    /*******************
+    * DEBUG & MESSAGES *
+    *******************/
+
+    /**
+    * Ouputs last sql
+    */
+    public function sql()
+    {
+        return $this->query->sql();
+    }
+
+    /**
+    * Handles an exception using error codes (see https://docstore.mik.ua/orelly/java-ent/jenut/ch08_06.htm)
+    * @param PDOException $exception
+    * @return object to be used for alert display with the following properties:
+    *   ->code: alphanumeric message code
+    *   ->data: an array with any specific error code relevant data (such as involved field names)
+    */
+    public function handleException(\PDOException $exception): object
+    {
+        //get error code and message
+        $errorCode = $exception->getCode();
+        $errorMessage = $exception->getMessage();
+        //extract SQL-92 error class and subclass from code
+        $class = substr($errorCode, 0, 2);
+        $subclass = substr($errorCode, 2);
+        switch($class) {
+            //Integrity constraint violation
+            case '23':
+                //duplicate entry
+                if(preg_match('/Duplicate entry/', $errorMessage) === 1) {
+                    //extract field name
+                    preg_match("/'([0-9a-zA-Z_]+)'$/", $errorMessage, $matches);
+                    $data = [$matches[1]];
+                }
+            break;
+        }
+        return (object) [
+            'code' => sprintf('SQLSTATE_%s', $errorCode),
+            'data' => $data
+        ];
+    }
+    
+    /*********
+    * SELECT *
+    *********/
 
     /**
     * Gets a recordset
@@ -97,11 +165,51 @@ abstract class ModelAbstract
         return current($this->get($where));
     }
     
+    /********
+    * INSERT *
+    ********/
+    
     /**
-    * Ouputs last sql
+    * Inserts a record
     */
-    public function sql()
+    public function insert($fieldsValues)
     {
-        return $this->query->sql();
+        $this->query
+            ->table($this->table())
+            ->insert($fieldsValues);
+    }
+    
+    /*********
+    * UPDATE *
+    *********/
+    
+    /**
+    * Updates a record
+    */
+    public function update($primaryKeyValues, $fieldsValues)
+    {
+        $this->query
+            ->table($this->table());
+        foreach ($primaryKeyValues as $field => $value) {
+            $this->query->where($field, $value);
+        }
+        $this->query->update($fieldsValues);
+    }
+    
+    /*********
+    * DELETE *
+    *********/
+    
+    /**
+    * Deletes a record
+    */
+    public function delete($primaryKeyValues)
+    {
+        $this->query
+            ->table($this->table());
+        foreach ($primaryKeyValues as $field => $value) {
+            $this->query->where($field, $value);
+        }
+        $this->query->delete();
     }
 }

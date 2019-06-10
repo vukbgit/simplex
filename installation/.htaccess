@@ -1,6 +1,9 @@
-#ENVIRONMENT
-SetEnvIf Host ^dev-domain\.ltd$ ENVIRONMENT=development
-SetEnvIf Host ^prod-domain\.ltd$ ENVIRONMENT=production
 Options +FollowSymlinks
+#environment
+SetEnvIf Host ^dev-host\.ltd$ ENVIRONMENT=development
+SetEnvIf Host ^prod-host\.ltd$ ENVIRONMENT=production
+#areas default URLs
+RewriteRule ^backend/?$ /backend/sign-in-form [R,L]
+#default entry point
 RewriteEngine on
 RewriteRule ^(.*)$ index.php [NC]

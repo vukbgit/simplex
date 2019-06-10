@@ -1,0 +1,26 @@
+{% extends '@share/Erp/templates/crudl-form.twig' %}
+
+{% use '@share/templates/form/blocks.twig' %}
+
+{% import '@share/templates/form/macros.twig' as formMacros %}
+
+{% block modelInputs %}
+
+    {{ formMacros.DISPLAYMACRONAME(
+    {
+        'name': 'FIELD-NAME',
+        'value': record.FIELD-NAME,
+        'label': fieldsLabels.FIELD-NAME,
+        'help': fieldsLabels.FIELD-NAMEHelp,
+        'autofocus': true,
+        'disabled': action == 'delete-form',
+        'maxlength': FIELD-MAX-LENGTH,
+        'autocomplete': '',
+        'class': '',
+        'validation': {
+            'required': true,
+            'pattern': ''
+        }
+    }
+    ) }}
+{% endblock %}

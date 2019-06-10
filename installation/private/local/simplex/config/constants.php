@@ -3,9 +3,9 @@
 * LOCAL *
 ********/
 //included into exceptions message
-define('TECH_EMAIL', null);
+define('TECH_EMAIL', 'EMAIL-ADDRESS');
 //used to set page title tag in some templates
-define('BRAND', null);
+define('BRAND', 'APPLICATION-NAME');
 /**************
 * ENVIRONMENT *
 **************/
@@ -29,6 +29,11 @@ define('PUBLIC_SHARE_DIR', 'public/share');
 define('TMP_DIR', '../tmp');
 //folder with HTTP errors pages
 define('ERROR_DIR', sprintf('%s/errors', PRIVATE_SHARE_DIR));
+/**********
+* COOKIES *
+**********/
+//cookies default duration  in minutes (525600 minutes = 1 year)
+define('COOKIE_DURATION', 525600 * 5);
 /************
 * TEMPLATES *
 ************/

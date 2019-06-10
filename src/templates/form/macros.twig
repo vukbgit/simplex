@@ -3,9 +3,12 @@
 {
     'name': '',
     'id': '',
-    'placeholder': ''|trans,
+    'value': '',
+    'label': fieldsLabels.,
+    'help': fieldsLabels.,
     'autofocus': true,
     'autocomplete': '',
+    'maxlength': '',
     'class': '',
     'validation': {
         'required': true,
@@ -18,11 +21,20 @@
     {# common #}
     name="{{ config.name }}"
     id="{{ config.id ?? config.name }}"
-    {% if config.placeholder %}
-    placeholder="{{ config.placeholder }}"
+    {% if config.value %}
+    value="{{ config.value }}"
+    {% endif %}
+    {% if config.label %}
+    placeholder="{{ config.label }}"
     {% endif %}
     {% if config.autofocus %}
     autofocus="" 
+    {% endif %}
+    {% if config.disabled %}
+    disabled="" 
+    {% endif %}
+    {% if config.maxlength %}
+    maxlength="{{ config.maxlength }}" 
     {% endif %}
     {% if config.autocomplete %}
     autocomplete="{{ config.autocomplete }}" 
@@ -30,6 +42,10 @@
     {# merge classes #}
     {% set classes = ['form-control']|merge([config.class]) %}
     class="{{ classes|join(' ') }}"
+    {# help text #}
+    {% if config.help %}
+    aria-describedby="{{ '%s-help'|format(config.id ?? config.name ) }}"
+    {% endif %}
     {# validation #}
     {% if validation %}
         {% if validation.required %}
@@ -61,6 +77,26 @@
   {{ validation.invalidMessage }}
 </div>
     {% endif %}
+{% endmacro %}
+
+{# displays label
+@param hash config: hash for field properties (see fieldSetAttributes macro explanation)
+#}
+{% macro displayLabel(config) %}
+<label for="{{ config.id ?? config.name }}">{{ config.label }}</label>
+{% endmacro %}
+
+{# displays help
+@param hash config: hash for field properties (see fieldSetAttributes macro explanation)
+#}
+{% macro displayHelp(config) %}
+    {% set help = config.help ? [config.help] : [] %}
+    {% if config.maxlength %}
+        {% set help = help|merge(['maximum length %s characters'|format(config.maxlength)]) %}
+    {% endif %}
+    {% if help is not empty %}
+ <small id="{{ '%s-help'|format(config.id ?? config.name ) }}" class="form-text text-muted">{{ help|join('; ') }}</small>
+{% endif %}
 {% endmacro %}
 
 {# displays an input field given the type, useful when type is condition dependant
@@ -114,4 +150,16 @@
 {% macro displayInputPassword(config) %}
     {% import _self as selfMacros %}
     {{ selfMacros.displayInput('password', config) }}
+{% endmacro %}
+
+{# displays an input text field
+@param hash config: hash for field properties (see fieldSetAttributes macro explanation)
+#}
+{% macro displayInputTextGroup(config) %}
+    {% import _self as selfMacros %}
+    <div class="form-group">
+        {{ selfMacros.displayLabel(config) }}
+        {{ selfMacros.displayInputText(config) }}
+        {{ selfMacros.displayHelp(config) }}
+    </div>
 {% endmacro %}
