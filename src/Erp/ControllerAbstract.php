@@ -408,7 +408,7 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
     ***************/
 
     /**
-     * Gets model record t ooperate on by route primary key value
+     * Gets model record to operate on by route primary key value
      */
     protected function getModelRecordFromRoute()
     {
@@ -422,10 +422,20 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
     }
     
     /**
+     * Gets any data necessary to the save form
+     * to be overridden by derived classes
+     */
+    protected function getSaveFormData()
+    {
+    }
+    
+    /**
      * Insert form
      */
     protected function insertForm()
     {
+        //get any necessary data
+        $this->getSaveFormData();
         //render
         $this->renderTemplate(sprintf(
             '@local/%s/%s/crudl-form.%s',
@@ -442,6 +452,8 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
     {
         //get model record
         $this->setTemplateParameter('record', $this->getModelRecordFromRoute());
+        //get any necessary data
+        $this->getSaveFormData();
         //render
         $this->renderTemplate(sprintf(
             '@local/%s/%s/crudl-form.%s',
@@ -583,4 +595,74 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
         //redirect
         $this->redirect($redirectRoute);
     }
+    
+    /**********
+     * UPLOAD *
+     *********/
+    
+    /**
+     * Uploads a file
+     */
+    protected function upload()
+    {
+        //x($_FILES, true);
+        //get field name cleaning file input name from the -upload suffix
+        $inputName = array_keys($_FILES)[0];
+        $fieldName = str_replace('-upload', '', $inputName);
+        //return object
+        $return = new \stdClass;
+        $errors = [];
+        //check field store folder
+        $fieldStoreFolder = str_replace('private/', 'public/', getInstancePath($this));
+        if(!is_dir($fieldStoreFolder)) {
+            //create field store folder
+            mkdir($fieldStoreFolder, 0755, true);
+        }
+        //check field upload configuration
+        if(!isset($this->CRUDLconfig->fields[$fieldName]->upload)) {
+            $errors[] = sprintf('Field %s have no upload configuration', $fieldName);
+        }elseif(!isset($this->CRUDLconfig->fields[$fieldName]->upload->outputs) || empty($this->CRUDLconfig->fields[$fieldName]->upload->outputs)) {
+            $errors[] = sprintf('Field %s have no upload outputs configuration', $fieldName);
+        } else {
+            //init return
+            $return->outputs = [
+            ];
+            //loop outputs
+            foreach ($this->CRUDLconfig->fields[$fieldName]->upload->outputs as $outputKey => $output) {
+                //check output store folder
+                $outputStoreFolder = sprintf('%s/%s', $fieldStoreFolder, $outputKey);
+                if(!is_dir($outputStoreFolder)) {
+                    //create output store folder
+                    mkdir($outputStoreFolder, 0755, true);
+                    //create default .gitignore file
+                    $fp = fopen(sprintf('%s/.gitignore', $outputStoreFolder), 'w');
+                    fwrite($fp, sprintf('# Ignore everything in this directory%1$s*%1$s!.gitignore', PHP_EOL));
+                    fclose($fp);
+                }
+                //move uploaded file
+                $outputFilePath = sprintf('%s/%s', $outputStoreFolder, $_FILES[$inputName]['name']);
+                move_uploaded_file($_FILES[$inputName]['tmp_name'], $outputFilePath);
+                //handler
+                if(isset($output->handler)) {
+                    $parameters = array_merge([$outputFilePath], $output->parameters ?? []);
+                    call_user_func_array($output->handler, $parameters);
+                }
+                //set return
+                $return->outputs[$outputKey] = $outputFilePath;
+            }
+        }
+        //store error
+        $return->error = implode('<br>', $errors);
+        echo json_encode($return);
+    }
+    
+    /**
+     * Resizes an image
+     */
+    protected static function resizeImage($path, $width, $height)
+    {
+        x($path);
+        x($width);
+        x($height);
+    }    
 };

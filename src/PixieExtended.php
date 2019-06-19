@@ -21,7 +21,8 @@ class PixieExtended extends QueryBuilderHandler
         $queryBuilderHandler = parent::table($table);
         //fetch the statement and pass to current instance
         $this->statements = $queryBuilderHandler->getStatements();
-        return $queryBuilderHandler;
+        //return $queryBuilderHandler;
+        return $this;
     }
 
     /**

@@ -119,6 +119,9 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
     */
     private function buildCommonTemplateHelpers()
     {
+        /********
+        * DEBUG *
+        ********/
         //dumps var in development environment
         $this->addTemplateFunction(
             'dump',
@@ -127,15 +130,72 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
             },
             ['is_safe' => ['html']]
         );
+        /************
+        * VARIABLES *
+        ************/
+        //changes an array or object property
+        $this->addTemplateFunction('updateProperty', function($input, $property, $value) {
+            if(is_array($input)) {
+                $input[$property] = $value;
+            } elseif (is_object($input)) {
+                $input->$property = $value;
+            }
+            return $input;
+        });
+        //deletes an array or object property
+        $this->addTemplateFunction('deleteProperty', function($input, $property) {
+            if(is_array($input)) {
+                unset($input[$property]);
+            } elseif (is_object($input)) {
+                unset($input->$property);
+            }
+            return $input;
+        });
+        //casts object to array (to iterate)
+        $this->addTemplateFilter('objectToArray', function($object): array{
+            return (array) $object;
+        });
+        //wrapper for vsprintf(), formats a string with an array of arguments
+        $this->addTemplateFilter('formatArray', function(string $format, $args): string{
+            if(is_array($args) && !empty($args)) {
+                return vsprintf($format, $args);
+            } else {
+                return $format;
+            }
+        });
+        //outputs a variable to be used in javascript context
+        $this->addTemplateFilter('varToJs', function($var) {
+            /*if(is_bool($var)) {
+                return $var ? 'true' : 'false';
+            } elseif(is_string($var)) {
+                return $var ? 'true' : 'false';
+            }*/
+            return json_encode($var);
+        },
+        ['is_safe' => ['html']]);
+        /********
+        * PATHS *
+        ********/
+        //checks hether a file path is valid (is_file wrapper)
+        $this->addTemplateFunction('isFile', function(string $path): bool{
+            //remove trailing slash
+            if(strpos($path, '/') === 0) {
+                $path = substr($path, 1);
+            }
+            return is_file($path);
+        });
         //returns path to yarn packages asset
         $this->addTemplateFilter('pathToNpmAsset', function(string $path){
             return sprintf('/%s/node_modules/%s', PUBLIC_SHARE_DIR, $path);
         });
-        //checks whether a given path is the requested URI  path
+        //checks whether a given path is the requested URI path
         //returns path to yarn packages asset
         $this->addTemplateFilter('isNavigationRouteCurrentRoute', function($path){
             return $this->isNavigationRouteCurrentRoute($path);
         });
+        /*******
+        * FORM *
+        *******/
         //parses the config object for a form field that uses templates/form/macros 
         $this->addTemplateFunction('parseFieldConfig', function(array $config){
             //turn into objects
@@ -156,21 +216,16 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
             //return config
             return $config;
         });
+        //formats an id to be used by javascript
+        $this->addTemplateFilter('formatIdforJs', function(string $id): string {
+            return str_replace(['[',']'], '_', $id);
+        });
+        /********
+        * USERS *
+        ********/
         //checks a user permission
         $this->addTemplateFunction('checkPermission', function(string $permission){
             return $this->checkPermission($permission);
-        });
-        //casts object ot array (to iterate)
-        $this->addTemplateFilter('objectToArray', function($object): array{
-            return (array) $object;
-        });
-        //wrapper for vsprintf()
-        $this->addTemplateFilter('formatArray', function(string $format, $args): string{
-            if(is_array($args) && !empty($args)) {
-                return vsprintf($format, $args);
-            } else {
-                return $format;
-            }
         });
     }
     

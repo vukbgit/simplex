@@ -6,23 +6,26 @@ Kint\Renderer\RichRenderer::$folder = false;
 Kint\Renderer\RichRenderer::$theme = 'aante-light.css';
 Kint::$aliases[] = 'x';
 Kint::$aliases[] = 'xx';
- 
+
 /**
 * Dumps a variable
 * @param mixed $var
+* @param bool $expand whether to expand objects by default
 **/
-function x($var) {
+function x($var, $expand = false) {
     if(ENVIRONMENT == 'development') {
+        if($expand) {
+            Kint::$expanded = true;
+        }
         !Kint::dump($var);
     }
 }
 /**
 * Dumps a variable and exits
 * @param mixed $var
+* @param bool $expand whether to expand objects by default
 **/
-function xx($var) {
-    //if(ENVIRONMENT == 'development') {
-        !Kint::dump($var);
-        exit;
-    //}
+function xx($var, $expand = false) {
+    x($var, $expand);
+    exit;
 }

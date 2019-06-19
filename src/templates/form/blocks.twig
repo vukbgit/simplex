@@ -1,21 +1,4 @@
 {% block validationAssets %}
-{#<!-- Parsley.js -->
-<script src="{{ 'parsleyjs/dist/parsley.min.js'|pathToNpmAsset }}"></script>
-<script src="{{ 'parsleyjs/dist/i18n/%s.js'|format(attribute(language, 'ISO-639-1'))|pathToNpmAsset }}"></script>
-<style media="screen" href="{{ '/%s/node_modules/parsleyjs/src/parsley.css'|format(publicShareDir) }}">
-</style>
-<script type="text/javascript">
-/* This global callbacks will be called for any field that fails/passes validation.
-Setting aria-invalid triggers Patternfly formatting
-*/
-window.Parsley.on('field:error', function() {
-    this.$element.attr('aria-invalid', true);
-});
-window.Parsley.on('field:success', function() {
-    // This global callback will be called for any field that fails validation.
-    this.$element.attr('aria-invalid', false);
-});
-</script>#}
 <script>
 // bootstrap starter JavaScript for disabling form submissions if there are invalid fields
 //mixed with validation tutorial from https://css-tricks.com/form-validation-part-2-constraint-validation-api-javascript/
@@ -239,8 +222,26 @@ window.Parsley.on('field:success', function() {
 </script>
 {% endblock %}
 
-{% block parsleyInitForm %}
-data-parsley-validate
-data-parsley-focus="first"{# focus first invalid field on validation error #}
-data-parsley-error-template="<p class='pf-c-form__helper-text pf-m-error'></p>"
+{# rich text editor
+language packages must be downloaded from https://www.tiny.cloud/get-tiny/language-packages/ and saved into /public/share/rich-text-editor/locales/ #}
+{% block richTextEditorAssets %}
+<!-- rich text textarea -->
+<script src="{{ 'tinymce/tinymce.min.js'|pathToNpmAsset }}"></script>
+<style type="text/css">
+/*tinyMCE fullscreen*/
+div.mce-fullscreen {
+    z-index:10000;
+}
+</style>
+{% endblock %}
+
+{# file upload #}
+{% block fileUploadAssets %}
+<!-- Kartik Bootstrap file input -->
+<link href="{{ 'bootstrap-fileinput/css/fileinput.min.css'|pathToNpmAsset }}" media="all" rel="stylesheet" type="text/css" />
+<script src="{{ 'bootstrap-fileinput/js/plugins/piexif.min.js'|pathToNpmAsset }}" type="text/javascript"></script>
+<script src="{{ 'bootstrap-fileinput/js/plugins/sortable.min.js'|pathToNpmAsset }}" type="text/javascript"></script>
+<script src="{{ 'bootstrap-fileinput/js/fileinput.min.js'|pathToNpmAsset }}" type="text/javascript"></script>
+<script src="/public/share/simplex/Erp/js/upload-file-theme.js" type="text/javascript"></script>
+<script src="{{ 'bootstrap-fileinput/js/locales/%s.js'|format(attribute(language, 'ISO-639-1'))|pathToNpmAsset }}" type="text/javascript"></script>
 {% endblock %}

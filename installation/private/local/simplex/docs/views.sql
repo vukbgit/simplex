@@ -1,4 +1,4 @@
--- v_categorie_partners
+-- v_
 SELECT
-cp.*
-FROM categorie_partners AS cp
+
+FROM  AS 
