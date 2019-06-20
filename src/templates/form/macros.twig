@@ -245,6 +245,7 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
 @param hash context: the calling template context object
 @param hash config: hash for field properties (see fieldSetAttributes macro explanation) excpet for specific upload file options which can be set as a config.options hash; common options:
     allowedFileTypes: ['image', 'html', 'text', 'video', 'audio', 'flash', 'object']
+    maxFileCount: maximum number of files allowed for each multiple upload. If set to 0, it means number of files allowed is unlimited
 #}
 {% macro displayFileUpload(context, config) %}
     {% import _self as selfMacros %}
@@ -252,9 +253,10 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
     {% set uploadRoute = buildRouteToActionFromRoot('upload') %}
     <div class="form-group">
         {{ selfMacros.displayLabel(config) }}
+        {% set fieldName = (config.id ?? config.name)|formatIdforJs %}
         {{ selfMacros.displayInputHidden(config) }}
         {# format upload input id to be used by javascript #}
-        {% set uploadId = '%s-upload'|format(config.id ?? config.name)|formatIdforJs %}
+        {% set uploadId = '%s-upload'|format(fieldName) %}
         {% set config = updateProperty(config, 'name', uploadId) %}
         {% set config = updateProperty(config, 'id', uploadId) %}
         {{ selfMacros.displayInputFile(config) }}
@@ -265,11 +267,25 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
     $("#{{ config.id }}").fileinput({
         language: '{{ attribute(context.language, 'ISO-639-1') }}',
         theme: 'simplex',
+        showUpload: false,
+        showRemove: false,
+        showUploadStats: false,
+        browseOnZoneClick: true,
         uploadUrl: '{{ uploadRoute }}',
+    {# config tweaks #}
+    {% if config.options.maxFileCount and config.options.maxFileCount == 1 and config.options.autoReplace is not defined %}
+        {% set config = updateProperty(config, 'options', updateProperty(config.options, 'autoReplace', true)) %}
+    {% endif %}
     {% for option,value in config.options %}
         '{{ option }}': {{ value|varToJs }},
     {% endfor %}
-    }).on('fileuploaded', function(event, data, previewId, index) {
+    })
+    //auto upload on file selection
+    .on("filebatchselected", function(event, files) {
+        $("#{{ config.id }}").fileinput("upload");
+    })
+    .on('fileuploaded', function(event, data, previewId, index) {
+        console.log('{{ fieldName }}');
         console.log(data);
         console.log(previewId);
         console.log(index);

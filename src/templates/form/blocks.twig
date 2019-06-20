@@ -39,7 +39,7 @@
             'blur',
             function (event) {
                 // Only run if the field is in a form to be validated on blur
-                if (!event.target.form.classList.contains('needs-validation') || event.target.form.classList.contains('do-not-validate-on-blur')) return;
+                if (event.target.form && !event.target.form.classList.contains('needs-validation') || event.target.form.classList.contains('do-not-validate-on-blur')) return;
                 // Validate the field
                 var error = hasError(event.target);
                 if(error) {
