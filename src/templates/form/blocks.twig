@@ -38,8 +38,8 @@
         document.addEventListener(
             'blur',
             function (event) {
-                // Only run if the field is in a form to be validated on blur
-                if (event.target.form && !event.target.form.classList.contains('needs-validation') || event.target.form.classList.contains('do-not-validate-on-blur')) return;
+                // Only run if the element is a form field (and not a dropzone for example) and is the form needs to be validated
+                if (typeof event.target.form == 'undefined' || (!event.target.form.classList.contains('needs-validation') || event.target.form.classList.contains('do-not-validate-on-blur'))) return;
                 // Validate the field
                 var error = hasError(event.target);
                 if(error) {
@@ -174,15 +174,29 @@
     
     /*
     Shows error
-    TODO: checkbox/radio
     */
     var showError = function (field, error) {
         // Toggle error classes to field
         field.classList.remove('is-valid');
         field.classList.add('is-invalid');
+        //get field type
+        var fieldType = $(field).attr('type');
         // Get field id or name
-        var id = field.id || field.name;
+        var id, messageContainer, manuallyShowMessage;
+        switch(fieldType) {
+            case 'radio':
+            case 'checkbox':
+                //radio or checkbox input id contains also value, check on name (and therefore on group container)
+                id = field.name;
+                manuallyShowMessage = true;
+            break;
+            default:
+                id = field.id || field.name;
+                manuallyShowMessage = false;
+            break;
+        }
         if (!id) return;
+        messageContainer = $('#' + id + '-container');
         // Check if error message field already exists
         // If not, create one
         var message = field.form.querySelector('.invalid-tooltip#error-for-' + id );
@@ -190,25 +204,42 @@
             message = document.createElement('div');
             message.className = 'invalid-tooltip';
             message.id = 'error-for-' + id;
-            field.parentNode.insertBefore( message, field.nextSibling );
+            messageContainer.append( message, field.nextSibling );
         }
         // Add ARIA role to the field
         field.setAttribute('aria-describedby', 'error-for-' + id);
         // Update error message
         message.innerHTML = error;
-        // Show error message
-        //message.style.display = 'block';
-        //message.style.visibility = 'visible';
+        //show manually if necessary
+        if(manuallyShowMessage) {
+            $('#' + message.id).css('display', 'block');
+        }
     };
     
     /*
     Remove error
-    TODO: checkbox/radio
     */
     var removeError = function (field) {
         // Toggle error classes to field
         field.classList.remove('is-invalid');
         field.classList.add('is-valid');
+        //get field type
+        var fieldType = $(field).attr('type');
+        var messageId, manuallyHideMessage
+        switch(fieldType) {
+            case 'radio':
+            case 'checkbox':
+                messageId = 'error-for-' + field.name;
+                manuallyHideMessage = true;
+            break;
+            default:
+                manuallyHideMessage = false;
+            break;
+        }
+        //hide manually if necessary
+        if(manuallyHideMessage) {
+            $('#' + messageId).css('display', 'none');
+        }
         // Remove ARIA role from the field
         field.removeAttribute('aria-describedby');
         // Get field id or name
@@ -237,11 +268,14 @@ div.mce-fullscreen {
 
 {# file upload #}
 {% block fileUploadAssets %}
-<!-- Kartik Bootstrap file input -->
+{<!-- Kartik Bootstrap file input -->
 <link href="{{ 'bootstrap-fileinput/css/fileinput.min.css'|pathToNpmAsset }}" media="all" rel="stylesheet" type="text/css" />
 <script src="{{ 'bootstrap-fileinput/js/plugins/piexif.min.js'|pathToNpmAsset }}" type="text/javascript"></script>
 <script src="{{ 'bootstrap-fileinput/js/plugins/sortable.min.js'|pathToNpmAsset }}" type="text/javascript"></script>
 <script src="{{ 'bootstrap-fileinput/js/fileinput.min.js'|pathToNpmAsset }}" type="text/javascript"></script>
 <script src="/public/share/simplex/Erp/js/upload-file-theme.js" type="text/javascript"></script>
 <script src="{{ 'bootstrap-fileinput/js/locales/%s.js'|format(attribute(language, 'ISO-639-1'))|pathToNpmAsset }}" type="text/javascript"></script>
+{#<!-- Dropzone.js -->
+<script src="{{ 'dropzone/dist/min/dropzone.min.js'|pathToNpmAsset }}" type="text/javascript"></script>
+<link href="{{ 'dropzone/dist/min/dropzone.min.css'|pathToNpmAsset }}" media="all" rel="stylesheet" type="text/css" />#}
 {% endblock %}

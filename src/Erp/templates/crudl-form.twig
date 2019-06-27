@@ -16,10 +16,10 @@
     {% set nextAction = action|replace({'-form': null})  %}
     {% set nextActionRoute = buildRouteToActionFromRoot(nextAction) %}
     <form method="post" action="{{ nextActionRoute }}"
-    id="save-form" class="needs-validation crudl-form"
+    id="save-form" class="needs-validation form-with-validation crudl-form"
     >
     {# primary key field(s) #}
-    {{ crudlFormMacros.displayPrimaryKeyInputs(_context, model) }}
+    {{ crudlFormMacros.displayPrimaryKeyInput(_context, model) }}
     {# model input fields #}
     {% block modelInputs %}
     {% endblock %}

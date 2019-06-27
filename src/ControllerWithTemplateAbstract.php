@@ -173,6 +173,10 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
             return json_encode($var);
         },
         ['is_safe' => ['html']]);
+        //convert metric byte units
+        $this->addTemplateFunction('convertByteUnit', function(float $value, string $fromUnit, string $toUnit): string{
+            return \ByteUnits\parse(sprintf('%s%s', $value, $fromUnit))->format($toUnit, ' ');
+        });
         /********
         * PATHS *
         ********/

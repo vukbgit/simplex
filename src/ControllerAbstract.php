@@ -149,6 +149,21 @@ abstract class ControllerAbstract
     }
 
     /**
+    * Checks if user is currently authenticated
+    * @return bool
+    */
+    protected function isAuthenticated(): bool
+    {
+        $requestAttributes = $this->request->getAttributes();
+        //no autentication needed
+        if(!isset($requestAttributes['parameters']->authentication)) {
+            return false;
+        } else {
+            return $requestAttributes['authenticationResult']->{$this->area}->authenticated;
+        }
+    }
+    
+    /**
     * Checks if authenticaion is needed and is valid
     * @return bool
     */

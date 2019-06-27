@@ -83,12 +83,12 @@
     overflow-x: hidden;
     overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
 }
-@supports ((position: -webkit-sticky) or (position: sticky)) {
+/*@supports ((position: -webkit-sticky) or (position: sticky)) {
     .sidebar-sticky {
         position: -webkit-sticky;
         position: sticky;
     }
-}
+}*/
 /* hamburgers override*/
 $hamburger-layer-height        : 4px !default;
 $hamburger-layer-spacing       : 6px !default;

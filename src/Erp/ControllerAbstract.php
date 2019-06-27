@@ -67,8 +67,10 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
         //get cookie stored user options
         $this->getSubjectCookie();
         //load navigation
-        $this->loadAreaNavigation();
-        $this->loadSubjectNavigation();
+        if($this->isAuthenticated()) {
+            $this->loadAreaNavigation();
+            $this->loadSubjectNavigation();
+        }
         //build common template helpers
         $this->buildCommonTemplateHelpers();
         //set specific CRUDL template parameters
@@ -414,11 +416,8 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
     protected function getModelRecordFromRoute()
     {
         //get primary key fields
-        $primaryKeys = $this->model->getConfig()->primaryKey;
-        $where = [];
-        foreach($primaryKeys as $primaryKey) {
-            $where[] = [$primaryKey, $this->routeParameters->$primaryKey];
-        }
+        $primaryKey = $this->model->getConfig()->primaryKey;
+        $where = [[$primaryKey, $this->routeParameters->$primaryKey]];
         return $this->model->first($where);
     }
     
@@ -431,8 +430,15 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
         //uploads
         $modelConfig = $this->model->getConfig();
         if(isset($modelConfig->uploads)) {
-            x(ini_get('upload_max_filesize'));
-            x(bytes(ini_get('upload_max_filesize')));
+            //max file size
+            $uploadMaxFilesizeIni = ini_get('upload_max_filesize');
+            $uploadMaxFilesizeBytes = bytes(ini_get('upload_max_filesize'));
+            //in kB for client validation
+            $uploadMaxFilesizeKB = str_replace('kB', '', \ByteUnits\bytes($uploadMaxFilesizeBytes)->format('kB'));
+            //in MB to be displayed
+            $uploadMaxFilesizeMB = str_replace('MB', '', \ByteUnits\bytes($uploadMaxFilesizeBytes)->format('MB'));
+            $this->setTemplateParameter('uploadMaxFilesizeKB', $uploadMaxFilesizeKB);
+            $this->setTemplateParameter('uploadMaxFilesizeMB', $uploadMaxFilesizeMB);
         }
     }
     
@@ -477,6 +483,8 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
     {
         //get model record
         $this->setTemplateParameter('record', $this->getModelRecordFromRoute());
+        //get any necessary data
+        $this->getSaveFormData();
         //render
         $this->renderTemplate(sprintf(
             '@local/%s/%s/crudl-form.%s',
@@ -495,24 +503,21 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
     }
     
     /**
-     * Purges input array from primary key values and return them into an array
+     * Purges input array from primary key value and returns it
      * this method is void by defaulkt, it must be overridden by derived class if necessary
      */
-    protected function extractPrimaryKeyValuesFromInput(&$input)
+    protected function extractPrimaryKeyValueFromInput(&$input)
     {
-        $primaryKeyFields = $this->model->getConfig()->primaryKey;
-        $primaryKeyValues = [];
-        foreach ($primaryKeyFields as $primaryKeyField) {
-            $primaryKeyValues[$primaryKeyField] = $input[$primaryKeyField];
-            unset($input[$primaryKeyField]);
-        }
-        return $primaryKeyValues;
+        $primaryKeyField = $this->model->getConfig()->primaryKey;
+        $primaryKeyValue = $input[$primaryKeyField];
+        unset($input[$primaryKeyField]);
+        return $primaryKeyValue;
     }
     
     /**
      * Gets save form input
      * @return object with properties:
-     *      ->primaryKeyValues: array with values of primary key(s) fields indexed by primary key fields names
+     *      ->primaryKeyValue: primary key value
      *      ->saveFieldsValues: array with values of fields to be saved indexed by fields names
      */
     protected function getSaveFieldsData(): object
@@ -531,15 +536,25 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
                 return $fieldFilter;
             }
         );
-        //get input
         $input = filter_input_array(INPUT_POST, $inputFieldsFilters);
         //process input
         $this->processSaveFormInput($input);
         //get primary key and purge it from input values
-        $primaryKeyValues = $this->extractPrimaryKeyValuesFromInput($input);
+        $primaryKeyValue = $this->extractPrimaryKeyValueFromInput($input);
+        //add eventual model upload fields
+        $uploadsInput = null;
+        if($this->model->hasUploads()) {
+            $uploadsFilters = [];
+            foreach (array_keys($this->model->getConfig()->uploads) as $uploadKey) {
+                $uploadsFilters[$uploadKey] = FILTER_UNSAFE_RAW;
+            }
+            $uploadsInput = (object) filter_input_array(INPUT_POST, $uploadsFilters);
+        }
+        //get input
         return (object) [
-            'primaryKeyValues' => $primaryKeyValues,
-            'saveFieldsValues' => $input
+            'primaryKeyValue' => $primaryKeyValue,
+            'saveFieldsValues' => $input,
+            'uploadsValues' => $uploadsInput
         ];
     }
     
@@ -552,6 +567,9 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
         try {
             //save record
             $this->model->insert($fieldsData->saveFieldsValues);
+            if($this->model->hasUploads()) {
+                $this->model->saveUploadsFiles($fieldsData->uploadsValues);
+            }
             $redirectRoute = $this->buildRouteToActionFromRoot('list');
             $this->setSubjectAlert('success', (object) ['code' => 'save_success']);
         } catch(\PDOException $exception) {
@@ -571,13 +589,16 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
         $fieldsData = $this->getSaveFieldsData();
         try {
             //save record
-            $this->model->update($fieldsData->primaryKeyValues, $fieldsData->saveFieldsValues);
+            $this->model->update($fieldsData->primaryKeyValue, $fieldsData->saveFieldsValues);
+            if($this->model->hasUploads()) {
+                $this->model->saveUploadsFiles($fieldsData->primaryKeyValue, $fieldsData->uploadsValues);
+            }
             $redirectRoute = $this->buildRouteToActionFromRoot('list');
             $this->setSubjectAlert('success', (object) ['code' => 'save_success']);
         } catch(\PDOException $exception) {
             $error = $this->model->handleException($exception);
             $this->setSubjectAlert('danger', $error);
-            $redirectRoute = $this->buildRouteToActionFromRoot(sprintf('update-form/%s', implode('/', array_values($primaryKeyValues))));
+            $redirectRoute = $this->buildRouteToActionFromRoot(sprintf('update-form/%s', $fieldsData->primaryKeyValue));
         }
         //redirect
         $this->redirect($redirectRoute);
@@ -591,13 +612,13 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
         $fieldsData = $this->getSaveFieldsData();
         try {
             //delete record
-            $this->model->delete($fieldsData->primaryKeyValues);
+            $this->model->delete($fieldsData->primaryKeyValue);
             $redirectRoute = $this->buildRouteToActionFromRoot('list');
             $this->setSubjectAlert('success', (object) ['code' => 'delete_success']);
         } catch(\PDOException $exception) {
             $error = $this->model->handleException($exception);
             $this->setSubjectAlert('danger', $error);
-            $redirectRoute = $this->buildRouteToActionFromRoot(sprintf('update-form/%s', implode('/', array_values($primaryKeyValues))));
+            $redirectRoute = $this->buildRouteToActionFromRoot(sprintf('delete-form/%s', $fieldsData->primaryKeyValue));
         }
         //redirect
         $this->redirect($redirectRoute);
@@ -612,55 +633,57 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
      */
     protected function upload()
     {
-        //x($_FILES, true);
+        //xx($_FILES, true);
         //get upload name cleaning file input name from the -upload suffix
         $inputName = array_keys($_FILES)[0];
-        $uploadName = str_replace('-upload', '', $inputName);
+        $uploadKey = str_replace('-upload', '', $inputName);
         $fileName = $_FILES[$inputName]['name'];
         //return object
         $return = new \stdClass;
         $errors = [];
-        //check upload store folder
-        $uploadStoreFolder = str_replace('private/', 'public/', getInstancePath($this));
-        if(!is_dir($uploadStoreFolder)) {
+        //check uploads folder
+        $uploadsFolder = $this->model->getUploadsFolder();
+        if(!is_dir($uploadsFolder)) {
             //create upload store folder
-            mkdir($uploadStoreFolder, 0755, true);
+            mkdir($uploadsFolder, 0755, true);
         }
-        //check upload configuration
+        //check uploads configuration
         $modelConfig = $this->model->getConfig();
         if(!isset($modelConfig->uploads)) {
             $errors[] = sprintf('Model %s have no uploads configuration', $this->subject);
-        }elseif(!isset($modelConfig->uploads[$uploadName]) || empty($modelConfig->uploads[$uploadName])) {
-            $errors[] = sprintf('Upload %s is not set into model %s configuration', $uploadName, $this->subject);
+        //check upload configuration
+        }elseif(!isset($modelConfig->uploads[$uploadKey]) || empty($modelConfig->uploads[$uploadKey])) {
+            $errors[] = sprintf('Upload %s is not set into model %s configuration', $uploadKey, $this->subject);
         } else {
-            //init return
-            $return->outputs = [
-            ];
+            //check upload folder
+            $uploadFolder = $this->model->getUploadFolder($uploadKey);
+            if(!is_dir($uploadFolder)) {
+                //create upload store folder
+                mkdir($uploadFolder, 0755, true);
+            }
             //move uploaded file to upload folder so that each output can access it (because move_uploaded_file deletes file)
-            $uploadFilePath = sprintf('%s/%s', $uploadStoreFolder, $fileName);
+            $uploadFilePath = sprintf('%s/%s', $uploadFolder, $fileName);
             move_uploaded_file($_FILES[$inputName]['tmp_name'], $uploadFilePath);
             //loop outputs
-            foreach ($modelConfig->uploads[$uploadName] as $outputKey => $output) {
-                //check output store folder
-                $outputStoreFolder = sprintf('%s/%s', $uploadStoreFolder, $outputKey);
-                if(!is_dir($outputStoreFolder)) {
+            foreach ($modelConfig->uploads[$uploadKey] as $outputKey => $output) {
+                //check output folder
+                $outputFolder = $this->model->getOutputFolder($uploadKey, $outputKey);
+                if(!is_dir($outputFolder)) {
                     //create output store folder
-                    mkdir($outputStoreFolder, 0755, true);
+                    mkdir($outputFolder, 0755, true);
                     //create default .gitignore file
-                    $fp = fopen(sprintf('%s/.gitignore', $outputStoreFolder), 'w');
+                    $fp = fopen(sprintf('%s/.gitignore', $outputFolder), 'w');
                     fwrite($fp, sprintf('# Ignore everything in this directory%1$s*%1$s!.gitignore', PHP_EOL));
                     fclose($fp);
                 }
                 //copy original uploaded file
-                $outputFilePath = sprintf('%s/%s', $outputStoreFolder, $fileName);
+                $outputFilePath = sprintf('%s/%s', $outputFolder, $fileName);
                 copy($uploadFilePath, $outputFilePath);
                 //handler
                 if(isset($output->handler)) {
                     $parameters = array_merge([$outputFilePath], $output->parameters ?? []);
                     call_user_func_array($output->handler, $parameters);
                 }
-                //set return
-                $return->outputs[$outputKey] = $outputFilePath;
             }
             //delete original uploaded file
             unlink($uploadFilePath);

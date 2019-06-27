@@ -32,4 +32,13 @@ class PixieExtended extends QueryBuilderHandler
     {
         return $this->getQuery()->getRawSql();
     }
+
+    /**
+    * Checks whether a table exists
+    * @param string $table
+    **/
+    public function tableExists(string $table): bool
+    {
+        return !is_null($this->query(sprintf("SHOW TABLES LIKE '%s'", $table))->first());
+    }
 }

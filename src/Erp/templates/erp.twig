@@ -26,7 +26,8 @@
 {% set alertMessages = {
     'save_success': 'Record saved'|trans,
     'delete_success': 'Record deleted'|trans,
-    'SQLSTATE_23000': 'There is already another record with the same %s'|trans
+    'SQLSTATE_23000_duplicate_entry': 'There is already another record with the same %s'|trans,
+    'SQLSTATE_23000_fk_constraint': 'Missing value for mandatory foreign key %s'|trans
 } %}
 {% set tableLabels = {
     'sort-asc': 'sort ascending'|trans,

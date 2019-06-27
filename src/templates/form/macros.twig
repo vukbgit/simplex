@@ -1,4 +1,5 @@
 {# sets field attributes based on config
+for autocomplete see https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete
 @param hash config: hash with following properties
 {
     'name': '',
@@ -9,7 +10,7 @@
     'autofocus': true,
     'autocomplete': '',
     'maxlength': '',
-    'class': '',
+    'classes': '',
     'validation': {
         'required': true,
         'pattern': ''
@@ -22,7 +23,7 @@
     name="{{ config.name }}"
     id="{{ config.id ?? config.name }}"
     {% if config.value %}
-    value="{{ config.value }}"
+    value="{{ config.value|escape('html_attr') }}"
     {% endif %}
     {% if config.label %}
     placeholder="{{ config.label }}"
@@ -33,6 +34,9 @@
     {% if config.disabled %}
     disabled="" 
     {% endif %}
+    {% if config.checked %}
+    checked="" 
+    {% endif %}
     {% if config.maxlength %}
     maxlength="{{ config.maxlength }}" 
     {% endif %}
@@ -40,8 +44,7 @@
     autocomplete="{{ config.autocomplete }}" 
     {% endif %}
     {# merge classes #}
-    {% set classes = ['form-control']|merge([config.class]) %}
-    class="{{ classes|join(' ') }}"
+    class="{{ config.classes|join(' ') }}"
     {# help text #}
     {% if config.help %}
     aria-describedby="{{ '%s-help'|format(config.id ?? config.name ) }}"
@@ -52,7 +55,7 @@
         required="" 
         {% endif %}
         {% if validation.pattern %}
-        pattern="{{ validation.pattern }}" 
+        pattern="{{ validation.pattern|escape('html_attr') }}" 
         {% endif %}
         {% if validation.validityStates %}
             {% for validityState, validityStateProperties in validation.validityStates %}
@@ -68,6 +71,7 @@
 {% endmacro %}
 
 {# displays a field validation message
+NOTE: javascript validation function creates automatically if needed, this macro can be used to initialized message at page load time
 @param string type: text | email
 @param hash config: hash for field properties (see fieldSetAttributes macro explanation)
 #}
@@ -81,16 +85,18 @@
 
 {# displays label
 @param hash config: hash for field properties (see fieldSetAttributes macro explanation)
+@param string classes: optional label css classes
 #}
-{% macro displayLabel(config) %}
-<label for="{{ config.id ?? config.name }}">{{ config.label }}</label>
+{% macro displayLabel(config, classes) %}
+<label for="{{ config.id ?? config.name }}"{% if classes %} class="{{ classes }}"{% endif %}
+>{{ config.label|raw }}</label>
 {% endmacro %}
 
 {# displays help
 @param hash config: hash for field properties (see fieldSetAttributes macro explanation)
 #}
 {% macro displayHelp(config) %}
-    {% set help = config.help ? [config.help] : [] %}
+    {% set help = config.help ? (config.help is iterable ? config.help : [config.help]) : [] %}
     {% if config.maxlength %}
         {% set help = help|merge(['maximum length %s characters'|format(config.maxlength)]) %}
     {% endif %}
@@ -99,9 +105,9 @@
 {% endif %}
 {% endmacro %}
 
-{############
-# INPUT TAG #
-############}
+{###################
+# TEXT-LIKE INPUTS #
+###################}
 
 {# displays an input field given the type, useful when type is condition dependant
 @param string type: text | email
@@ -114,11 +120,10 @@
     type="{{ type }}"
     {{ selfMacros.fieldSetAttributes(config) }}
     >
-    {#{ selfMacros.displayFieldValidationMessage(config.validation) }#}
 {% endmacro %}
 
-{# displays an input field given the type, useful when type is condition dependant
-@param string type: text | email
+{# displays a text-like input field given the type, useful when type is condition dependant
+@param string type: text | email | password
 @param hash config: hash for field properties (see fieldSetAttributes macro explanation)
 #}
 {% macro displayInputByTipe(type, config) %}
@@ -145,15 +150,32 @@
 #}
 {% macro displayInputText(config) %}
     {% import _self as selfMacros %}
+    {# add input class #}
+    {% set classes = config.classes ?? [] %}
+    {% set classes = ['form-control']|merge(classes) %}
+    {% set config = updateProperty(config, 'classes', classes) %}
     {{ selfMacros.displayInput('text', config) }}
 {% endmacro %}
 
 {# displays an input email field
 @param hash config: hash for field properties (see fieldSetAttributes macro explanation)
+NOTE: for to perform validation Simplex does not use browser built in (see https://www.w3.org/TR/html5/sec-forms.html#constraints-definitions) but a pattern that matches real world emails; and to avoid conflicts does not use both email type AND pattern validation
+^(([^<>()\\.,;:\s@"]+(\.[^<>()\\.,;:\s@"]+)*)|(".+"))@(([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$
+
 #}
 {% macro displayInputEmail(config) %}
     {% import _self as selfMacros %}
-    {{ selfMacros.displayInput('email', config) }}
+    {# set default validation pattern #}
+    {% if config.validation.pattern is not defined %}
+    {% set validation = config.validation ?? {} %}
+        {% set validation = updateProperty(validation, 'pattern', '^(([^<>()\\.,;:\s@"]+(\.[^<>()\\.,;:\s@"]+)*)|(".+"))@(([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$') %}
+        {% set config = updateProperty(config, 'validation', validation) %}
+    {% endif %}
+    {# add input class #}
+    {% set classes = config.classes ?? [] %}
+    {% set classes = ['form-control']|merge(classes) %}
+    {% set config = updateProperty(config, 'classes', classes) %}
+    {{ selfMacros.displayInput('text', config) }}
 {% endmacro %}
 
 {# displays an input password field
@@ -161,6 +183,10 @@
 #}
 {% macro displayInputPassword(config) %}
     {% import _self as selfMacros %}
+    {# add input class #}
+    {% set classes = config.classes ?? [] %}
+    {% set classes = ['form-control']|merge(classes) %}
+    {% set config = updateProperty(config, 'classes', classes) %}
     {{ selfMacros.displayInput('password', config) }}
 {% endmacro %}
 
@@ -172,14 +198,107 @@
     {{ selfMacros.displayInput('file', config) }}
 {% endmacro %}
 
-{# displays an input text field
+{# displays a text-like input field block
+@param string type: text | email | password
 @param hash config: hash for field properties (see fieldSetAttributes macro explanation)
 #}
-{% macro displayInputTextGroup(config) %}
+{% macro displayInputGroup(type, config) %}
     {% import _self as selfMacros %}
-    <div class="form-group">
+    {% set inputId = (config.id ?? config.name)|formatIdforJs %}
+    <div class="form-group" id="{{ '%s-container'|format(inputId) }}">
         {{ selfMacros.displayLabel(config) }}
-        {{ selfMacros.displayInputText(config) }}
+        {{ selfMacros.displayInputByTipe(type, config) }}
+        {{ selfMacros.displayHelp(config) }}
+    </div>
+{% endmacro %}
+
+{#################
+# RADIO/CHECKBOX #
+#################}
+
+{# displays one or more radio input field
+@param hash config: hash for field properties (see fieldSetAttributes macro explanation) plus specific properties:
+    bool inline
+@param array items: array of hashes each with value and label property
+#}
+{% macro displayInputRadio(config, items) %}
+    {% import _self as selfMacros %}
+    {{ selfMacros.displayInputRadioCheckbox('radio', config, items) }}
+{% endmacro %}
+
+{# displays one or more checkbox input field
+@param hash config: hash for field properties (see fieldSetAttributes macro explanation) plus specific properties:
+    bool inline
+@param array items: array of hashes each with value and label property
+#}
+{% macro displayInputRadio(config, items) %}
+    {% import _self as selfMacros %}
+    {{ selfMacros.displayInputRadioCheckbox('checkbox', config, items) }}
+{% endmacro %}
+
+{# displays one or more radio/checkbox input field
+@param string type: radio | checkbox
+@param hash config: hash for field properties (see fieldSetAttributes macro explanation) plus specific properties:
+    bool inline
+@param array items: array of hashes each with value and label property
+#}
+{% macro displayInputRadioCheckbox(type, config, items) %}
+    {% import _self as selfMacros %}
+    <div>
+    {% for item in items %}
+    <div class="form-check{% if config.inline %} form-check-inline{% endif %}">
+        {# id #}
+        {% set itemId = '%s_%s'|format(config.name, item.value) %}
+        {% set config = updateProperty(config, 'id', itemId) %}
+        {# checked #}
+        {% if item.value == config.value %}
+            {% set config = updateProperty(config, 'checked', true) %}
+        {% else %}
+            {% set config = updateProperty(config, 'checked', false) %}
+        {% endif %}
+        {# class #}
+        {% set classes = config.classes ?? [] %}
+        {% set classes = ['form-check-input']|merge(classes) %}
+        {% set config = updateProperty(config, 'classes', classes) %}
+        {{ selfMacros.displayInput(type, config) }}
+        {{ selfMacros.displayLabel({
+            'id': itemId,
+            'label': item.label
+        },
+        'form-check-label') }}
+    </div>
+    {% endfor %}
+    </div>
+{% endmacro %}
+
+{# displays a radios fields block
+@param hash config: hash for field properties (see fieldSetAttributes macro explanation)
+@param array items: array of hashes each with value and label property
+#}
+{% macro displayInputRadioGroup(config, items) %}
+    {% import _self as selfMacros %}
+    {{ selfMacros.displayInputRadioCheckboxGroup('radio', config, items) }}
+{% endmacro %}
+
+{# displays a checkoxes fields block
+@param hash config: hash for field properties (see fieldSetAttributes macro explanation)
+@param array items: array of hashes each with value and label property
+#}
+{% macro displayInputCheckboxGroup(config, items) %}
+    {% import _self as selfMacros %}
+    {{ selfMacros.displayInputRadioCheckboxGroup('checkbox', config, items) }}
+{% endmacro %}
+
+{# displays a checkoxes fields block
+@param string type: radio | checkbox
+@param hash config: hash for field properties (see fieldSetAttributes macro explanation)
+@param array items: array of hashes each with value and label property
+#}
+{% macro displayInputRadioCheckboxGroup(type, config, items) %}
+    {% import _self as selfMacros %}
+    <div class="form-group" id="{{ '%s-container'|format(config.name|formatIdforJs) }}">
+        {{ selfMacros.displayLabel(config) }}
+        {{ selfMacros.displayInputRadioCheckbox(type, config, items) }}
         {{ selfMacros.displayHelp(config) }}
     </div>
 {% endmacro %}
@@ -199,7 +318,6 @@
     <textarea
     {{ selfMacros.fieldSetAttributes(config) }}
     >{{ value }}</textarea>
-    {{ selfMacros.displayFieldValidationMessage(config.validation) }}
 {% endmacro %}
 
 {# rich text field
@@ -241,36 +359,49 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
     </script>
 {% endmacro %}
 
+{#########
+# UPLOAD #
+#########}
+
 {# file(s) upload field
 @param hash context: the calling template context object
+@param string uploadRoute: route to address uploads to
 @param hash config: hash for field properties (see fieldSetAttributes macro explanation) excpet for specific upload file options which can be set as a config.options hash; common options:
     allowedFileTypes: ['image', 'html', 'text', 'video', 'audio', 'flash', 'object']
     maxFileCount: maximum number of files allowed for each multiple upload. If set to 0, it means number of files allowed is unlimited
 #}
-{% macro displayFileUpload(context, config) %}
+{% macro displayFileUpload(context, uploadRoute, config) %}
     {% import _self as selfMacros %}
     {# build uplaod route #}
-    {% set uploadRoute = buildRouteToActionFromRoot('upload') %}
     <div class="form-group">
         {{ selfMacros.displayLabel(config) }}
-        {% set fieldName = (config.id ?? config.name)|formatIdforJs %}
+        {% set inputId = (config.id ?? config.name)|formatIdforJs %}
         {{ selfMacros.displayInputHidden(config) }}
         {# format upload input id to be used by javascript #}
-        {% set uploadId = '%s-upload'|format(fieldName) %}
+        {% set uploadId = '%s-upload'|format(inputId) %}
         {% set config = updateProperty(config, 'name', uploadId) %}
         {% set config = updateProperty(config, 'id', uploadId) %}
         {{ selfMacros.displayInputFile(config) }}
+        {# set help infos #}
+        {% set help = config.help ? [config.help] : [] %}
+        {# maximum file size #}
+        {% set help = help|merge(['maximum allowed upload size: %s MB'|trans|format(context.uploadMaxFilesizeMB)]) %}
+        {# number of files #}
+        {% set help = help|merge(['maximum number of files: %s'|trans|format(config.options.maxFileCount ? config.options.maxFileCount : 'no limit'|trans)]) %}
+        {% set config = updateProperty(config, 'help', help) %}
         {{ selfMacros.displayHelp(config) }}
     </div>
     
     <script type="text/javascript">
-    $("#{{ config.id }}").fileinput({
+    var options = {
         language: '{{ attribute(context.language, 'ISO-639-1') }}',
         theme: 'simplex',
         showUpload: false,
         showRemove: false,
         showUploadStats: false,
+        showDrag: true,
         browseOnZoneClick: true,
+        maxFileSize: {{ context.uploadMaxFilesizeKB }},
         uploadUrl: '{{ uploadRoute }}',
     {# config tweaks #}
     {% if config.options.maxFileCount and config.options.maxFileCount == 1 and config.options.autoReplace is not defined %}
@@ -279,16 +410,102 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
     {% for option,value in config.options %}
         '{{ option }}': {{ value|varToJs }},
     {% endfor %}
-    })
+    };
+    $("#{{ uploadId }}").fileinput(options)
     //auto upload on file selection
-    .on("filebatchselected", function(event, files) {
-        $("#{{ config.id }}").fileinput("upload");
+    .on("fileselect", function(event, numFiles, label) {
+        //upload only if there are files to upload so that triggered errors can be shown
+        if( $('#{{ uploadId }}').fileinput('getFilesCount')) {
+            $("#{{ uploadId }}").fileinput("upload");
+        }
     })
+    //after upload append file to input value
     .on('fileuploaded', function(event, data, previewId, index) {
-        console.log('{{ fieldName }}');
-        console.log(data);
-        console.log(previewId);
-        console.log(index);
-    });
+        //get file name
+        var fileName = data.files[0].name;
+        upload.appendFile('{{ inputId }}', {name: fileName});
+    })
+    .on('fileclear', function(event, id, index) {
+        console.log('fileclear: id = ' + id + ', index = ' + index);
+    })
+    .on('filecleared', function(event, id, index) {
+        console.log('filecleared: id = ' + id + ', index = ' + index);
+    })
+    .on('fileremoved', function(event, id, index) {
+        console.log('fileremoved: id = ' + id + ', index = ' + index);
+    })
+    //preview of just uploaded file has been deleted
+    .on('filesuccessremove', function(event, id, index) {
+        //remove file form input value
+        upload.removeFileFromInput('{{ inputId }}', index);
+    })
+    ;
+    var upload = {
+        /**
+        * gets files list from hidden input json
+        * @param string inputId: id attribute of the hidden input that stores files rapresentation
+        **/
+        getInputFiles: function(inputId) {
+            return $('#' + inputId).val() ? JSON.parse($('#' + inputId).val()) : [];
+        },
+        /**
+        * sets files list into hidden input json
+        * @param string inputId: id attribute of the hidden input that stores files rapresentation
+        * @param array filesList: list of files objects
+        **/
+        setFiles: function(inputId, filesList) {
+            $('#' + inputId).val(JSON.stringify(filesList));
+        },
+        /**
+        * makes room for a new file
+        * @param string inputId: id attribute of the hidden input that stores files rapresentation
+        **/
+        makeRoom: function(inputId) {
+            //get current files list
+            var filesList = this.getInputFiles(inputId);
+            //check maxFileCount
+            var maxFileCount = options.maxFileCount ? options.maxFileCount : 0;
+            if(maxFileCount == filesList.length) {
+                //remove first file in the list to make room
+                this.removeFileFromInput(inputId, 0);
+                this.removeFileFromPreviews(0);
+            }
+        },
+        /**
+        * removes a file from the input value
+        * @param string inputId: id attribute of the hidden input that stores files rapresentation
+        * @param int fileIndex: 0 based index of file both in the input files list and the files previews of uploaded files
+        **/
+        removeFileFromInput: function(inputId, fileIndex) {
+            //get current files list
+            var filesList = this.getInputFiles(inputId);
+            filesList.splice(fileIndex,1);
+            this.setFiles(inputId, filesList);
+        },
+        /**
+        * removes a file from previews
+        * @param int fileIndex: 0 based index of file both in the input files list and the files previews of uploaded files
+        **/
+        removeFileFromPreviews: function(fileIndex) {
+            //remove file from preview
+            //get previews of successfully upload files
+            var previewsList = $('#{{ uploadId }}').fileinput('getFrames', '.file-preview-success');
+            var preview = previewsList[fileIndex];
+            $(preview).remove();
+        },
+        /**
+        * appends an uploaded file to files list into the hidden input
+        * @param string inputId: id attribute of the hidden input that stores files rapresentation
+        * @param object fileObject: the object representing the uploaded file {name:name-of-the-file}
+        **/
+        appendFile: function(inputId, fileObject) {
+            //make room if necessary
+            this.makeRoom(inputId);
+            //append file
+            var filesList = this.getInputFiles(inputId);
+            filesList.push(fileObject);
+            this.setFiles(inputId, filesList);
+        }
+    }
     </script>
 {% endmacro %}

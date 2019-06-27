@@ -25,3 +25,21 @@ $(document).ready(function(){
     var cookieDurationDays = cookieDurationMinutes / 1440;
 </script>
 {% endblock %}
+{# sanitizes an email by the substitutions of @ and dots by replacements that must be defined (for example by using two different configured random function calls) into calling scope #}
+{% block sanitizeMailAssets %}
+{#% set mailDotReplacement = random(5000, 9999) %#}
+<!-- mail sanitize -->
+<script src="{{ 'jquery.safemail/dist/jquery.safemail.js'|pathToNpmAsset }}"></script>
+<script type="text/javascript">
+    {% if mailAtReplacement is not defined or mailDotReplacement is not defined %}
+    alert('for mail sanitize to be used, mailAtReplacement and mailDotReplacement template variables must be defined')
+    {% else %}
+$(document).ready(function(){
+    $('.sanitized-email').safemail({
+        atRegex: /\s+{{ mailAtReplacement }}\s+/g,
+        dotRegex: /\s+{{ mailDotReplacement }}\s+/g,
+    });
+});
+    {% endif %}
+</script>
+{% endblock %}

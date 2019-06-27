@@ -4,3 +4,9 @@
     top:0;
     z-index:1000000;
 }
+.form-with-validation {
+    .form-group {
+        //for tooltip messages to work
+        position:relative;
+    }
+}
