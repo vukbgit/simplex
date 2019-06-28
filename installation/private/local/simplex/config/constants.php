@@ -46,3 +46,9 @@ define('LOCAL_TEMPLATES_DIR', PRIVATE_LOCAL_DIR);
 define('TEMPLATES_EXTENSION', 'twig');
 //twig folder to search for default action template, path from the controller folder
 define('TEMPLATES_DEFAULT_FOLDER', 'templates');
+/**********
+* CAPTCHA *
+**********/
+//it supposed to be only one captcha configuration for the whole site (do we ever need more?!)
+//path to captcha config file
+define('CAPTCHA_CONFIG_PATH', 'private/local/simplex/config/captcha.php');

@@ -1,14 +1,10 @@
 {% extends '@share/Erp/templates/erp.twig' %}
 
-{% use '@share/templates/form/blocks.twig' %}
-
 {% import '@share/templates/form/macros.twig' as formMacros %}
 
 {% block head %}
     {{ parent() }}
-    {% block validationAssets %}
-        {{ parent() }}
-    {% endblock %}
+    {{ formMacros.setUpForm(_context) }}
     <!-- sign in assets -->
     <link rel="stylesheet" href="/public/share/simplex/Authentication/css/sign-in.min.css">
 {% endblock %}

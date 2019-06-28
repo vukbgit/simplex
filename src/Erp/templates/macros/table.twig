@@ -8,12 +8,12 @@
     {% endfor %}
     {# field sorting is not set  #}
     {% if sorting == null %}
-        {% set buttonClass = 'icon-sort text-muted' %}
+        {% set buttonClass = 'icon-erp-sort text-muted' %}
         {% set reverseDirection = 'asc' %}
     {% else %}
     {# field sorting is set  #}
         {% set direction = sorting[1]|lower %}
-        {% set buttonClass = 'icon-sorted-%s'|format(direction) %}
+        {% set buttonClass = 'icon-erp-sorted-%s'|format(direction) %}
         {% set reverseDirection = direction == 'asc' ? 'desc' : 'asc' %}
     {% endif %}
     {% set buttonTitle = attribute(context.tableLabels, 'sort-%s'|format(reverseDirection)) %}

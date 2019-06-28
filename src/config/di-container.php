@@ -20,6 +20,8 @@ use \Pixie\Connection;
 use \Simplex\PixieExtended;
 //authentication
 use \Simplex\Authentication;
+//captcha
+use Simplex\ZendCaptchaImageExtended;
 //to get LOCAL CLASSES
 use function Simplex\mergeArrayFromFiles;
 //definitions array
@@ -81,6 +83,9 @@ return array_merge(
         //authentication
         'simplexAuthenticationMiddleware' => create(Authentication\Middleware::class)
             ->constructor(get('cookieManager')),
+        //captcha
+        'captcha' => create(ZendCaptchaImageExtended::class)
+            ->constructor(require CAPTCHA_CONFIG_PATH),
         /**********************************
         * STOP ADDITIONAL FUNCTIONALITIES *
         **********************************/

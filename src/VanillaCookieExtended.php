@@ -6,7 +6,7 @@ namespace Simplex;
 use CodeZero\Cookie\VanillaCookie;
 
 /*
-* Subclass of  Vanilla Cookie (https://github.com/codezero-be/cookie) to add some functionalities
+* Subclass of Vanilla Cookie (https://github.com/codezero-be/cookie) to add some functionalities
 *
 */
 class VanillaCookieExtended extends VanillaCookie
