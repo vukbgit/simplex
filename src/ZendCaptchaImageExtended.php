@@ -12,24 +12,36 @@ use Zend\Captcha\Image;
 class ZendCaptchaImageExtended extends Image
 {
     /**
+    * Checks whether image folder config and creates it if not
+    **/
+    private function checkCaptchaImageFolder()
+    {
+        $options = $this->getOptions();
+        if(!is_dir($options['imgDir'])) {
+            mkdir($options['imgDir'], 0755, true);
+        }
+    }
+    
+    /**
     * Generate image and return url
     **/
     public function generateCaptchaImage()
     {
-        $id = $this->captcha->generate();
-        $configuration = require sprintf('%s/Frontend/config/captcha.php', PRIVATE_LOCAL_DIR);
+        $this->checkCaptchaImageFolder();
+        $options = $this->getOptions();
+        $id = $this->generate();
         return (object) [
             'id' => $id,
-            'imageUrl' => sprintf('%s/%s.png', $configuration['imgDir'], $id)
+            'imageUrl' => sprintf('/%s/%s.png', $options['imgDir'], $id)
         ];
     }
 
     /**
     * Generate image and return url
     **/
-    public function reloadCaptcha()
+    public function reloadCaptcha(\Psr\Http\Message\ResponseInterface &$response)
     {
-        $response = $this->response->withHeader('Content-Type', 'text/json');
+        $response = $response->withHeader('Content-Type', 'text/json');
         $response->getBody()
             ->write(json_encode($this->generateCaptchaImage()));
     }
@@ -52,11 +64,11 @@ class ZendCaptchaImageExtended extends Image
     public function isCaptchaValid($id, $value)
     {
         $captchaData = [
-            $this->captcha->getName() => [
+            $this->getName() => [
                 'id' => $id,
                 'input' => $value
             ]
         ];
-        return $this->captcha->isValid($captchaData);
+        return $this->isValid($captchaData);
     }
 }
