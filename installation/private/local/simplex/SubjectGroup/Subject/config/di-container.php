@@ -12,9 +12,11 @@ require sprintf('%s/Backend/config/variables.php', PRIVATE_LOCAL_DIR);
 //import subject variables
 require 'variables.php';
 //definitions array
+/*
 return [
     sprintf('%s-controller', $subject) => create(sprintf('%s\Controller', $subjectNamespace))
         ->constructor(get('DIContainer'), get('response'), get('templateEngine'), get('cookieManager')),
     sprintf('%s-model', $subject) => create(sprintf('%s\Model', $subjectNamespace))
         ->constructor(get('queryBuilder')),
 ];
+*/
