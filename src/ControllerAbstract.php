@@ -138,14 +138,36 @@ abstract class ControllerAbstract
     }
     
     /**
+    * Loads configured language
+    */
+    protected function loadLanguages(): object
+    {
+        //load languages configuration
+        $languagesConfigFilePath = sprintf('%s/languages.json', LOCAL_CONFIG_DIR);
+        return json_decode(file_get_contents($languagesConfigFilePath));
+    }
+    
+    /**
     * Gets & sets language
     */
     protected function setLanguage()
     {
+        //try to get language form route
         $languageCode = $this->routeParameters->lang ?? null;
-        $languagesConfigFilePath = sprintf('%s/languages.json', LOCAL_CONFIG_DIR);
-        $languages = json_decode(file_get_contents($languagesConfigFilePath));
+        //load configured languages
+        $languages = $this->loadLanguages();
+        //set current language
         $this->language = $languages->$languageCode ?? current($languages);
+        $languageIETF = str_replace('-', '_', $this->language->IETF);
+        // Set language
+        putenv(sprintf('LC_ALL=%s', $languageIETF));
+        setlocale(LC_ALL, sprintf('%s.utf8', $languageIETF));
+        $domain = 'simplex';
+        // Specify the location of the translation tables
+        bindtextdomain($domain, sprintf('%s/locales', PRIVATE_LOCAL_DIR));
+        bind_textdomain_codeset($domain, 'UTF-8');
+        // Choose domain
+        textdomain($domain);
     }
 
     /**

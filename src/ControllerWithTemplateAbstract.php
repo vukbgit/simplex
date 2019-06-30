@@ -234,6 +234,14 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
     }
     
     /**
+    * Build common template helpers going up the inheritance chain, used to generate templates cache during translations extraction
+    */
+    protected function buildTemplateHelpersBack()
+    {
+        $this->buildCommonTemplateHelpers();
+    }
+    
+    /**
     * Sets common template parameters
     */
     private function setCommonTemplateParameters()

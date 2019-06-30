@@ -1,10 +1,12 @@
 {
     "it": {
         "ISO-639-1": "it",
-        "ISO-639-3": "ita"
+        "ISO-639-3": "ita",
+        "IETF": "it-IT"
     },
     "en": {
         "ISO-639-1": "en",
-        "ISO-639-3": "eng"
+        "ISO-639-3": "eng",
+        "IETF": "en-GB"
     }
 }

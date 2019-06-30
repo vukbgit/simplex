@@ -293,6 +293,15 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
     }
     
     /**
+    * Build common template helpers going up the inheritance chain, used to generate templates cache during translations extraction
+    */
+    protected function buildTemplateHelpersBack()
+    {
+        parent::buildTemplateHelpersBack();
+        $this->buildCommonTemplateHelpers();
+    }
+    
+    /**
     * Sets common template parameters
     */
     private function setCommonTemplateParameters()
@@ -434,7 +443,7 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
             $uploadMaxFilesizeIni = ini_get('upload_max_filesize');
             $uploadMaxFilesizeBytes = bytes(ini_get('upload_max_filesize'));
             //in kB for client validation
-            $uploadMaxFilesizeKB = str_replace('kB', '', \ByteUnits\bytes($uploadMaxFilesizeBytes)->format('kB'));
+            $uploadMaxFilesizeKB = number_format((float) str_replace('kB', '', \ByteUnits\bytes($uploadMaxFilesizeBytes)->format('kB')), 2, '.', '');
             //in MB to be displayed
             $uploadMaxFilesizeMB = str_replace('MB', '', \ByteUnits\bytes($uploadMaxFilesizeBytes)->format('MB'));
             $this->setTemplateParameter('uploadMaxFilesizeKB', $uploadMaxFilesizeKB);

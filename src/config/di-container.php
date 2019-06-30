@@ -22,6 +22,8 @@ use \Simplex\PixieExtended;
 use \Simplex\Authentication;
 //captcha
 use Simplex\ZendCaptchaImageExtended;
+//translations
+use Simplex\TranslationsExtractor;
 //to get LOCAL CLASSES
 use function Simplex\mergeArrayFromFiles;
 //definitions array
@@ -54,13 +56,16 @@ return array_merge(
         'response' => create(response::class),
         //emitter
         'emitter' => create(SapiEmitter::class),
+        //translations
+        'translationsExtractor' => create(TranslationsExtractor::class)
+            ->constructor(get('DIContainer'), get('response'), get('templateEngine'), get('cookieManager')),
         /*******************************
         * STOP MINIMAL FUNCTIONALITIES *
         *******************************/
         /***********************************
         * START ADDITIONAL FUNCTIONALITIES *
         ***********************************/
-        //template engine, templates path are set into Simplex\ControllerWithTemplateAbstract::renderTemplate
+        //template engine, templates paths are set into Simplex\ControllerWithTemplateAbstract::renderTemplate
         'twigFilesystemLoader' => create(FilesystemLoader::class)
             ->constructor(),
         'templateEngine' => create(Environment::class)

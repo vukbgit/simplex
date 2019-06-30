@@ -59,34 +59,34 @@ _NOTE ON THIS DOCUMENT_: I will try to be clear and write down all the details t
 
 Create a Composer.json in the root folder:
 
-    {
-        "type": "project",
-        "name": "simplex",
-        "description": "Simplex app",
-        "license": "MIT",
-        "require": {
-            "vukbgit/simplex": "^1.1.0"
-        },
-        "config": {
-            "vendor-dir": "private/share",
-            "bin-dir": "./"
-        },
-        "autoload": {
-            "psr-4": {
-                "Simplex\\Local\\": "private/local/simplex"
-            }
-        },
-        "scripts": {
-           "post-create-project-cmd": [
-               "SlowProg\\CopyFile\\ScriptHandler::copy"
-           ]
-       },
-       "extra": {
-           "copy-file": {
-               "private/share/vukbgit/simplex/installation/": "."
-           }
+{
+    "type": "project",
+    "name": "simplex",
+    "description": "Simplex app",
+    "license": "MIT",
+    "require": {
+        "vukbgit/simplex": "^1.1.0"
+    },
+    "config": {
+        "vendor-dir": "private/share",
+        "bin-dir": "./"
+    },
+    "autoload": {
+        "psr-4": {
+            "Simplex\\Local\\": "private/local/simplex"
+        }
+    },
+    "scripts": {
+       "post-create-project-cmd": [
+           "SlowProg\\CopyFile\\ScriptHandler::copy"
+       ]
+   },
+   "extra": {
+       "copy-file": {
+           "private/share/vukbgit/simplex/installation/": "."
        }
-    }
+   }
+}
 
 Create the Composer project running on command line in the root folder:
 

@@ -538,7 +538,7 @@ NOTE: javascript validation function creates automatically if needed, this macro
 {% macro displayHelp(config) %}
     {% set help = config.help ? (config.help is iterable ? config.help : [config.help]) : [] %}
     {% if config.maxlength %}
-        {% set help = help|merge(['maximum length %s characters'|format(config.maxlength)]) %}
+        {% set help = help|merge(['maximum length %s characters'|trans|format(config.maxlength)]) %}
     {% endif %}
     {% if help is not empty %}
  <small id="{{ '%s-help'|format(config.id ?? config.name ) }}" class="form-text text-muted">{{ help|join('; ') }}</small>
@@ -575,7 +575,6 @@ NOTE: javascript validation function creates automatically if needed, this macro
         {{ selfMacros.captchaAssets(context, config.captcha) }}
     {% endif %}
 {% endmacro %}
-
 {% macro formValidation() %}
 <script>
 /*************
@@ -678,34 +677,34 @@ NOTE: javascript validation function creates automatically if needed, this macro
         var defaultErrorMessage;
         switch(validityState) {
             case 'value-missing':
-                defaultErrorMessage = '{{ 'Please fill out this field.'|trans|escape('js') }}';
+                defaultErrorMessage = '{{ 'Please fill out this field'|trans|escape('js') }}';
             break;
             case 'email':
-                defaultErrorMessage = '{{' Please enter an email address'|trans|escape('js') }}.';
+                defaultErrorMessage = '{{'Please enter an email address'|trans|escape('js') }}.';
             break;
             case 'url':
-                defaultErrorMessage = '{{ 'Please enter a URL.'|trans|escape('js') }}';
+                defaultErrorMessage = '{{ 'Please enter a URL'|trans|escape('js') }}';
             break;
             case 'too-short':
-                defaultErrorMessage = 'Please lengthen this text to ' + field.getAttribute('minLength') + ' characters or more. You are currently using ' + field.value.length + ' characters.';
+                defaultErrorMessage = '{{ 'Please lengthen this text to %s characters or more. You are currently using %s characters'|trans|format("' + field.getAttribute('minLength') + '", "' + field.value.length + '")|raw }}';
             break;
             case 'too-long':
-                defaultErrorMessage = 'Please short this text to no more than ' + field.getAttribute('maxLength') + ' characters. You are currently using ' + field.value.length + ' characters.';
+                defaultErrorMessage = '{{ 'Please short this text to no more than %s characters. You are currently using %s characters'|trans|format("' + field.getAttribute('maxLength') + '", "' + field.value.length + '")|raw }}';
             break;
             case 'bad-input':
-                defaultErrorMessage = '{{ 'Please enter a number.'|trans|escape('js') }}';
+                defaultErrorMessage = '{{ 'Please enter a number'|trans|escape('js') }}';
             break;
             case 'step-mismatch':
-                defaultErrorMessage = '{{ 'Please select a valid value.'|trans|escape('js') }}';
+                defaultErrorMessage = '{{ 'Please select a valid value'|trans|escape('js') }}';
             break;
             case 'range-overflow':
-                defaultErrorMessage = 'Please select a value that is no more than ' + field.getAttribute('max') + '.';
+                defaultErrorMessage = '{{ 'Please select a value that is no more than %s'|trans|format("' + field.getAttribute('max')")|raw }};
             break;
             case 'range-underflow':
-                defaultErrorMessage = 'Please select a value that is no less than ' + field.getAttribute('min') + '.';
+                defaultErrorMessage = '{{ 'Please select a value that is no less than %s'|trans|format("' + field.getAttribute('min')")|raw }};
             break;
             case 'pattern-mismatch':
-                defaultErrorMessage = '{{ 'Please match the requested format.'|trans|escape('js') }}';
+                defaultErrorMessage = '{{ 'Please match the requested format'|trans|raw }}';
             break;
         }
         var dataAttribute = 'data-validity-state-' + validityState + '-message';

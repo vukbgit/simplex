@@ -62,7 +62,6 @@ if (!function_exists('Simplex\requireFromFiles')) {
             $filePath = $file->__toString();
             require $filePath;
         }
-        return $return;
     }
 }
 
