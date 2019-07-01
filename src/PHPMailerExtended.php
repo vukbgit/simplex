@@ -70,7 +70,7 @@ class PHPMailerExtended extends PHPMailer
         //subject
         $this->Subject = $subject;
         //body
-        $this->msgHTML($body);
+        $this->msgHTML($body, ABS_PATH_TO_ROOT);
         //attachments
         if($attachments) {
             if(!is_array($attachments)) {
