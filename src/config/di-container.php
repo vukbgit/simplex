@@ -24,6 +24,8 @@ use \Simplex\Authentication;
 use Simplex\ZendCaptchaImageExtended;
 //translations
 use Simplex\TranslationsExtractor;
+//spreadsheets read/write
+use Simplex\SpreadsheetReaderWriter;
 //to get LOCAL CLASSES
 use function Simplex\mergeArrayFromFiles;
 //definitions array
@@ -91,6 +93,8 @@ return array_merge(
         //captcha
         'captcha' => create(ZendCaptchaImageExtended::class)
             ->constructor(require CAPTCHA_CONFIG_PATH),
+        //spreadsheet reader/write
+        'spreadsheet' => create(SpreadsheetReaderWriter::class),
         /**********************************
         * STOP ADDITIONAL FUNCTIONALITIES *
         **********************************/
