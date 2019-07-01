@@ -282,10 +282,10 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
     }
 
     /**
-    * Renders template
+    * Renders template and injects HTML code into response
     * @param string $templatePath: if null, into current namespace will be searched into 'templates' subfolder a template named after $this->action
     */
-    protected function renderTemplate(string $templatePath = null)
+    protected function renderTemplateCode(string $templatePath = null): string
     {
         //add templates paths
         $loader = $this->template->getLoader();
@@ -304,7 +304,16 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         }
         //render template and get HTML
         $this->setTemplateParameter('test', $this->cookie->get('test'));
-        $html = $this->template->render($templatePath, $this->templateParameters);
+        return $this->template->render($templatePath, $this->templateParameters);
+    }
+    
+    /**
+    * Renders template and injects HTML code into response
+    * @param string $templatePath: if null, into current namespace will be searched into 'templates' subfolder a template named after $this->action
+    */
+    protected function renderTemplate(string $templatePath = null)
+    {
+        $html = $this->renderTemplateCode($templatePath);
         //send HTML to response
         $response = $this->response->withHeader('Content-Type', 'text/html');
         $response->getBody()

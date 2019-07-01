@@ -3,9 +3,9 @@
 * LOCAL *
 ********/
 //included into exceptions message
-define('TECH_EMAIL', 'leo@derosaassociates.com');
+define('TECH_EMAIL', '');
 //used to set page title tag in some templates
-define('BRAND', 'LIA');
+define('BRAND', '');
 /**************
 * ENVIRONMENT *
 **************/

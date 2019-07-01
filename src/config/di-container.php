@@ -26,6 +26,8 @@ use Simplex\ZendCaptchaImageExtended;
 use Simplex\TranslationsExtractor;
 //spreadsheets read/write
 use Simplex\SpreadsheetReaderWriter;
+//mailer
+use Simplex\PHPMailerExtended;
 //to get LOCAL CLASSES
 use function Simplex\mergeArrayFromFiles;
 //definitions array
@@ -95,6 +97,8 @@ return array_merge(
             ->constructor(require CAPTCHA_CONFIG_PATH),
         //spreadsheet reader/write
         'spreadsheet' => create(SpreadsheetReaderWriter::class),
+        //mailer
+        'mailer' => create(PHPMailerExtended::class),
         /**********************************
         * STOP ADDITIONAL FUNCTIONALITIES *
         **********************************/
