@@ -137,3 +137,16 @@ if (!function_exists('Simplex\getInstancePath')) {
         return sprintf('private/local/simplex/%s', str_replace('\\', '/', $namespace));
     }
 }
+
+if (!function_exists('Simplex\loadLanguages')) {
+    /**
+    * Loads configured languages from json file
+    *
+    * @return object
+    */
+    function loadLanguages() : object
+    {
+        $languagesConfigFilePath = sprintf('%s/languages.json', LOCAL_CONFIG_DIR);
+        return json_decode(file_get_contents($languagesConfigFilePath));
+    }
+}

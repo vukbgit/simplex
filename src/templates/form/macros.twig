@@ -99,8 +99,18 @@ NOTE: for to perform validation Simplex does not use browser built in (see https
     {% import _self as selfMacros %}
     {% set inputId = (config.id ?? config.name)|formatIdforJs %}
     <div class="form-group" id="{{ '%s-container'|format(inputId) }}">
+    {% if config.locales is not defined %}
         {{ selfMacros.displayLabel(config) }}
         {{ selfMacros.displayInputByTipe(type, config) }}
+    {% else %}
+        {% for languageCode, language in config.locales|objectToArray %}
+            {% set languageConfig = config %}
+            {% set languageConfig = updateProperty(languageConfig, 'name', '%s[%s]'|format(config.name, languageCode)) %}
+            {% set languageConfig = updateProperty(languageConfig, 'countryCode', attribute(language, 'ISO-3166-1-2')|lower) %}
+            {{ selfMacros.displayLabel(languageConfig) }}
+            {{ selfMacros.displayInputByTipe(type, languageConfig) }}
+        {% endfor %}
+    {% endif %}
         {{ selfMacros.displayHelp(config) }}
     </div>
 {% endmacro %}
@@ -463,7 +473,7 @@ for autocomplete see https://developer.mozilla.org/en-US/docs/Web/HTML/Attribute
     {% set validation = config.validation ?? {} %}
     {# common #}
     name="{{ config.name }}"
-    id="{{ config.id ?? config.name }}"
+    id="{{ (config.id ?? config.name)|formatIdforJs }}"
     value="{{ config.value|escape('html_attr') }}"
     {% if config.label %}
     placeholder="{{ config.label }}"
@@ -528,8 +538,13 @@ NOTE: javascript validation function creates automatically if needed, this macro
 @param string classes: optional label css classes
 #}
 {% macro displayLabel(config, classes) %}
-<label for="{{ config.id ?? config.name }}"{% if classes %} class="{{ classes }}"{% endif %}
->{{ config.label|raw }}</label>
+<label for="{{ (config.id ?? config.name)|formatIdforJs }}"{% if classes %} class="{{ classes }}"{% endif %}
+>
+{{ config.label|raw }}
+{% if config.countryCode is defined %}
+<span class="{{ 'flag-icon flag-icon-%s'|format(config.countryCode) }}"></span>
+{% endif %}
+</label>
 {% endmacro %}
 
 {# displays help
@@ -552,6 +567,7 @@ NOTE: javascript validation function creates automatically if needed, this macro
 {# sets up form and include assets, to be called inside head tag
 @param hash config: hash for form properties
     noValidation (bool): whether NOT to load JavaScript validation API
+    locales (bool): whether there is at least one localized field
     assets (list): ['richTextEditor', 'fileUpload', 'captcha'] list of the field types included into form that need some asset to be included
     captcha (object): captcha config object, properties:
         reloadRoute (string): route for image reloading, it must be mapped and must return Simplex\ZendCaptchaImageExtended::reloadCaptcha
@@ -564,6 +580,10 @@ NOTE: javascript validation function creates automatically if needed, this macro
     {% if (config.noValidation is not defined) or config.noValidation == false %}
         {{ selfMacros.formValidation() }}
     {% endif %}
+    {# locales #}
+    {% if config.locales %}
+        {{ selfMacros.localesAssets(context) }}
+    {% endif %}
     {# assets #}
     {% if 'richTextEditor' in config.assets %}
         {{ selfMacros.richTextEditorAssets(context) }}
@@ -575,6 +595,10 @@ NOTE: javascript validation function creates automatically if needed, this macro
         {{ selfMacros.captchaAssets(context, config.captcha) }}
     {% endif %}
 {% endmacro %}
+
+{#
+builds validation javascript API
+#}
 {% macro formValidation() %}
 <script>
 /*************
@@ -834,6 +858,14 @@ NOTE: javascript validation function creates automatically if needed, this macro
     };
 })();
 </script>
+{% endmacro %}
+
+{# localized fields
+@param object context
+#}
+{% macro localesAssets(context) %}
+{<!-- Flag icon css -->
+<link href="{{ 'flag-icon-css/css/flag-icon.min.css'|pathToNpmAsset }}" media="all" rel="stylesheet" type="text/css" />
 {% endmacro %}
 
 {# rich text editor

@@ -6,6 +6,7 @@ namespace Simplex\Model;
 use Simplex\PixieExtended;
 use function Simplex\getInstanceNamespace;
 use function Simplex\getInstancePath;
+use function Simplex\loadLanguages;
 
 /*
 * class that rapresents a model, an atomic structure of data stored in a database
@@ -84,11 +85,19 @@ abstract class ModelAbstract
     }
     
     /**
-    * Returns the view or at least table defined
+    * Returns the defined view or at least table
     */
     public function view(): string
     {
-        return $this->config->view ?? $this->config->table;
+        return $this->config->view ? ($this->hasLocales() ? sprintf('%s_locales', $this->config->view) : $this->config->view) : $this->config->table;
+    }
+    
+    /**
+    * Returns whether the model has at least one localized field
+    */
+    public function hasLocales(): bool
+    {
+        return isset($this->config->locales);
     }
     
     /**
@@ -177,14 +186,45 @@ abstract class ModelAbstract
                 call_user_func_array([$this->query, 'orderBy'], $orderCondition);
             }
         }
-        return $this->query->get();
+        $records = $this->query->get();
+        //localized fields
+        if($this->hasLocales()) {
+            $recordsByPK = [];
+            $languagesCodes = array_keys(get_object_vars(loadLanguages()));
+            $localizedFieldValuesTemplate = [];
+            foreach ($languagesCodes as $languageCode) {
+                $localizedFieldValuesTemplate[$languageCode] = null;
+            }
+            foreach ($records as $record) {
+                $PKValue = $record->{$this->config->primaryKey};
+                //init record by PK
+                if(!isset($recordsByPK[$PKValue])) {
+                    $recordsByPK[$PKValue] = (object) [
+                    ];
+                    foreach ($record as $field => $value) {
+                        //if it's not a localized field store as is
+                        if(!in_array($field, $this->config->locales)) {
+                            $recordsByPK[$PKValue]->$field = $value;
+                        } else {
+                        //if it's a localized field init field's values container
+                            $recordsByPK[$PKValue]->$field = $localizedFieldValuesTemplate;
+                        }
+                    }
+                }
+                //loop record's localized fields
+                foreach ($this->config->locales as $field) {
+                    $recordsByPK[$PKValue]->$field[$record->language_code] = $record->field;
+                }
+            }
+        }
+        return $records;
     }
     
     /**
     * Gets a record
     * @param array $where: array of arrays, each with 2 elements (field name and value, operator defaults to '=') or 3 elements (field name, operator, value)
     */
-    public function first(array $where = []): object
+    public function first(array $where = [])
     {
         return current($this->get($where));
     }

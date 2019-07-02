@@ -197,6 +197,18 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         $this->addTemplateFilter('isNavigationRouteCurrentRoute', function($path){
             return $this->isNavigationRouteCurrentRoute($path);
         });
+        /********
+        * DATES *
+        ********/
+        /* formats a date with locale awareness
+        * @param string $date: in Y-m-d format
+        * @param string $format: as accepted by strftime https://php.net/strftime
+        */
+        $this->addTemplateFunction('dateLocale', function(string $date, string $format){
+            $date = \DateTime::createFromFormat('Y-m-d', $date);
+            $timestamp = (int) $date->format('U');
+            return strftime($format, $timestamp);
+        });
         /*******
         * FORM *
         *******/
@@ -251,6 +263,7 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         $this->setTemplateParameter('area', $this->area);
         $this->setTemplateParameter('action', $this->action);
         $this->setTemplateParameter('language', $this->language);
+        $this->setTemplateParameter('languages', $this->languages);
         $this->setTemplateParameter('routeParameters', $this->routeParameters);
         $this->setTemplateParameter('pathToAreaTemplate', sprintf('@local/%s/%s/%s.twig', slugToPSR1Name($this->area, 'class'), TEMPLATES_DEFAULT_FOLDER, $this->area));
         $this->setTemplateParameter('areaCookie', $this->getAreaCookie());

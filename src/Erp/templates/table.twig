@@ -23,33 +23,39 @@
         {% endblock tableFilter %}
 </nav>
     {% endblock tableNavBar %}
+    {% if records|length %}
 <table class="table table-sm table-hover table-responsive-sm erp-table">
     <caption>{{- attribute(modelGlobalActionsNavigationLabels, currentNavigationVoice.modelGlobalActions) -}}</caption>
     <thead class="thead-light">
         <tr>
-    {% block tableHeaders %}
-    {% endblock %}
+        {% block tableHeaders %}
+        {% endblock %}
     {# record visible actions header #}
-    {% if navigations.recordVisibleActions|length %}
+        {% if navigations.recordVisibleActions|length %}
         <th colspan="{{ navigations.recordVisibleActions|length }}"></th>
-    {% endif %}
+        {% endif %}
         </tr>
     </thead>
     <tbody>
     {# ROWS LOOP #}
-    {% for record in records %}
+        {% for record in records %}
         <tr>
-        {% block rowFields %}
-        {% endblock %}
-        {% for voiceKey, voiceProperties in navigations.recordVisibleActions %}
+            {% block rowFields %}
+            {% endblock %}
+            {% for voiceKey, voiceProperties in navigations.recordVisibleActions %}
             <td class="record-action">
                 <a href="{{ parseRecordActionRoute(voiceProperties.route, record) }}">
             {{- attribute(actionsLabels, voiceKey) -}}
                 </a>
             </td>
-        {% endfor %}
+            {% endfor %}
         </tr>
-    {% endfor %}
-  </tbody>
+        {% endfor %}
+    </tbody>
 </table>
+    {% else %}
+<div class="alert alert-info" role="alert">
+{% trans 'No records saved' %}
+</div>
+    {% endif %}
 {% endblock pageContent %}

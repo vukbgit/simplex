@@ -531,9 +531,10 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
      */
     protected function getSaveFieldsData(): object
     {
+        //extract filter definition from fields config
         //get fields filters
         $inputFieldsFilters = array_filter(
-            //extract filter definition from fields config
+            //return true if field has a filter definition
             array_map(
                 function($fieldConfiguration) {
                     return $fieldConfiguration->inputFilter ?? null;
@@ -545,6 +546,21 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
                 return $fieldFilter;
             }
         );
+        //deral with localized fields
+        $modelLocales = $this->model->getConfig()->locales ?? [];
+        foreach ($inputFieldsFilters as $fieldName => $inputFilter) {
+            //localized field
+            if(in_array($fieldName, $modelLocales)) {
+                if(!is_array($inputFilter)) {
+                    $inputFilter = ['filter' => $inputFilter];
+                }
+                if(!isset($inputFilter['flags'])) {
+                    $inputFilter['flags'] = 0;
+                }
+                $inputFilter['flags'] = FILTER_REQUIRE_ARRAY;
+                $inputFieldsFilters[$fieldName] = $inputFilter;
+            }
+        }
         $input = filter_input_array(INPUT_POST, $inputFieldsFilters);
         //process input
         $this->processSaveFormInput($input);
@@ -572,7 +588,9 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
      */
     protected function insert()
     {
+        x($_POST);
         $fieldsData = $this->getSaveFieldsData();
+        xx($fieldsData);
         try {
             //save record
             $this->model->insert($fieldsData->saveFieldsValues);

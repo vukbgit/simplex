@@ -9,6 +9,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Container\ContainerInterface;
 use Twig\Environment;
 use function Simplex\slugToPSR1Name;
+use function Simplex\loadLanguages;
 
 /*
 * In this context controller means a class that:
@@ -50,6 +51,12 @@ abstract class ControllerAbstract
     */
     protected $area;
 
+    /**
+    * @var object
+    * object with configured languages objects
+    */
+    protected $languages = null;
+    
     /**
     * @var object
     * object with current language specifications
@@ -140,11 +147,12 @@ abstract class ControllerAbstract
     /**
     * Loads configured language
     */
-    protected function loadLanguages(): object
+    protected function loadLanguages()
     {
-        //load languages configuration
-        $languagesConfigFilePath = sprintf('%s/languages.json', LOCAL_CONFIG_DIR);
-        return json_decode(file_get_contents($languagesConfigFilePath));
+        if(!$this->languages) {
+            //load languages configuration
+            $this->languages = loadLanguages();
+        }
     }
     
     /**
@@ -155,10 +163,10 @@ abstract class ControllerAbstract
         //try to get language form route
         $languageCode = $this->routeParameters->lang ?? null;
         //load configured languages
-        $languages = $this->loadLanguages();
+        $this->loadLanguages();
         //set current language
-        $this->language = $languages->$languageCode ?? current($languages);
-        $languageIETF = str_replace('-', '_', $this->language->IETF);
+        $this->language = $this->languages->$languageCode ?? current($this->languages);
+        $languageIETF = sprintf('%s_%s', $this->language->{'ISO-639-1'}, $this->language->{'ISO-3166-1-2'});
         // Set language
         putenv(sprintf('LC_ALL=%s', $languageIETF));
         setlocale(LC_ALL, sprintf('%s.utf8', $languageIETF));

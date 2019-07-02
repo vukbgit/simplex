@@ -22,9 +22,11 @@ var area = '{{ area }}';
 {% block simplexAssets %}
     {{ parent() }}
 {% endblock %}
+{% block head %}
+{% endblock %}
+{% block headForSimplex %}
 <!-- application -->
 <link rel="stylesheet" href="/public/local/simplex/css/application.min.css">
-{% block head %}
 {% endblock %}
 </head>
 <body class="{% block bodyClass %}{% endblock %}" id="{% block bodyId %}{% endblock %}">

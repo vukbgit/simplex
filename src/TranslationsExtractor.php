@@ -139,8 +139,8 @@ EOT;
     private function generateUpdatedPoFile(string $context)
     {
         //load configured languages
-        $languages = $this->loadLanguages();
-        foreach ($languages as $languageCode => $language) {
+        $this->loadLanguages();
+        foreach ($this->languages as $languageCode => $language) {
             $this->generateUpdatedLanguagePoFile($context, $language);
         }
     }
@@ -151,10 +151,10 @@ EOT;
     **/
     private function generateUpdatedLanguagePoFileBAK(object $language)
     {
-        echo sprintf('GENERATING UPDATED PO FILE FOR %s...%s', $language->IETF, PHP_EOL);
+        $languageIETF = sprintf('%s_%s', $language->{'ISO-639-1'}, $language->{'ISO-3166-1-2'});
+        echo sprintf('GENERATING UPDATED PO FILE FOR %s...%s', $languageIETF, PHP_EOL);
         $domain = 'simplex';
         $package = 'Simplex';
-        $languageIETF = str_replace('-', '_', $language->IETF);
         $pathToPoFolder = sprintf('%s/%s/LC_MESSAGES', LOCALES_DIR, $languageIETF);
         $pathToCacheFolder = $this->buildPathToTranslationsCache();
         $pathToPotFile = sprintf('%s/%s.pot', $pathToCacheFolder, $domain);
@@ -179,10 +179,10 @@ EOT;
     **/
     private function generateUpdatedLanguagePoFile(string $context, object $language)
     {
-        echo sprintf('GENERATING %s UPDATED PO FILE FOR %s...%s', $context, $language->IETF, PHP_EOL);
+        $languageIETF = sprintf('%s_%s', $language->{'ISO-639-1'}, $language->{'ISO-3166-1-2'});
+        echo sprintf('GENERATING %s UPDATED PO FILE FOR %s...%s', $context, $languageIETF, PHP_EOL);
         $domain = 'simplex';
         $package = 'Simplex';
-        $languageIETF = str_replace('-', '_', $language->IETF);
         //destination po file location changes by context
         $pathToShareLocalesRoot = sprintf('%s/../locales', PRIVATE_SHARE_DIR);
         $pathToLocalLocalesRoot = LOCALES_DIR;
