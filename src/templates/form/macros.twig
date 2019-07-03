@@ -551,13 +551,15 @@ NOTE: javascript validation function creates automatically if needed, this macro
 @param hash config: hash for field properties (see fieldSetAttributes macro explanation)
 #}
 {% macro displayHelp(config) %}
-    {% set help = config.help ? (config.help is iterable ? config.help : [config.help]) : [] %}
-    {% if config.maxlength %}
-        {% set help = help|merge(['maximum length %s characters'|trans|format(config.maxlength)]) %}
+    {% if config.hideHelp is not defined or config.hideHelp == false %}
+        {% set help = config.help ? (config.help is iterable ? config.help : [config.help]) : [] %}
+        {% if config.maxlength %}
+            {% set help = help|merge(['maximum length %s characters'|trans|format(config.maxlength)]) %}
+        {% endif %}
+        {% if help is not empty %}
+    <small id="{{ '%s-help'|format(config.id ?? config.name ) }}" class="form-text text-muted">{{ help|join('; ') }}</small>
+        {% endif %}
     {% endif %}
-    {% if help is not empty %}
- <small id="{{ '%s-help'|format(config.id ?? config.name ) }}" class="form-text text-muted">{{ help|join('; ') }}</small>
-{% endif %}
 {% endmacro %}
 
 {##################
