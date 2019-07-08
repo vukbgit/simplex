@@ -41,4 +41,28 @@ class PixieExtended extends QueryBuilderHandler
     {
         return !is_null($this->query(sprintf("SHOW TABLES LIKE '%s'", $table))->first());
     }
+    
+    /**
+    * Builds a where condition with the possibility to pass also the logical operator 
+    * @param array $whereCondition and array with 
+    **/
+    public function whereLogical(array $whereCondition): QueryBuilderHandler
+    {
+        //extract logical operator if any
+        if(isset($whereCondition['logical'])) {
+            $joiner = $whereCondition['logical'];
+        } else {
+            $joiner = 'AND';
+        }
+        $key = $whereCondition[0];
+        // If two params are given then assume operator is =
+        if (count($whereCondition) == 2) {
+            $value = $whereCondition[1];
+            $operator = '=';
+        } else {
+            $operator = $whereCondition[1];
+            $value = $whereCondition[2];
+        }
+        return $this->whereHandler($key, $operator, $value, $joiner);
+    }
 }

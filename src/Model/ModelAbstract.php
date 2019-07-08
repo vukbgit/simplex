@@ -108,6 +108,31 @@ abstract class ModelAbstract
         return isset($this->config->uploads);
     }
 
+    /**
+    * Returns the configured upload keys names
+    */
+    public function getUploadKeys(): array
+    {
+        if($this->hasUploads()) {
+            return array_keys($this->config->uploads);
+        } else {
+            return [];
+        }
+    }
+
+    /**
+    * Returns the configured outputs names for an upload key
+    * @param string $uploadKey
+    */
+    public function getUploadKeyOutputs(string $uploadKey): array
+    {
+        if($this->hasUploads()) {
+            return array_keys($this->config->uploads[$uploadKey]);
+        } else {
+            return [];
+        }
+    }
+
     /*******************
     * DEBUG & MESSAGES *
     *******************/
@@ -139,17 +164,26 @@ abstract class ModelAbstract
             //Integrity constraint violation
             case '23':
                 //duplicate entry
-                $errorType = 'duplicate_entry';
                 if(preg_match('/Duplicate entry/', $errorMessage) === 1) {
+                    $errorType = 'duplicate_entry';
                     //extract field name
                     preg_match("/'([0-9a-zA-Z_]+)'$/", $errorMessage, $matches);
                     $data = [$matches[1]];
                 }
                 //failed foreign key constraint
-                $errorType = 'fk_constraint';
                 if(preg_match('/a foreign key constraint fails/', $errorMessage) === 1) {
+                    $errorType = 'fk_constraint';
                     //extract field name
                     preg_match("/FOREIGN KEY \(`([0-9a-zA-Z_]+)`\)/", $errorMessage, $matches);
+                    $data = [$matches[1]];
+                }
+            break;
+            //Column not found
+            case '42':
+                if(preg_match('/Column not found/', $errorMessage) === 1) {
+                    $errorType = 'column_not_found';
+                    //extract field name
+                    preg_match("/Unknown column '([0-9a-zA-Z_]+)'/", $errorMessage, $matches);
                     $data = [$matches[1]];
                 }
             break;
@@ -166,7 +200,7 @@ abstract class ModelAbstract
 
     /**
     * Gets a recordset
-    * @param array $where: array of arrays, each with 2 elements (field name and value, operator defaults to '=') or 3 elements (field name, operator, value)
+    * @param array $where: array of arrays, each with 2 elements (field name and value, comparison operator defaults to '=') or 3 elements (field name, comparison operator, value)
     * @param array $order: array of arrays, each with 1 element (field name, direction defaults to 'ASC') or 2 elements (field name, order 'ASC' | 'DESC')
     */
     public function get(array $where = [], array $order = [])
@@ -177,7 +211,7 @@ abstract class ModelAbstract
         //where conditions
         if(!empty($where)) {
             foreach ($where as $fieldCondition) {
-                call_user_func_array([$this->query, 'where'], $fieldCondition);
+                call_user_func([$this->query, 'whereLogical'], $fieldCondition);
             }
         }
         //order
@@ -188,9 +222,19 @@ abstract class ModelAbstract
         }
         $records = $this->query->get();
         //localized fields
+        $records = $this->extractLocales($records);
+        return $records;
+    }
+    
+    /**
+    * Process locales into a recordset
+    * @param array $records
+    */
+    public function extractLocales(array $records)
+    {
         if($this->hasLocales()) {
             $recordsByPK = [];
-            $languagesCodes = array_keys(get_object_vars(loadLanguages()));
+            $languagesCodes = array_keys(get_object_vars(loadLanguages('local')));
             $localizedFieldValuesTemplate = [];
             foreach ($languagesCodes as $languageCode) {
                 $localizedFieldValuesTemplate[$languageCode] = null;
@@ -202,6 +246,10 @@ abstract class ModelAbstract
                     $recordsByPK[$PKValue] = (object) [
                     ];
                     foreach ($record as $field => $value) {
+                        //skip language code field
+                        if($field == 'language_code') {
+                            continue;
+                        }
                         //if it's not a localized field store as is
                         if(!in_array($field, $this->config->locales)) {
                             $recordsByPK[$PKValue]->$field = $value;
@@ -213,9 +261,10 @@ abstract class ModelAbstract
                 }
                 //loop record's localized fields
                 foreach ($this->config->locales as $field) {
-                    $recordsByPK[$PKValue]->$field[$record->language_code] = $record->field;
+                    $recordsByPK[$PKValue]->$field[$record->language_code] = $record->$field;
                 }
             }
+            $records = array_values($recordsByPK);
         }
         return $records;
     }
@@ -239,9 +288,11 @@ abstract class ModelAbstract
     */
     public function insert(array $fieldsValues): string
     {
-        return $this->query
+        //insert record
+        $primaryKeyValue = $this->query
             ->table($this->table())
             ->insert($fieldsValues);
+        return $primaryKeyValue;
     }
     
     /*********
@@ -271,10 +322,75 @@ abstract class ModelAbstract
     */
     public function delete($primaryKeyValue)
     {
+        //uploads
+        if($this->hasUploads()) {
+            //get uploaded files to check for deletion
+            $uploadedFilesToDelete = $this->getUploadedFiles(
+                [
+                    [$this->config->primaryKey, $primaryKeyValue]
+                ]
+            );
+        }
+        //delete record
         $this->query
             ->table($this->table())
             ->where($this->config->primaryKey, $primaryKeyValue)
             ->delete();
+        //uploads
+        if($this->hasUploads()) {
+            $uploadKeys = $this->getUploadKeys();
+            //group files by upload key
+            $uploadedFilesByUploadKey = [];
+            foreach ($uploadKeys as $uploadKey) {
+                $uploadedFilesByUploadKey[$uploadKey] = [];
+            }
+            foreach ($uploadedFilesToDelete as $uploadedFileToDelete) {
+                $uploadedFilesByUploadKey[$uploadedFileToDelete->upload_key][] = $uploadedFileToDelete;
+            }
+            foreach ($uploadedFilesByUploadKey as $uploadKey => $uploadedFilesToDelete) {
+                $this->unlinkUploadedFiles($uploadKey, $uploadedFilesToDelete);
+            }
+        }
+    }
+    
+    /**********
+    * LOCALES *
+    **********/
+    
+    /**
+    * Saves locales values
+    * @param mixed $primaryKeyValue
+    * @param array $localesValues: indexes are localized fields names, values are array indexed by language code with localized values
+    */
+    public function saveLocales($primaryKeyValue, $localesValues)
+    {
+        //create uploads table if necessary
+        $localesTableName = sprintf('%s_locales', $this->table());
+        if (!$this->query->tableExists($localesTableName)) {
+            throw new \Exception(sprintf('missing %s locales tables for model %s', $localesTableName, getInstanceNamespace($this)));
+            
+        }
+        //reset values
+        $this->query
+            ->table($localesTableName)
+            ->where($this->config->primaryKey, $primaryKeyValue)
+            ->delete();
+        //loop fields
+        $records = [];
+        foreach ($localesValues as $languageCode => $fieldLocalesValues) {
+            $record = [
+                'language_code' => $languageCode,
+                $this->config->primaryKey => $primaryKeyValue
+            ];
+            //loop languages
+            foreach ($fieldLocalesValues as $fieldName => $fieldValue) {
+                $record[$fieldName] = $fieldValue;
+            }
+            $records[] = $record;
+        }
+        $this->query
+            ->table($localesTableName)
+            ->insert($records);
     }
     
     /**********
@@ -309,6 +425,17 @@ abstract class ModelAbstract
     }
     
     /**
+    * Gets an uploaded file path for an output
+    * @param string $uploadKey
+    * @param string $outputKey
+    * @param string $fileName
+    */
+    public function getOutputFilePath(string $uploadKey, string $outputKey, string $fileName): string
+    {
+        return sprintf('%s/%s/%s', $this->getUploadFolder($uploadKey), $outputKey, $fileName);
+    }
+    
+    /**
     * Gets the uploads table name
     */
     protected function uploadTable(): string
@@ -317,14 +444,19 @@ abstract class ModelAbstract
     }
     
     /**
-    * Gets record uploads
-    * @param mixed $primaryKeyValue: value of recrod primary key field
+    * Gets uploads records
+    * @param array $where: array of arrays, each with 2 elements (field name and value, operator defaults to '=') or 3 elements (field name, operator, value)
     */
-    protected function getUploadedFiles($primaryKeyValue): array
+    protected function getUploadedFiles($where): array
     {
         $this->query
-            ->table($this->uploadTable())
-            ->where($this->config->primaryKey, $primaryKeyValue);
+            ->table($this->uploadTable());
+        //where conditions
+        if(!empty($where)) {
+            foreach ($where as $fieldCondition) {
+                call_user_func_array([$this->query, 'where'], $fieldCondition);
+            }
+        }
         return $this->query->get();
     }
     
@@ -353,6 +485,22 @@ abstract class ModelAbstract
     }
     
     /**
+    * Delete uploads records
+    * @param mixed $primaryKeyValue: value of record primary key field
+    * @param mixed $uploadKey
+    */
+    protected function deleteUploadedFiles($primaryKeyValue, string $uploadKey = null)
+    {
+        $this->query
+            ->table($this->uploadTable())
+            ->where($this->config->primaryKey, $primaryKeyValue);
+        if($uploadKey) {
+            $this->query->where('upload_key', $uploadKey);
+        }
+        $this->query->delete();
+    }
+    
+    /**
     * Creates the uploads table
     */
     public function createUploadsTable()
@@ -377,9 +525,9 @@ EOT;
     /**
     * Saves uploads values
     * @param mixed $primaryKeyValue
-    * @param array $uploadsValues: indexes are uploads keys, values are json string with the fields informations
+    * @param object $uploadsValues: indexes are uploads keys, values are strings with images names separated by |
     */
-    public function saveUploadsFiles($primaryKeyValue, $uploadsValues)
+    public function saveUploadsFiles($primaryKeyValue, object $uploadsValues)
     {
         //create uploads table if necessary
         $uploadTableName = sprintf('%s_uploads', $this->table());
@@ -387,29 +535,72 @@ EOT;
             $this->createUploadsTable();
         }
         //loop uploads
-        foreach (array_keys($this->config->uploads) as $uploadKey) {
-            $filesList = json_decode($uploadsValues->$uploadKey);
-            $this->saveUploadFiles($uploadKey, $filesList);
+        foreach ($this->getUploadKeys() as $uploadKey) {
+            if($uploadsValues->$uploadKey) {
+                $filesList = explode('|', $uploadsValues->$uploadKey);
+                $this->saveUploadFiles($primaryKeyValue, $uploadKey, $filesList);
+            }
         }
     }
+    
     /**
     * Saves uploads values
     * @param mixed $primaryKeyValue
-    * @param array $filesList
+    * @param string $uploadKey
+    * @param array $filesList: array of file names
     */
-    public function saveUploadFiles($uploadKey, $filesList)
+    protected function saveUploadFiles($primaryKeyValue, string $uploadKey, array $filesList = null)
     {
-        //get record uploaded files and candidate them for deletion
-        $uploadedFilesToDelete = $this->getUploadedFiles($primaryKeyValue, $uploadKey);
-        foreach((array) $filesList as $fileObject) {
-            $fileName = $fileObject->name;
+        //get upload files and candidate them for deletion
+        $uploadedFilesToDelete = $this->getUploadedFiles([
+            [$this->config->primaryKey, $primaryKeyValue],
+            ['upload_key', $uploadKey]
+        ]);
+        //reset upload files
+        $this->deleteUploadedFiles($primaryKeyValue, $uploadKey);
+        foreach((array) $filesList as $fileName) {
             //look for file into record uploaded files
             if (($uploadedIndex = array_search($fileName, $uploadedFilesToDelete)) !== false) {
                 //remove this file from the ones to be deleted
                 unset($uploadedFilesToDelete[$uploadedIndex]);
             }
+            //save record
+            $record = [
+                $this->config->primaryKey => $primaryKeyValue,
+                'upload_key' => $uploadKey,
+                'file_name' => $fileName
+            ];
+            $this->query
+                ->table($this->uploadTable())
+                ->where($this->config->primaryKey, $primaryKeyValue)
+                ->where('upload_key', $uploadKey)
+                ->insert($record);
         }
-        //remove files no longer needed
-        $this->unlinkUploadedFiles($uploadedFilesToDelete);
+        //handle files no longer needed by this upload key deletion
+        $this->unlinkUploadedFiles($uploadKey, $uploadedFilesToDelete);
+    }
+    
+    /**
+    * Saves uploads values
+    * @param string $uploadKey
+    * @param array $uploadedFilesToDelete
+    */
+    protected function unlinkUploadedFiles(string $uploadKey, array $uploadedFilesToDelete)
+    {
+        //loop files
+        foreach ($uploadedFilesToDelete as $uploadedFileToDelete) {
+            //check if the file is used by some other record
+            $isFileInUse = $this->getUploadedFiles([
+                ['upload_key', $uploadKey],
+                ['file_name', $uploadedFileToDelete->file_name]
+            ]);
+            if(!$isFileInUse) {
+                //loop outputs
+                foreach ($this->getUploadKeyOutputs($uploadKey) as $outputKey) {
+                    $outputFilePath = $this->getOutputFilePath($uploadKey, $outputKey, $uploadedFileToDelete->file_name);
+                    unlink($outputFilePath);
+                }
+            }
+        }
     }
 }

@@ -141,12 +141,19 @@ if (!function_exists('Simplex\getInstancePath')) {
 if (!function_exists('Simplex\loadLanguages')) {
     /**
     * Loads configured languages from json file
-    *
+    * @param string $context: share | local, share uses the installations languages dafinition file to include always all of supported languages
     * @return object
     */
-    function loadLanguages() : object
+    function loadLanguages(string $context) : object
     {
-        $languagesConfigFilePath = sprintf('%s/languages.json', LOCAL_CONFIG_DIR);
+        switch($context) {
+            case 'share':
+                $languagesConfigFilePath = sprintf('%s/../installation/private/local/simplex/config/languages.json', PRIVATE_SHARE_DIR);
+            break;
+            case 'local':
+                $languagesConfigFilePath = sprintf('%s/languages.json', LOCAL_CONFIG_DIR);
+            break;
+        }
         return json_decode(file_get_contents($languagesConfigFilePath));
     }
 }

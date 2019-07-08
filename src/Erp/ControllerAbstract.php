@@ -6,7 +6,7 @@ namespace Simplex\Erp;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
-use Simplex\ControllerWithTemplateAbstract;
+use Simplex\Controller\ControllerWithTemplateAbstract;
 use Spatie\Image\Image;
 use function Simplex\getInstanceNamespace;
 use function Simplex\getInstancePath;
@@ -29,6 +29,12 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
     * model passed by route
     */
     protected $model;
+    
+    /**
+    * @var array
+    * ancestors models passed by route
+    */
+    protected $ancestors = [];
 
     /**
     * @param object
@@ -46,7 +52,7 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
     * @param string
     * current route root till subject (included9)
     **/
-    private $currentRouteSubjectRoot;
+    private $currentSubjectRoot;
     
     /**
     * Performs some operations before action execution
@@ -59,9 +65,11 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
         //store subject
         $this->storeSubject();
         //store current route subject root
-        $this->storeCurrentRouteSubjectRoot();
+        $this->storeCurrentSubjectRoot();
         //store model
         $this->storeModel();
+        //store ancestors
+        $this->storeAncestors();
         //load ERP config
         $this->loadCRUDLConfig();
         //get cookie stored user options
@@ -88,12 +96,13 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
     /**
      * Stores current route subject root
      */
-    protected function storeCurrentRouteSubjectRoot()
+    protected function storeCurrentSubjectRoot()
     {
         $currentRoute = $this->request->getUri()->getPath();
-        $pattern = sprintf('~^[0-1a-zA-Z/]+/%s~', $this->subject);
-        preg_match($pattern , $currentRoute, $matches); 
-        $this->currentRouteSubjectRoot = $matches[0];
+        $pattern = sprintf('~^[0-9a-zA-Z-/]+/%s/~', $this->subject);
+        preg_match($pattern , $currentRoute, $matches);
+        //remove ending slash
+        $this->currentSubjectRoot = substr($matches[0], 0, -1);
     }
     
     /**
@@ -103,7 +112,7 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
      */
     protected function buildRouteToActionFromRoot(string $actionRoutePart): string
     {
-        return sprintf('%s/%s', $this->currentRouteSubjectRoot, $actionRoutePart);
+        return sprintf('%s/%s', $this->currentSubjectRoot, $actionRoutePart);
     }
 
     /**
@@ -112,6 +121,19 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
     protected function storeModel()
     {
         $this->model = $this->DIContainer->get(sprintf('%s-model', $this->subject));
+    }
+    
+    /**
+     * Stores ancestors models searching for a ancestor-namespace\Model class
+     */
+    protected function storeAncestors()
+    {
+        //loop routeParameters
+        foreach ($this->routeParameters as $parameter => $value) {
+            if(substr($parameter, 0, 8) == 'ancestor') {
+                $this->ancestors[] = $this->DIContainer->get(sprintf('%s-model', $value));
+            }
+        }
     }
     
     /**
@@ -319,6 +341,16 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
     **************/
 
     /**
+     * Gets the recordset for the list
+     */
+    protected function getList()
+    {
+        return $this->model->get(
+            $this->buildListWhere(),
+            $this->subjectCookie->sorting ?? []
+        );
+    }
+    /**
      * Lists records
      */
     protected function list()
@@ -329,10 +361,7 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
         //check list query modifiers
         $this->setListQueryModifiers();
         //get model list
-        $records = $this->model->get(
-            $this->buildListWhere(),
-            $this->subjectCookie->sorting ?? []
-        );
+        $records = $this->getList();
         //x($this->model->sql());
         $this->setTemplateParameter('records', $records);
         //render
@@ -399,16 +428,16 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
     * Builds list query where based on modifiers
     * @return array as accepted by Pixie query builder
     */
-    private function buildListWhere(): array
+    protected function buildListWhere(): array
     {
         $where = [];
         //filter
         $subjectCookie = $this->getSubjectCookie();
-        if(isset($subjectCookie->filter)) {
+        if(isset($subjectCookie->filter) && $subjectCookie->filter) {
             //loop config fields
             foreach ((array) $this->CRUDLconfig->fields as $fieldName => $fieldConfig) {
                 if(!isset($fieldConfig->tableFilter) || $fieldConfig->tableFilter) {
-                    $where[] = [$fieldName, 'LIKE', sprintf('%%%s%%', $subjectCookie->filter)];
+                    $where[] = [$fieldName, 'LIKE', sprintf('%%%s%%', $subjectCookie->filter), 'logical' => 'OR'];
                 }
             }
         }
@@ -546,39 +575,63 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
                 return $fieldFilter;
             }
         );
-        //deral with localized fields
-        $modelLocales = $this->model->getConfig()->locales ?? [];
-        foreach ($inputFieldsFilters as $fieldName => $inputFilter) {
-            //localized field
-            if(in_array($fieldName, $modelLocales)) {
-                if(!is_array($inputFilter)) {
-                    $inputFilter = ['filter' => $inputFilter];
+        //deal with localized fields
+        if($this->model->hasLocales()) {
+            $modelLocales = $this->model->getConfig()->locales ?? [];
+            foreach ($inputFieldsFilters as $fieldName => $inputFilter) {
+                //localized field
+                if(in_array($fieldName, $modelLocales)) {
+                    if(!is_array($inputFilter)) {
+                        $inputFilter = ['filter' => $inputFilter];
+                    }
+                    if(!isset($inputFilter['flags'])) {
+                        $inputFilter['flags'] = 0;
+                    }
+                    $inputFilter['flags'] = FILTER_REQUIRE_ARRAY;
+                    $inputFieldsFilters[$fieldName] = $inputFilter;
                 }
-                if(!isset($inputFilter['flags'])) {
-                    $inputFilter['flags'] = 0;
-                }
-                $inputFilter['flags'] = FILTER_REQUIRE_ARRAY;
-                $inputFieldsFilters[$fieldName] = $inputFilter;
             }
         }
         $input = filter_input_array(INPUT_POST, $inputFieldsFilters);
         //process input
         $this->processSaveFormInput($input);
+        //separate localized and non localized values
+        $inputLocales = [];
+        foreach (array_keys((array) $this->languages) as $languageCode) {
+            $inputLocales[$languageCode] = [];
+        }
+        if($this->model->hasLocales()) {
+            foreach ($input as $fieldName => $fieldLocalesValues) {
+                if(in_array($fieldName, $modelLocales)) {
+                    if(is_array($fieldLocalesValues)) {
+                        foreach ($fieldLocalesValues as $languageCode => $languageValue) {
+                            $inputLocales[$languageCode][$fieldName] = $languageValue;
+                        }
+                    }
+                    unset($input[$fieldName]);
+                }
+            }
+        }
         //get primary key and purge it from input values
         $primaryKeyValue = $this->extractPrimaryKeyValueFromInput($input);
         //add eventual model upload fields
         $uploadsInput = null;
         if($this->model->hasUploads()) {
             $uploadsFilters = [];
-            foreach (array_keys($this->model->getConfig()->uploads) as $uploadKey) {
-                $uploadsFilters[$uploadKey] = FILTER_UNSAFE_RAW;
+            foreach ($this->model->getUploadKeys() as $uploadKey) {
+                $uploadsFilters[$uploadKey] = [
+                    'filter' => FILTER_VALIDATE_REGEXP,
+                    'options' => ['regexp'=>'/^([0-9a-zA-z_ -]+\.[a-zA-Z]{3,4}\|?)+$/']
+                ];
             }
             $uploadsInput = (object) filter_input_array(INPUT_POST, $uploadsFilters);
+            
         }
         //get input
         return (object) [
             'primaryKeyValue' => $primaryKeyValue,
             'saveFieldsValues' => $input,
+            'saveLocalesFieldsValues' => $inputLocales,
             'uploadsValues' => $uploadsInput
         ];
     }
@@ -588,14 +641,17 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
      */
     protected function insert()
     {
-        x($_POST);
         $fieldsData = $this->getSaveFieldsData();
-        xx($fieldsData);
         try {
             //save record
-            $this->model->insert($fieldsData->saveFieldsValues);
+            $primaryKeyValue = $this->model->insert($fieldsData->saveFieldsValues);
+            //save locales
+            if($this->model->hasLocales()) {
+                $this->model->saveLocales($primaryKeyValue, $fieldsData->saveLocalesFieldsValues);
+            }
+            //save uploads
             if($this->model->hasUploads()) {
-                $this->model->saveUploadsFiles($fieldsData->uploadsValues);
+                $this->model->saveUploadsFiles($primaryKeyValue, $fieldsData->uploadsValues);
             }
             $redirectRoute = $this->buildRouteToActionFromRoot('list');
             $this->setSubjectAlert('success', (object) ['code' => 'save_success']);
@@ -617,6 +673,11 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
         try {
             //save record
             $this->model->update($fieldsData->primaryKeyValue, $fieldsData->saveFieldsValues);
+            //save locales
+            if($this->model->hasLocales()) {
+                $this->model->saveLocales($fieldsData->primaryKeyValue, $fieldsData->saveLocalesFieldsValues);
+            }
+            //save uploads
             if($this->model->hasUploads()) {
                 $this->model->saveUploadsFiles($fieldsData->primaryKeyValue, $fieldsData->uploadsValues);
             }
@@ -704,7 +765,7 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
                     fclose($fp);
                 }
                 //copy original uploaded file
-                $outputFilePath = sprintf('%s/%s', $outputFolder, $fileName);
+                $outputFilePath = $this->model->getOutputFilePath($uploadKey, $outputKey, $fileName);
                 copy($uploadFilePath, $outputFilePath);
                 //handler
                 if(isset($output->handler)) {

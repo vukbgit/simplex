@@ -20,13 +20,13 @@
     },
     {
       "uid": "94103e1b3f1e8cf514178ec5912b4469",
-      "css": "erp-sorted-asc",
+      "css": "erp-triangle-down",
       "code": 61661,
       "src": "fontawesome"
     },
     {
       "uid": "65b3ce930627cabfb6ac81ac60ec5ae4",
-      "css": "erp-sorted-desc",
+      "css": "erp-triangle-up",
       "code": 61662,
       "src": "fontawesome"
     }

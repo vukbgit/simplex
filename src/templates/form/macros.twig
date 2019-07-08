@@ -4,20 +4,20 @@
 
 {# displays an input field given the type, useful when type is condition dependant
 @param string type: text | email
-@param hash config: hash for field properties (see fieldSetAttributes macro explanation)
+@param hash config: hash for field properties (see setFieldAttributes macro explanation)
 #}
 {% macro displayInput(type, config) %}
     {% import _self as selfMacros %}
     {% set config = parseFieldConfig(config) %}
     <input 
     type="{{ type }}"
-    {{ selfMacros.fieldSetAttributes(config) }}
+    {{ selfMacros.setFieldAttributes(config) }}
     >
 {% endmacro %}
 
 {# displays a text-like input field given the type, useful when type is condition dependant
 @param string type: text | email | password
-@param hash config: hash for field properties (see fieldSetAttributes macro explanation)
+@param hash config: hash for field properties (see setFieldAttributes macro explanation)
 #}
 {% macro displayInputByTipe(type, config) %}
     {% import _self as selfMacros %}
@@ -31,7 +31,7 @@
 {% endmacro %}
 
 {# displays an input hidden field
-@param hash config: hash for field properties (see fieldSetAttributes macro explanation)
+@param hash config: hash for field properties (see setFieldAttributes macro explanation)
 #}
 {% macro displayInputHidden(config) %}
     {% import _self as selfMacros %}
@@ -39,7 +39,7 @@
 {% endmacro %}
 
 {# displays an input text field
-@param hash config: hash for field properties (see fieldSetAttributes macro explanation)
+@param hash config: hash for field properties (see setFieldAttributes macro explanation)
 #}
 {% macro displayInputText(config) %}
     {% import _self as selfMacros %}
@@ -51,7 +51,7 @@
 {% endmacro %}
 
 {# displays an input email field
-@param hash config: hash for field properties (see fieldSetAttributes macro explanation)
+@param hash config: hash for field properties (see setFieldAttributes macro explanation)
 NOTE: for to perform validation Simplex does not use browser built in (see https://www.w3.org/TR/html5/sec-forms.html#constraints-definitions) but a pattern that matches real world emails; and to avoid conflicts does not use both email type AND pattern validation
 ^(([^<>()\\.,;:\s@"]+(\.[^<>()\\.,;:\s@"]+)*)|(".+"))@(([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$
 
@@ -72,7 +72,7 @@ NOTE: for to perform validation Simplex does not use browser built in (see https
 {% endmacro %}
 
 {# displays an input password field
-@param hash config: hash for field properties (see fieldSetAttributes macro explanation)
+@param hash config: hash for field properties (see setFieldAttributes macro explanation)
 #}
 {% macro displayInputPassword(config) %}
     {% import _self as selfMacros %}
@@ -84,7 +84,7 @@ NOTE: for to perform validation Simplex does not use browser built in (see https
 {% endmacro %}
 
 {# displays a file input field
-@param hash config: hash for field properties (see fieldSetAttributes macro explanation)
+@param hash config: hash for field properties (see setFieldAttributes macro explanation)
 #}
 {% macro displayInputFile(config) %}
     {% import _self as selfMacros %}
@@ -93,34 +93,160 @@ NOTE: for to perform validation Simplex does not use browser built in (see https
 
 {# displays a text-like input field block
 @param string type: text | email | password
-@param hash config: hash for field properties (see fieldSetAttributes macro explanation)
+@param hash config: hash for field properties (see setFieldAttributes macro explanation)
 #}
 {% macro displayInputGroup(type, config) %}
     {% import _self as selfMacros %}
     {% set inputId = (config.id ?? config.name)|formatIdforJs %}
-    <div class="form-group" id="{{ '%s-container'|format(inputId) }}">
     {% if config.locales is not defined %}
-        {{ selfMacros.displayLabel(config) }}
-        {{ selfMacros.displayInputByTipe(type, config) }}
+        {% set inputsConfigs = [config] %}
     {% else %}
+        {% set inputsConfigs = [] %}
         {% for languageCode, language in config.locales|objectToArray %}
-            {% set languageConfig = config %}
-            {% set languageConfig = updateProperty(languageConfig, 'name', '%s[%s]'|format(config.name, languageCode)) %}
-            {% set languageConfig = updateProperty(languageConfig, 'countryCode', attribute(language, 'ISO-3166-1-2')|lower) %}
-            {{ selfMacros.displayLabel(languageConfig) }}
-            {{ selfMacros.displayInputByTipe(type, languageConfig) }}
+            {% set languageInputConfig = config %}
+            {% set languageInputConfig = updateProperty(languageInputConfig, 'name', '%s[%s]'|format(config.name, languageCode)) %}
+            {% set languageInputConfig = updateProperty(languageInputConfig, 'value', attribute(config.value, languageCode)) %}
+            {% set languageInputConfig = updateProperty(languageInputConfig, 'countryCode', attribute(language, 'ISO-3166-1-2')|lower) %}
+            {% set inputsConfigs = inputsConfigs|merge([languageInputConfig]) %}
         {% endfor %}
     {% endif %}
+    {% for inputConfig in inputsConfigs %}
+    <div class="form-group" id="{{ '%s-container'|format(inputId) }}">
+        {{ selfMacros.displayLabel(inputConfig) }}
+        {{ selfMacros.displayInputByTipe(type, inputConfig) }}
+        {{ selfMacros.displayHelp(config) }}
+    </div>
+    {% endfor %}
+{% endmacro %}
+
+{###########
+# TEXTAREA #
+###########}
+
+{# displays a textarea field
+@param hash config: hash for field properties (see setFieldAttributes macro explanation)
+#}
+{% macro displayTextarea(config) %}
+    {% import _self as selfMacros %}
+    {% set config = parseFieldConfig(config) %}
+    {% set value = config.value %}
+    {% set config = deleteProperty(config, 'value') %}
+    {% set classes = config.classes ?? [] %}
+    {% set classes = ['form-control']|merge(classes) %}
+    {% set config = updateProperty(config, 'classes', classes) %}
+    <textarea
+    {{ selfMacros.setFieldAttributes(config) }}
+    >{{ value }}</textarea>
+{% endmacro %}
+
+{# rich text field
+language packages must be downloaded from https://www.tiny.cloud/get-tiny/language-packages/ and saved into /public/share/rich-text-editor/locales/
+@param hash context: the calling template context object
+@param hash config: hash for field properties (see setFieldAttributes macro explanation) excpet for specific rich text options which can be set as a config.options hash
+#}
+{% macro displayRichTextEditor(context, config) %}
+    {% import _self as selfMacros %}
+    {# check locale file path #}
+    {% set languageCode = attribute(context.language, 'ISO-639-1') %}
+    {% set localePath = '/public/share/rich-text-editor/locales/%s.js'|format(languageCode) %}
+    {% if isFile(localePath) == false %}
+        {% set config = updateProperty(config, 'validation', updateProperty(config.validation, 'invalidMessage', 'TinyMCE local file missing in %s'|format(localePath))) %}
+        {% set loadLocale = false %}
+    {% else %}
+        {% set loadLocale = true %}
+    {% endif %}
+    {% if config.locales is not defined %}
+        {% set config = updateProperty(config, 'id', (config.id ?? config.name)|formatIdforJs) %}
+        {% set inputsConfigs = [config] %}
+    {% else %}
+        {% set inputsConfigs = [] %}
+        {% for languageCode, language in config.locales|objectToArray %}
+            {% set languageInputConfig = config %}
+            {% set languageInputConfig = updateProperty(languageInputConfig, 'name', '%s[%s]'|format(config.name, languageCode)) %}
+            {% set languageInputConfig = updateProperty(languageInputConfig, 'id', languageInputConfig.name|formatIdforJs) %}
+            {% set languageInputConfig = updateProperty(languageInputConfig, 'value', attribute(config.value, languageCode)) %}
+            {% set languageInputConfig = updateProperty(languageInputConfig, 'countryCode', attribute(language, 'ISO-3166-1-2')|lower) %}
+            {% set inputsConfigs = inputsConfigs|merge([languageInputConfig]) %}
+        {% endfor %}
+    {% endif %}
+
+    {% for inputConfig in inputsConfigs %}
+    <div class="form-group">
+        {{ selfMacros.displayLabel(inputConfig) }}
+        {{ selfMacros.displayTextarea(inputConfig) }}
+        {{ selfMacros.displayHelp(config) }}
+        <script type="text/javascript">
+            var options = {
+                selector: '#{{ inputConfig.id }}',
+        {% if loadLocale %}
+                language: '{{ languageCode }}',
+                language_url: '{{ localePath }}',
+        {% endif %}
+        {% if config.disabled or config.readonly %}
+                readonly: true,
+        {% endif %}
+        {# rich text editor specific options #}
+        {% for option,value in config.options %}
+            '{{ option }}': {{ value|varToJs }},
+        {% endfor %}
+            }
+            tinymce.init(options);
+        </script>
+    </div>
+    {% endfor %}
+{% endmacro %}
+
+{#########
+# SELECT #
+#########}
+
+{# displays a select
+@param hash config: hash for field properties (see setFieldAttributes macro explanation) plus specific properties:
+    noOption0 (bool) whether not to display the first zero-value option
+    option0Label (string) label to be used for the first option instead of the default one
+@param array items: array of hashes each with value and label property
+#}
+{% macro displaySelect(config, items) %}
+    {% import _self as selfMacros %}
+    {% set value = config.value %}
+    {% set config = deleteProperty(config, 'value') %}
+    {% set classes = config.classes ?? [] %}
+    {% set classes = ['custom-select']|merge(classes) %}
+    {% set config = updateProperty(config, 'classes', classes) %}
+<select {{ selfMacros.setFieldAttributes(config) }}>
+    {% if config.noOption0 is not defined or config.noOption0 == false %}
+    <option value="">{{ config.option0Label ?? 'please select an item '|trans }}</option>
+    {% endif %}
+    {% for item in items %}
+        {% set selected = item.value == value %}
+    <option value="{{ item.value }}"{% if selected %} selected="selected"{% endif %}>{{ item.label }}</option>
+    {% endfor %}
+</select>
+{% endmacro %}
+
+{# displays a select field block
+@param hash config: hash for field properties (see setFieldAttributes macro explanation) plus specific properties:
+    noOption0 (bool) whether not to display the first zero-value option
+    option0Label (string) label to be used for the first option instead of the default one
+@param array items: array of hashes each with value and label property
+#}
+{% macro displaySelectGroup(config, items) %}
+    {% import _self as selfMacros %}
+    {% set id = (config.id ?? config.name)|formatIdforJs %}
+    <div class="form-group" id="{{ '%s-container'|format(id) }}">
+        {{ selfMacros.displayLabel(config) }}
+        {{ selfMacros.displaySelect(config, items) }}
         {{ selfMacros.displayHelp(config) }}
     </div>
 {% endmacro %}
+
 
 {#################
 # RADIO/CHECKBOX #
 #################}
 
 {# displays one or more radio input field
-@param hash config: hash for field properties (see fieldSetAttributes macro explanation) plus specific properties:
+@param hash config: hash for field properties (see setFieldAttributes macro explanation) plus specific properties:
     bool inline
 @param array items: array of hashes each with value and label property
 #}
@@ -130,7 +256,7 @@ NOTE: for to perform validation Simplex does not use browser built in (see https
 {% endmacro %}
 
 {# displays one or more checkbox input field
-@param hash config: hash for field properties (see fieldSetAttributes macro explanation) plus specific properties:
+@param hash config: hash for field properties (see setFieldAttributes macro explanation) plus specific properties:
     bool inline
 @param array items: array of hashes each with value and label property
 #}
@@ -141,7 +267,7 @@ NOTE: for to perform validation Simplex does not use browser built in (see https
 
 {# displays one or more radio/checkbox input field
 @param string type: radio | checkbox
-@param hash config: hash for field properties (see fieldSetAttributes macro explanation) plus specific properties:
+@param hash config: hash for field properties (see setFieldAttributes macro explanation) plus specific properties:
     bool inline
 @param array items: array of hashes each with value and label property
 #}
@@ -174,7 +300,7 @@ NOTE: for to perform validation Simplex does not use browser built in (see https
 {% endmacro %}
 
 {# displays a radios fields block
-@param hash config: hash for field properties (see fieldSetAttributes macro explanation)
+@param hash config: hash for field properties (see setFieldAttributes macro explanation)
 @param array items: array of hashes each with value and label property
 #}
 {% macro displayInputRadioGroup(config, items) %}
@@ -183,7 +309,7 @@ NOTE: for to perform validation Simplex does not use browser built in (see https
 {% endmacro %}
 
 {# displays a checkoxes fields block
-@param hash config: hash for field properties (see fieldSetAttributes macro explanation)
+@param hash config: hash for field properties (see setFieldAttributes macro explanation)
 @param array items: array of hashes each with value and label property
 #}
 {% macro displayInputCheckboxGroup(config, items) %}
@@ -193,7 +319,7 @@ NOTE: for to perform validation Simplex does not use browser built in (see https
 
 {# displays a checkoxes fields block
 @param string type: radio | checkbox
-@param hash config: hash for field properties (see fieldSetAttributes macro explanation)
+@param hash config: hash for field properties (see setFieldAttributes macro explanation)
 @param array items: array of hashes each with value and label property
 #}
 {% macro displayInputRadioCheckboxGroup(type, config, items) %}
@@ -205,62 +331,6 @@ NOTE: for to perform validation Simplex does not use browser built in (see https
     </div>
 {% endmacro %}
 
-{###########
-# TEXTAREA #
-###########}
-
-{# displays a textarea field
-@param hash config: hash for field properties (see fieldSetAttributes macro explanation)
-#}
-{% macro displayTextarea(config) %}
-    {% import _self as selfMacros %}
-    {% set config = parseFieldConfig(config) %}
-    {% set value = config.value %}
-    {% set config = deleteProperty(config, 'value') %}
-    <textarea
-    {{ selfMacros.fieldSetAttributes(config) }}
-    >{{ value }}</textarea>
-{% endmacro %}
-
-{# rich text field
-language packages must be downloaded from https://www.tiny.cloud/get-tiny/language-packages/ and saved into /public/share/rich-text-editor/locales/
-@param hash context: the calling template context object
-@param hash config: hash for field properties (see fieldSetAttributes macro explanation) excpet for specific rich text options which can be set as a config.options hash
-#}
-{% macro displayRichTextEditor(context, config) %}
-    {% import _self as selfMacros %}
-    {# check locale file path #}
-    {% set languageCode = attribute(context.language, 'ISO-639-1') %}
-    {% set localePath = '/public/share/rich-text-editor/locales/%s.js'|format(languageCode) %}
-    {% if isFile(localePath) == false %}
-        {% set config = updateProperty(config, 'validation', updateProperty(config.validation, 'invalidMessage', 'TinyMCE local file missing in %s'|format(localePath))) %}
-        {% set loadLocale = false %}
-    {% else %}
-        {% set loadLocale = true %}
-    {% endif %}
-    {# format id to be used by javascript #}
-    {% set config = updateProperty(config, 'id', (config.id ?? config.name)|formatIdforJs) %}
-    <div class="form-group">
-        {{ selfMacros.displayLabel(config) }}
-        {{ selfMacros.displayTextarea(config) }}
-        {{ selfMacros.displayHelp(config) }}
-    </div>
-    <script type="text/javascript">
-        var options = {
-            selector: '#{{ config.id }}',
-    {% if loadLocale %}
-            language: '{{ languageCode }}',
-            language_url: '{{ localePath }}',
-    {% endif %}
-    {# rich text editor specific options #}
-    {% for option,value in config.options %}
-        '{{ option }}': {{ value|varToJs }},
-    {% endfor %}
-        }
-        tinymce.init(options);
-    </script>
-{% endmacro %}
-
 {#########
 # UPLOAD #
 #########}
@@ -268,9 +338,12 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
 {# file(s) upload field
 @param hash context: the calling template context object
 @param string uploadRoute: route to address uploads to
-@param hash config: hash for field properties (see fieldSetAttributes macro explanation) excpet for specific upload file options which can be set as a config.options hash; common options:
+@param hash config: hash for field properties (see setFieldAttributes macro explanation) specific properties:
+- options (hash); specific js class options passes as is, common options:
     allowedFileTypes: ['image', 'html', 'text', 'video', 'audio', 'flash', 'object']
     maxFileCount: maximum number of files allowed for each multiple upload. If set to 0, it means number of files allowed is unlimited
+- previewTemplate: HTML chunk (see http://plugins.krajee.com/file-input/plugin-options#initialPreview) with placeholders for the outputs files paths in the form @output-name
+    
 #}
 {% macro displayFileUpload(context, uploadRoute, config) %}
     {% import _self as selfMacros %}
@@ -278,6 +351,7 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
     <div class="form-group">
         {{ selfMacros.displayLabel(config) }}
         {% set inputId = (config.id ?? config.name)|formatIdforJs %}
+        {% set uploadKey = config.name %}
         {{ selfMacros.displayInputHidden(config) }}
         {# format upload input id to be used by javascript #}
         {% set uploadId = '%s-upload'|format(inputId) %}
@@ -300,17 +374,34 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
         theme: 'simplex',
         showUpload: false,
         showRemove: false,
+        initialPreviewShowDelete: true,
+        deleteUrl: 'fake-delete-url',
         showUploadStats: false,
         showDrag: true,
-        browseOnZoneClick: true,
+        showCaption: false,
+        browseOnZoneClick: false,
+        overwriteInitial: false,
         maxFileSize: {{ context.uploadMaxFilesizeKB }},
         uploadUrl: '{{ uploadRoute }}',
     {# config tweaks #}
     {% if config.options.maxFileCount and config.options.maxFileCount == 1 and config.options.autoReplace is not defined %}
         {% set config = updateProperty(config, 'options', updateProperty(config.options, 'autoReplace', true)) %}
     {% endif %}
+    {# preview #}
+    {% if config.value and config.previewTemplate is defined %}
+        initialPreview: [
+        {% for fileName in config.value|split('|') %}
+            '{{ formatUploadPreviewTemplate(uploadKey, fileName, config.previewTemplate) }}',
+        {% endfor %}
+        ],
+        initialPreviewConfig: [
+        {% for fileName in config.value|split('|') %}
+            {caption: '{{ fileName }}', key: '{{ fileName }}'},
+        {% endfor %}
+        ],
+    {% endif %}
     {% for option,value in config.options %}
-        '{{ option }}': {{ value|varToJs }},
+        {{ option }}: {{ value|varToJs }},
     {% endfor %}
     };
     $("#{{ uploadId }}").fileinput(options)
@@ -327,19 +418,22 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
         var fileName = data.files[0].name;
         upload.appendFile('{{ inputId }}', {name: fileName});
     })
-    .on('fileclear', function(event, id, index) {
-        console.log('fileclear: id = ' + id + ', index = ' + index);
-    })
-    .on('filecleared', function(event, id, index) {
-        console.log('filecleared: id = ' + id + ', index = ' + index);
-    })
-    .on('fileremoved', function(event, id, index) {
-        console.log('fileremoved: id = ' + id + ', index = ' + index);
-    })
     //preview of just uploaded file has been deleted
     .on('filesuccessremove', function(event, id, index) {
         //remove file form input value
         upload.removeFileFromInput('{{ inputId }}', index);
+    })
+    .on('filesorted', function(event, params) {
+        upload.saveSorting('{{ inputId }}', params.oldIndex, params.newIndex);
+    })
+    .on('filebeforedelete', function(event, key, data) {
+        var fileIndex = upload.getPreviewIndexByKey(key);
+        if(fileIndex !== false) {
+            upload.removeFileFromPreviews(fileIndex);
+            upload.removeFileFromInput('{{ inputId }}', fileIndex);
+        }
+        //do not make ajax delete call
+        return true;
     })
     ;
     var upload = {
@@ -348,7 +442,36 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
         * @param string inputId: id attribute of the hidden input that stores files rapresentation
         **/
         getInputFiles: function(inputId) {
-            return $('#' + inputId).val() ? JSON.parse($('#' + inputId).val()) : [];
+            return $('#' + inputId).val().split('|');
+        },
+        /**
+        * gets list of previews form the initial set plus any successfully uploaded file, excluding failed uploads
+        **/
+        getPreviewsList: function() {
+            var list = [];
+            var initialList = $('#{{ uploadId }}').fileinput('getFrames', '.file-preview-initial');
+            for (var i = 0; i < initialList.length; i++) {
+                list.push(initialList[i]);
+            }
+            var uploadedList = $('#{{ uploadId }}').fileinput('getFrames', '.file-preview-success');
+            for (var i = 0; i < uploadedList.length; i++) {
+                list.push(uploadedList[i]);
+            }
+            return list;
+        },
+        /**
+        * gets the index of a preview given the key
+        **/
+        getPreviewIndexByKey: function(key) {
+            var list = this.getPreviewsList();
+            for (var i = 0; i < list.length; i++) {
+                $(list[i]).find('src');
+                match = $(list[i]).find('[src*="/' + key + '"]');
+                if(match.length) {
+                    return i;
+                }
+            }
+            return false;
         },
         /**
         * sets files list into hidden input json
@@ -356,7 +479,40 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
         * @param array filesList: list of files objects
         **/
         setFiles: function(inputId, filesList) {
-            $('#' + inputId).val(JSON.stringify(filesList));
+            $('#' + inputId).val(filesList.join('|'));
+        },
+        /**
+        * appends an uploaded file to files list into the hidden input
+        * @param string inputId: id attribute of the hidden input that stores files rapresentation
+        * @param object fileObject: the object representing the uploaded file {name:name-of-the-file}
+        **/
+        appendFile: function(inputId, fileObject) {
+            //make room if necessary
+            this.makeRoom(inputId);
+            //append file
+            var filesList = this.getInputFiles(inputId);
+            filesList.push(fileObject.name);
+            this.setFiles(inputId, filesList);
+        },
+        /**
+        * sets files list into hidden input json according to current preview order
+        * @param string inputId: id attribute of the hidden input that stores files rapresentation
+        * @param int oldIndex
+        * @param int newIndex
+        **/
+        saveSorting: function(inputId, oldIndex, newIndex) {
+            var list = this.getInputFiles(inputId);
+            //get file name
+            console.log(list);
+            var fileName = list[oldIndex];
+            console.log(fileName);
+            //remove from old index
+            list.splice(oldIndex, 1);
+            console.log(list);
+            //insert at new index
+            list.splice(newIndex, 0, fileName);
+            console.log(list);
+            this.setFiles(inputId, list);
         },
         /**
         * makes room for a new file
@@ -391,23 +547,11 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
         removeFileFromPreviews: function(fileIndex) {
             //remove file from preview
             //get previews of successfully upload files
-            var previewsList = $('#{{ uploadId }}').fileinput('getFrames', '.file-preview-success');
+            var previewsList = this.getPreviewsList();
             var preview = previewsList[fileIndex];
             $(preview).remove();
         },
-        /**
-        * appends an uploaded file to files list into the hidden input
-        * @param string inputId: id attribute of the hidden input that stores files rapresentation
-        * @param object fileObject: the object representing the uploaded file {name:name-of-the-file}
-        **/
-        appendFile: function(inputId, fileObject) {
-            //make room if necessary
-            this.makeRoom(inputId);
-            //append file
-            var filesList = this.getInputFiles(inputId);
-            filesList.push(fileObject);
-            this.setFiles(inputId, filesList);
-        }
+        
     }
     </script>
 {% endmacro %}
@@ -469,7 +613,7 @@ for autocomplete see https://developer.mozilla.org/en-US/docs/Web/HTML/Attribute
     }
 }
 #}
-{% macro fieldSetAttributes(config) %}
+{% macro setFieldAttributes(config) %}
     {% set validation = config.validation ?? {} %}
     {# common #}
     name="{{ config.name }}"
@@ -523,7 +667,7 @@ for autocomplete see https://developer.mozilla.org/en-US/docs/Web/HTML/Attribute
 {# displays a field validation message
 NOTE: javascript validation function creates automatically if needed, this macro can be used to initialized message at page load time
 @param string type: text | email
-@param hash config: hash for field properties (see fieldSetAttributes macro explanation)
+@param hash config: hash for field properties (see setFieldAttributes macro explanation)
 #}
 {% macro displayFieldValidationMessage(validation) %}
     {% if validation.invalidMessage %}
@@ -534,13 +678,16 @@ NOTE: javascript validation function creates automatically if needed, this macro
 {% endmacro %}
 
 {# displays label
-@param hash config: hash for field properties (see fieldSetAttributes macro explanation)
+@param hash config: hash for field properties (see setFieldAttributes macro explanation)
 @param string classes: optional label css classes
 #}
 {% macro displayLabel(config, classes) %}
 <label for="{{ (config.id ?? config.name)|formatIdforJs }}"{% if classes %} class="{{ classes }}"{% endif %}
 >
 {{ config.label|raw }}
+{% if config.validation.required and (config.hideMandatories is not defined or config.hideMandatories == false) %}
+*
+{% endif %}
 {% if config.countryCode is defined %}
 <span class="{{ 'flag-icon flag-icon-%s'|format(config.countryCode) }}"></span>
 {% endif %}
@@ -548,7 +695,7 @@ NOTE: javascript validation function creates automatically if needed, this macro
 {% endmacro %}
 
 {# displays help
-@param hash config: hash for field properties (see fieldSetAttributes macro explanation)
+@param hash config: hash for field properties (see setFieldAttributes macro explanation)
 #}
 {% macro displayHelp(config) %}
     {% if config.hideHelp is not defined or config.hideHelp == false %}
@@ -557,7 +704,7 @@ NOTE: javascript validation function creates automatically if needed, this macro
             {% set help = help|merge(['maximum length %s characters'|trans|format(config.maxlength)]) %}
         {% endif %}
         {% if help is not empty %}
-    <small id="{{ '%s-help'|format(config.id ?? config.name ) }}" class="form-text text-muted">{{ help|join('; ') }}</small>
+    <small id="{{ '%s-help'|format(config.id ?? config.name )|formatIdforJs }}" class="form-text text-muted">{{ help|join('; ') }}</small>
         {% endif %}
     {% endif %}
 {% endmacro %}

@@ -3,19 +3,19 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Simplex\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-06-30 11:27+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"POT-Creation-Date: 2019-07-04 11:30+0200\n"
+"PO-Revision-Date: 2019-07-04 11:32+0200\n"
+"Language: en_GB\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"X-Generator: Poedit 2.0.6\n"
 
 #. line 19
 msgid "list"
@@ -49,6 +49,7 @@ msgid "Missing value for mandatory foreign key %s"
 msgstr "Missing value for mandatory foreign key %s"
 
 #. line 32
+#. line 33
 msgid "sort ascending"
 msgstr "sort ascending"
 
@@ -58,6 +59,9 @@ msgstr "sort descending"
 msgid "Please sign in"
 msgstr "Please sign in"
 
+#. line 30
+#. line 31
+#. line 32
 #. line 30
 #. line 31
 #. line 32
@@ -148,6 +152,8 @@ msgstr "Wrong username"
 #. line 55
 #. line 54
 #. line 55
+#. line 54
+#. line 55
 msgid "Password"
 msgstr "Password"
 
@@ -198,10 +204,12 @@ msgid "no limit"
 msgstr "no limit"
 
 #. line 417
+#. line 464
 msgid "Control Code"
 msgstr "Control Code"
 
 #. line 434
+#. line 481
 msgid ""
 "Type code displayed into image, if you are not able to read the code click "
 "on the reload icon to generate a new image"
@@ -215,9 +223,12 @@ msgstr "maximum length %s characters"
 
 #. line 753
 #. line 752
+#. line 818
 msgid "The value you entered for this field is invalid."
 msgstr "The value you entered for this field is invalid."
 
+#. line 20
+#. line 21
 #. line 20
 #. line 21
 #. line 20
@@ -255,21 +266,25 @@ msgstr "Filter"
 
 #. line 681
 #. line 680
+#. line 746
 msgid "Please fill out this field"
 msgstr "Please fill out this field"
 
 #. line 684
 #. line 683
+#. line 749
 msgid "Please enter an email address"
 msgstr "Please enter an email address"
 
 #. line 687
 #. line 686
+#. line 752
 msgid "Please enter a URL"
 msgstr "Please enter a URL"
 
 #. line 690
 #. line 689
+#. line 755
 #, php-format
 msgid ""
 "Please lengthen this text to %s characters or more. You are currently using "
@@ -280,6 +295,7 @@ msgstr ""
 
 #. line 693
 #. line 692
+#. line 758
 #, php-format
 msgid ""
 "Please short this text to no more than %s characters. You are currently "
@@ -290,33 +306,44 @@ msgstr ""
 
 #. line 696
 #. line 695
+#. line 761
 msgid "Please enter a number"
 msgstr "Please enter a number"
 
 #. line 699
 #. line 698
+#. line 764
 msgid "Please select a valid value"
 msgstr "Please select a valid value"
 
 #. line 702
 #. line 701
+#. line 767
 #, php-format
 msgid "Please select a value that is no more than %s"
 msgstr "Please select a value that is no more than %s"
 
 #. line 705
 #. line 704
+#. line 770
 #, php-format
 msgid "Please select a value that is no less than %s"
 msgstr "Please select a value that is no less than %s"
 
 #. line 708
 #. line 707
+#. line 773
 msgid "Please match the requested format"
 msgstr "Please match the requested format"
 
-#~ msgid "masthead trans"
-#~ msgstr "masthead trans"
+#, php-format
+msgid "Column \"%s\" not found"
+msgstr "Column \"%s\" not found"
 
-#~ msgid "yet another masthead trans"
-#~ msgstr "yet another masthead trans"
+#. line 19
+msgid "fields marked with * are mandatory"
+msgstr "fields marked with * are mandatory"
+
+#. line 58
+msgid "No records saved"
+msgstr "No records saved"

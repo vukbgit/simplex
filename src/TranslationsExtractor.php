@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Simplex;
 
 use Simplex\Erp\ControllerAbstract;
+use function Simplex\loadLanguages;
 
 /*
 * Class to extract translations from templates
@@ -139,8 +140,8 @@ EOT;
     private function generateUpdatedPoFile(string $context)
     {
         //load configured languages
-        $this->loadLanguages();
-        foreach ($this->languages as $languageCode => $language) {
+        $languages = loadLanguages($context);
+        foreach ($languages as $languageCode => $language) {
             $this->generateUpdatedLanguagePoFile($context, $language);
         }
     }

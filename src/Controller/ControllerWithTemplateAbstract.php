@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Simplex;
+namespace Simplex\Controller;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -10,7 +10,7 @@ use Psr\Container\ContainerInterface;
 use Twig\Environment;
 use Aptoma\Twig\Extension\MarkdownExtension;
 use Aptoma\Twig\Extension\MarkdownEngine;
-use Simplex\ControllerAbstract;
+use Simplex\Controller\ControllerAbstract;
 use Simplex\VanillaCookieExtended;
 use function Simplex\slugToPSR1Name;
 use function Simplex\PSR1NameToSlug;
@@ -236,6 +236,28 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         $this->addTemplateFilter('formatIdforJs', function(string $id): string {
             return str_replace(['[',']'], '_', $id);
         });
+        //processes a template for a file upload preview
+        $this->addTemplateFunction(
+            'formatUploadPreviewTemplate',
+            function($uploadKey, $fileName, $previewTemplate){
+                //file name
+                $previewTemplate = preg_replace(
+                    '/@name/',
+                    sprintf('%s', $fileName),
+                    $previewTemplate
+                );
+                //get field output keys
+                foreach ($this->model->getUploadKeyOutputs($uploadKey) as $outputKey) {
+                    $previewTemplate = preg_replace(
+                        sprintf('/@%s/', $outputKey),
+                        sprintf('/%s', $this->model->getOutputFilePath($uploadKey, $outputKey, $fileName)),
+                        $previewTemplate
+                    );
+                }
+                return $previewTemplate;
+            },
+            ['is_safe' => ['html']]
+        );
         /********
         * USERS *
         ********/
@@ -414,6 +436,7 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
             $this->setNavigationVoiceParentsActive($parentVoiceProperties->parent);
         }
     }
+    
     /**********
     * COOKIES *
     **********/
@@ -440,5 +463,34 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
     protected function getAreaCookie(string $propertyName = null)
     {
         return $this->cookie->getAreaCookie($this->area, $propertyName);
+    }
+    
+    /********
+    * FORMS *
+    ********/
+    
+    /**
+    * Processes a recordset to be used in a radio, checkbox or select mapping fields to value and label
+    * @param string $valueField
+    * @param mixed $labelFields: the neme of one field or an array of fields names and strings to be joined to form label
+    * @param array $recordset
+    */
+    protected function processRecordsetForInput(string $valueField, $labelFields, array $recordset): array
+    {
+        if(is_string($labelFields)) {
+            $labelFields = [$labelFields];
+        }
+        $items = [];
+        foreach ((array) $recordset as $record) {
+            $label = '';
+            foreach ($labelFields as $labelField) {
+                $label .= $record->$labelField ?? $labelField;
+            }
+            $items[] = (object) [
+                'value' => $record->$valueField,
+                'label' => $label
+            ];
+        }
+        return $items;
     }
 }

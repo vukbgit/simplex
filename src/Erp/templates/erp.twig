@@ -21,13 +21,16 @@
     'insert-form': 'insert'|trans,
     'update-form': 'update'|trans,
     'delete-form': 'delete'|trans,
-    'cancel': 'cancel'|trans
+    'cancel': 'cancel'|trans,
+    'move-up': 'move up'|trans,
+    'move-down': 'move down'|trans
 } %}
 {% set alertMessages = {
     'save_success': 'Record saved'|trans,
     'delete_success': 'Record deleted'|trans,
     'SQLSTATE_23000_duplicate_entry': 'There is already another record with the same %s'|trans,
-    'SQLSTATE_23000_fk_constraint': 'Missing value for mandatory foreign key %s'|trans
+    'SQLSTATE_23000_fk_constraint': 'Missing value for mandatory foreign key %s'|trans,
+    'SQLSTATE_42S22_column_not_found': 'Column "%s" not found'|trans
 } %}
 {% set tableLabels = {
     'sort-asc': 'sort ascending'|trans,

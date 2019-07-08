@@ -43,10 +43,23 @@
             {% block rowFields %}
             {% endblock %}
             {% for voiceKey, voiceProperties in navigations.recordVisibleActions %}
+                {% set voiceLabel = voiceProperties.label ?? attribute(actionsLabels, voiceKey) %}
             <td class="record-action">
-                <a href="{{ parseRecordActionRoute(voiceProperties.route, record) }}">
-            {{- attribute(actionsLabels, voiceKey) -}}
+                {% set allowed = true %}
+                {% if voiceProperties.conditions is defined %}
+                    {% for conditionField in voiceProperties.conditions %}
+                        {% if attribute(record, conditionField) == false %}
+                            {% set allowed = false %}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                {% if allowed %}
+                <a href="{{ parseRecordActionRoute(voiceProperties.route, record) }}"{% if voiceProperties.linkClass is defined  %} class="{{ voiceProperties.linkClass }}"{% endif %} title="{{- voiceLabel|escape('html_attr') -}}">
+                    {% if voiceProperties.linkClass is not defined  %}
+                        {{- voiceLabel -}}
+                    {% endif %}
                 </a>
+                {% endif %}
             </td>
             {% endfor %}
         </tr>

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Simplex;
+namespace Simplex\Controller;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -151,7 +151,7 @@ abstract class ControllerAbstract
     {
         if(!$this->languages) {
             //load languages configuration
-            $this->languages = loadLanguages();
+            $this->languages = loadLanguages('local');
         }
     }
     

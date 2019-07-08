@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Simplex\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-02 16:12+0200\n"
-"PO-Revision-Date: 2019-07-02 16:15+0200\n"
+"POT-Creation-Date: 2019-07-04 11:30+0200\n"
+"PO-Revision-Date: 2019-07-04 11:33+0200\n"
 "Language: it_IT\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,6 +49,7 @@ msgid "Missing value for mandatory foreign key %s"
 msgstr "Manca il vaore per la chiave esterna obbligatoria %s"
 
 #. line 32
+#. line 33
 msgid "sort ascending"
 msgstr "imposta ordine alfabetico ascendente"
 
@@ -58,6 +59,12 @@ msgstr "imposta ordine alfabetico discendente"
 msgid "Please sign in"
 msgstr "Prego, effettuare l'accesso"
 
+#. line 30
+#. line 31
+#. line 32
+#. line 30
+#. line 31
+#. line 32
 #. line 30
 #. line 31
 #. line 32
@@ -163,6 +170,10 @@ msgstr "Nome utente errato"
 #. line 55
 #. line 54
 #. line 55
+#. line 54
+#. line 55
+#. line 54
+#. line 55
 msgid "Password"
 msgstr "Password errata"
 
@@ -216,11 +227,13 @@ msgstr "nessun limite"
 
 #. line 417
 #. line 427
+#. line 464
 msgid "Control Code"
 msgstr "Codice di Verifica"
 
 #. line 434
 #. line 444
+#. line 481
 msgid ""
 "Type code displayed into image, if you are not able to read the code click "
 "on the reload icon to generate a new image"
@@ -232,9 +245,14 @@ msgstr ""
 #. line 753
 #. line 752
 #. line 776
+#. line 818
 msgid "The value you entered for this field is invalid."
 msgstr "Il valore digitato per questo campo non è valido."
 
+#. line 20
+#. line 21
+#. line 20
+#. line 21
 #. line 20
 #. line 21
 #. line 20
@@ -283,24 +301,28 @@ msgstr "lunghezza massima: %s caratteri"
 #. line 681
 #. line 680
 #. line 704
+#. line 746
 msgid "Please fill out this field"
 msgstr "Prego, compilare questo campo"
 
 #. line 684
 #. line 683
 #. line 707
+#. line 749
 msgid "Please enter an email address"
 msgstr "Prego, digitare un indirizzo di posta elettronica"
 
 #. line 687
 #. line 686
 #. line 710
+#. line 752
 msgid "Please enter a URL"
 msgstr "Prego, digitare un URL"
 
 #. line 690
 #. line 689
 #. line 713
+#. line 755
 #, php-format
 msgid ""
 "Please lengthen this text to %s characters or more. You are currently using "
@@ -312,6 +334,7 @@ msgstr ""
 #. line 693
 #. line 692
 #. line 716
+#. line 758
 #, php-format
 msgid ""
 "Please short this text to no more than %s characters. You are currently "
@@ -323,18 +346,21 @@ msgstr ""
 #. line 696
 #. line 695
 #. line 719
+#. line 761
 msgid "Please enter a number"
 msgstr "Prego, digitare un numero"
 
 #. line 699
 #. line 698
 #. line 722
+#. line 764
 msgid "Please select a valid value"
 msgstr "Prego, selezionare un valore valido"
 
 #. line 702
 #. line 701
 #. line 725
+#. line 767
 #, php-format
 msgid "Please select a value that is no more than %s"
 msgstr "Prego, selezionare un valore che non sia maggiore di %s"
@@ -342,6 +368,7 @@ msgstr "Prego, selezionare un valore che non sia maggiore di %s"
 #. line 705
 #. line 704
 #. line 728
+#. line 770
 #, php-format
 msgid "Please select a value that is no less than %s"
 msgstr "Prego, selezionare un valore che non sia minore di %s"
@@ -349,9 +376,18 @@ msgstr "Prego, selezionare un valore che non sia minore di %s"
 #. line 708
 #. line 707
 #. line 731
+#. line 773
 msgid "Please match the requested format"
 msgstr "Prego, conformarsi al formato richiesto"
 
 #. line 58
 msgid "No records saved"
 msgstr "Nessun record salvato"
+
+#, php-format
+msgid "Column \"%s\" not found"
+msgstr "Campo \"%s\" non trovato "
+
+#. line 19
+msgid "fields marked with * are mandatory"
+msgstr "I campi contrassegnati con * sono obbligatori"

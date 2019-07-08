@@ -13,7 +13,7 @@
     {% else %}
     {# field sorting is set  #}
         {% set direction = sorting[1]|lower %}
-        {% set buttonClass = 'icon-erp-sorted-%s'|format(direction) %}
+        {% set buttonClass = 'icon-erp-triangle-%s'|format(direction == 'asc' ? 'down' : 'up') %}
         {% set reverseDirection = direction == 'asc' ? 'desc' : 'asc' %}
     {% endif %}
     {% set buttonTitle = attribute(context.tableLabels, 'sort-%s'|format(reverseDirection)) %}
@@ -28,4 +28,8 @@
         </form>
     </div>
 </th>
+{% endmacro %}
+
+{% macro displayMoveRecordCell(context) %}
+    up - down
 {% endmacro %}
