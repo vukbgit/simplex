@@ -50,7 +50,7 @@
         "bin/yarn.sh",
         "bin/sass.sh",
         "bin/git-init.sh",
-        "bin/git-pull.sh",
+        "bin/update-all.sh",
         "bin/git-push-all.sh"
     ]
 }
