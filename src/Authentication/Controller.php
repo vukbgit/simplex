@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Simplex\Authentication;
 
-use Simplex\ControllerWithTemplateAbstract;
+use Simplex\Controller\ControllerWithTemplateAbstract;
 use function Simplex\slugToPSR1Name;
 
 /*use Psr\Http\Message\ServerRequestInterface;
