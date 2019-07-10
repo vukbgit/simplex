@@ -683,7 +683,11 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
             if($this->model->hasUploads()) {
                 $this->model->saveUploadsFiles($primaryKeyValue, $fieldsData->uploadsValues);
             }
+            //post save processing
+            $this->doAfterRecordSave($primaryKeyValue, $fieldsData);
+            //redirect
             $redirectRoute = $this->buildRouteToActionFromRoot('list');
+            //message
             $this->setSubjectAlert('success', (object) ['code' => 'save_success']);
         } catch(\PDOException $exception) {
             $error = $this->model->handleException($exception);
@@ -713,7 +717,11 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
             if($this->model->hasUploads()) {
                 $this->model->saveUploadsFiles($fieldsData->primaryKeyValue, $fieldsData->uploadsValues);
             }
+            //post save processing
+            $this->doAfterRecordSave($primaryKeyValue, $fieldsData);
+            //redirect
             $redirectRoute = $this->buildRouteToActionFromRoot('list');
+            //message
             $this->setSubjectAlert('success', (object) ['code' => 'save_success']);
         } catch(\PDOException $exception) {
             $error = $this->model->handleException($exception);
@@ -722,6 +730,16 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
         }
         //redirect
         $this->redirect($redirectRoute);
+    }
+    
+    /**
+     * Performs action after record save
+     * to be overridden by children classes if necessary
+     * @param mixed $primaryKeyValue
+     * @param object $fieldsData as returnd by getSaveFormData method
+     */
+    protected function doAfterRecordSave($primaryKeyValue, $fieldsData)
+    {
     }
     
     /**

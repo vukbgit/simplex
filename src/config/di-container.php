@@ -29,6 +29,8 @@ use Simplex\TranslationsExtractor;
 use Simplex\SpreadsheetReaderWriter;
 //mailer
 use Simplex\PHPMailerExtended;
+//password generator
+use Hackzilla\PasswordGenerator\Generator\ComputerPasswordGenerator;
 //to get LOCAL CLASSES
 use function Simplex\mergeArrayFromFiles;
 //definitions array
@@ -100,6 +102,8 @@ return array_merge(
         'spreadsheet' => create(SpreadsheetReaderWriter::class),
         //mailer
         'mailer' => create(PHPMailerExtended::class),
+        //password generator
+        'passwordGenerator' => create(ComputerPasswordGenerator::class),
         /**********************************
         * STOP ADDITIONAL FUNCTIONALITIES *
         **********************************/
