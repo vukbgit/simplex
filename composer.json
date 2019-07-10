@@ -35,7 +35,8 @@
         "zendframework/zend-validator": "^2.12",
         "zendframework/zend-session": "^2.8",
         "box/spout": "^3.0",
-        "phpmailer/phpmailer": "^6.0"
+        "phpmailer/phpmailer": "^6.0",
+        "ircmaxell/random-lib": "^1.2"
     },
     "autoload": {
         "psr-4" : {

@@ -129,9 +129,12 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
     protected function storeAncestors()
     {
         //loop routeParameters
-        foreach ($this->routeParameters as $parameter => $value) {
+        foreach ($this->routeParameters as $parameter => $subjectKey) {
             if(substr($parameter, 0, 8) == 'ancestor') {
-                $this->ancestors[] = $this->DIContainer->get(sprintf('%s-model', $value));
+                $this->ancestors[$subjectKey] = (object) [
+                    'controller' => $this->DIContainer->get(sprintf('%s-controller', $subjectKey)),
+                    'model' => $this->DIContainer->get(sprintf('%s-model', $subjectKey))
+                ];
             }
         }
     }
@@ -241,7 +244,7 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
     /**
      * Loads subject navigation which is *always* needed for ERP 
      */
-    protected function loadSubjectNavigation()
+    public function loadSubjectNavigation()
     {
         //config file must be into class-folder/config/model.php
         $configPath = sprintf('%s/config/navigation.php', getInstancePath($this));
@@ -312,6 +315,15 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
                 return $this->resetSubjectAlerts();
             }
         );
+        /*************
+        * NAVIGATION *
+        *************/
+        //gets a local controller navigationS object
+        $this->addTemplateFunction('getNavigations', function(ControllerWithTemplateAbstract $controller){
+            $controller->loadSubjectNavigation();
+            return $controller->getNavigations();
+        });
+        
     }
     
     /**
@@ -331,9 +343,9 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
         $this->setTemplateParameter('userData', $this->getAuthenticatedUserData());
         $this->setTemplateParameter('subject', $this->subject);
         $this->setTemplateParameter('model', $this->model);
+        $this->setTemplateParameter('ancestors', $this->ancestors);
         $this->setTemplateParameter('currentNavigationVoice', $this->currentNavigationVoice);
         $this->setTemplateParameter('sideBarClosed', $this->getAreaCookie('sideBarClosed') ?? false);
-        $this->setTemplateParameter('pathToSubjectTemplate', sprintf('@local/%s/%s/subject.twig', str_replace('\\', '/', getInstanceNamespace($this, true)), TEMPLATES_DEFAULT_FOLDER));
     }
     
     /**************
@@ -434,12 +446,30 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
         //filter
         $subjectCookie = $this->getSubjectCookie();
         if(isset($subjectCookie->filter) && $subjectCookie->filter) {
+            //create a grouped where for the filter
+            $filterWhere = [
+                'grouped' => true
+            ];
             //loop config fields
             foreach ((array) $this->CRUDLconfig->fields as $fieldName => $fieldConfig) {
                 if(!isset($fieldConfig->tableFilter) || $fieldConfig->tableFilter) {
-                    $where[] = [$fieldName, 'LIKE', sprintf('%%%s%%', $subjectCookie->filter), 'logical' => 'OR'];
+                    //filter fields conditions are joined by the logical OR operator
+                    $filterWhere[] = [$fieldName, 'LIKE', sprintf('%%%s%%', $subjectCookie->filter), 'logical' => 'OR'];
                 }
             }
+            $where[] = $filterWhere;
+        }
+        //parent primary key
+        if(!empty($this->ancestors)) {
+            $parent = end($this->ancestors)->model;
+            $parentConfig = $parent->getConfig();
+            //check parent primary key into route
+            if(!isset($this->routeParameters->{$parentConfig->primaryKey})) {
+                throw new \Exception(sprintf('Controller %s has defined the ancestor %s into route but ancestor primary key %s value is not set into route', getInstanceNamespace($this), getInstanceNamespace($parent), $parentConfig->primaryKey));
+                
+            }
+            $parentPrimaryKeyValue = $this->routeParameters->{$parentConfig->primaryKey};
+            $where[] = [$parentConfig->primaryKey, $parentPrimaryKeyValue];
         }
         return $where;
     }
@@ -672,7 +702,9 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
         $fieldsData = $this->getSaveFieldsData();
         try {
             //save record
-            $this->model->update($fieldsData->primaryKeyValue, $fieldsData->saveFieldsValues);
+            if(!empty($fieldsData->saveFieldsValues)) {
+                $this->model->update($fieldsData->primaryKeyValue, $fieldsData->saveFieldsValues);
+            }
             //save locales
             if($this->model->hasLocales()) {
                 $this->model->saveLocales($fieldsData->primaryKeyValue, $fieldsData->saveLocalesFieldsValues);

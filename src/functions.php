@@ -134,7 +134,7 @@ if (!function_exists('Simplex\getInstancePath')) {
     function getInstancePath($instance) : string
     {
         $namespace = getInstanceNamespace($instance, true);
-        return sprintf('private/local/simplex/%s', str_replace('\\', '/', $namespace));
+        return sprintf('%s/%s', PRIVATE_LOCAL_DIR, str_replace('\\', '/', $namespace));
     }
 }
 

@@ -1,0 +1,7 @@
+{# included without context passing labels global variable  #}
+{% set labels = updateProperty(labels, 'categorie-servizi', {
+    'subject': 'SUBJECT-LABEL'|trans,
+    'fields': {
+        'FIELD-NAME': 'FIELD-LABEL'|trans,
+    }
+}) %}

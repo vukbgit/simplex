@@ -43,7 +43,33 @@
     </nav>
     {# main content #}
     <main role="main" class="{% if sideBarClosed %} wide{% endif %}">
-<h2 class="h3 my-3">{{- subjectLabel }} &raquo; {% block actionLabel %}{{ attribute(actionsLabels, action) }}{% endblock %}</h2>
+        {#<h2 class="h3 my-3">
+            {{- subjectLabel }} &raquo; {% block actionLabel %}{{ attribute(actionsLabels, action) }}{% endblock %}
+        </h2>#}
+        <nav aria-label="breadcrumb" class="my-3">
+            <ol class="breadcrumb">
+            {% for ancestorKey, ancestor in ancestors %}
+                {% set ancestorRoute = attribute((getNavigations(ancestor.controller)).globalActions|first, 'route') %}
+                <li class="breadcrumb-item">
+                {% if ancestorRoute %}
+                    <a href="{{ ancestorRoute }}">
+                {% endif %}
+                    {{- getLabel(labels, ancestorKey, 'subject') }}
+                {% if ancestorRoute %}
+                    </a>
+                {% endif %}
+                </li>
+            {% endfor %}
+                <li class="breadcrumb-item">
+                    <a href="{{ buildRouteToActionFromRoot('list') }}">
+                    {{- getLabel(labels, subject, 'subject') }}
+                    </a>
+                </li>
+                <li class="breadcrumb-item active text-capitalize" aria-current="page">
+            {%- block actionLabel %}{{ attribute(actionsLabels, action) }}{% endblock %}
+                </li>
+            </ol>
+        </nav>
         {# model global actions navigation #}
         {{ navigationMacros.displaySubjectGlobalActionsNavigation(_context, navigations.globalActions, globalActionsLabels) }}
         {# subject alerts #}

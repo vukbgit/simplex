@@ -55,7 +55,15 @@
         <ul class="nav nav-tabs">
             {% for voiceKey, voiceProperties in navigation %}
             <li class="nav-item">
-        <a href="{{ voiceProperties.route|default('#') }}" class="nav-link{% if voiceProperties.isActive %} active{% endif %} text-capitalize">
+            {# absolute route #}
+            {% if voiceProperties.route is defined %}
+                {% set route = voiceProperties.route %}
+            {% elseif voiceProperties.routeFromSubject is defined %}
+                {% set route = buildRouteToActionFromRoot(voiceProperties.routeFromSubject ) %}
+            {% else %}
+                {% set route = '#' %}
+            {% endif %}
+        <a href="{{ route }}" class="nav-link{% if voiceProperties.isActive %} active{% endif %} text-capitalize">
                 {{- attribute(context.actionsLabels, voiceKey) -}}
                 </a>
             </li>

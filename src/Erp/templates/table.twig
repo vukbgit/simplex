@@ -54,7 +54,8 @@
                     {% endfor %}
                 {% endif %}
                 {% if allowed %}
-                <a href="{{ parseRecordActionRoute(voiceProperties.route, record) }}"{% if voiceProperties.linkClass is defined  %} class="{{ voiceProperties.linkClass }}"{% endif %} title="{{- voiceLabel|escape('html_attr') -}}">
+                    {% set route = voiceProperties.routeFromSubject is defined ? buildRouteToActionFromRoot(voiceProperties.routeFromSubject) : voiceProperties.route %}
+                <a href="{{ parseRecordActionRoute(route, record) }}"{% if voiceProperties.linkClass is defined  %} class="{{ voiceProperties.linkClass }}"{% endif %} title="{{- voiceLabel|escape('html_attr') -}}">
                     {% if voiceProperties.linkClass is not defined  %}
                         {{- voiceLabel -}}
                     {% endif %}

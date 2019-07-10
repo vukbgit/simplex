@@ -25,6 +25,8 @@
         {{ selfMacros.displayInputText(config) }}
     {% elseif type == 'email' %}
         {{ selfMacros.displayInputEmail(config) }}
+    {% elseif type == 'url' %}
+        {{ selfMacros.displayInputUrl(config) }}
     {% elseif type == 'password' %}
         {{ selfMacros.displayInputPassword(config) }}
     {% endif %}
@@ -59,9 +61,28 @@ NOTE: for to perform validation Simplex does not use browser built in (see https
 {% macro displayInputEmail(config) %}
     {% import _self as selfMacros %}
     {# set default validation pattern #}
-    {% if config.validation.pattern is not defined %}
-    {% set validation = config.validation ?? {} %}
+    {% if config.validation.pattern is not defined or config.validation.pattern == '' %}
+        {% set validation = config.validation ?? {} %}
         {% set validation = updateProperty(validation, 'pattern', '^(([^<>()\\.,;:\s@"]+(\.[^<>()\\.,;:\s@"]+)*)|(".+"))@(([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$') %}
+        {% set config = updateProperty(config, 'validation', validation) %}
+    {% endif %}
+    {# add input class #}
+    {% set classes = config.classes ?? [] %}
+    {% set classes = ['form-control']|merge(classes) %}
+    {% set config = updateProperty(config, 'classes', classes) %}
+    {{ selfMacros.displayInput('text', config) }}
+{% endmacro %}
+
+{# displays an input URL field
+@param hash config: hash for field properties (see setFieldAttributes macro explanation)
+NOTE: for to perform validation Simplex does not use browser built in but a pattern that matches real world URLs (from http://regexlib.com/REDetails.aspx?regexp_id=90); and to avoid conflicts does not use both URL type AND pattern validation
+#}
+{% macro displayInputUrl(config) %}
+    {% import _self as selfMacros %}
+    {# set default validation pattern #}
+    {% if config.validation.pattern is not defined or config.validation.pattern == '' %}
+        {% set validation = config.validation ?? {} %}
+        {% set validation = updateProperty(validation, 'pattern', "^https?\://[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(/\S*)?$") %}
         {% set config = updateProperty(config, 'validation', validation) %}
     {% endif %}
     {# add input class #}
@@ -92,7 +113,7 @@ NOTE: for to perform validation Simplex does not use browser built in (see https
 {% endmacro %}
 
 {# displays a text-like input field block
-@param string type: text | email | password
+@param string type: text | email | password | url
 @param hash config: hash for field properties (see setFieldAttributes macro explanation)
 #}
 {% macro displayInputGroup(type, config) %}
@@ -225,9 +246,7 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
 {% endmacro %}
 
 {# displays a select field block
-@param hash config: hash for field properties (see setFieldAttributes macro explanation) plus specific properties:
-    noOption0 (bool) whether not to display the first zero-value option
-    option0Label (string) label to be used for the first option instead of the default one
+@param hash config: hash for field properties (see setFieldAttributes macro explanation) plus specific properties (see displaySelect)
 @param array items: array of hashes each with value and label property
 #}
 {% macro displaySelectGroup(config, items) %}
@@ -239,7 +258,6 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
         {{ selfMacros.displayHelp(config) }}
     </div>
 {% endmacro %}
-
 
 {#################
 # RADIO/CHECKBOX #
@@ -331,6 +349,75 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
     </div>
 {% endmacro %}
 
+{###################
+# DATE TIME PICKER #
+###################}
+
+{# displays a date time picker
+@param hash config: hash for field properties (see setFieldAttributes macro explanation) plus
+- format (string, i.e. 'DD-MM-YYYY'), default to the one returnd by getdateFormat function
+- options (hash): specific datetime options (see)
+#}
+{% macro displayDateTimePicker(config) %}
+    {% import _self as selfMacros %}
+    {% set id = config.id ?? config.name %}
+    {% set containerId = '%s_container'|format(id) %}
+    {% if config.value %}
+        {% set config = updateProperty(config, 'value', config.value|date(attribute(getLanguage('dateFormat'), 'PHP'))) %}
+    {% endif %}
+    {% set classes = config.classes ?? [] %}
+    {% set classes = ['form-control', 'datetimepicker-input']|merge(classes) %}
+    {% set config = updateProperty(config, 'classes', classes) %}
+    {% set config = updateProperty(config, 'data', {'target': containerId}) %}
+    <div class="input-group date" id="{{ containerId }}" data-target-input="nearest">
+        {{ selfMacros.displayInputText(config) }}
+        <div class="input-group-append" data-target="#{{ containerId }}" data-toggle="datetimepicker">
+            <div class="input-group-text"><i class="icon-form-calendar"></i></div>
+        </div>
+    </div>
+    <script type="text/javascript">
+       $(function () {
+            $('#{{ containerId }}').datetimepicker({
+                format: '{{ config.format|default(attribute(getLanguage('dateFormat'), 'calendar')) }}',
+                locale: '{{ getLanguage('ISO-639-1') }}',
+                icons: {
+                    time: 'icon-form-clock',
+                    date: 'icon-form-calendar',
+                    up: 'icon-form-angle-up',
+                    down: 'icon-form-angle-down',
+                    previous: 'icon-form-angle-left',
+                    next: 'icon-form-angle-right',
+                    today: 'icon-form-calendar-today',
+                    clear: 'icon-form-trash',
+                    close: 'icon-form-close'
+                }
+           {% for option,value in config.options %}
+               {{ option }}: {{ value|varToJs }},
+           {% endfor %}
+           });
+       });
+   </script>
+{% endmacro %}
+
+{# displays a date time picker block
+@param hash config: hash for field properties (see setFieldAttributes macro explanation) plus specific properties (see displayDateTimePicker)
+@param array items: array of hashes each with value and label property
+#}
+{% macro displayDateTimePickerGroup(config) %}
+    {% import _self as selfMacros %}
+    {% set format = config.format|default(attribute(getLanguage('dateFormat'), 'calendar')) %}
+    {% set config = updateProperty(config, 'format', format) %}
+    {% set id = (config.id ?? config.name)|formatIdforJs %}
+    {% set help = config.help ?? [] %}
+    {% set help = ['Format: %s'|format(format)]|merge(help) %}
+    {% set config = updateProperty(config, 'help', help) %}
+    <div class="form-group" id="{{ '%s-container'|format(id) }}">
+        {{ selfMacros.displayLabel(config) }}
+        {{ selfMacros.displayDateTimePicker(config) }}
+        {{ selfMacros.displayHelp(config) }}
+    </div>
+{% endmacro %}
+
 {#########
 # UPLOAD #
 #########}
@@ -339,8 +426,9 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
 @param hash context: the calling template context object
 @param string uploadRoute: route to address uploads to
 @param hash config: hash for field properties (see setFieldAttributes macro explanation) specific properties:
-- options (hash); specific js class options passes as is, common options:
+- options (hash); specific js class options passed as is (see http://plugins.krajee.com/file-input/plugin-options), common options:
     allowedFileTypes: ['image', 'html', 'text', 'video', 'audio', 'flash', 'object']
+    allowedFileExtensions: ['ext1', 'ext2', ...]
     maxFileCount: maximum number of files allowed for each multiple upload. If set to 0, it means number of files allowed is unlimited
 - previewTemplate: HTML chunk (see http://plugins.krajee.com/file-input/plugin-options#initialPreview) with placeholders for the outputs files paths in the form @output-name
     
@@ -388,7 +476,8 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
         {% set config = updateProperty(config, 'options', updateProperty(config.options, 'autoReplace', true)) %}
     {% endif %}
     {# preview #}
-    {% if config.value and config.previewTemplate is defined %}
+    {#% if config.value and config.previewTemplate is defined %#}
+    {% if config.value %}
         initialPreview: [
         {% for fileName in config.value|split('|') %}
             '{{ formatUploadPreviewTemplate(uploadKey, fileName, config.previewTemplate) }}',
@@ -442,7 +531,8 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
         * @param string inputId: id attribute of the hidden input that stores files rapresentation
         **/
         getInputFiles: function(inputId) {
-            return $('#' + inputId).val().split('|');
+            var stringValue = $('#' + inputId).val();
+            return stringValue ? stringValue.split('|') : [];
         },
         /**
         * gets list of previews form the initial set plus any successfully uploaded file, excluding failed uploads
@@ -491,6 +581,7 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
             this.makeRoom(inputId);
             //append file
             var filesList = this.getInputFiles(inputId);
+            console.log(filesList);
             filesList.push(fileObject.name);
             this.setFiles(inputId, filesList);
         },
@@ -503,15 +594,11 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
         saveSorting: function(inputId, oldIndex, newIndex) {
             var list = this.getInputFiles(inputId);
             //get file name
-            console.log(list);
             var fileName = list[oldIndex];
-            console.log(fileName);
             //remove from old index
             list.splice(oldIndex, 1);
-            console.log(list);
             //insert at new index
             list.splice(newIndex, 0, fileName);
-            console.log(list);
             this.setFiles(inputId, list);
         },
         /**
@@ -611,6 +698,7 @@ for autocomplete see https://developer.mozilla.org/en-US/docs/Web/HTML/Attribute
         'required': true,
         'pattern': ''
     }
+    'data': {attr1: attr-1-value} //any data-x attribute
 }
 #}
 {% macro setFieldAttributes(config) %}
@@ -642,6 +730,12 @@ for autocomplete see https://developer.mozilla.org/en-US/docs/Web/HTML/Attribute
     {# help text #}
     {% if config.help %}
     aria-describedby="{{ '%s-help'|format(config.id ?? config.name ) }}"
+    {% endif %}
+    {# data #}
+    {% if config.data %}
+        {% for name, value in config.data %}
+            {{ 'data-%s=%s'|format(name, value|escape('html_attr')) }}
+        {% endfor %}
     {% endif %}
     {# validation #}
     {% if validation %}
@@ -717,7 +811,7 @@ NOTE: javascript validation function creates automatically if needed, this macro
 @param hash config: hash for form properties
     noValidation (bool): whether NOT to load JavaScript validation API
     locales (bool): whether there is at least one localized field
-    assets (list): ['richTextEditor', 'fileUpload', 'captcha'] list of the field types included into form that need some asset to be included
+    assets (list): ['richTextEditor', 'fileUpload', 'captcha', 'dateTimePicker'] list of the field types included into form that need some asset to be included
     captcha (object): captcha config object, properties:
         reloadRoute (string): route for image reloading, it must be mapped and must return Simplex\ZendCaptchaImageExtended::reloadCaptcha
 #}
@@ -734,6 +828,9 @@ NOTE: javascript validation function creates automatically if needed, this macro
         {{ selfMacros.localesAssets(context) }}
     {% endif %}
     {# assets #}
+    {% if 'dateTimePicker' in config.assets %}
+        {{ selfMacros.dateTimePickerAssets(context) }}
+    {% endif %}
     {% if 'richTextEditor' in config.assets %}
         {{ selfMacros.richTextEditorAssets(context) }}
     {% endif %}
@@ -1013,11 +1110,22 @@ builds validation javascript API
 @param object context
 #}
 {% macro localesAssets(context) %}
-{<!-- Flag icon css -->
+<!-- Flag icon css -->
 <link href="{{ 'flag-icon-css/css/flag-icon.min.css'|pathToNpmAsset }}" media="all" rel="stylesheet" type="text/css" />
 {% endmacro %}
 
 {# rich text editor
+language packages must be downloaded from https://www.tiny.cloud/get-tiny/language-packages/ and saved into /public/share/rich-text-editor/locales/
+@param object context
+#}
+{% macro dateTimePickerAssets(context) %}
+<!-- date picker -->
+<script src="{{ 'moment/min/moment-with-locales.min.js'|pathToNpmAsset }}"></script>
+<script src="{{ 'tempusdominus-bootstrap-4/build/js/tempusdominus-bootstrap-4.min.js'|pathToNpmAsset }}"></script>
+<link rel="stylesheet" href="/public/share/node_modules/tempusdominus-bootstrap-4/build/css/tempusdominus-bootstrap-4.min.css">
+{% endmacro %}
+
+{# date time picker
 language packages must be downloaded from https://www.tiny.cloud/get-tiny/language-packages/ and saved into /public/share/rich-text-editor/locales/
 @param object context
 #}
@@ -1036,7 +1144,7 @@ div.mce-fullscreen {
 @param object context
 #}
 {% macro fileUploadAssets(context) %}
-{<!-- Kartik Bootstrap file input -->
+<!-- Kartik Bootstrap file input -->
 <link href="{{ 'bootstrap-fileinput/css/fileinput.min.css'|pathToNpmAsset }}" media="all" rel="stylesheet" type="text/css" />
 <script src="{{ 'bootstrap-fileinput/js/plugins/piexif.min.js'|pathToNpmAsset }}" type="text/javascript"></script>
 <script src="{{ 'bootstrap-fileinput/js/plugins/sortable.min.js'|pathToNpmAsset }}" type="text/javascript"></script>

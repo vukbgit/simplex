@@ -125,6 +125,36 @@
       "css": "form-block",
       "code": 59408,
       "src": "iconic"
+    },
+    {
+      "uid": "531bc468eecbb8867d822f1c11f1e039",
+      "css": "form-calendar",
+      "code": 59395,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "598a5f2bcf3521d1615de8e1881ccd17",
+      "css": "form-clock",
+      "code": 59401,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "5de9370846a26947e03f63142a3f1c07",
+      "css": "form-angle-up",
+      "code": 61702,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "e4dde1992f787163e2e2b534b8c8067d",
+      "css": "form-angle-down",
+      "code": 61703,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "9de4ac1aec6b1cca1929e1407eecf3db",
+      "css": "form-calendar-today",
+      "code": 62068,
+      "src": "fontawesome"
     }
   ]
 }

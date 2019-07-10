@@ -1,7 +1,18 @@
-{# extends local model template #}
-{% extends pathToSubjectTemplate ?? pathToAreaTemplate %}
+{# extends area template #}
+{% extends pathToAreaTemplate %}
 
 {% use '@share/templates/blocks.twig' %}
+
+{# include subject and ancestors labels #}
+
+{% block body %}
+    {{ include(getInstanceTemplate(model, 'labels.twig'), {'labels': labels}, with_context = false) }}
+    {% for ancestor in ancestors %}
+        {{ include(getInstanceTemplate(ancestor.controller, 'labels.twig'), {'labels': labels}, with_context = false) }}
+    {% endfor %}
+    {{ parent() }}
+{% endblock %}
+
 
 {% block head %}
     {{ parent() }}

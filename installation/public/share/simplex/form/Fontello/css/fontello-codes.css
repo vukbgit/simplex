@@ -2,11 +2,13 @@
 .icon-form-trash:before { content: '\e800'; } /* '' */
 .icon-form-upload:before { content: '\e801'; } /* '' */
 .icon-form-reload:before { content: '\e802'; } /* '' */
+.icon-form-calendar:before { content: '\e803'; } /* '' */
 .icon-form-download:before { content: '\e804'; } /* '' */
 .icon-form-zoom-in:before { content: '\e805'; } /* '' */
 .icon-form-move:before { content: '\e806'; } /* '' */
 .icon-form-plus-circled:before { content: '\e807'; } /* '' */
 .icon-form-checked-circled:before { content: '\e808'; } /* '' */
+.icon-form-clock:before { content: '\e809'; } /* '' */
 .icon-form-exclamation-circled:before { content: '\e80a'; } /* '' */
 .icon-form-hourglass:before { content: '\e80b'; } /* '' */
 .icon-form-pause:before { content: '\e80c'; } /* '' */
@@ -18,4 +20,7 @@
 .icon-form-resize-full:before { content: '\f0b2'; } /* '' */
 .icon-form-angle-left:before { content: '\f104'; } /* '' */
 .icon-form-angle-right:before { content: '\f105'; } /* '' */
+.icon-form-angle-up:before { content: '\f106'; } /* '' */
+.icon-form-angle-down:before { content: '\f107'; } /* '' */
 .icon-form-folder-open:before { content: '\f115'; } /* '' */
+.icon-form-calendar-today:before { content: '\f274'; } /* '' */

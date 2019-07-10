@@ -2,18 +2,19 @@
 declare(strict_types=1);
 
 namespace Simplex\Controller;
-
+//parent
+use Simplex\Controller\ControllerAbstract;
+//contructor injections
+use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseInterface;
+use Twig\Environment;
+use Simplex\VanillaCookieExtended;
+//other classes and functions
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Container\ContainerInterface;
-use Twig\Environment;
-use Aptoma\Twig\Extension\MarkdownExtension;
-use Aptoma\Twig\Extension\MarkdownEngine;
-use Simplex\Controller\ControllerAbstract;
-use Simplex\VanillaCookieExtended;
 use function Simplex\slugToPSR1Name;
 use function Simplex\PSR1NameToSlug;
+use function Simplex\getInstancePath;
 
 /*
 * In this context controller means a class that:
@@ -69,11 +70,6 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         parent::__construct($DIContainer, $response);
         $this->template = $templateEngine;
         $this->cookie = $cookie;
-        //internationalization
-        $this->template->addExtension(new \Twig_Extensions_Extension_I18n());
-        //markdown support
-        $markdownEngine = new MarkdownEngine\MichelfMarkdownEngine();
-        $this->template->addExtension(new MarkdownExtension($markdownEngine));
     }
 
     /**
@@ -178,6 +174,16 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
             return \ByteUnits\parse(sprintf('%s%s', $value, $fromUnit))->format($toUnit, ' ');
         });
         /********
+        * DATES *
+        ********/
+        /* formats a date with locale awareness
+        */
+        $this->addTemplateFunction('dateLocale', function(string $date, string $format = null): string{
+            $date = \DateTime::createFromFormat('Y-m-d', $date);
+            $timestamp = (int) $date->format('U');
+            return strftime($format, $timestamp);
+        });
+        /********
         * PATHS *
         ********/
         //checks hether a file path is valid (is_file wrapper)
@@ -197,17 +203,27 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         $this->addTemplateFilter('isNavigationRouteCurrentRoute', function($path){
             return $this->isNavigationRouteCurrentRoute($path);
         });
-        /********
-        * DATES *
-        ********/
-        /* formats a date with locale awareness
-        * @param string $date: in Y-m-d format
-        * @param string $format: as accepted by strftime https://php.net/strftime
+        //gets path to a local controller or model instance template
+        $this->addTemplateFunction('getInstanceTemplate', function($instance, $templateName){
+            return sprintf(
+                '@local/%s/%s/%s',
+                substr(getInstancePath($instance), strlen(PRIVATE_LOCAL_DIR) + 1),
+                TEMPLATES_DEFAULT_FOLDER,
+                $templateName
+            );
+        });
+        /*********
+        * LOCALE *
+        *********/
+        /* get currently selected language locale
+        * @param string $key: a specific property key of the language object to be returned
         */
-        $this->addTemplateFunction('dateLocale', function(string $date, string $format){
-            $date = \DateTime::createFromFormat('Y-m-d', $date);
-            $timestamp = (int) $date->format('U');
-            return strftime($format, $timestamp);
+        $this->addTemplateFunction('getLanguage', function(string $key = null){
+            if($key) {
+                return $this->language->$key;
+            } else {
+                return $this->language;
+            }
         });
         /*******
         * FORM *
@@ -250,13 +266,27 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
                 foreach ($this->model->getUploadKeyOutputs($uploadKey) as $outputKey) {
                     $previewTemplate = preg_replace(
                         sprintf('/@%s/', $outputKey),
-                        sprintf('/%s', $this->model->getOutputFilePath($uploadKey, $outputKey, $fileName)),
+                        sprintf('%s', $this->model->getPublicOutputFilePath($uploadKey, $outputKey, $fileName)),
                         $previewTemplate
                     );
                 }
                 return $previewTemplate;
             },
             ['is_safe' => ['html']]
+        );
+        /*********
+        * LABELS *
+        *********/
+        //resets subject alerts
+        $this->addTemplateFunction(
+            'getLabel',
+            function($labels, $subject, $type, $key = null){
+                $label = $labels->{$subject}[$type] ?? '';
+                if($key) {
+                    $label = $label[$key] ?? '';
+                }
+                return $label;
+            }
         );
         /********
         * USERS *
@@ -286,6 +316,7 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         $this->setTemplateParameter('action', $this->action);
         $this->setTemplateParameter('language', $this->language);
         $this->setTemplateParameter('languages', $this->languages);
+        $this->setTemplateParameter('labels', new \stdClass);
         $this->setTemplateParameter('routeParameters', $this->routeParameters);
         $this->setTemplateParameter('pathToAreaTemplate', sprintf('@local/%s/%s/%s.twig', slugToPSR1Name($this->area, 'class'), TEMPLATES_DEFAULT_FOLDER, $this->area));
         $this->setTemplateParameter('areaCookie', $this->getAreaCookie());
@@ -394,6 +425,14 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
     }
     
     /**
+     * Gets navigations
+     */
+    public function getNavigations()
+    {
+        return $this->navigations;
+    }
+    
+    /**
      * Loads a navigation level
      * @param string $navigationName
      * @param array $navigationLevel
@@ -402,16 +441,17 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
     protected function loadNavigationLevel(string $navigationName, array &$loadedNavigationLevel, object &$parentVoiceProperties = null)
     {
         foreach ($loadedNavigationLevel as $voiceKey => $voiceProperties) {
-            //check voice permission
-            if(isset($voiceProperties->permissions) && !$this->checkAtLeastOnePermission($voiceProperties->permissions)) {
+            //check voice permission (only if controller has been invoked by router and so request is defined)
+            if(isset($this->request) && isset($voiceProperties->permissions) && !$this->checkAtLeastOnePermission($voiceProperties->permissions)) {
                 unset($loadedNavigationLevel[$voiceKey]);
                 continue;
             }
             if($parentVoiceProperties) {
                 $voiceProperties->parent =& $parentVoiceProperties;
             }
-            //check if its current route
-            if(isset($voiceProperties->route) && $this->isNavigationRouteCurrentRoute($voiceProperties->route)) {
+            //check if its current route (only if controller has been invoked by router and so request is defined)
+            $route = isset($voiceProperties->route) ? $voiceProperties->route : (isset($voiceProperties->routeFromSubject) ? $this->buildRouteToActionFromRoot($voiceProperties->routeFromSubject) : null);
+            if(isset($this->request) && isset($route) && $this->isNavigationRouteCurrentRoute($route)) {
                 $voiceProperties->isActive = true;
                 $this->currentNavigationVoice[$navigationName] = $voiceKey;
                 if($parentVoiceProperties) {

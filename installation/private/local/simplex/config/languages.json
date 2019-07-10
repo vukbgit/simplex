@@ -2,11 +2,19 @@
     "it": {
         "ISO-639-1": "it",
         "ISO-639-3": "ita",
-        "ISO-3166-1-2": "IT"
+        "ISO-3166-1-2": "IT",
+        "dateFormat": {
+            "PHP": "d-m-Y",
+            "calendar": "DD-MM-YYYY"
+        }
     },
     "en": {
         "ISO-639-1": "en",
         "ISO-639-3": "eng",
-        "ISO-3166-1-2": "GB"
+        "ISO-3166-1-2": "GB",
+        "dateFormat": {
+            "PHP": "Y-m-d",
+            "calendar": "YYYY-MM-DD"
+        }
     }
 }

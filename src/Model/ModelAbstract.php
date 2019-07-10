@@ -194,13 +194,30 @@ abstract class ModelAbstract
         ];
     }
     
+    /********************
+    * FIELDS PROCESSING *
+    ********************/
+
+    /**
+    * turns a date from the locale format to YYYY-MM-DD
+    * @param string $fromFormat: locale format
+    * @param string $date
+    */
+    public function formatDate(string $fromFormat, string $date): string
+    {
+        $date = \DateTime::createFromFormat($fromFormat, $date);
+        return $date->format('Y-m-d');
+    }
+    
     /*********
     * SELECT *
     *********/
 
     /**
     * Gets a recordset
-    * @param array $where: array of arrays, each with 2 elements (field name and value, comparison operator defaults to '=') or 3 elements (field name, comparison operator, value)
+    * @param array $where: array of arrays, each with 2 number indexed elements (field name and value, comparison operator defaults to '=') or 3 number indexed elements (field name, comparison operator, value)
+    *   + an optional key 'logical' (string) whose value triggers the logical operators 'AND' (default) and 'OR' 
+    *   + an optional key 'grouped' (boolean) to create a grouped where condition, in this case there must be an array for each field composed as above (except for the 'grouped' key, only one nested level is allowed at this time)
     * @param array $order: array of arrays, each with 1 element (field name, direction defaults to 'ASC') or 2 elements (field name, order 'ASC' | 'DESC')
     */
     public function get(array $where = [], array $order = [])
@@ -210,8 +227,35 @@ abstract class ModelAbstract
             ->table($this->view());
         //where conditions
         if(!empty($where)) {
-            foreach ($where as $fieldCondition) {
-                call_user_func([$this->query, 'whereLogical'], $fieldCondition);
+            foreach ($where as $fieldConditions) {
+                //not a grouped wwhere
+                if(!isset($fieldConditions['grouped']) || $fieldConditions['grouped'] === false) {
+                    call_user_func([$this->query, 'whereLogical'], $fieldConditions);
+                } else {
+                //grouped where
+                    //check logical operator
+                    if(!isset($fieldConditions['logical']) || strtoupper($fieldConditions['logical']) == 'OR') {
+                        $whereMethod = 'orWhere';
+                    } else {
+                        $whereMethod = 'where';
+                    }
+                    //clean up
+                    unset($fieldConditions['grouped']);
+                    unset($fieldConditions['logical']);
+                    //build grouped where
+                    $this->query->$whereMethod(function($q) use ($fieldConditions) {
+                        foreach ($fieldConditions as $fieldCondition) {
+                            //check logical operator
+                            if(!isset($fieldCondition['logical']) || strtoupper($fieldCondition['logical']) == 'OR') {
+                                $whereMethod = 'orWhere';
+                            } else {
+                                $whereMethod = 'where';
+                            }
+                            unset($fieldCondition['logical']);
+                            call_user_func_array([$q, $whereMethod], $fieldCondition);
+                        }
+                    });
+                }
             }
         }
         //order
@@ -271,7 +315,7 @@ abstract class ModelAbstract
     
     /**
     * Gets a record
-    * @param array $where: array of arrays, each with 2 elements (field name and value, operator defaults to '=') or 3 elements (field name, operator, value)
+    * @param array $where: where conditions, see get() method for details
     */
     public function first(array $where = [])
     {
@@ -425,7 +469,7 @@ abstract class ModelAbstract
     }
     
     /**
-    * Gets an uploaded file path for an output
+    * Gets an uploaded file absolute path for an output
     * @param string $uploadKey
     * @param string $outputKey
     * @param string $fileName
@@ -433,6 +477,21 @@ abstract class ModelAbstract
     public function getOutputFilePath(string $uploadKey, string $outputKey, string $fileName): string
     {
         return sprintf('%s/%s/%s', $this->getUploadFolder($uploadKey), $outputKey, $fileName);
+        return str_replace(ABS_PATH_TO_ROOT, '', $absolutePath);
+        
+    }
+    
+    /**
+    * Gets an uploaded file path to be used into templates
+    * @param string $uploadKey
+    * @param string $outputKey
+    * @param string $fileName
+    */
+    public function getPublicOutputFilePath(string $uploadKey, string $outputKey, string $fileName): string
+    {
+        $absolutePath = $this->getOutputFilePath($uploadKey, $outputKey, $fileName);
+        return str_replace(ABS_PATH_TO_ROOT, '', $absolutePath);
+        
     }
     
     /**

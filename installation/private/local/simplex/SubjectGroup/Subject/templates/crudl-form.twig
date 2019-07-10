@@ -16,7 +16,7 @@
     {
         'name': 'FIELD-NAME',
         'value': record.FIELD-NAME,
-        'label': fieldsLabels.FIELD-NAME,
+        'label': getLabel(labels, subject, 'fields', 'FIELD-NAME'),
         'help': fieldsLabels.FIELD-NAMEHelp,
         'autofocus': true,
         'disabled': action == 'delete-form',

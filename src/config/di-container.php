@@ -13,7 +13,8 @@ use Narrowspark\HttpEmitter\SapiEmitter;
 //ADDITIONAL FUNCTIONALITIES
 //template engine
 use Twig\Loader\FilesystemLoader;
-use Twig\Environment;
+//use Twig\Environment;
+use \Simplex\TwigExtended;
 use Simplex\VanillaCookieExtended;
 //query builder
 use \Pixie\Connection;
@@ -72,7 +73,7 @@ return array_merge(
         //template engine, templates paths are set into Simplex\ControllerWithTemplateAbstract::renderTemplate
         'twigFilesystemLoader' => create(FilesystemLoader::class)
             ->constructor(),
-        'templateEngine' => create(Environment::class)
+        'templateEngine' => create(TwigExtended::class)
             ->constructor(get('twigFilesystemLoader')),
         //cookie manager
         'cookieManager' => create(VanillaCookieExtended::class)
