@@ -178,7 +178,7 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         ********/
         /* formats a date with locale awareness
         */
-        $this->addTemplateFunction('dateLocale', function(string $date, string $format = null): string{
+        $this->addTemplateFunction('dateLocale', function(string $date, string $format): string{
             $date = \DateTime::createFromFormat('Y-m-d', $date);
             $timestamp = (int) $date->format('U');
             return strftime($format, $timestamp);
@@ -512,19 +512,38 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
     /**
     * Processes a recordset to be used in a radio, checkbox or select mapping fields to value and label
     * @param string $valueField
-    * @param mixed $labelFields: the neme of one field or an array of fields names and strings to be joined to form label
+    * @param mixed $labelTokens: the neme of one field or an array of fields names and strings to be joined to form label
     * @param array $recordset
+    * @param string $languageCode: optional language code to use for localized fields
     */
-    protected function processRecordsetForInput(string $valueField, $labelFields, array $recordset): array
+    protected function processRecordsetForInput(string $valueField, $labelTokens, array $recordset, string $languageCode = null): array
     {
-        if(is_string($labelFields)) {
-            $labelFields = [$labelFields];
+        //check labelfields and turn into an array if it's a string
+        if(is_string($labelTokens)) {
+            $labelTokens = [$labelTokens];
+        }
+        //check language code
+        if(!$languageCode) {
+            $languageCode = $this->language->{'ISO-639-1'};
         }
         $items = [];
         foreach ((array) $recordset as $record) {
             $label = '';
-            foreach ($labelFields as $labelField) {
-                $label .= $record->$labelField ?? $labelField;
+            foreach ($labelTokens as $labelToken) {
+                //dealing with a record field
+                if(isset($record->$labelToken)) {
+                    //localized field
+                    if(is_array($record->$labelToken)) {
+                        $tokenLabel = $record->$labelToken[$languageCode];
+                    } else {
+                    //not a localized field
+                        $tokenLabel = $record->$labelToken;
+                    }
+                } else {
+                //it's a text token, take it as it is
+                    $tokenLabel = $labelToken;
+                }
+                $label .= $tokenLabel;
             }
             $items[] = (object) [
                 'value' => $record->$valueField,

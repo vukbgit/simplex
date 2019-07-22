@@ -8,6 +8,11 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Simplex\VanillaCookieExtended;
+use Aura\Auth\Session\Segment;
+use Aura\Auth\AuthFactory;
+use Aura\Auth\Exception\UsernameNotFound;
+use Aura\Auth\Exception\PasswordIncorrect;
+use Aura\Auth\Verifier\PasswordVerifier;
 use function Simplex\slugToPSR1Name;
 
 /**
@@ -47,7 +52,7 @@ class Middleware implements MiddlewareInterface
     * @var array
     * Methods that can be used to sign in
     */
-    private $signInMethods = ['htpasswd'];
+    private $signInMethods = ['htpasswd', 'db'];
     
     /**
     * Constructor
@@ -64,8 +69,8 @@ class Middleware implements MiddlewareInterface
      **/
     protected function setAuthFactory()
     {
-        $sessionSegment = new \Aura\Auth\Session\Segment($this->area);
-        $this->authFactory = new \Aura\Auth\AuthFactory($_COOKIE, null, $sessionSegment);
+        $sessionSegment = new Segment($this->area);
+        $this->authFactory = new AuthFactory($_COOKIE, null, $sessionSegment);
     }
     
     /**
@@ -174,12 +179,34 @@ class Middleware implements MiddlewareInterface
                     case 'htpasswd':
                         //check htpasswd file path
                         if(!isset($methodProperties->path)) {
-                            throw new \Exception('htpasswd must have a \'path\' property with path to the htpasswd file');
+                            throw new \Exception('htpasswd authentication method must have a \'path\' property with path to the htpasswd file');
                         }
                         if(!is_file($methodProperties->path)) {
-                            throw new \Exception(sprintf('htpasswd \'path\' property must be a valid path to a htpasswd file'));
+                            throw new \Exception(sprintf('authentication method htpasswd \'path\' property must be a valid path to a htpasswd file'));
                         }
-                        $returnCode = $this->signInWithHtpasswd($methodProperties->path, $username, $password);
+                        $returnCode = $this->signInWithHtpasswd($username, $password, $methodProperties->path);
+                    break;
+                    case 'db':
+                        //check connection configuration file path
+                        if(!isset($methodProperties->path)) {
+                            throw new \Exception('db authentication method must have a \'path\' property with path to the database configuration file');
+                        }
+                        //check algo
+                        if(!isset($methodProperties->algo)) {
+                            throw new \Exception('db authentication method must have an \'algo\' property with the hashing algorithm as accepted by hash() as first argument');
+                        }
+                        //check table
+                        if(!isset($methodProperties->table)) {
+                            throw new \Exception('db authentication method must have a \'table\' property with the name of the db table to query');
+                        }
+                        //check fields
+                        if(!isset($methodProperties->fields) || !is_array($methodProperties->fields) || count($methodProperties->fields) != 3) {
+                            throw new \Exception('db authentication method must have a \'fields\' property, an array of columns table names with 3 elements, first is the username field, second the password field, third is user role field');
+                        }
+                        $returnCode = $this->signInWithDb($username, $password, $methodProperties->path, $methodProperties->algo, $methodProperties->table, $methodProperties->fields, $methodProperties->condition ?? null);
+                    break;
+                }
+                if($returnCode == 4) {
                     break;
                 }
             }
@@ -206,12 +233,12 @@ class Middleware implements MiddlewareInterface
     
     /**
      * Checks sign in by htpasswd method
-     * @param string $pathToHtpasswdFile path to htpassword file
      * @param string $username
      * @param string $password
+     * @param string $pathToHtpasswdFile path to htpassword file
      * @return int return code: 1 = wrong username, 2 = wrong password, 3 = sign in correct
      **/
-    protected function signInWithHtpasswd($pathToHtpasswdFile, $username, $password): int
+    private function signInWithHtpasswd(string $username, string $password, string $pathToHtpasswdFile): int
     {
         $auth = $this->authFactory->newInstance();
         $htpasswdAdapter = $this->authFactory->newHtpasswdAdapter($pathToHtpasswdFile);
@@ -226,10 +253,64 @@ class Middleware implements MiddlewareInterface
             unset($userData['password']);
             $this->setUserData($userData);
             $returnCode = 4;
-        } catch(\Aura\Auth\Exception\UsernameNotFound $e) {
+        } catch(UsernameNotFound $e) {
             //wrong username
             $returnCode = 2;
-        } catch(\Aura\Auth\Exception\PasswordIncorrect $e) {
+        } catch(PasswordIncorrect $e) {
+            //wrong password
+            $returnCode = 3;
+        }
+        return $returnCode;
+    }
+    
+    /**
+     * Checks sign in by db method
+     * @param string $username
+     * @param string $password
+     * @param string $pathToDbConfigFile path to db configuration file
+     * @param string $algo hashing algorithm for the hash() function
+     * @param string $table table or view to be quieried
+     * @param array $fields: username field, password field, any other field
+     * @param string $condition: query where condition portion
+     * @return string return code: 1 = wrong username, 2 = wrong password, 3 = sign in correct
+     **/
+    private function signInWithDb(string $username, string $password, string $pathToDbConfigFile, string $algo, string $table, array $fields, string $condition = null): int
+    {
+        //create PDO instance
+        $dbConfig = (require $pathToDbConfigFile)[ENVIRONMENT];
+        $dsn = sprintf(
+            '%s:dbname=%s;host=%s',
+            $dbConfig['driver'],
+            $dbConfig['database'],
+            $dbConfig['host']
+        );
+        $pdo = new \PDO($dsn, $dbConfig['username'], $dbConfig['password']);
+        //create password verifier
+        //xx(hash($algo, $password));
+        $hash = new PasswordVerifier($algo);
+        $auth = $this->authFactory->newInstance();
+        $pdoAdapter = $this->authFactory->newPdoAdapter($pdo, $hash, $fields, $table, $condition);
+        $loginService = $this->authFactory->newLoginService($pdoAdapter);
+        try {
+            //success
+            $loginService->login(
+                $auth,
+                [
+                    'username' => $username,
+                    'password' => $password
+                ]
+            );
+            //get role
+            $userData = $auth->getUserData();
+            $userData['username'] = $username;
+            $userData['role'] = $userData[$fields[2]];
+            unset($userData[$fields[2]]);
+            $this->setUserData($userData);
+            $returnCode = 4;
+        } catch(UsernameNotFound $e) {
+            //wrong username
+            $returnCode = 2;
+        } catch(PasswordIncorrect $e) {
             //wrong password
             $returnCode = 3;
         }
@@ -346,6 +427,10 @@ class Middleware implements MiddlewareInterface
     {
         //get current userdata
         $userData = $this->getUserData();
+        //check if user role has already been set
+        if(isset($userData->role)) {
+            return;
+        }
         //get users roles
         $userRoles = require $authenticationParameters->usersRolesPath;
         //check it's an object

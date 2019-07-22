@@ -1,4 +1,4 @@
-{% macro displaySortableHeader(context, fieldName) %}
+{% macro displaySortableHeader(context, fieldName, align) %}
     {% set fieldsSorting = attribute(attribute(context.areaCookie, context.subject), 'sorting') ?? null %}
     {% set sorting = null %}
     {% for fieldSorting in fieldsSorting %}
@@ -18,8 +18,8 @@
     {% endif %}
     {% set buttonTitle = attribute(context.tableLabels, 'sort-%s'|format(reverseDirection)) %}
 <th>
-    <div class="d-flex align-items-center">
-        <form action="" method="post">
+    <div class="d-flex align-items-center align-content-center">
+<form action="" method="post" class="w-100{% if align %} text-{{ align }}{% endif %}">
             <input type="hidden" name="modifier" value="sort">
             <input type="hidden" name="field" value="{{ fieldName }}">
             <input type="hidden" name="direction" value="{{ reverseDirection }}">

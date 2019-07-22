@@ -564,7 +564,8 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
     
     /**
      * Processes save form input to manipulate fields data before saving
-     * this method is void by defaulkt, it must be overridden by derived class if necessary
+     * this method is void by default, it must be overridden by derived class if necessary
+     * It operates over input by reference and can return any type of extra data that will be inserted into the resutl of getSaveFieldsData
      */
     protected function processSaveFormInput(&$input)
     {
@@ -624,7 +625,7 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
         }
         $input = filter_input_array(INPUT_POST, $inputFieldsFilters);
         //process input
-        $this->processSaveFormInput($input);
+        $inputExtraData = $this->processSaveFormInput($input);
         //separate localized and non localized values
         $inputLocales = [];
         foreach (array_keys((array) $this->languages) as $languageCode) {
@@ -662,7 +663,8 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
             'primaryKeyValue' => $primaryKeyValue,
             'saveFieldsValues' => $input,
             'saveLocalesFieldsValues' => $inputLocales,
-            'uploadsValues' => $uploadsInput
+            'uploadsValues' => $uploadsInput,
+            'extraData' => $inputExtraData
         ];
     }
     
@@ -718,7 +720,7 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
                 $this->model->saveUploadsFiles($fieldsData->primaryKeyValue, $fieldsData->uploadsValues);
             }
             //post save processing
-            $this->doAfterRecordSave($primaryKeyValue, $fieldsData);
+            $this->doAfterRecordSave($fieldsData->primaryKeyValue, $fieldsData);
             //redirect
             $redirectRoute = $this->buildRouteToActionFromRoot('list');
             //message

@@ -65,4 +65,46 @@ class PixieExtended extends QueryBuilderHandler
         }
         return $this->whereHandler($key, $operator, $value, $joiner);
     }
+    
+    /**
+    * Builds where conditions
+    * @param array $where: array of arrays, each with 2 number indexed elements (field name and value, comparison operator defaults to '=') or 3 number indexed elements (field name, comparison operator, value)
+    *   + an optional key 'logical' (string) whose value triggers the logical operators 'AND' (default) and 'OR' 
+    *   + an optional key 'grouped' (boolean) to create a grouped where condition, in this case there must be an array for each field composed as above (except for the 'grouped' key, only one nested level is allowed at this time)
+    **/
+    public function buildWhere(array $where)
+    {
+        if(!empty($where)) {
+            foreach ($where as $fieldConditions) {
+                //not a grouped wwhere
+                if(!isset($fieldConditions['grouped']) || $fieldConditions['grouped'] === false) {
+                    call_user_func([$this, 'whereLogical'], $fieldConditions);
+                } else {
+                //grouped where
+                    //check logical operator
+                    if(!isset($fieldConditions['logical']) || strtoupper($fieldConditions['logical']) == 'OR') {
+                        $whereMethod = 'orWhere';
+                    } else {
+                        $whereMethod = 'where';
+                    }
+                    //clean up
+                    unset($fieldConditions['grouped']);
+                    unset($fieldConditions['logical']);
+                    //build grouped where
+                    $this->$whereMethod(function($q) use ($fieldConditions) {
+                        foreach ($fieldConditions as $fieldCondition) {
+                            //check logical operator
+                            if(!isset($fieldCondition['logical']) || strtoupper($fieldCondition['logical']) == 'OR') {
+                                $whereMethod = 'orWhere';
+                            } else {
+                                $whereMethod = 'where';
+                            }
+                            unset($fieldCondition['logical']);
+                            call_user_func_array([$q, $whereMethod], $fieldCondition);
+                        }
+                    });
+                }
+            }
+        }
+    }
 }

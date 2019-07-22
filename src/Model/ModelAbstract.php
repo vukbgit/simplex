@@ -212,12 +212,14 @@ abstract class ModelAbstract
     /*********
     * SELECT *
     *********/
+    
+    /*********
+    * SELECT *
+    *********/
 
     /**
     * Gets a recordset
-    * @param array $where: array of arrays, each with 2 number indexed elements (field name and value, comparison operator defaults to '=') or 3 number indexed elements (field name, comparison operator, value)
-    *   + an optional key 'logical' (string) whose value triggers the logical operators 'AND' (default) and 'OR' 
-    *   + an optional key 'grouped' (boolean) to create a grouped where condition, in this case there must be an array for each field composed as above (except for the 'grouped' key, only one nested level is allowed at this time)
+    * @param array $where: see Simplex\PixieExtended::buildWhere for details
     * @param array $order: array of arrays, each with 1 element (field name, direction defaults to 'ASC') or 2 elements (field name, order 'ASC' | 'DESC')
     */
     public function get(array $where = [], array $order = [])
@@ -226,38 +228,7 @@ abstract class ModelAbstract
         $this->query
             ->table($this->view());
         //where conditions
-        if(!empty($where)) {
-            foreach ($where as $fieldConditions) {
-                //not a grouped wwhere
-                if(!isset($fieldConditions['grouped']) || $fieldConditions['grouped'] === false) {
-                    call_user_func([$this->query, 'whereLogical'], $fieldConditions);
-                } else {
-                //grouped where
-                    //check logical operator
-                    if(!isset($fieldConditions['logical']) || strtoupper($fieldConditions['logical']) == 'OR') {
-                        $whereMethod = 'orWhere';
-                    } else {
-                        $whereMethod = 'where';
-                    }
-                    //clean up
-                    unset($fieldConditions['grouped']);
-                    unset($fieldConditions['logical']);
-                    //build grouped where
-                    $this->query->$whereMethod(function($q) use ($fieldConditions) {
-                        foreach ($fieldConditions as $fieldCondition) {
-                            //check logical operator
-                            if(!isset($fieldCondition['logical']) || strtoupper($fieldCondition['logical']) == 'OR') {
-                                $whereMethod = 'orWhere';
-                            } else {
-                                $whereMethod = 'where';
-                            }
-                            unset($fieldCondition['logical']);
-                            call_user_func_array([$q, $whereMethod], $fieldCondition);
-                        }
-                    });
-                }
-            }
-        }
+        $this->query->buildWhere($where);
         //order
         if(!empty($order)) {
             foreach ($order as $orderCondition) {
@@ -361,25 +332,31 @@ abstract class ModelAbstract
     *********/
     
     /**
-    * Deletes a record
+    * Deletes a record by primary key value and/or other where conditions
     * @param mixed $primaryKeyValue
+    * @param array $where: see Simplex\PixieExtended::buildWhere for details
     */
-    public function delete($primaryKeyValue)
+    public function delete($primaryKeyValue = null, $where = [])
     {
-        //uploads
-        if($this->hasUploads()) {
-            //get uploaded files to check for deletion
-            $uploadedFilesToDelete = $this->getUploadedFiles(
+        //set whrre conditions
+        if($primaryKeyValue) {
+            $where = array_merge(
+                $where,
                 [
                     [$this->config->primaryKey, $primaryKeyValue]
                 ]
             );
         }
+        //uploads
+        if($this->hasUploads()) {
+            //get uploaded files to check for deletion
+            $uploadedFilesToDelete = $this->getUploadedFiles($where);
+        }
         //delete record
         $this->query
-            ->table($this->table())
-            ->where($this->config->primaryKey, $primaryKeyValue)
-            ->delete();
+            ->table($this->table());
+        $this->query->buildWhere($where);
+        $this->query->delete();
         //uploads
         if($this->hasUploads()) {
             $uploadKeys = $this->getUploadKeys();
@@ -512,9 +489,7 @@ abstract class ModelAbstract
             ->table($this->uploadTable());
         //where conditions
         if(!empty($where)) {
-            foreach ($where as $fieldCondition) {
-                call_user_func_array([$this->query, 'where'], $fieldCondition);
-            }
+            $this->query->buildWhere($where);
         }
         return $this->query->get();
     }

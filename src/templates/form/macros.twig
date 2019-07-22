@@ -63,7 +63,7 @@ NOTE: for to perform validation Simplex does not use browser built in (see https
     {# set default validation pattern #}
     {% if config.validation.pattern is not defined or config.validation.pattern == '' %}
         {% set validation = config.validation ?? {} %}
-        {% set validation = updateProperty(validation, 'pattern', '^(([^<>()\\.,;:\s@"]+(\.[^<>()\\.,;:\s@"]+)*)|(".+"))@(([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$') %}
+        {% set validation = updateProperty(validation, 'pattern', '^(([^<>()\\.,;:\\s@"]+(\.[^<>()\\.,;:\\s@"]+)*)|(".+"))@(([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$') %}
         {% set config = updateProperty(config, 'validation', validation) %}
     {% endif %}
     {# add input class #}
@@ -176,6 +176,9 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
     {% else %}
         {% set loadLocale = true %}
     {% endif %}
+    {% set classes = config.classes ?? [] %}
+    {% set classes = ['rich-text-editor']|merge(classes) %}
+    {% set config = updateProperty(config, 'classes', classes) %}
     {% if config.locales is not defined %}
         {% set config = updateProperty(config, 'id', (config.id ?? config.name)|formatIdforJs) %}
         {% set inputsConfigs = [config] %}
@@ -192,7 +195,7 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
     {% endif %}
 
     {% for inputConfig in inputsConfigs %}
-    <div class="form-group">
+    <div class="form-group" id="{{ '%s-container'|format(inputConfig.id) }}">
         {{ selfMacros.displayLabel(inputConfig) }}
         {{ selfMacros.displayTextarea(inputConfig) }}
         {{ selfMacros.displayHelp(config) }}
@@ -299,7 +302,12 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
         {% set itemId = '%s_%s'|format(config.name, item.value) %}
         {% set itemConfig = updateProperty(itemConfig, 'id', itemId) %}
         {# checked #}
-        {% set itemConfig = updateProperty(itemConfig, 'checked', item.value == config.value) %}
+        {# checkbox multiple selected values #}
+        {% if config.value is iterable %}
+            {% set itemConfig = updateProperty(itemConfig, 'checked', item.value in config.value) %}
+        {% else %}
+            {% set itemConfig = updateProperty(itemConfig, 'checked', item.value == config.value) %}
+        {% endif %}
         {# value #}
         {% set itemConfig = updateProperty(itemConfig, 'value', item.value) %}
         {# class #}
@@ -335,7 +343,7 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
     {{ selfMacros.displayInputRadioCheckboxGroup('checkbox', config, items) }}
 {% endmacro %}
 
-{# displays a checkoxes fields block
+{# displays a radio/checkbox fields block
 @param string type: radio | checkbox
 @param hash config: hash for field properties (see setFieldAttributes macro explanation)
 @param array items: array of hashes each with value and label property
@@ -347,6 +355,44 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
         {{ selfMacros.displayInputRadioCheckbox(type, config, items) }}
         {{ selfMacros.displayHelp(config) }}
     </div>
+{% endmacro %}
+
+{# displays a radios fields block
+@param hash config: hash for field properties (see setFieldAttributes macro explanation)
+@param array items: array of hashes each with value and label property
+#}
+{% macro displayInputRadioGroup(config, items) %}
+    {% import _self as selfMacros %}
+    {{ selfMacros.displayInputRadioCheckboxGroup('radio', config, items) }}
+{% endmacro %}
+
+{# displays a radios fields block with a boolean choice
+@param hash config: hash for field properties (see setFieldAttributes macro explanation)
+@param array items: array of hashes each with value and label property
+#}
+{% macro displayInputRadioBooleanGroup(config) %}
+    {% import _self as selfMacros %}
+    {% set config = updateProperty(config, 'inline', true) %}
+    {% set items = [
+        {
+            'value': 0,
+            'label': 'No'|trans
+        },
+        {
+            'value': 1,
+            'label': 'Yes'|trans
+        }
+    ] %}
+    {{ selfMacros.displayInputRadioCheckboxGroup('radio', config, items) }}
+{% endmacro %}
+
+{# displays a checkboxes fields block
+@param hash config: hash for field properties (see setFieldAttributes macro explanation)
+@param array items: array of hashes each with value and label property
+#}
+{% macro displayInputCheckboxGroup(config, items) %}
+    {% import _self as selfMacros %}
+    {{ selfMacros.displayInputRadioCheckboxGroup('checkbox', config, items) }}
 {% endmacro %}
 
 {###################
@@ -1047,7 +1093,7 @@ builds validation javascript API
         }
         if (!id) return;
         messageContainer = $('#' + id + '-container');
-        if(!messageContainer.length) {
+        if(!messageContainer.length || $(field).hasClass('datetimepicker-input')) {
             messageContainer = $(field).parent();
         }
         // Check if error message field already exists
@@ -1057,7 +1103,7 @@ builds validation javascript API
             message = document.createElement('div');
             message.className = 'invalid-tooltip';
             message.id = 'error-for-' + id;
-            messageContainer.append( message, field.nextSibling );
+            messageContainer.append(message);
         }
         // Add ARIA role to the field
         field.setAttribute('aria-describedby', 'error-for-' + id);
