@@ -214,6 +214,13 @@ Simplex include an ERP namespace and uses it to build backends and ERP applicati
 
         htpasswd -cB -C10 .htpasswd your-username
         
+## Debugging ##
+
+Simplex uses [Whoops](https://filp.github.io/whoops/) for printing exceptions in development environment and [Kint](https://kint-php.github.io/kint/) for dumping variables; in particular Kint is available as two functions:
+
+* x($var): dumps a variable to HTML aoutput
+* xx($var): dumps a variable and exits the scripts immediately
+
 ## Development to Production ##
 
 If you keep separate development and production environment and manage pubblication through a git repository you can use some bash scripts soft linked into web root at installation time:
