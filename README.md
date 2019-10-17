@@ -1,4 +1,4 @@
-# Simplex #
+# Simplex* #
 
 A tool for web developers
 
