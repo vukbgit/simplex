@@ -37,56 +37,56 @@ _NOTE ON THIS DOCUMENT_: I will try to be clear and write down all the details t
 
 ## Terminology ##
 
-    * __root__: the top folder of the Simplex installation, usually the top folder in the web accessible part of the site web space
-    * __application__: the customized installation of Simplex for the specific project/domain
-    * __environment__: in which the current request is handled, based usually on the requested domain, takes usually the values of "development" or "production"
-    * __area__: a part of the application matching a set of routes having properties, requirements and behaviours in common, i.e "Backend", "Frontend", "Cron", every route must set an 'area' parameter and it should be formatted as a [slug](https://en.wikipedia.org/wiki/Clean_URL#Slug)
-    * __subject__: into an ERP area, a subject is the name of the system formed by:
-        * a controller
-        * a set of routes handled by the controller
-        * the set of actions corresponding to these routes
-        * the controller methods corresponding to these actions
-        * the model each of this actions operate on
-    * __action__: the specific logic associated to a route, i.e. 'list' or 'save-form', every route must set an 'action' parameter and it should be formatted as a [slug](https://en.wikipedia.org/wiki/Clean_URL#Slug)
+* __root__: the top folder of the Simplex installation, usually the top folder in the web accessible part of the site web space
+* __application__: the customized installation of Simplex for the specific project/domain
+* __environment__: in which the current request is handled, based usually on the requested domain, takes usually the values of "development" or "production"
+* __area__: a part of the application matching a set of routes having properties, requirements and behaviours in common, i.e "Backend", "Frontend", "Cron", every route must set an 'area' parameter and it should be formatted as a [slug](https://en.wikipedia.org/wiki/Clean_URL#Slug)
+* __subject__: into an ERP area, a subject is the name of the system formed by:
+    * a controller
+    * a set of routes handled by the controller
+    * the set of actions corresponding to these routes
+    * the controller methods corresponding to these actions
+    * the model each of this actions operate on
+* __action__: the specific logic associated to a route, i.e. 'list' or 'save-form', every route must set an 'action' parameter and it should be formatted as a [slug](https://en.wikipedia.org/wiki/Clean_URL#Slug)
 
-    Conventions:
+Conventions:
 
-    * in the following explanation files are written in _italic_
-    * for each file is always given the path from the root, without leading slash
+* in the following explanation files are written in _italic_
+* for each file is always given the path from the root, without leading slash
 
 
 ## Installation ##
 
 Create a Composer.json in the root folder:
 
-{
-    "type": "project",
-    "name": "simplex",
-    "description": "Simplex app",
-    "license": "MIT",
-    "require": {
-        "vukbgit/simplex": "^1.1.0"
-    },
-    "config": {
-        "vendor-dir": "private/share",
-        "bin-dir": "./"
-    },
-    "autoload": {
-        "psr-4": {
-            "Simplex\\Local\\": "private/local/simplex"
-        }
-    },
-    "scripts": {
-       "post-create-project-cmd": [
-           "SlowProg\\CopyFile\\ScriptHandler::copy"
-       ]
-   },
-   "extra": {
-       "copy-file": {
-           "private/share/vukbgit/simplex/installation/": "."
+    {
+        "type": "project",
+        "name": "simplex",
+        "description": "Simplex app",
+        "license": "MIT",
+        "require": {
+            "vukbgit/simplex": "^1.1.0"
+        },
+        "config": {
+            "vendor-dir": "private/share",
+            "bin-dir": "./"
+        },
+        "autoload": {
+            "psr-4": {
+                "Simplex\\Local\\": "private/local/simplex"
+            }
+        },
+        "scripts": {
+           "post-create-project-cmd": [
+               "SlowProg\\CopyFile\\ScriptHandler::copy"
+           ]
+       },
+       "extra": {
+           "copy-file": {
+               "private/share/vukbgit/simplex/installation/": "."
+           }
        }
-   }
-}
+    }
 
 Create the Composer project running on command line in the root folder:
 
