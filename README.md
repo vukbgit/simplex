@@ -1,4 +1,4 @@
-# Simplex* #
+# Simplex*** #
 
 A tool for web developers
 
@@ -65,7 +65,7 @@ Create a Composer.json in the root folder:
         "description": "Simplex app",
         "license": "MIT",
         "require": {
-            "vukbgit/simplex": "^1.1.0"
+            "vukbgit/simplex": "^1.1.1"
         },
         "config": {
             "vendor-dir": "private/share",
@@ -87,6 +87,8 @@ Create a Composer.json in the root folder:
            }
        }
     }
+
+Note: for version constraint (^1.1.0) check last version number on packagist.
 
 Create the Composer project running on command line in the root folder:
 
@@ -113,7 +115,7 @@ For details see _Folders & Files structure_ below
         * _domain\.ltd_ must be replaced by a valid domain name (beware the escaped dot)
         * _value_ can be either _development_ or _production_ and Simplex expects to have at least one domain mapped to _production_
     * set default redirections, i.e _/backend_ to _/backend/sign-in-form_
-* local __composer__ bash script: if your system has multiple PHP versions installed it can be useful to have a shortcut to use composer with a version different from the system default one; file _private\local\simplex\bin\composer.sh_ can be set with the path to the right PHP binary and softlinked into root folder
+* local __composer__ bash script: if your system has multiple PHP versions installed it can be useful to have a shortcut to use composer with a version different from the system default one; file _private\local\simplex\bin\composer.sh_ is an example containing PHP and Composer path to custom binaries and it can be softlinked into root folder, i.e. `ln -s private\local\simplex\bin\composer.sh composer`
 * install __yarn__ packages:
     * the _public\share\package.json_ file contains some NPM packages for:
         * the whole application:
