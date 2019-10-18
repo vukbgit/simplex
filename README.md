@@ -176,6 +176,13 @@ For details see _Folders & Files structure_ below
 Simplex include an ERP namespace and uses it to build backends and ERP applications, besides the common operations discussed above, here are the steps to configure the provided Backend area :
 * _.htaccess_: set redirection of _/backend_ route to _/backend/sign-in-form_
 * compile the ERP SASS file: `./sass.sh erp`
+* set up _authentication_:
+    * _private/local/simplex/Backend/config/routes.php_ contains the rules to use for authentication, methods are:
+        * _htpasswd_: (enabled by default), points to a htpasswd file that must be set manually, cd into desired folder (default _private/local/simplex/Backend/config_):
+
+            htpasswd -c .htpasswd your-username
+        
+        * _database_: (commented by default) uses a table or view, specifies fields names and conditions (like a boolean field which stores whether user is active)
 
 This is the Backend folder structure:
 * _private/local/simplex_
