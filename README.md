@@ -65,7 +65,7 @@ Create a Composer.json in the root folder:
         "description": "Simplex app",
         "license": "MIT",
         "require": {
-            "vukbgit/simplex": "^1.1.1"
+            "vukbgit/simplex": "^1.1.0"
         },
         "config": {
             "vendor-dir": "private/share",
@@ -88,7 +88,7 @@ Create a Composer.json in the root folder:
        }
     }
 
-Note: for version constraint (^1.1.0) check last version number on packagist.
+Note: for version constraint (^1.1.0) check last tag on github repository or non-develop version number on packagist.
 
 Create the Composer project running on command line in the root folder:
 
