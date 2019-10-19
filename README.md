@@ -177,12 +177,31 @@ Simplex include an ERP namespace and uses it to build backends and ERP applicati
 * _.htaccess_: set redirection of _/backend_ route to _/backend/sign-in-form_
 * compile the ERP SASS file: `./sass.sh erp`
 * set up _authentication_:
-    * _private/local/simplex/Backend/config/routes.php_ contains the rules to use for authentication, methods are:
-        * _htpasswd_: (enabled by default), points to a htpasswd file that must be set manually, cd into desired folder (default _private/local/simplex/Backend/config_):
+    * _private/local/simplex/Backend/config/routes.php_ contains the rules to use for:
+        * _authentication_, methods are:
+            * _htpasswd_: (enabled by default)
+                * points to a htpasswd file that must be set manually, cd into desired folder (defaults to _private/local/simplex/Backend/config_):
 
-            htpasswd -c .htpasswd your-username
-        
-        * _database_: (commented by default) uses a table or view, specifies fields names and conditions (like a boolean field which stores whether user is active)
+                    htpasswd -c .htpasswd your-username
+                * every user defined in this file must be given a role into _private/local/simplex/Backend/config/permissions-roles.php_
+            
+            * _database_: (commented by default) uses a table or view, specifies fields names and conditions (like a boolean field which stores whether user is active)
+        * _default URLs_: the following variables are defined in the top of the script:
+            * $signInRoute: contains the route to sign-in form, defaults to _/backend/sign-in-form_
+            * $successfulSignInRoute: the route to redirect after a succesful sign-in
+* set up the _subject_ called by the $signInRoute route:
+    * the following steps show how to set up an ERP subject, that is a subject which implies a database model and that CRUD UI to manage it, as the major part of a backend's subjects should be; it is also possible to use into a backend other kind of subjects (a dasboard for example), in this case see the frontend explanation below
+    * each subject files are contained into a folder named after the subject
+    * ponder the position of the subject into application architecture:
+        * it can be used application wide, so its folder should reside into _private/local/simplex_
+        * it can be used only inside ont specific area, so it should reside into _private/local/simplex/area-name_
+        * it can share some business logic with other subjects, so it should reside into _private/local/simplex/[area-name]/subjects-group-name_; in case application uses more than a few subjects I usually try to group them
+    * use _private/local/simplex/SubjectGroup/Subject_ folders as a draft, copy them and customize files; working into subject folder:
+        * _config/routes.variables.php_: set up subject namespace and slug form
+        * _config/routes.model.php_: set up subject model definition
+        * _config/routes.draft.php_
+            * rename to _config/routes.php_
+            * 
 
 This is the Backend folder structure:
 * _private/local/simplex_
