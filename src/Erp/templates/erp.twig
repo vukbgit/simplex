@@ -6,7 +6,7 @@
 {# include subject and ancestors labels #}
 
 {% block body %}
-    {{ include(getInstanceTemplate(model, 'labels.twig'), {'labels': labels}, with_context = false) }}
+    {{ include(getInstanceTemplate(null, 'labels.twig'), {'labels': labels}, with_context = false) }}
     {% for ancestor in ancestors %}
         {{ include(getInstanceTemplate(ancestor.controller, 'labels.twig'), {'labels': labels}, with_context = false) }}
     {% endfor %}

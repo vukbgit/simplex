@@ -9,7 +9,7 @@ define('BRAND', '');
 /**************
 * ENVIRONMENT *
 **************/
-define('HOST', $_SERVER['HTTP_HOST']);
+define('HOST', $_SERVER['HTTP_HOST'] ?? null);
 define('ABS_PATH_TO_ROOT', str_replace('/private/local/simplex/config', '', __DIR__));
 //development | production or any other value set into root .htaccess file
 if(getenv('REDIRECT_ENVIRONMENT')) {

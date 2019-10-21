@@ -205,6 +205,9 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         });
         //gets path to a local controller or model instance template
         $this->addTemplateFunction('getInstanceTemplate', function($instance, $templateName){
+            if($instance == null) {
+                $instance = $this;
+            }
             return sprintf(
                 '@local/%s/%s/%s',
                 substr(getInstancePath($instance), strlen(PRIVATE_LOCAL_DIR) + 1),

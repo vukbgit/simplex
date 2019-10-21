@@ -18,8 +18,8 @@
 use Simplex\Authentication;
 use Simplex\Local\Partners;
 use function Simplex\slugToPSR1Name;
-//current area in slug form
-$area = 'backend';
+//import area variables
+require sprintf('%s/Backend/config/variables.php', PRIVATE_LOCAL_DIR);
 //definitions array
 return [
     /*****************
@@ -28,36 +28,45 @@ return [
     //sign in form
     [
         'method' => 'GET',
-        'route' => sprintf('/%s/{action:sign-in-form}[/]', $area),
+        'route' => $signInFormRoute,
         'handler' => [
             'backendAuthenticationController',
             [
                 'action' => 'sign-in-form',
                 'area' => $area,
-                'signInUrl' => sprintf('/%s/sign-in', $area)
+                'signInUrl' => $signInRoute
             ]
         ]
     ],
     //sign in action
     [
         'method' => 'POST',
-        'route' => sprintf('/%s/{action:sign-in}', $area),
+        'route' => $signInRoute,
         'handler' => [
             'backendAuthenticationController',
             [
                 'area' => $area,
+                'action' => 'sign-in',
                 'authentication' => (object) [
                     'action' => 'sign-in',
                     'signInMethods' => [
                         'htpasswd' => (object) [
                             'path' => sprintf('private/local/simplex/%s/config/.htpasswd', slugToPSR1Name($area, 'class'))
-                        ]
+                        ],/*
+                        'db' => (object) [
+                            'path' => 'private/local/simplex/config/db.php',
+                            'algo' => BACKEND_PASSWORD_ALGO,
+                            'table' => 'v_utenti',
+                            //first username, second crypted password, third user role
+                            'fields' => ['email', 'password', 'gruppo_utenti'],
+                            'condition' => 'active = 1'
+                        ]*/
                     ],
                     'usersRolesPath' => sprintf('private/local/simplex/%s/config/users-roles.php', slugToPSR1Name($area, 'class')),
                     'permissionsRolesPath' => sprintf('private/local/simplex/%s/config/permissions-roles.php', slugToPSR1Name($area, 'class')),
                     'urls' => (object) [
-                        'signInForm' => sprintf('/%s/sign-in-form', $area),
-                        'successDefault' => sprintf('/%s/categorie-partners/list', $area),
+                        'signInForm' => $signInFormRoute,
+                        'successDefault' => $successfulSignInRoute,
                     ]
                 ]
             ]
@@ -66,15 +75,16 @@ return [
     //sign out action
     [
         'method' => 'GET',
-        'route' => sprintf('/%s/{action:sign-out}', $area),
+        'route' => $signOutRoute,
         'handler' => [
             'backendAuthenticationController',
             [
                 'area' => $area,
+                'action' => 'sign-out',
                 'authentication' => (object) [
                     'action' => 'sign-out',
                     'urls' => (object) [
-                        'signInForm' => sprintf('/%s/sign-in-form', $area)
+                        'signInForm' => $signInFormRoute
                     ]
                 ]
             ]

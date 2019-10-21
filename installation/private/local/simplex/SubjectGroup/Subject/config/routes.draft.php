@@ -28,7 +28,7 @@ $modelConfig = require 'model.php';
 return [
     [
         'method' => ['GET','POST'],
-        'route' => sprintf('/%s/{subject:%s}/{action}[/{%s}]', $area, $subject, implode('/', $modelConfig->primaryKey)),
+        'route' => sprintf('/%s/{subject:%s}/{action}[/{%s}]', $area, $subject, $modelConfig->primaryKey),
         'handler' => [
             sprintf('%s-controller', $subject),
             [

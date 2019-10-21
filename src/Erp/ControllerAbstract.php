@@ -99,7 +99,7 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
     protected function storeCurrentSubjectRoot()
     {
         $currentRoute = $this->request->getUri()->getPath();
-        $pattern = sprintf('~^[0-9a-zA-Z-/]+/%s/~', $this->subject);
+        $pattern = sprintf('~^[0-9a-zA-Z-/]*/%s/~', $this->subject);
         preg_match($pattern , $currentRoute, $matches);
         //remove ending slash
         $this->currentSubjectRoot = substr($matches[0], 0, -1);
@@ -120,7 +120,11 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
      */
     protected function storeModel()
     {
-        $this->model = $this->DIContainer->get(sprintf('%s-model', $this->subject));
+        $modelClassKey = sprintf('%s-model', $this->subject);
+        //if model class has been defined into subject di-container config file load it
+        if($this->DIContainer->has($modelClassKey)) {
+            $this->model = $this->DIContainer->get($modelClassKey);
+        }
     }
     
     /**

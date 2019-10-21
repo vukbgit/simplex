@@ -46,6 +46,7 @@
         {#<h2 class="h3 my-3">
             {{- subjectLabel }} &raquo; {% block actionLabel %}{{ attribute(actionsLabels, action) }}{% endblock %}
         </h2>#}
+        {% if displayBreadcrumb is not defined or displayBreadcrumb == true  %}
         <nav aria-label="breadcrumb" class="my-3">
             <ol class="breadcrumb">
             {% for ancestorKey, ancestor in ancestors %}
@@ -70,6 +71,7 @@
                 </li>
             </ol>
         </nav>
+    {% endif %}
         {# model global actions navigation #}
         {{ navigationMacros.displaySubjectGlobalActionsNavigation(_context, navigations.globalActions, globalActionsLabels) }}
         {# subject alerts #}

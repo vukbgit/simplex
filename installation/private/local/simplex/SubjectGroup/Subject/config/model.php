@@ -1,10 +1,8 @@
 <?php
 return (object) [
-    'table' => 'categorie_partners',
-    'view' => 'v_categorie_partners',
-    'primaryKey' => [
-        'id_categoria_partners'
-    ],
+    'table' => 'TABLE-NAME',
+    'view' => 'VIEW-NAME',
+    'primaryKey' => 'PRIMARY-KEY-FIELD',
     'uploads' => [
         'UPLOAD-KEY' => [
             'OUTPUT-WITHOUT-HANDLER-KEY' => (object) [],
