@@ -187,21 +187,7 @@ Simplex include an ERP namespace and uses it to build backends and ERP applicati
     * _database_: (commented by default) uses a table or view, specifies fields names and conditions (like a boolean field which stores whether user is active)
 * set up _logoPath_ into _private/local/simplex/Backend/templates/sign-in-form.twig_ to point to a logo image to be displayted into login form
 * set up _logoPath_ into _private/local/simplex/Backend/templates/backend.twig_ to point to a logo image to be displayted into masthead, navbar hieigh defaults to 48px, it can be twiked into _private/local/simplex/sass/variables.scss_
-* set up the _subject_ called by the $successfulSignInRoute route:
-    * the following steps show how to set up an ERP subject, that is a subject which implies a database model and the related CRUD UI, as the major part of a backend's subjects should be; it is also possible to use into a backend other kind of subjects (a dasboard for example), in this case see the frontend explanation below
-    * each subject files are contained into a folder named after the subject
-    * ponder the position of the subject into application architecture:
-        * it can be used application wide, so its folder should reside into _private/local/simplex_
-        * it can be used only inside ont specific area, so it should reside into _private/local/simplex/area-name_
-        * it can share some business logic with other subjects, so it should reside into _private/local/simplex/[area-name]/subjects-group-name_; in case application uses more than a few subjects I usually try to group them
-    * use _private/local/simplex/SubjectGroup/Subject_ folders as a draft, copy them and customize files; working into subject folder:
-        * _config/routes.variables.php_: set up subject namespace and slug form, namespace must reflect subject folder position (i.e. _Simplex\Local\Backend\Subject-Group-Name\Subject-Name_)
-        * _config/routes.model.php_: set up subject model definition
-        * rename _config/routes.draft.php_ to _config/routes.php_, default configure dynamic route should cover at least the basic CRUD operations (list, inser form, insert operation, update form, update operation, delete form, delete operation)
-        * rename _config/di-container.draft.php_ to _config/di-container.php_
-        * edit _Controller.php_ and correct namespace to the same value used into _config/routes.variables.php_
-* set up subject _template labels_ in _templates/labels.twig_, at least subject label is required
-* set up subject _navigation label_ in _private/local/simplex/Backend/templates/backend.twig_, into the _areaNavigationLabels_ hash
+* set up the _subject_ called by the $successfulSignInRoute route (see "Subject set-up below"):
 * compile the ERP SASS file: `./sass.sh erp`
 
 This is the Backend folder structure:
@@ -258,12 +244,23 @@ This is the Backend folder structure:
         * _yarn.sh_: symlinked from web root to handle Yarn commands
     * _.htaccess_: Apache configuration file, grants access to real files (CSS, Javascript, imagess, etc) and redirects every other request to index.php
 
-* compile SASS files
-* authentication:
-    * by apache htpasswd:
-        * htpasswd: create password file for example in _private/local/simplex/Backend/config/.htpasswd_
+### Subject set up
 
-        htpasswd -cB -C10 .htpasswd your-username
+the following steps show how to set up an ERP subject, that is a subject which implies a database model and the related CRUD UI, as the major part of a backend's subjects should be; it is also possible to use into a backend other kind of subjects (a dasboard for example), in this case see the frontend explanation below
+
+* each subject files are contained into a folder named after the subject
+* ponder the position of the subject into application architecture:
+    * it can be used application wide, so its folder should reside into _private/local/simplex_
+    * it can be used only inside ont specific area, so it should reside into _private/local/simplex/area-name_
+    * it can share some business logic with other subjects, so it should reside into _private/local/simplex/[area-name]/subjects-group-name_; in case application uses more than a few subjects I usually try to group them
+* use _private/local/simplex/SubjectGroup/Subject_ folders as a draft, copy them and customize files; working into subject folder:
+    * _config/routes.variables.php_: set up subject namespace and slug form, namespace must reflect subject folder position (i.e. _Simplex\Local\Backend\Subject-Group-Name\Subject-Name_)
+    * _config/routes.model.php_: set up subject model definition
+    * rename _config/routes.draft.php_ to _config/routes.php_, default configure dynamic route should cover at least the basic CRUD operations (list, inser form, insert operation, update form, update operation, delete form, delete operation)
+    * rename _config/di-container.draft.php_ to _config/di-container.php_
+    * edit _Controller.php_ and correct namespace to the same value used into _config/routes.variables.php_
+* set up subject _template labels_ in _templates/labels.twig_, at least subject label is required
+* set up subject _navigation label_ in _private/local/simplex/Backend/templates/backend.twig_, into the _areaNavigationLabels_ hash
         
 ## Debugging ##
 
