@@ -187,8 +187,8 @@ Simplex include an ERP namespace and uses it to build backends and ERP applicati
     * _database_: (commented by default) uses a table or view, specifies fields names and conditions (like a boolean field which stores whether user is active)
 * set up _logoPath_ into _private/local/simplex/Backend/templates/sign-in-form.twig_ to point to a logo image to be displayted into login form
 * set up _logoPath_ into _private/local/simplex/Backend/templates/backend.twig_ to point to a logo image to be displayted into masthead, navbar hieigh defaults to 48px, it can be twiked into _private/local/simplex/sass/variables.scss_
-* set up the _subject_ called by the $successfulSignInRoute route (see "Subject set-up below"):
 * compile the ERP SASS file: `./sass.sh erp`
+* set up the _subject_ called by the $successfulSignInRoute route (see "Subject set-up below"):
 
 This is the Backend folder structure:
 * _private/local/simplex_
@@ -244,10 +244,14 @@ This is the Backend folder structure:
         * _yarn.sh_: symlinked from web root to handle Yarn commands
     * _.htaccess_: Apache configuration file, grants access to real files (CSS, Javascript, imagess, etc) and redirects every other request to index.php
 
-### Subject set up
+### Subject set up ###
 
-the following steps show how to set up an ERP subject, that is a subject which implies a database model and the related CRUD UI, as the major part of a backend's subjects should be; it is also possible to use into a backend other kind of subjects (a dasboard for example), in this case see the frontend explanation below
+The following steps show how to set up an ERP subject, that is a subject which implies a database model and the related CRUD UI, as the major part of a backend's subjects should be; it is also possible to use into a backend other kind of subjects (a dasboard for example), in this case see the frontend explanation below
 
+* set up _database architecture_
+    * tipically a subject is the representation of one _table_ 
+    * although not strictly necessary there should also be a correspondent _view_
+    * Simplex is shipped with a convenient _private/local/simplex/docs/views.sql_ where views definition can be written; often database manager SQL editor are not handy, storing views definition into a plain SQL/text file, editing through an editor with synthax highlighting and copy and paste into the db application can be a solution and provides also a backup
 * each subject files are contained into a folder named after the subject
 * ponder the position of the subject into application architecture:
     * it can be used application wide, so its folder should reside into _private/local/simplex_
@@ -258,8 +262,13 @@ the following steps show how to set up an ERP subject, that is a subject which i
     * _config/routes.model.php_: set up subject model definition
     * rename _config/routes.draft.php_ to _config/routes.php_, default configure dynamic route should cover at least the basic CRUD operations (list, inser form, insert operation, update form, update operation, delete form, delete operation)
     * rename _config/di-container.draft.php_ to _config/di-container.php_
-    * edit _Controller.php_ and correct namespace to the same value used into _config/routes.variables.php_
-* set up subject _template labels_ in _templates/labels.twig_, at least subject label is required
+    * edit _Controller.php_ and _Model.php_ and correct namespace to the same value used into _config/routes.variables.php_
+    * edit _config/crudl.php_ and set up table fields
+    * _config/navigation.php_ contains rules to display the UI navigation for basic CRUD actions, it can be customized to remove some of them or add more actions
+* set up subject _template labels_ in _templates/labels.twig_, at least subject label is required but fields labels are used int list and save form templates
+* edit _templates/list.twig_ to set up fields displayed into records table, there is a tableheader block for headers and a records loop for table cells with fields values
+* edit _templates/crudl-form.twig_ to set up fields displayed into insert/update and delete forms; any valid html can be inserted into modelInputs block but a bunch of useful Twig macros are defined into _/private/share/vukbgit/simplex/src/templates/form/macros.twig_ which is included by default
+* include subject into area navigation in _private/local/simplex/Backend/config/navigation.php_
 * set up subject _navigation label_ in _private/local/simplex/Backend/templates/backend.twig_, into the _areaNavigationLabels_ hash
         
 ## Debugging ##
