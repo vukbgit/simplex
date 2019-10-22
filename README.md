@@ -258,8 +258,8 @@ The following steps show how to set up an ERP subject, that is a subject which i
     * it can be used only inside ont specific area, so it should reside into _private/local/simplex/area-name_
     * it can share some business logic with other subjects, so it should reside into _private/local/simplex/[area-name]/subjects-group-name_; in case application uses more than a few subjects I usually try to group them
 * use _private/local/simplex/SubjectGroup/Subject_ folders as a draft, copy them and customize files; working into subject folder:
-    * *_config/variables.php_*: set up subject namespace and slug form, namespace must reflect subject folder position (i.e. _Simplex\Local\Backend\Subject-Group-Name\Subject-Name_)
-    * _config/model.php_: set up subject model definition
+    * _config/__variables__.php_: set up subject namespace and slug form, namespace must reflect subject folder position (i.e. _Simplex\Local\Backend\Subject-Group-Name\Subject-Name_)
+    * __config/model.php__: set up subject model definition
     * rename _config/routes.draft.php_ to _config/routes.php_, default configure dynamic route should cover at least the basic CRUD operations (list, inser form, insert operation, update form, update operation, delete form, delete operation)
     * rename _config/di-container.draft.php_ to _config/di-container.php_
     * edit _Controller.php_ and _Model.php_ and correct namespace to the same value used into _config/routes.variables.php_
