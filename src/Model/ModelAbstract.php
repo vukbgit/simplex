@@ -177,6 +177,13 @@ abstract class ModelAbstract
                     preg_match("/FOREIGN KEY \(`([0-9a-zA-Z_]+)`\)/", $errorMessage, $matches);
                     $data = [$matches[1]];
                 }
+                //null value on mandatory column
+                if(preg_match('/Column \'[0-9a-zA-Z_]+\' cannot be null/', $errorMessage) === 1) {
+                    $errorType = 'mandatory_null';
+                    //extract field name
+                    preg_match("/Column \'([0-9a-zA-Z_]+)\'/", $errorMessage, $matches);
+                    $data = [$matches[1]];
+                }
             break;
             //Column not found
             case '42':

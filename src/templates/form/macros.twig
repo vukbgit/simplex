@@ -16,7 +16,7 @@
 {% endmacro %}
 
 {# displays a text-like input field given the type, useful when type is condition dependant
-@param string type: text | email | password
+@param string type: text | email | password | textarea
 @param hash config: hash for field properties (see setFieldAttributes macro explanation)
 #}
 {% macro displayInputByTipe(type, config) %}
@@ -29,6 +29,8 @@
         {{ selfMacros.displayInputUrl(config) }}
     {% elseif type == 'password' %}
         {{ selfMacros.displayInputPassword(config) }}
+    {% elseif type == 'textarea' %}
+        {{ selfMacros.displayTextarea(config) }}
     {% endif %}
 {% endmacro %}
 
@@ -113,7 +115,7 @@ NOTE: for to perform validation Simplex does not use browser built in but a patt
 {% endmacro %}
 
 {# displays a text-like input field block
-@param string type: text | email | password | url
+@param string type: text | email | password | url | textarea
 @param hash config: hash for field properties (see setFieldAttributes macro explanation)
 #}
 {% macro displayInputGroup(type, config) %}

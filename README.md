@@ -182,7 +182,7 @@ Simplex include an ERP namespace and uses it to build backends and ERP applicati
 
             htpasswd -c .htpasswd your-username
             
-        * every user defined in this file must be given a role into _private/local/simplex/Backend/config/permissions-roles.php_
+        * every user defined in this file must be given a role into _private/local/simplex/Backend/config/users-roles.php_
     
     * _database_: (commented by default) uses a table or view, specifies fields names and conditions (like a boolean field which stores whether user is active)
 * set up _logoPath_ into _private/local/simplex/Backend/templates/sign-in-form.twig_ to point to a logo image to be displayted into login form
@@ -264,19 +264,20 @@ The following steps show how to set up an ERP subject, that is a subject which i
     * rename _config/di-container.draft.php_ to _config/di-container.php_
     * edit _Controller.php_ and _Model.php_ and correct namespace to the same value used into _config/routes.variables.php_
     * edit _config/crudl.php_ and set up table fields
-    * _config/navigation.php_ contains rules to display the UI navigation for basic CRUD actions, it can be customized to remove some of them or add more actions
+    * _config/navigation.php_ contains rules to display the UI navigation for basic CRUD actions, it can be customized to remove some of them or add more actions, for permissions logic see _subject permission_ below
 * set up subject _template labels_ in _templates/labels.twig_, at least subject label is required but fields labels are used int list and save form templates
 * edit _templates/list.twig_ to set up fields displayed into records table, there is a tableheader block for headers and a records loop for table cells with fields values
-* edit _templates/crudl-form.twig_ to set up fields displayed into insert/update and delete forms; any valid html can be inserted into modelInputs block but a bunch of useful Twig macros are defined into _/private/share/vukbgit/simplex/src/templates/form/macros.twig_ which is included by default
-* include subject into area navigation in _private/local/simplex/Backend/config/navigation.php_
+* edit _templates/crudl-form.twig_ to set up fields displayed into insert/update and delete forms; any valid html can be inserted into modelInputs block but a bunch of useful Twig macros are defined into _/private/share/vukbgit/simplex/src/templates/form/macros.twig_ which is included by default; use macros whose name end by 'group' di build a Bootsrap field form complete with label
+* set up _subject permission_ for roles into _private/local/simplex/Backend/config/permissions-roles.php_; by default into _private/local/simplex/Backend/config/navigation.php_ permission _manage-SUBJECT-KEY_ is required for the user to use global (list and insert) and record actions (update and delete), so permission _manage-SUBJECT-KEY_ must be added and user's role must be included into permission's allowed roles array
+* include subject into area navigation into _private/local/simplex/Backend/config/navigation.php_
 * set up subject _navigation label_ in _private/local/simplex/Backend/templates/backend.twig_, into the _areaNavigationLabels_ hash
         
 ## Debugging ##
 
-Simplex uses [Whoops](https://filp.github.io/whoops/) for printing exceptions in development environment and [Kint](https://kint-php.github.io/kint/) for dumping variables; in particular Kint is available as two functions:
-
-* x($var): dumps a variable to HTML aoutput
-* xx($var): dumps a variable and exits the scripts immediately
+* PHP layer: Simplex uses [Whoops](https://filp.github.io/whoops/) for printing exceptions in development environment and [Kint](https://kint-php.github.io/kint/) for dumping variables; in particular Kint is available as two functions:
+    * 'x($var)': dumps a variable to HTML aoutput
+    * 'xx($var)': dumps a variable and exits the scripts immediately
+* Twig templates: the dump function is available as a wrapper for Kint dump function, i.e. '{{ dump(my-variable-of-any-type) }}'
 
 ## Translations ##
 
