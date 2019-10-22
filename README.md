@@ -271,6 +271,7 @@ The following steps show how to set up an ERP subject, that is a subject which i
 * set up _subject permission_ for roles into _private/local/simplex/Backend/config/permissions-roles.php_; by default into _private/local/simplex/Backend/config/navigation.php_ permission _manage-SUBJECT-KEY_ is required for the user to use global (list and insert) and record actions (update and delete), so permission _manage-SUBJECT-KEY_ must be added and user's role must be included into permission's allowed roles array
 * include subject into area navigation into _private/local/simplex/Backend/config/navigation.php_
 * set up subject _navigation label_ in _private/local/simplex/Backend/templates/backend.twig_, into the _areaNavigationLabels_ hash
+* perform sign-out/sign-in to reload permissions
         
 ## Debugging ##
 
