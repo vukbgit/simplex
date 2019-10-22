@@ -257,20 +257,20 @@ The following steps show how to set up an ERP subject, that is a subject which i
     * it can be used application wide, so its folder should reside into _private/local/simplex_
     * it can be used only inside ont specific area, so it should reside into _private/local/simplex/area-name_
     * it can share some business logic with other subjects, so it should reside into _private/local/simplex/[area-name]/subjects-group-name_; in case application uses more than a few subjects I usually try to group them
-* use _private/local/simplex/SubjectGroup/Subject_ folders as a draft, copy them and customize files; working into subject folder:
+* use _private/local/simplex/SubjectGroup/Subject_ folders as a draft (or even better an already configured subject folder...), copy them and customize files; working into subject folder:
     * ___config/variables.php___: set up subject namespace and slug form, namespace must reflect subject folder position (i.e. _Simplex\Local\Backend\Subject-Group-Name\Subject-Name_)
-    * __config/model.php__: set up subject model definition
+    * ___config/model.php___: set up subject model definition
     * rename _config/routes.draft.php_ to _config/routes.php_, default configure dynamic route should cover at least the basic CRUD operations (list, inser form, insert operation, update form, update operation, delete form, delete operation)
     * rename _config/di-container.draft.php_ to _config/di-container.php_
-    * edit _Controller.php_ and _Model.php_ and correct namespace to the same value used into _config/routes.variables.php_
-    * edit _config/crudl.php_ and set up table fields
+    * edit ___Controller.php___ and ___Model.php___ and correct namespace to the same value used into _config/routes.variables.php_
+    * edit ___config/crudl.php___ and set up table fields
     * _config/navigation.php_ contains rules to display the UI navigation for basic CRUD actions, it can be customized to remove some of them or add more actions, for permissions logic see _subject permission_ below
-* set up subject _template labels_ in _templates/labels.twig_, at least subject label is required but fields labels are used int list and save form templates
-* edit _templates/list.twig_ to set up fields displayed into records table, there is a tableheader block for headers and a records loop for table cells with fields values
-* edit _templates/crudl-form.twig_ to set up fields displayed into insert/update and delete forms; any valid html can be inserted into modelInputs block but a bunch of useful Twig macros are defined into _/private/share/vukbgit/simplex/src/templates/form/macros.twig_ which is included by default; use macros whose name end by 'group' di build a Bootsrap field form complete with label
-* set up _subject permission_ for roles into _private/local/simplex/Backend/config/permissions-roles.php_; by default into _private/local/simplex/Backend/config/navigation.php_ permission _manage-SUBJECT-KEY_ is required for the user to use global (list and insert) and record actions (update and delete), so permission _manage-SUBJECT-KEY_ must be added and user's role must be included into permission's allowed roles array
-* include subject into area navigation into _private/local/simplex/Backend/config/navigation.php_
-* set up subject _navigation label_ in _private/local/simplex/Backend/templates/backend.twig_, into the _areaNavigationLabels_ hash
+* set up subject _template labels_ in ___templates/labels.twig___, at least subject label is required but fields labels are used int list and save form templates
+* edit ___templates/list.twig___ to set up fields displayed into records table, there is a tableheader block for headers and a records loop for table cells with fields values
+* edit ___templates/crudl-form.twig___ to set up fields displayed into insert/update and delete forms; any valid html can be inserted into modelInputs block but a bunch of useful Twig macros are defined into _/private/share/vukbgit/simplex/src/templates/form/macros.twig_ which is included by default; use macros whose name end by 'group' di build a Bootsrap field form complete with label
+* set up _subject permission_ for roles into ___private/local/simplex/Backend/config/permissions-roles.php___:; by default into _private/local/simplex/Backend/config/navigation.php_ permission _manage-SUBJECT-KEY_ is required for the user to use global (list and insert) and record actions (update and delete), so permission _manage-SUBJECT-KEY_ must be added and user's role must be included into permission's allowed roles array
+* include subject into area navigation into ___private/local/simplex/Backend/config/navigation.php___
+* set up subject _navigation label_ in ___private/local/simplex/Backend/templates/backend.twig___, into the _areaNavigationLabels_ hash
 * perform sign-out/sign-in to reload permissions
         
 ## Debugging ##
