@@ -10,7 +10,9 @@
   /* font-size: 120%; */
 }
  
-.icon-erp-sign-out { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe803;&nbsp;'); }
-.icon-erp-sort { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xf0dc;&nbsp;'); }
-.icon-erp-triangle-down { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xf0dd;&nbsp;'); }
-.icon-erp-triangle-up { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xf0de;&nbsp;'); }
+.icon-erp-sign-out { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#x0180;&nbsp;'); }
+.icon-erp-sort { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#x0181;&nbsp;'); }
+.icon-erp-triangle-down { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#x0182;&nbsp;'); }
+.icon-erp-triangle-up { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#x0183;&nbsp;'); }
+.icon-erp-plus-circle { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#x0184;&nbsp;'); }
+.icon-erp-minus-circle { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#x0185;&nbsp;'); }

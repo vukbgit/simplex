@@ -6,7 +6,7 @@
 @param string type: text | email
 @param hash config: hash for field properties (see setFieldAttributes macro explanation)
 #}
-{% macro displayInput(type, config) %}
+{% macro displayInput(type, config, prepend, append) %}
     {% import _self as selfMacros %}
     {% set config = parseFieldConfig(config) %}
     <input 
@@ -23,6 +23,8 @@
     {% import _self as selfMacros %}
     {% if type == 'text' %}
         {{ selfMacros.displayInputText(config) }}
+    {% elseif type == 'number' %}
+        {{ selfMacros.displayInputNumber(config) }}
     {% elseif type == 'email' %}
         {{ selfMacros.displayInputEmail(config) }}
     {% elseif type == 'url' %}
@@ -54,14 +56,54 @@
     {{ selfMacros.displayInput('text', config) }}
 {% endmacro %}
 
+{# displays an input number field, see see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/number for specifi type infos
+@param hash config: hash for field properties (see setFieldAttributes macro explanation) plus specific properties:
+    numberType: integer (default) | decimal
+    step: the step attribute
+    precision: for decimal numbers, defaults to locale frac_digits
+    integerPrecision: number of digits for the integer part
+    isCurrency: adds currency symbol
+    isFraction: adds fraction symbol
+#}
+{% macro displayInputNumber(config) %}
+    {% import _self as selfMacros %}
+    {% set numberType = config.numberType ?? 'integer' %}
+    {# integer #}
+    {% if numberType == 'integer' %}
+        {% set inputType = 'number' %}
+        {% set inputMode = 'numeric' %}
+        {% set step = config.step ?? '1' %}
+    {% elseif numberType == 'decimal' %}
+        {% set localeconv = getLanguage().localeconv %}
+        {% set inputType = 'text' %}
+        {% set inputMode = 'decimal' %}
+        {% set precision = config.precision ?? localeconv.frac_digits %}
+        {% set validation = config.validation ?? {} %}
+        {% set integerPrecision = config.integerPrecision ? '{1,%d}'|format(config.integerPrecision) : '+' %}
+        {% set validation = updateProperty(validation, 'pattern', '^[0-9]%s(%s{1}[0-9]{1,%d}){0,1}$'|format(integerPrecision, localeconv.decimal_point, precision)) %}
+        {% set config = updateProperty(config, 'validation', validation) %}
+    {% endif %}
+    {# set inputmode #}
+    {% set config = updateProperty(config, 'inputmode', inputMode) %}
+    {# set step #}
+    {% set config = updateProperty(config, 'step', step) %}
+    {# add input class #}
+    {% set classes = config.classes ?? [] %}
+    {% set classes = ['form-control']|merge(classes) %}
+    {% set config = updateProperty(config, 'classes', classes) %}
+    {{ selfMacros.displayInput(inputType, config) }}
+{% endmacro %}
+
 {# displays an input email field
 @param hash config: hash for field properties (see setFieldAttributes macro explanation)
-NOTE: for to perform validation Simplex does not use browser built in (see https://www.w3.org/TR/html5/sec-forms.html#constraints-definitions) but a pattern that matches real world emails; and to avoid conflicts does not use both email type AND pattern validation
+NOTE: to perform validation Simplex does not use browser built in (see https://www.w3.org/TR/html5/sec-forms.html#constraints-definitions) but a pattern that matches real world emails; and to avoid conflicts does not use both email type AND pattern validation
 ^(([^<>()\\.,;:\s@"]+(\.[^<>()\\.,;:\s@"]+)*)|(".+"))@(([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$
 
 #}
 {% macro displayInputEmail(config) %}
     {% import _self as selfMacros %}
+    {# set inputmode #}
+    {% set config = updateProperty(config, 'inputmode', 'email') %}
     {# set default validation pattern #}
     {% if config.validation.pattern is not defined or config.validation.pattern == '' %}
         {% set validation = config.validation ?? {} %}
@@ -77,7 +119,7 @@ NOTE: for to perform validation Simplex does not use browser built in (see https
 
 {# displays an input URL field
 @param hash config: hash for field properties (see setFieldAttributes macro explanation)
-NOTE: for to perform validation Simplex does not use browser built in but a pattern that matches real world URLs (from http://regexlib.com/REDetails.aspx?regexp_id=90); and to avoid conflicts does not use both URL type AND pattern validation
+NOTE: to perform validation Simplex does not use browser built in but a pattern that matches real world URLs (from http://regexlib.com/REDetails.aspx?regexp_id=90); and to avoid conflicts does not use both URL type AND pattern validation
 #}
 {% macro displayInputUrl(config) %}
     {% import _self as selfMacros %}
@@ -116,7 +158,9 @@ NOTE: for to perform validation Simplex does not use browser built in but a patt
 
 {# displays a text-like input field block
 @param string type: text | email | password | url | textarea
-@param hash config: hash for field properties (see setFieldAttributes macro explanation)
+@param hash config: hash for field properties (see setFieldAttributes macro explanation) plus:
+    prepended: content to be prepended to input
+    append: content to be appended to input
 #}
 {% macro displayInputGroup(type, config) %}
     {% import _self as selfMacros %}
@@ -136,7 +180,24 @@ NOTE: for to perform validation Simplex does not use browser built in but a patt
     {% for inputConfig in inputsConfigs %}
     <div class="form-group" id="{{ '%s-container'|format(inputId) }}">
         {{ selfMacros.displayLabel(inputConfig) }}
+        
+    {% if config.prepend or config.append %}
+        <div class="input-group">
+        {% if config.prepend %}
+            <div class="input-group-prepend">
+                <span class="input-group-text">{{ config.prepend|raw }}</span>
+            </div>
+        {% endif %}
+    {% endif %}
         {{ selfMacros.displayInputByTipe(type, inputConfig) }}
+    {% if config.prepend or config.append %}
+        {% if config.append %}
+            <div class="input-group-append">
+                <span class="input-group-text">{{ config.append|raw }}</span>
+            </div>
+        {% endif %}
+        </div>
+    {% endif %}
         {{ selfMacros.displayHelp(config) }}
     </div>
     {% endfor %}
@@ -165,7 +226,7 @@ NOTE: for to perform validation Simplex does not use browser built in but a patt
 {# rich text field
 language packages must be downloaded from https://www.tiny.cloud/get-tiny/language-packages/ and saved into /public/share/rich-text-editor/locales/
 @param hash context: the calling template context object
-@param hash config: hash for field properties (see setFieldAttributes macro explanation) excpet for specific rich text options which can be set as a config.options hash
+@param hash config: hash for field properties (see setFieldAttributes macro explanation) except for specific rich text options which can be set as a config.options hash
 #}
 {% macro displayRichTextEditor(context, config) %}
     {% import _self as selfMacros %}
@@ -739,8 +800,10 @@ for autocomplete see https://developer.mozilla.org/en-US/docs/Web/HTML/Attribute
     'label': fieldsLabels.,
     'help': fieldsLabels.,
     'autofocus': true,
-    'autocomplete': '',
     'maxlength': '',
+    'autocomplete': '',
+    'inputmode': none | text | tel | url | email | numeric | decimal | search
+    'step': integer or float
     'classes': '',
     'validation': {
         'required': true,
@@ -772,6 +835,12 @@ for autocomplete see https://developer.mozilla.org/en-US/docs/Web/HTML/Attribute
     {% endif %}
     {% if config.autocomplete %}
     autocomplete="{{ config.autocomplete }}" 
+    {% endif %}
+    {% if config.inputmode %}
+    inputmode="{{ config.inputmode }}" 
+    {% endif %}
+    {% if config.step %}
+    step="{{ config.step }}" 
     {% endif %}
     {# merge classes #}
     class="{{ config.classes|join(' ') }}"

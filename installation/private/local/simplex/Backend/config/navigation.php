@@ -13,7 +13,7 @@ return [
         'SUBJECT-KEY' => (object) [
             'route' => '/ROUTE/TO/SUBJECT/ACTION',
             'permissions' => ['PERMISSION-KEY'],
-            'icon' => 'ICON-CLASS'
+            'icon' => 'ICON-CLASS',
             'navigation' => [
                 
             ]

@@ -399,6 +399,9 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
     */
     protected function isNavigationRouteCurrentRoute(string $route)
     {
+        if(!$route) {
+            return false;
+        }
         //replace route placeholder (which will be substituted by record fields values) with regexp pattern
         $textPattern = '[0-9a-z-_]';
         $patterns = [
@@ -450,7 +453,7 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
                 continue;
             }
             if($parentVoiceProperties) {
-                $voiceProperties->parent =& $parentVoiceProperties;
+                //$voiceProperties->parent = $parentVoiceProperties;
             }
             //check if its current route (only if controller has been invoked by router and so request is defined)
             $route = isset($voiceProperties->route) ? $voiceProperties->route : (isset($voiceProperties->routeFromSubject) ? $this->buildRouteToActionFromRoot($voiceProperties->routeFromSubject) : null);
@@ -462,7 +465,7 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
                 }
             }
             //check sub level
-            if(isset($voiceProperties->navigation)) {
+            if(isset($voiceProperties->navigation) && !empty($voiceProperties->navigation)) {
                 $this->loadNavigationLevel($navigationName, $voiceProperties->navigation, $voiceProperties);
             }
         }

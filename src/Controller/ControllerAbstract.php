@@ -170,6 +170,8 @@ abstract class ControllerAbstract
         // Set language
         putenv(sprintf('LC_ALL=%s', $languageIETF));
         setlocale(LC_ALL, sprintf('%s.utf8', $languageIETF));
+        //add localeconv information to current language object
+        $this->language->localeconv = localeconv();
         $domain = 'simplex';
         // Specify the location of the translation tables
         bindtextdomain($domain, sprintf('%s/locales', PRIVATE_LOCAL_DIR));

@@ -9,151 +9,151 @@
     {
       "uid": "f48ae54adfb27d8ada53d0fd9e34ee10",
       "css": "form-trash",
-      "code": 59392,
+      "code": 256,
       "src": "fontawesome"
     },
     {
       "uid": "f156d14a32cd7d5bc5a5f70382ab04ec",
       "css": "form-upload",
-      "code": 59393,
+      "code": 257,
       "src": "typicons"
     },
     {
       "uid": "bc71f4c6e53394d5ba46b063040014f1",
       "css": "form-reload",
-      "code": 59394,
+      "code": 258,
       "src": "fontawesome"
     },
     {
       "uid": "7yekfd0qlkgp6emwfbo10sjdmf8pewli",
       "css": "form-download",
-      "code": 59396,
+      "code": 259,
       "src": "typicons"
     },
     {
       "uid": "0b2b66e526028a6972d51a6f10281b4b",
       "css": "form-zoom-in",
-      "code": 59397,
+      "code": 260,
       "src": "fontawesome"
     },
     {
       "uid": "fhkechw94uv9ydw6tukba3ka2hhoif4n",
       "css": "form-move",
-      "code": 59398,
+      "code": 261,
       "src": "typicons"
     },
     {
       "uid": "a66cdc7278e6b33b8bd44a141f5e1a8d",
       "css": "form-plus-circled",
-      "code": 59399,
+      "code": 262,
       "src": "entypo"
     },
     {
       "uid": "43ab845088317bd348dee1d975700c48",
       "css": "form-checked-circled",
-      "code": 59400,
+      "code": 263,
       "src": "fontawesome"
     },
     {
       "uid": "b035c28eba2b35c6ffe92aee8b0df507",
       "css": "form-exclamation-circled",
-      "code": 59402,
+      "code": 264,
       "src": "fontawesome"
     },
     {
       "uid": "7f6916533c0842b6cec699fd773693d3",
       "css": "form-hourglass",
-      "code": 59403,
+      "code": 265,
       "src": "entypo"
     },
     {
       "uid": "d8d378d0ce413f231dfa37592e39c227",
       "css": "form-pause",
-      "code": 59404,
+      "code": 266,
       "src": "entypo"
     },
     {
       "uid": "1b5a5d7b7e3c71437f5a26befdd045ed",
       "css": "form-file",
-      "code": 59405,
+      "code": 267,
       "src": "fontawesome"
     },
     {
       "uid": "f3f90c8c89795da30f7444634476ea4f",
       "css": "form-angle-left",
-      "code": 61700,
+      "code": 268,
       "src": "fontawesome"
     },
     {
       "uid": "7bf14281af5633a597f85b061ef1cfb9",
       "css": "form-angle-right",
-      "code": 61701,
+      "code": 269,
       "src": "fontawesome"
     },
     {
       "uid": "d3b3f17bc3eb7cd809a07bbd4d178bee",
       "css": "form-resize-vertical",
-      "code": 59406,
+      "code": 270,
       "src": "fontawesome"
     },
     {
       "uid": "b013f6403e5ab0326614e68d1850fd6b",
       "css": "form-resize-full",
-      "code": 61618,
+      "code": 271,
       "src": "fontawesome"
     },
     {
       "uid": "e15f0d620a7897e2035c18c80142f6d9",
       "css": "form-external-link",
-      "code": 61582,
+      "code": 272,
       "src": "fontawesome"
     },
     {
       "uid": "c709da589c923ba3c2ad48d9fc563e93",
       "css": "form-close",
-      "code": 59407,
+      "code": 273,
       "src": "entypo"
     },
     {
       "uid": "6533bdc16ab201eb3f3b27ce989cab33",
       "css": "form-folder-open",
-      "code": 61717,
+      "code": 274,
       "src": "fontawesome"
     },
     {
       "uid": "7cf0c6fefa5327473dec91427434ae26",
       "css": "form-block",
-      "code": 59408,
+      "code": 275,
       "src": "iconic"
     },
     {
       "uid": "531bc468eecbb8867d822f1c11f1e039",
       "css": "form-calendar",
-      "code": 59395,
+      "code": 276,
       "src": "fontawesome"
     },
     {
       "uid": "598a5f2bcf3521d1615de8e1881ccd17",
       "css": "form-clock",
-      "code": 59401,
+      "code": 277,
       "src": "fontawesome"
     },
     {
       "uid": "5de9370846a26947e03f63142a3f1c07",
       "css": "form-angle-up",
-      "code": 61702,
+      "code": 278,
       "src": "fontawesome"
     },
     {
       "uid": "e4dde1992f787163e2e2b534b8c8067d",
       "css": "form-angle-down",
-      "code": 61703,
+      "code": 279,
       "src": "fontawesome"
     },
     {
       "uid": "9de4ac1aec6b1cca1929e1407eecf3db",
       "css": "form-calendar-today",
-      "code": 62068,
+      "code": 280,
       "src": "fontawesome"
     }
   ]

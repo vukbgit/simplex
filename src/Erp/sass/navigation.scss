@@ -45,8 +45,8 @@
                 color: $white;
             }
             &[aria-expanded="false"]::after {
-                content: " \f0da";
-                font-family: FontAwesome;
+                content: " \0184";
+                font-family: fontello;
                 display: inline;
                 text-align: right;
                 padding-left: 5px;
@@ -55,8 +55,8 @@
                 background-color: $darker;
             }
             &[aria-expanded="true"]::after {
-                content: " \f0d7";
-                font-family: FontAwesome;
+                content: " \0185";
+                font-family: fontello;
                 display: inline;
                 text-align: right;
                 padding-left: 5px;

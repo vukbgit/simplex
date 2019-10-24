@@ -17,7 +17,7 @@
             <a
             href="{{ voiceProperties.route|default('#') }}"
             id="{{ voiceLabelId }}"
-            class="nav-link {{ 'pl-%d'|format(level) }}
+            class="nav-link {{ 'pl-%d'|format((level + 1)) }}
         {%- if voiceProperties.isActive %} active text-white{% endif -%}
             "
             {%- if voiceProperties.navigation -%}

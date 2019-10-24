@@ -1,5 +1,7 @@
 
-.icon-erp-sign-out:before { content: '\e803'; } /* '' */
-.icon-erp-sort:before { content: '\f0dc'; } /* '' */
-.icon-erp-triangle-down:before { content: '\f0dd'; } /* '' */
-.icon-erp-triangle-up:before { content: '\f0de'; } /* '' */
+.icon-erp-sign-out:before { content: '\0180'; } /* 'ƀ' */
+.icon-erp-sort:before { content: '\0181'; } /* 'Ɓ' */
+.icon-erp-triangle-down:before { content: '\0182'; } /* 'Ƃ' */
+.icon-erp-triangle-up:before { content: '\0183'; } /* 'ƃ' */
+.icon-erp-plus-circle:before { content: '\0184'; } /* 'Ƅ' */
+.icon-erp-minus-circle:before { content: '\0185'; } /* 'ƅ' */

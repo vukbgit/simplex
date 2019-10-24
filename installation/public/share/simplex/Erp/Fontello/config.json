@@ -9,26 +9,38 @@
     {
       "uid": "74b2f1d1ee541715b3f389f7cdf63d1c",
       "css": "erp-sign-out",
-      "code": 59395,
+      "code": 384,
       "src": "websymbols"
     },
     {
       "uid": "56a21935a5d4d79b2e91ec00f760b369",
       "css": "erp-sort",
-      "code": 61660,
+      "code": 385,
       "src": "fontawesome"
     },
     {
       "uid": "94103e1b3f1e8cf514178ec5912b4469",
       "css": "erp-triangle-down",
-      "code": 61661,
+      "code": 386,
       "src": "fontawesome"
     },
     {
       "uid": "65b3ce930627cabfb6ac81ac60ec5ae4",
       "css": "erp-triangle-up",
-      "code": 61662,
+      "code": 387,
       "src": "fontawesome"
+    },
+    {
+      "uid": "a66e72da83c98248ae3ef43808efc452",
+      "css": "erp-plus-circle",
+      "code": 388,
+      "src": "websymbols"
+    },
+    {
+      "uid": "994eaa764b3f30721f3839c64c390ce3",
+      "css": "erp-minus-circle",
+      "code": 389,
+      "src": "websymbols"
     }
   ]
 }

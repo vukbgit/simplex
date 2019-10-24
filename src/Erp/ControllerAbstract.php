@@ -519,6 +519,8 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
      */
     protected function insertForm()
     {
+        //pass fields config to template
+        $this->setTemplateParameter('CRUDLconfig', $this->CRUDLconfig);
         //get any necessary data
         $this->getSaveFormData();
         //render
@@ -535,6 +537,8 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
      */
     protected function updateForm()
     {
+        //pass fields config to template
+        $this->setTemplateParameter('CRUDLconfig', $this->CRUDLconfig);
         //get model record
         $this->setTemplateParameter('record', $this->getModelRecordFromRoute());
         //get any necessary data

@@ -295,6 +295,14 @@ To extract _gettext translations_:
 
     /opt/php-7.3.5/bin/php private/share/vukbgit/simplex/bin/translations.php create share
 
+## Icon Fonts ##
+
+Simplex uses [Fontello](http://fontello.com/) for icons and it breaks icons into logical groups, each with its Fontello folder, so far:
+* _public/share/simplex/form/Fontello_ for form related icons (unicode from 0100 to 017F)
+* _public/share/simplex/Erp/Fontello_ for ERP (Backend) related icons  (unicode from 0180 to 01FF)
+
+Unicode codes are assigned so that, if icons are used into css (setting CSS properties _content_ to unicode code and _font-family_ to "fontello") icons do not overlap, if other application specific icons are added they should take unicode codes from 0200 (included) onward
+
 ## Development to Production ##
 
 If you keep separate development and production environment and manage pubblication through a git repository you can use some bash scripts soft linked into web root at installation time:
