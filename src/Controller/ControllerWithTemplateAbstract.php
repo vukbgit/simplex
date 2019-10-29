@@ -8,6 +8,7 @@ use Simplex\Controller\ControllerAbstract;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Twig\Environment;
+use Twig\Extra\Intl\IntlExtension;
 use Simplex\VanillaCookieExtended;
 //other classes and functions
 use Psr\Http\Message\ServerRequestInterface;
@@ -69,6 +70,8 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
     {
         parent::__construct($DIContainer, $response);
         $this->template = $templateEngine;
+        //add Twig IntlExtension
+        $this->template->addExtension(new IntlExtension());
         $this->cookie = $cookie;
     }
 
@@ -521,6 +524,7 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
     * @param mixed $labelTokens: the neme of one field or an array of fields names and strings to be joined to form label
     * @param array $recordset
     * @param string $languageCode: optional language code to use for localized fields
+    * @return array of records
     */
     protected function processRecordsetForInput(string $valueField, $labelTokens, array $recordset, string $languageCode = null): array
     {

@@ -573,7 +573,7 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
     /**
      * Processes save form input to manipulate fields data before saving
      * this method is void by default, it must be overridden by derived class if necessary
-     * It operates over input by reference and can return any type of extra data that will be inserted into the resutl of getSaveFieldsData
+     * It operates over input by reference and can return any type of extra data that will be inserted into the result of getSaveFieldsData
      */
     protected function processSaveFormInput(&$input)
     {

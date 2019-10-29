@@ -59,6 +59,7 @@
 {# displays an input number field, see see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/number for specifi type infos
 @param hash config: hash for field properties (see setFieldAttributes macro explanation) plus specific properties:
     numberType: integer (default) | decimal
+    formatAttributes: object with properties to be passed to value formatting filter format_number (see https://twig.symfony.com/doc/2.x/filters/format_number.html)
     step: the step attribute
     precision: for decimal numbers, defaults to locale frac_digits
     integerPrecision: number of digits for the integer part
@@ -67,7 +68,12 @@
 #}
 {% macro displayInputNumber(config) %}
     {% import _self as selfMacros %}
+    {# check type of number #}
     {% set numberType = config.numberType ?? 'integer' %}
+    {# format value according to locale #}
+    {% set formatAttributes = config.formatAttributes ?? {} %}
+    {% set value = config.value ? config.value|format_number(formatAttributes) : null %}
+    {% set config = updateProperty(config, 'value', value) %}
     {# integer #}
     {% if numberType == 'integer' %}
         {% set inputType = 'number' %}
@@ -431,7 +437,6 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
 
 {# displays a radios fields block with a boolean choice
 @param hash config: hash for field properties (see setFieldAttributes macro explanation)
-@param array items: array of hashes each with value and label property
 #}
 {% macro displayInputRadioBooleanGroup(config) %}
     {% import _self as selfMacros %}
@@ -456,6 +461,23 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
 {% macro displayInputCheckboxGroup(config, items) %}
     {% import _self as selfMacros %}
     {{ selfMacros.displayInputRadioCheckboxGroup('checkbox', config, items) }}
+{% endmacro %}
+
+{# displays a block with a checkbox formatted as a switch
+@param hash config: hash for field properties (see setFieldAttributes macro explanation)
+#}
+{% macro displaySwitch(config) %}
+    {% import _self as selfMacros %}
+    <div class="custom-control custom-switch">
+    {% set config = updateProperty(config, 'checked', config.value == 1) %}
+    {% set config = updateProperty(config, 'value', 1) %}
+    {% set classes = config.classes ?? [] %}
+    {% set classes = ['custom-control-input']|merge(classes) %}
+    {% set config = updateProperty(config, 'classes', classes) %}
+    {{ selfMacros.displayInput('checkbox', config) }}
+    {% set classes = 'custom-control-label' %}
+    {{ selfMacros.displayLabel(config, classes) }}
+    </div>
 {% endmacro %}
 
 {###################
@@ -510,7 +532,6 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
 
 {# displays a date time picker block
 @param hash config: hash for field properties (see setFieldAttributes macro explanation) plus specific properties (see displayDateTimePicker)
-@param array items: array of hashes each with value and label property
 #}
 {% macro displayDateTimePickerGroup(config) %}
     {% import _self as selfMacros %}
@@ -1005,17 +1026,15 @@ builds validation javascript API
         document.addEventListener(
             'blur',
             function (event) {
-                // Only run if the element is a form field (and not a dropzone for example) and is the form needs to be validated
+                // Only run if the element is a form field (and not a dropzone for example) and the form needs to be validated
                 if (typeof event.target.form == 'undefined' || (!event.target.form.classList.contains('needs-validation') || event.target.form.classList.contains('do-not-validate-on-blur'))) return;
                 // Validate the field
                 var error = hasError(event.target);
                 if(error) {
                     showError(event.target, error);
-                    event.target.form.classList.add('was-validated');
                 } else {
                     // Otherwise, remove any existing error message
                     removeError(event.target);
-                    event.target.form.classList.remove('was-validated');
                 }
             },
             true
@@ -1106,7 +1125,7 @@ builds validation javascript API
     
     // Validates the field
     var hasError = function (field) {
-        // Don't validate submits, buttons, file and reset inputs, and disabled fields
+        // Check if field needs validation
         if (!fieldIsToValidate(field)) return;
         // Get validity
         var validity = field.validity;
@@ -1192,7 +1211,9 @@ builds validation javascript API
     var removeError = function (field) {
         // Toggle error classes to field
         field.classList.remove('is-invalid');
-        field.classList.add('is-valid');
+        if($(field).attr('required')) {
+            field.classList.add('is-valid');
+        }
         //get field type
         var fieldType = $(field).attr('type');
         var messageId, manuallyHideMessage
