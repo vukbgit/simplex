@@ -1,5 +1,8 @@
 Options +FollowSymlinks
 RewriteEngine on
+#get rid of facebook id
+RewriteCond %{QUERY_STRING} ^(.*)&?fbclid=(.*)$ [NC]
+RewriteRule ^/?(.*)$ /$1?%1 [R=301,L]
 #environment
 SetEnvIf Host ^dev-host\.ltd$ ENVIRONMENT=development
 SetEnvIf Host ^prod-host\.ltd$ ENVIRONMENT=production
