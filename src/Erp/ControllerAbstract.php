@@ -342,7 +342,7 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
     /**
     * Sets common template parameters
     */
-    private function setCommonTemplateParameters()
+    protected function setCommonTemplateParameters()
     {
         $this->setTemplateParameter('userData', $this->getAuthenticatedUserData());
         $this->setTemplateParameter('subject', $this->subject);

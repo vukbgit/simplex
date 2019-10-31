@@ -7,6 +7,9 @@
 *           parameter: {parameter-name}
 *           parameter value: {parameter-name:parameter-value}
 *           optional pattern end: [/optional-ending-pattern]
+*           ancestors: to add to the route informations about subject ancestor, for each ancestor add:
+*               a route parameter with name 'ancestor-X' (where X should an integer index starting form 0 but can be any string) and value the ancestor subject key
+*               a route parameter named after the ancestor subject primay key
 *       handler: an array with two elements:
 *           (mandatory) callable (class to be invoked through magic __invoke method) in the form ClassName::class
 *           an optional associative array of parameters

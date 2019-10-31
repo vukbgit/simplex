@@ -43,8 +43,9 @@
             {% block rowFields %}
             {% endblock %}
             {% for voiceKey, voiceProperties in navigations.recordVisibleActions %}
-                {% set voiceLabel = voiceProperties.label ?? attribute(actionsLabels, voiceKey) %}
-            <td class="record-action">
+                {#% set voiceLabel = voiceProperties.label ?? attribute(actionsLabels, voiceKey) %#}
+                {% set voiceLabel = voiceProperties.label ?? (attribute(attribute(attribute(labels, subject), 'actions'), voiceKey) ?? attribute(actionsLabels, voiceKey)) %}
+            <td class="record-action text-right">
                 {% set allowed = true %}
                 {% if voiceProperties.conditions is defined %}
                     {% for conditionField in voiceProperties.conditions %}

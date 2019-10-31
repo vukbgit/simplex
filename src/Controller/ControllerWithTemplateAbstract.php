@@ -8,7 +8,6 @@ use Simplex\Controller\ControllerAbstract;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Twig\Environment;
-use Twig\Extra\Intl\IntlExtension;
 use Simplex\VanillaCookieExtended;
 //other classes and functions
 use Psr\Http\Message\ServerRequestInterface;
@@ -70,8 +69,6 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
     {
         parent::__construct($DIContainer, $response);
         $this->template = $templateEngine;
-        //add Twig IntlExtension
-        $this->template->addExtension(new IntlExtension());
         $this->cookie = $cookie;
     }
 
