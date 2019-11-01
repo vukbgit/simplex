@@ -61,8 +61,10 @@
     numberType: integer (default) | decimal
     formatAttributes: object with properties to be passed to value formatting filter format_number (see https://twig.symfony.com/doc/2.x/filters/format_number.html)
     step: the step attribute
+    min: for integer numbers, minimum value
+    max: for integer numbers, maximum value
     precision: for decimal numbers, defaults to locale frac_digits
-    integerPrecision: number of digits for the integer part
+    integerPrecision: for decimal numbers, number of digits for the integer part
     isCurrency: adds currency symbol
     isFraction: adds fraction symbol
 #}
@@ -79,6 +81,12 @@
         {% set inputType = 'number' %}
         {% set inputMode = 'numeric' %}
         {% set step = config.step ?? '1' %}
+        {% if config.min %}
+            {% set config = updateProperty(config, 'min', config.min) %}
+        {% endif %}
+        {% if config.max %}
+            {% set config = updateProperty(config, 'max', config.max) %}
+        {% endif %}
     {% elseif numberType == 'decimal' %}
         {% set localeconv = getLanguage().localeconv %}
         {% set inputType = 'text' %}
@@ -827,6 +835,8 @@ for autocomplete see https://developer.mozilla.org/en-US/docs/Web/HTML/Attribute
     'autocomplete': '',
     'inputmode': none | text | tel | url | email | numeric | decimal | search
     'step': integer or float
+    'min': for integer nmumbers inputs
+    'max': for integer nmumbers inputs
     'classes': '',
     'validation': {
         'required': true,
@@ -865,6 +875,12 @@ for autocomplete see https://developer.mozilla.org/en-US/docs/Web/HTML/Attribute
     {% endif %}
     {% if config.step %}
     step="{{ config.step }}" 
+    {% endif %}
+    {% if config.min %}
+    min="{{ config.min }}" 
+    {% endif %}
+    {% if config.max %}
+    max="{{ config.max }}" 
     {% endif %}
     {# merge classes #}
     class="{{ config.classes|join(' ') }}"

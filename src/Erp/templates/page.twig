@@ -50,15 +50,10 @@
         <nav aria-label="breadcrumb" class="my-3">
             <ol class="breadcrumb">
             {% for ancestorKey, ancestor in ancestors %}
-                {% set ancestorRoute = attribute((getNavigations(ancestor.controller)).globalActions|first, 'route') %}
                 <li class="breadcrumb-item">
-                {% if ancestorRoute %}
-                    <a href="{{ ancestorRoute }}">
-                {% endif %}
+                    <a href="{{ ancestor.routeBack }}">
                     {{- getLabel(labels, ancestorKey, 'subject') }}
-                {% if ancestorRoute %}
                     </a>
-                {% endif %}
                 </li>
             {% endfor %}
                 <li class="breadcrumb-item">

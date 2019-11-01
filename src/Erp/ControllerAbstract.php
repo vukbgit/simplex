@@ -50,7 +50,7 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
     
     /**
     * @param string
-    * current route root till subject (included9)
+    * current route root till subject (included)
     **/
     private $currentSubjectRoot;
     
@@ -99,7 +99,7 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
     protected function storeCurrentSubjectRoot()
     {
         $currentRoute = $this->request->getUri()->getPath();
-        $pattern = sprintf('~^[0-9a-zA-Z-/]*/%s/~', $this->subject);
+        $pattern = sprintf('~^[0-9a-zA-Z-_/]*/%s/~', $this->subject);
         preg_match($pattern , $currentRoute, $matches);
         //remove ending slash
         $this->currentSubjectRoot = substr($matches[0], 0, -1);
@@ -135,9 +135,14 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
         //loop routeParameters
         foreach ($this->routeParameters as $parameter => $subjectKey) {
             if(substr($parameter, 0, 8) == 'ancestor') {
+                //get the route fragment to this ancestor
+                preg_match(sprintf('~^[0-9a-zA-Z-_/]*/%s/~', $subjectKey), $this->currentSubjectRoot, $matches);
+                //suppose the main action to ancestor is list as it should
+                $routeBack = sprintf('%slist', $matches[0]);
                 $this->ancestors[$subjectKey] = (object) [
                     'controller' => $this->DIContainer->get(sprintf('%s-controller', $subjectKey)),
-                    'model' => $this->DIContainer->get(sprintf('%s-model', $subjectKey))
+                    'model' => $this->DIContainer->get(sprintf('%s-model', $subjectKey)),
+                    'routeBack' => $routeBack
                 ];
             }
         }
@@ -757,16 +762,18 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
      */
     protected function delete()
     {
-        $fieldsData = $this->getSaveFieldsData();
+        $primaryKeyField = $this->model->getConfig()->primaryKey;
+        $primayKeyFilter = $this->CRUDLconfig->fields[$primaryKeyField]->inputFilter;
+        $primaryKeyValue = filter_input(INPUT_POST, $primaryKeyField, $primayKeyFilter);
         try {
             //delete record
-            $this->model->delete($fieldsData->primaryKeyValue);
+            $this->model->delete($primaryKeyValue);
             $redirectRoute = $this->buildRouteToActionFromRoot('list');
             $this->setSubjectAlert('success', (object) ['code' => 'delete_success']);
         } catch(\PDOException $exception) {
             $error = $this->model->handleException($exception);
             $this->setSubjectAlert('danger', $error);
-            $redirectRoute = $this->buildRouteToActionFromRoot(sprintf('delete-form/%s', $fieldsData->primaryKeyValue));
+            $redirectRoute = $this->buildRouteToActionFromRoot(sprintf('delete-form/%s', $primaryKeyValue));
         }
         //redirect
         $this->redirect($redirectRoute);
