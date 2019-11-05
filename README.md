@@ -5,6 +5,12 @@ A tool for web developers
 ### Table of Contents ###
 
 * [Introduction](#Introduction)
+* [Requirements](#Requirements)
+* [Terminology](#Terminology)
+* [Installation](#Installation)
+* [Post-Installation Jobs](#Post-Installation-Jobs)
+* [Area set up](#Area-set-up)
+    * [Backend / ERP](#Backend-/-ERP)
 * [References](#References)
 
 ## Introduction ##
