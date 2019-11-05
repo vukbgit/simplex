@@ -37,14 +37,20 @@
         </tr>
     </thead>
     <tbody>
+    {# init totals #}
+    {% set tableTotals = {} %}
+    {% for fieldName, field in CRUDLConfig.fields %}
+        {% if field.table.total %}
+            {% set tableTotals = updateProperty(tableTotals, fieldName, 0) %}
+        {% endif %}
+    {% endfor %}
     {# ROWS LOOP #}
         {% for record in records %}
         <tr>
             {% block rowFields %}
             {% endblock %}
             {% for voiceKey, voiceProperties in navigations.recordVisibleActions %}
-                {#% set voiceLabel = voiceProperties.label ?? attribute(actionsLabels, voiceKey) %#}
-                {% set voiceLabel = voiceProperties.label ?? (attribute(attribute(attribute(labels, subject), 'actions'), voiceKey) ?? attribute(actionsLabels, voiceKey)) %}
+                {% set voiceLabel = getLabel('actions', voiceKey) %}
             <td class="record-action text-right">
                 {% set allowed = true %}
                 {% if voiceProperties.conditions is defined %}
@@ -65,8 +71,25 @@
             </td>
             {% endfor %}
         </tr>
+            {# totals #}
+            {% for fieldName, total in tableTotals %}
+                {% set total = attribute(tableTotals, fieldName) + attribute(record, fieldName) %}
+                {% set tableTotals = updateProperty(tableTotals, fieldName, total) %}
+            {% endfor %}
         {% endfor %}
     </tbody>
+    {% if tableTotals is not empty %}
+    <tfoot class="thead-light">
+        <tr>
+        {% block tableFooter %}
+        {% endblock %}
+    {# record visible actions header #}
+        {% if navigations.recordVisibleActions|length %}
+        <th colspan="{{ navigations.recordVisibleActions|length }}"></th>
+        {% endif %}
+        </tr>
+    </tfoot>
+    {% endif %}
 </table>
     {% else %}
 <div class="alert alert-info" role="alert">

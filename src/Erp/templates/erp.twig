@@ -3,17 +3,6 @@
 
 {% use '@share/templates/blocks.twig' %}
 
-{# include subject and ancestors labels #}
-
-{% block body %}
-    {{ include(getInstanceTemplate(null, 'labels.twig'), {'labels': labels}, with_context = false) }}
-    {% for ancestor in ancestors %}
-        {{ include(getInstanceTemplate(ancestor.controller, 'labels.twig'), {'labels': labels}, with_context = false) }}
-    {% endfor %}
-    {{ parent() }}
-{% endblock %}
-
-
 {% block head %}
     {{ parent() }}
     {% block cookiesAssets %}
@@ -26,8 +15,18 @@
     <link rel="stylesheet" href="/public/share/simplex/Erp/Fontello/css/fontello.css">
 {% endblock %}
 
+{# include subject and ancestors labels #}
+
+{% block body %}
+    {{ include(getInstanceTemplate(null, 'labels.twig'), {'labels': labels}, with_context = true) }}
+    {% for ancestor in ancestors %}
+        {{ include(getInstanceTemplate(ancestor.controller, 'labels.twig'), {'labels': labels}, with_context = true) }}
+    {% endfor %}
+    {{ parent() }}
+{% endblock %}
+
 {# messages & labels #}
-{% set actionsLabels = {
+{% set labels = setLabels('actions', {
     'list': 'list'|trans,
     'insert-form': 'insert'|trans,
     'update-form': 'update'|trans,
@@ -35,16 +34,16 @@
     'cancel': 'cancel'|trans,
     'move-up': 'move up'|trans,
     'move-down': 'move down'|trans
-} %}
-{% set alertMessages = {
+}) %}
+{% set labels = setLabels('alerts', {
     'save_success': 'Record saved'|trans,
     'delete_success': 'Record deleted'|trans,
     'SQLSTATE_23000_duplicate_entry': 'There is already another record with the same %s'|trans,
     'SQLSTATE_23000_fk_constraint': 'Missing value for mandatory foreign key %s'|trans,
     'SQLSTATE_23000_mandatory_null': 'Field "%s" cannot be null'|trans,
     'SQLSTATE_42S22_column_not_found': 'Field "%s" not found'|trans,
-} %}
-{% set tableLabels = {
+}) %}
+{% set labels = setLabels('table', {
     'sort-asc': 'sort ascending'|trans,
     'sort-desc': 'sort descending'|trans,
-} %}
+}) %}

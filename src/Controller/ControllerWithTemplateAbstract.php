@@ -57,6 +57,12 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
     * currently selected voice key into navigations, indexed by navigation since each route can be set into different anvigations with different keys
     */
     protected $currentNavigationVoice = [];
+    
+    /**
+    * @var object
+    * labels containers
+    */
+    protected $labels;
 
     /**
     * Constructor
@@ -70,6 +76,11 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         parent::__construct($DIContainer, $response);
         $this->template = $templateEngine;
         $this->cookie = $cookie;
+        $this->labels = (object) [
+            'actions' => (object) [],
+            'alerts' => (object) [],
+            'table' => (object) []
+        ];
     }
 
     /**
@@ -280,8 +291,24 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         /*********
         * LABELS *
         *********/
-        //resets subject alerts
+        //sets a label by category and key
         $this->addTemplateFunction(
+            'setLabel',
+            function(string $category, string $key, $value): object {
+                $this->labels->$category->$key = $value;
+                return $this->labels;
+            }
+        );
+        //sets a group of labels of one category at once
+        $this->addTemplateFunction(
+            'setLabels',
+            function(string $category, array $labels): object {
+                $this->labels->$category = (object) array_merge((array) (isset($this->labels->$category) ? $this->labels->$category : []), $labels);
+                return $this->labels;
+            }
+        );
+        //gets a label by category and key
+        /*$this->addTemplateFunction(
             'getLabel',
             function($labels, $subject, $type, $key = null){
                 $label = $labels->{$subject}[$type] ?? '';
@@ -289,6 +316,21 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
                     $label = $label[$key] ?? '';
                 }
                 return $label;
+            }
+        );*/
+        $this->addTemplateFunction(
+            'getLabel',
+            /**
+            * first parameter is category, others are nested keys
+            **/
+            function() {
+                $arguments = func_get_args();
+                $category = array_shift($arguments);
+                $result = $this->labels->$category;
+                foreach($arguments as $key) {
+                    $result = is_array($result->$key) ? (object) $result->$key : $result->$key;
+                }
+                return $result;
             }
         );
         /********
@@ -319,7 +361,7 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         $this->setTemplateParameter('action', $this->action);
         $this->setTemplateParameter('language', $this->language);
         $this->setTemplateParameter('languages', $this->languages);
-        $this->setTemplateParameter('labels', new \stdClass);
+        $this->setTemplateParameter('labels', $this->labels);
         $this->setTemplateParameter('routeParameters', $this->routeParameters);
         $this->setTemplateParameter('pathToAreaTemplate', sprintf('@local/%s/%s/%s.twig', slugToPSR1Name($this->area, 'class'), TEMPLATES_DEFAULT_FOLDER, $this->area));
         $this->setTemplateParameter('areaCookie', $this->getAreaCookie());

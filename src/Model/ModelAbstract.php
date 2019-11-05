@@ -326,11 +326,15 @@ abstract class ModelAbstract
     * @param mixed $primaryKeyValue
     * @param array $fieldsValues: indexes are fields names, values are fields values
     */
-    public function update($primaryKeyValue, array $fieldsValues)
+    public function update($primaryKeyValue = null, array $fieldsValues = [])
     {
         $this->query
-            ->table($this->table())
-            ->where($this->config->primaryKey, $primaryKeyValue)
+            ->table($this->table());
+        if($primaryKeyValue) {
+            $this->query
+                ->where($this->config->primaryKey, $primaryKeyValue);
+        }
+        $this->query
             ->update($fieldsValues);
     }
     

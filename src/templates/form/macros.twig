@@ -549,7 +549,7 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
     {% set format = config.format|default(attribute(getLanguage('dateFormat'), 'calendar')) %}
     {% set config = updateProperty(config, 'format', format) %}
     {% set id = (config.id ?? config.name)|formatIdforJs %}
-    {% set help = config.help ?? [] %}
+    {% set help = [config.help] ?? null %}
     {% set help = ['Format: %s'|format(format)]|merge(help) %}
     {% set config = updateProperty(config, 'help', help) %}
     <div class="form-group" id="{{ '%s-container'|format(id) }}">

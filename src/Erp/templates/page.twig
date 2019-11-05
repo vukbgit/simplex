@@ -43,26 +43,23 @@
     </nav>
     {# main content #}
     <main role="main" class="{% if sideBarClosed %} wide{% endif %}">
-        {#<h2 class="h3 my-3">
-            {{- subjectLabel }} &raquo; {% block actionLabel %}{{ attribute(actionsLabels, action) }}{% endblock %}
-        </h2>#}
         {% if displayBreadcrumb is not defined or displayBreadcrumb == true  %}
         <nav aria-label="breadcrumb" class="my-3">
             <ol class="breadcrumb">
             {% for ancestorKey, ancestor in ancestors %}
                 <li class="breadcrumb-item">
                     <a href="{{ ancestor.routeBack }}">
-                    {{- getLabel(labels, ancestorKey, 'subject') }}
+                    {{- getLabel(ancestorKey, 'subject') }}
                     </a>
                 </li>
             {% endfor %}
                 <li class="breadcrumb-item">
                     <a href="{{ buildRouteToActionFromRoot('list') }}">
-                    {{- getLabel(labels, subject, 'subject') }}
+                    {{- getLabel(subject, 'subject') }}
                     </a>
                 </li>
                 <li class="breadcrumb-item active text-capitalize" aria-current="page">
-            {%- block actionLabel %}{{ attribute(actionsLabels, action) }}{% endblock %}
+            {%- block actionLabel %}{{ getLabel('actions', action) }}{% endblock %}
                 </li>
             </ol>
         </nav>
@@ -74,7 +71,7 @@
             <div class="alert {{ 'alert-%s'|format(severity) }} alert-dismissible fade show" role="alert">
             {% set severityAlerts = [] %}
             {% for alert in alerts %}
-                {% set severityAlerts = severityAlerts|merge([attribute(alertMessages, alert.code)|formatArray(alert.data)]) %}
+                {% set severityAlerts = severityAlerts|merge([getLabel('alerts', alert.code)|formatArray(alert.data)]) %}
             {% endfor %}
             {{ severityAlerts|join('<br>')|raw }}
             <button type="button" class="close" data-dismiss="alert" aria-label="{{ 'Close'|trans }}">

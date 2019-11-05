@@ -160,7 +160,7 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
             throw new \Exception(sprintf('configuration CRUDL file \'%s\' for subject %s is not a valid path', $configPath, $this->subject));
         }
         //store config
-        $this->CRUDLconfig = require $configPath;
+        $this->CRUDLConfig = require $configPath;
     }
     
     /**********
@@ -353,6 +353,7 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
         $this->setTemplateParameter('subject', $this->subject);
         $this->setTemplateParameter('model', $this->model);
         $this->setTemplateParameter('ancestors', $this->ancestors);
+        $this->setTemplateParameter('CRUDLConfig', $this->CRUDLConfig);
         $this->setTemplateParameter('currentNavigationVoice', $this->currentNavigationVoice);
         $this->setTemplateParameter('sideBarClosed', $this->getAreaCookie('sideBarClosed') ?? false);
     }
@@ -460,8 +461,8 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
                 'grouped' => true
             ];
             //loop config fields
-            foreach ((array) $this->CRUDLconfig->fields as $fieldName => $fieldConfig) {
-                if(!isset($fieldConfig->tableFilter) || $fieldConfig->tableFilter) {
+            foreach ((array) $this->CRUDLConfig->fields as $fieldName => $fieldConfig) {
+                if(!isset($fieldConfig->table->filter) || $fieldConfig->table->filter) {
                     //filter fields conditions are joined by the logical OR operator
                     $filterWhere[] = [$fieldName, 'LIKE', sprintf('%%%s%%', $subjectCookie->filter), 'logical' => 'OR'];
                 }
@@ -524,8 +525,6 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
      */
     protected function insertForm()
     {
-        //pass fields config to template
-        $this->setTemplateParameter('CRUDLconfig', $this->CRUDLconfig);
         //get any necessary data
         $this->getSaveFormData();
         //render
@@ -542,8 +541,6 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
      */
     protected function updateForm()
     {
-        //pass fields config to template
-        $this->setTemplateParameter('CRUDLconfig', $this->CRUDLconfig);
         //get model record
         $this->setTemplateParameter('record', $this->getModelRecordFromRoute());
         //get any necessary data
@@ -612,7 +609,7 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
                 function($fieldConfiguration) {
                     return $fieldConfiguration->inputFilter ?? null;
                 },
-                $this->CRUDLconfig->fields
+                $this->CRUDLConfig->fields
             ),
             //keep only fields with a not null filter definition
             function($fieldFilter) {
@@ -763,7 +760,7 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
     protected function delete()
     {
         $primaryKeyField = $this->model->getConfig()->primaryKey;
-        $primayKeyFilter = $this->CRUDLconfig->fields[$primaryKeyField]->inputFilter;
+        $primayKeyFilter = $this->CRUDLConfig->fields[$primaryKeyField]->inputFilter;
         $primaryKeyValue = filter_input(INPUT_POST, $primaryKeyField, $primayKeyFilter);
         try {
             //delete record

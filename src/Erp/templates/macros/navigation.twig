@@ -63,8 +63,8 @@
             {% else %}
                 {% set route = '#' %}
             {% endif %}
-        <a href="{{ route }}" class="nav-link{% if voiceProperties.isActive %} active{% endif %} text-capitalize">
-                {{- attribute(context.actionsLabels, voiceKey) -}}
+                <a href="{{ route }}" class="nav-link{% if voiceProperties.isActive %} active{% endif %} text-capitalize">
+                {{- getLabel('actions', voiceKey) -}}
                 </a>
             </li>
             {% endfor %}

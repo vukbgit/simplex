@@ -10,7 +10,7 @@
 ##}
 {% macro displayDefaultButtons(context) %}
 <div class="form-group" role="group">
-    <a href="{{ buildRouteToActionFromRoot('list') }}" class="btn btn-secondary text-capitalize">{{ attribute(context.actionsLabels, 'cancel') }}</a>
-    <button type="submit" class="btn btn-success text-capitalize">{{ attribute(context.actionsLabels, context.action) }}</button>
+    <a href="{{ buildRouteToActionFromRoot('list') }}" class="btn btn-secondary text-capitalize">{{ getLabel('actions', 'cancel') }}</a>
+    <button type="submit" class="btn btn-success text-capitalize">{{ getLabel('actions', context.action) }}</button>
 </div>
 {% endmacro %}
