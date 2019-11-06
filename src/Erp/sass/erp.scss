@@ -9,6 +9,15 @@
 $darker: rgba(0, 0, 0, .25);
 //navigation
 @import './navigation.scss';
+//navbar
+.navbar {
+    &.navbar-dark {
+        color: $navbar-dark-color;
+        [class^="icon-"] {
+            color: $navbar-dark-color;
+        }
+    }
+}
 //page main content
 main {
     margin-left:$sideBarWidth;

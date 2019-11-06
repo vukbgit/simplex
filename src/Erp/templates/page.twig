@@ -20,6 +20,10 @@
             <img src="{{ logoPath }}" alt="{{ brand }}">
         {% endif %}
     </div>
+    <div class="flex-grow-1 text-right">
+        <span>{{ userData.username }}</span>
+        <i class="icon-erp-user"></i>
+    </div>
     <ul class="navbar-nav ml-auto px-3">
         <li class="nav-item text-nowrap">
             <a class="nav-link" href="{{ routeParameters.authentication.urls.signOut }}">
