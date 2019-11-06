@@ -9,7 +9,6 @@ select yn in "Yes" "No"; do
         git remote add origin $repositoryUrl
         git fetch --all
         git reset --hard origin/master
-        git checkout -t origin/master
         break;;
     No ) exit;;
     esac
