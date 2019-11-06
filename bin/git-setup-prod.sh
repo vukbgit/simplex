@@ -7,7 +7,8 @@ select yn in "Yes" "No"; do
         git init
         read -p "Repository URL:" repositoryUrl
         git remote add origin $repositoryUrl
-        git fetch
+        git fetch --all
+        git reset --hard origin/master
         git checkout -t origin/master
         break;;
     No ) exit;;

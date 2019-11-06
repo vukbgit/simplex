@@ -333,7 +333,7 @@ If you keep separate development and production environment and manage pubblicat
 * production environment:
     * copy _composer.json_ file from development environment
     * run `composer create-project`
-    * run _git-setup-prod_, interactive script that asks for repository URL and sets up repository for pulling
+    * run _git-setup-prod.sh_, interactive script that asks for repository URL and sets up repository for pulling
     * run _update-all.sh_ which:
         * cleans DI container and templates cache, beware of tmp folder path, (see _[Post-Installation Jobs](#Post-Installation-Jobs) > bash scripts settings_
         * updates Composer packages
