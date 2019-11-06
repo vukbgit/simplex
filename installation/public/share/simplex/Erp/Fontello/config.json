@@ -41,6 +41,12 @@
       "css": "erp-minus-circle",
       "code": 389,
       "src": "websymbols"
+    },
+    {
+      "uid": "3fce1eca43f917c8f23e532749abae5d",
+      "css": "erp-user",
+      "code": 390,
+      "src": "fontawesome"
     }
   ]
 }

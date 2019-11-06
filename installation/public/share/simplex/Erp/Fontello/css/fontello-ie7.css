@@ -16,3 +16,4 @@
 .icon-erp-triangle-up { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#x0183;&nbsp;'); }
 .icon-erp-plus-circle { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#x0184;&nbsp;'); }
 .icon-erp-minus-circle { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#x0185;&nbsp;'); }
+.icon-erp-user { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#x0186;&nbsp;'); }
