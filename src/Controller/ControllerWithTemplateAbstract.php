@@ -414,7 +414,6 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
             $templatePath = sprintf('@local/%s/%s.%s', $templatesFolder, $this->action, TEMPLATES_EXTENSION);
         }
         //render template and get HTML
-        $this->setTemplateParameter('test', $this->cookie->get('test'));
         return $this->template->render($templatePath, $this->templateParameters);
     }
     
