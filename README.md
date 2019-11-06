@@ -327,9 +327,9 @@ Unicode codes are assigned so that, if icons are used into css (setting CSS prop
 ## Development to Production ##
 
 If you keep separate development and production environment and manage pubblication through a git repository you can use some bash scripts soft linked into web root at installation time:
-* development environemnt:
-    *_git-init.sh_: interactive script that asks for repository URL, git user email and git user name, sets up the repository, makes first significative commit and pushes it to repository
-    *_git-push-all.sh_: push all changes made since last commit; if you nedd to push only some changes you must add, commit and push manually
+* development environment:
+    * _git-init.sh_: interactive script that asks for repository URL, git user email and git user name, sets up the repository, makes first significative commit and pushes it to repository
+    * _git-push-all.sh_: push all changes made since last commit; if you nedd to push only some changes you must add, commit and push manually
 * production environment:
     * _git-pull.sh_: besides pulling automatically cleans DI container and templates cache but beware of tmp folder path, see _intallation > bash scripts settings_ above
 
