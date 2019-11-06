@@ -169,7 +169,7 @@ For details see _Folders and Files Structure_ below
     * routes are set up into route.php files, which are stored into _config_ folders
     * as explained into the _terminology_ section above, Simplex logic is to devide application into logical areas, corresponding to folders; Simplex is shipped with a _private/local/simplex/Backend_ folder as a draft for building a backend for the application, it contains a _config/routes.php_ where 3 routes are defined for the login operation (display the login form, perform login authentication and logout)
     * Backend folder can be renamed to something else to suit application logic but some adjustments must be made (area variable value in _routes.php_ and _templates/backend.twig_ file name)
-    * there is also a _private/local/simplex/SubjectGroup_ folder which is a draft for the developement of a subject
+    * there is also a _private/local/simplex/SubjectGroup_ folder which is a draft for the development of a subject
 * compile _SASS_ files to CSS:
     * Simplex encourages compilation of SASS source files (.scss) to CSS files (.css).
     * _private/local/simplex/config/sass.config_ contains a map of SASS to CSS files, each couple marked by an id (see file for explanations) 
@@ -328,10 +328,16 @@ Unicode codes are assigned so that, if icons are used into css (setting CSS prop
 
 If you keep separate development and production environment and manage pubblication through a git repository you can use some bash scripts soft linked into web root at installation time:
 * development environment:
-    * _git-init.sh_: interactive script that asks for repository URL, git user email and git user name, sets up the repository, makes first significative commit and pushes it to repository
+    * _git-setup-dev.sh_: interactive script that asks for repository URL, git user email and git user name, sets up the repository, makes first significative commit and pushes it to repository
     * _git-push-all.sh_: push all changes made since last commit; if you need to push only some changes you must add, commit and push manually
 * production environment:
-    * _git-pull.sh_: besides pulling automatically cleans DI container and templates cache but beware of tmp folder path, see _intallation > bash scripts settings_ above
+    * copy _composer.json_ file from development environment
+    * run `composer create-project`
+    * run _git-setup-prod_, interactive script that asks for repository URL and sets up repository for pulling
+    * run _update-all.sh_ which:
+        * cleans DI container and templates cache, beware of tmp folder path, (see _[Post-Installation Jobs](#Post-Installation-Jobs) > bash scripts settings_
+        * updates Composer packages
+        * updates NPM packages through Yarn
 
 ## Simplex Logic overview ##
 
