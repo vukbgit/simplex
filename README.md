@@ -10,7 +10,17 @@ A tool for web developers
 * [Installation](#Installation)
 * [Post-Installation Jobs](#Post-Installation-Jobs)
 * [Area set up](#Area-set-up)
-    * [Backend / ERP](#Backend-/-ERP)
+    * [Backend / ERP](#Backend--ERP)
+* [Subject set up](#Subject-set-up)
+* [Debugging](#Debugging)
+* [Internazionalization](#Internazionalization)
+* [Icon Fonts](#Icon-Fonts)
+* [Development to Production](#Development-to-Production)
+* [Simplex Logic overview](#Simplex-Logic-overview)
+    * [Logical Structure](#Logical-Structure)
+    * [Application Flow](#Application-Flow)
+* [Folders and Files Structure](#Folders-and-Files-Structure)
+* [Considerations](#Considerations)
 * [References](#References)
 
 ## Introduction ##
@@ -112,7 +122,7 @@ Simplex will:
 * make symlinks in the root directory to some shell scripts ([Composer vendor binaries](https://getcomposer.org/doc/articles/vendor-binaries.md))
 * build the folders structure for the local application with some ready draft files
 
-For details see _Folders & Files structure_ below
+For details see _Folders and Files Structure_ below
 
 ## Post-Installation Jobs ##
 
@@ -255,7 +265,7 @@ This is the Backend folder structure:
         * _yarn.sh_: symlinked from web root to handle Yarn commands
     * _.htaccess_: Apache configuration file, grants access to real files (CSS, Javascript, imagess, etc) and redirects every other request to index.php
 
-### Subject set up ###
+## Subject set up ##
 
 The following steps show how to set up an ERP subject, that is a subject which implies a database model and the related CRUD UI, as the major part of a backend's subjects should be; it is also possible to use into a backend other kind of subjects (a dasboard for example), in this case see the frontend explanation below
 
@@ -291,7 +301,7 @@ The following steps show how to set up an ERP subject, that is a subject which i
     * 'xx($var)': dumps a variable and exits the scripts immediately
 * Twig templates: the dump function is available as a wrapper for Kint dump function, i.e. '{{ dump(my-variable-of-any-type) }}'
 
-## Translations ##
+## Internazionalization ##
 
 Simplex uses [gettext](https://www.gnu.org/software/gettext/) and is shipped with a set of English and Italian translations for the messages contained into the provided UI
 To extract _gettext translations_:
@@ -384,7 +394,7 @@ If you keep separate development and production environment and manage pubblicat
     * the HTTP status code of the response is checked and if different from 200 (which means "everything went fine") gets the appropriate HTML code from a _private/share/vukbgit/simplex/src/errors/_ file and injects it into the response
     * the __Emitter__ is instantiated and returns the response to the browser
 
-## Folders & Files Structure ##
+## Folders and Files Structure ##
 
 Simplex extends the classes namespace logic to every file in the application;: the __local namespace__ starts from the folder defined into _private/local/simplex/config/constants.php_ LOCAL_DIR constant (defaults to _private/local/simplex_) and is named by default _Simplex\Local_.
 
