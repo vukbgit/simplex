@@ -271,6 +271,12 @@ The following steps show how to set up an ERP subject, that is a subject which i
 
 * set up _database architecture_
     * tipically a subject is the representation of one _table_ 
+    * Simplex aims to be localization ready, so model data should be divided in two tables:
+        * one main table for language-indipendent data, at least the primary key; it should be named after the model key, usually snake case even if it can be any name as long as it is set into _config/crudl.php_
+        * one for any language-dependent information (if any), named _main-table-name_locales_ (with the mandatory _locales suffix), with the following structure:
+            * a primary key (integer autoincrement)
+            * a _language_code_ (char 2) field, which hold the languages codes used as key into _config/languages.json_ (the ISO-639-1 codes)
+            * any custom field (text or varchar) for localized pieces of informations as needed by subject
     * although not strictly necessary there should also be a correspondent _view_
     * Simplex is shipped with a convenient _private/local/simplex/docs/views.sql_ where views definition can be written; often database manager SQL editor are not handy, storing views definition into a plain SQL/text file, editing through an editor with synthax highlighting and copy and paste into the db application can be a solution and provides also a backup
 * each subject files are contained into a folder named after the subject
@@ -284,7 +290,9 @@ The following steps show how to set up an ERP subject, that is a subject which i
     * rename _config/routes.draft.php_ to _config/routes.php_, default configure dynamic route should cover at least the basic CRUD operations (list, inser form, insert operation, update form, update operation, delete form, delete operation)
     * rename _config/di-container.draft.php_ to _config/di-container.php_
     * edit ___Controller.php___ and ___Model.php___ and correct namespace to the same value used into _config/routes.variables.php_
-    * edit ___config/crudl.php___ and set up table fields
+    * edit ___config/crudl.php___ and set up:
+        * table localization (localized property, boolean), whether model table uses an accessory table for localization (see "set up _database architecture_" above)
+        * table fields filters to be used to retrieve fields values passed by save form
     * _config/navigation.php_ contains rules to display the UI navigation for basic CRUD actions, it can be customized to remove some of them or add more actions, for permissions logic see _subject permission_ below
 * set up subject _template labels_ in ___templates/labels.twig___, at least subject label is required but fields labels are used int list and save form templates
 * edit ___templates/list.twig___ to set up fields displayed into records table, there is a tableheader block for headers and a records loop for table cells with fields values
@@ -315,6 +323,8 @@ To extract _gettext translations_:
 * in case site uses a PHP version different from system one if must be specified te complete path to PHP binary, i.e.
 
     /opt/php-7.3.5/bin/php private/share/vukbgit/simplex/bin/translations.php create share
+    
+Besides, Simplex encourages a localization ready database architecture, even when site uses justy one lunguage (see [Subject set up](#Subject-set-up) > _database architecture_)
 
 ## Icon Fonts ##
 
