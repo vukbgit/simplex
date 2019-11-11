@@ -11,5 +11,9 @@ return (object) [
                 'parameters' => [PARAMETER1,...]
             ]
         ]
+    ],
+    'locales' => [
+        'LOCALE-FIELD-1',
+        'LOCALE-FIELD-2',
     ]
 ];
