@@ -46,11 +46,12 @@ class PixieExtended extends QueryBuilderHandler
     * Builds a where condition with the possibility to pass also the logical operator 
     * @param array $whereCondition and array with 
     **/
-    public function whereLogical(array $whereCondition): QueryBuilderHandler
+    public function whereLogical(array $whereCondition)
     {
         //extract logical operator if any
         if(isset($whereCondition['logical'])) {
             $joiner = $whereCondition['logical'];
+            unset($whereCondition['logical']);
         } else {
             $joiner = 'AND';
         }
@@ -63,7 +64,7 @@ class PixieExtended extends QueryBuilderHandler
             $operator = $whereCondition[1];
             $value = $whereCondition[2];
         }
-        return $this->whereHandler($key, $operator, $value, $joiner);
+        $this->whereHandler($key, $operator, $value, $joiner);
     }
     
     /**
@@ -82,10 +83,10 @@ class PixieExtended extends QueryBuilderHandler
                 } else {
                 //grouped where
                     //check logical operator
-                    if(!isset($fieldConditions['logical']) || strtoupper($fieldConditions['logical']) == 'OR') {
-                        $whereMethod = 'orWhere';
-                    } else {
+                    if(!isset($fieldConditions['logical']) || strtoupper($fieldConditions['logical']) == 'AND') {
                         $whereMethod = 'where';
+                    } else {
+                        $whereMethod = 'orWhere';
                     }
                     //clean up
                     unset($fieldConditions['grouped']);

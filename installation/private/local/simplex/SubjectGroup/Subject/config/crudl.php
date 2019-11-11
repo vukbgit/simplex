@@ -1,5 +1,7 @@
 <?php
 return (object) [
+    //whether model use _locales table
+    'localized' => true,
     'fields' => [
         'PRIMARY-KEY-FIELD' => (object) [
             'table' => (object)[

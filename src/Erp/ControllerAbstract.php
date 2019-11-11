@@ -453,6 +453,10 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
     protected function buildListWhere(): array
     {
         $where = [];
+        //localized table
+        if(isset($this->CRUDLConfig->localized) && $this->CRUDLConfig->localized) {
+            $where[] = ['language_code', $this->language->{'ISO-639-1'}];
+        }
         //filter
         $subjectCookie = $this->getSubjectCookie();
         if(isset($subjectCookie->filter) && $subjectCookie->filter) {
