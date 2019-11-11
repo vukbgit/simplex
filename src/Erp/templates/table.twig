@@ -50,7 +50,7 @@
             {% block rowFields %}
             {% endblock %}
             {% for voiceKey, voiceProperties in navigations.recordVisibleActions %}
-                {% set voiceLabel = getLabel('actions', voiceKey) %}
+                {% set voiceLabel = parseRecordActionRoute(getLabel('actions', voiceKey), record) %}
             <td class="record-action text-right">
                 {% set allowed = true %}
                 {% if voiceProperties.conditions is defined %}

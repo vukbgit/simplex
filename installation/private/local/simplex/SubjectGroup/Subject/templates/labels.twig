@@ -8,3 +8,5 @@
         'ACTION-KEY': 'ACTION-LABEL'|trans
     }
 }) %}
+{# for record actions defined into navigation.php placeholders enclosed by curly brackets {} will be substituded by field values found into record #}
+{#% set labels = setLabel('actions', 'SUBJECT-KEY', 'ACTION-LABEL ({FIELD-NAME})'|trans) %#}
