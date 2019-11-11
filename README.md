@@ -278,7 +278,7 @@ The following steps show how to set up an ERP subject, that is a subject which i
             * a _language_code_ (char 2) field, which hold the languages codes used as key into _config/languages.json_ (the ISO-639-1 codes)
             * a _foreign key_ field targeted to the main table primary key with a CASCADE delete setting
             * any custom field (text or varchar) for localized pieces of information as needed by subject
-    * although not strictly necessary there should also be a correspondent _view_
+    * although not strictly necessary there should also be a correspondent _view_, in case of a localized subject a localized view is mandatory which must join main table oover the locales one and expose primary keys fields, _language_code_ field (besides localized informations of course)
     * Simplex is shipped with a convenient _private/local/simplex/docs/views.sql_ where views definition can be written; often database manager SQL editor are not handy, storing views definition into a plain SQL/text file, editing through an editor with synthax highlighting and copy and paste into the db application can be a solution and provides also a backup
 * each subject files are contained into a folder named after the subject
 * ponder the position of the subject into application architecture:
