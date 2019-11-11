@@ -273,8 +273,8 @@ The following steps show how to set up an ERP subject, that is a subject which i
     * tipically a subject is the representation of one _table_ 
     * Simplex aims to be localization ready, so model data should be divided in two tables:
         * one main table for language-indipendent data, at least the primary key; it should be named after the model key, usually snake case even if it can be any name as long as it is set into _config/crudl.php_
-        * one for any language-dependent information (if any), named _main-table-name_locales_ (with the mandatory _locales suffix), with the following structure:
-            * a primary key (integer autoincrement)
+        * one for any language-dependent information (if any), named _main-table-name_locales_ (with the mandatory _locales suffix), with the following structure (naming convention is to be sctrictly followed for Simplex to handle correctly data saving):
+            * a primary key (integer autoincrement) named _this-table-name_id_ (with the mandatory _id suffix)
             * a _language_code_ (char 2) field, which hold the languages codes used as key into _config/languages.json_ (the ISO-639-1 codes)
             * a _foreign key_ field targeted to the main table primary key
             * any custom field (text or varchar) for localized pieces of information as needed by subject
