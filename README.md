@@ -329,7 +329,7 @@ The following steps show how to set up an ERP subject, that is a subject which i
         * upload resulting .po and .mo fiels back to _TRANSLATIONS_DIR_
     * in case site uses a PHP version different from system one if must be specified te complete path to PHP binary, i.e.
 
-        /opt/php-7.3.5/bin/php private/share/vukbgit/simplex/bin/translations.php update local
+            /opt/php-7.3.5/bin/php private/share/vukbgit/simplex/bin/translations.php update local
 * __database__: Simplex encourages a localization ready database architecture, even when site uses just one language (see [Subject set up](#Subject-set-up) > _database architecture_)
 
 ## Icon Fonts ##
