@@ -323,7 +323,7 @@ The following steps show how to set up an ERP subject, that is a subject which i
         * after installation, into _TRANSLATIONS_DIR_ English and Italian translations for Simplex core messages are stored
         * when local translations are added run script to update local messages, .po and .mo files are saved into _TRANSLATIONS_DIR_ for every language defined into _private/local/simplex/config/languages.json_:
 
-            php private/share/vukbgit/simplex/bin/translations.php update local
+                php private/share/vukbgit/simplex/bin/translations.php update local
             
         * download .po files, translate with [Poedit](https://poedit.net/) or other similar software
         * upload resulting .po and .mo fiels back to _TRANSLATIONS_DIR_
