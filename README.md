@@ -146,6 +146,7 @@ For details see _Folders and Files Structure_ below
             * [parsleyjs](http://parsleyjs.org/): form validation
             * [moment](https://momentjs.com/) for dates and time manipulation
             * [tempus dominus](https://tempusdominus.github.io/bootstrap-4/) for date/time pickers
+            * [bootstrap-fileinput](https://plugins.krajee.com/file-input) for asyncronous file upload. NOTE: as for 2019-11-12 version is frozen to 5.0.4 due to a bug in auto upload
         * frontend
             * [jquery.safemail](https://github.com/leftclickcomau/jquery.safemail) for obfuscating email
     * edit the file if needed to include/exclude packages

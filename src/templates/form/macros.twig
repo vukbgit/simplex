@@ -611,6 +611,7 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
         browseOnZoneClick: false,
         overwriteInitial: false,
         maxFileSize: {{ context.uploadMaxFilesizeKB }},
+        uploadAsync: true,
         uploadUrl: '{{ uploadRoute }}',
     {# config tweaks #}
     {% if config.options.maxFileCount and config.options.maxFileCount == 1 and config.options.autoReplace is not defined %}
@@ -634,39 +635,40 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
         {{ option }}: {{ value|varToJs }},
     {% endfor %}
     };
+    {% set jsUploadObject = 'js_upload_%s'|format(inputId) %}
     $("#{{ uploadId }}").fileinput(options)
     //auto upload on file selection
     .on("fileselect", function(event, numFiles, label) {
         //upload only if there are files to upload so that triggered errors can be shown
-        if( $('#{{ uploadId }}').fileinput('getFilesCount')) {
-            $("#{{ uploadId }}").fileinput("upload");
+        if($('#{{ uploadId }}').fileinput('getFilesCount')) {
+            $("#{{ uploadId }}").fileinput('upload');
         }
     })
     //after upload append file to input value
     .on('fileuploaded', function(event, data, previewId, index) {
         //get file name
         var fileName = data.files[0].name;
-        upload.appendFile('{{ inputId }}', {name: fileName});
+        {{ jsUploadObject }}.appendFile('{{ inputId }}', {name: fileName});
     })
     //preview of just uploaded file has been deleted
     .on('filesuccessremove', function(event, id, index) {
         //remove file form input value
-        upload.removeFileFromInput('{{ inputId }}', index);
+        {{ jsUploadObject }}.removeFileFromInput('{{ inputId }}', index);
     })
     .on('filesorted', function(event, params) {
-        upload.saveSorting('{{ inputId }}', params.oldIndex, params.newIndex);
+        {{ jsUploadObject }}.saveSorting('{{ inputId }}', params.oldIndex, params.newIndex);
     })
     .on('filebeforedelete', function(event, key, data) {
-        var fileIndex = upload.getPreviewIndexByKey(key);
+        var fileIndex = {{ jsUploadObject }}.getPreviewIndexByKey(key);
         if(fileIndex !== false) {
-            upload.removeFileFromPreviews(fileIndex);
-            upload.removeFileFromInput('{{ inputId }}', fileIndex);
+            {{ jsUploadObject }}.removeFileFromPreviews(fileIndex);
+            {{ jsUploadObject }}.removeFileFromInput('{{ inputId }}', fileIndex);
         }
         //do not make ajax delete call
         return true;
     })
     ;
-    var upload = {
+    var {{ jsUploadObject }} = {
         /**
         * gets files list from hidden input json
         * @param string inputId: id attribute of the hidden input that stores files rapresentation
@@ -719,7 +721,7 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
         **/
         appendFile: function(inputId, fileObject) {
             //make room if necessary
-            this.makeRoom(inputId);
+            //this.makeRoom(inputId);
             //append file
             var filesList = this.getInputFiles(inputId);
             filesList.push(fileObject.name);
@@ -1581,6 +1583,13 @@ div.mce-fullscreen {
 <script src="{{ 'bootstrap-fileinput/js/fileinput.min.js'|pathToNpmAsset }}" type="text/javascript"></script>
 <script src="/public/share/simplex/form/js/upload-file-theme.js" type="text/javascript"></script>
 <script src="{{ 'bootstrap-fileinput/js/locales/%s.js'|format(attribute(context.language, 'ISO-639-1'))|pathToNpmAsset }}" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        //fix bug
+        $('.file-drop-zone').addClass('clearfix');
+        console.log($('.file-drop-zone'));
+    });
+</script>
 {% endmacro %}
 
 {# captcha 
