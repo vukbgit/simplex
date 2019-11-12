@@ -312,20 +312,24 @@ The following steps show how to set up an ERP subject, that is a subject which i
 
 ## Internazionalization ##
 
-Simplex uses [gettext](https://www.gnu.org/software/gettext/) and is shipped with a set of English and Italian translations for the messages contained into the provided UI
-To extract _gettext translations_:
-* to extract gettext strings from source files _private/share/vukbgit/simplex/bin/translations.php_ shell script can be called with two parameters:
-    * first one is the operation required and can take value _create_ or _update_
-    * second one is the context to extract translations from and can take value _share_ or _local_
-* so, in case you add translations to PHP and/or Twig templates it can be called once in the form
+* __PHP/Twig templates__:
+    * Simplex uses [gettext](https://www.gnu.org/software/gettext/) and is shipped with a set of English and Italian translations for the messages contained into the provided UI
+    * translations can be inserted into:
+        * _PHP_ files using the gettext() function or the _() alias (see [PHP gettext documentation](https://www.php.net/gettext))
+        * _Twig templates_ using the trans block and filter from the (included by default) i18n extension (see [documentation](https://twig-extensions.readthedocs.io/en/latest/i18n.html))
+    * _private/share/vukbgit/simplex/bin/translations.php_ script can be used to extract translations
+    * folder where translations files are stored is specified by the _TRANSLATIONS_DIR_ constant and defaults to _private/local/simplex/locales_
+    * this is the translations workflow:
+        * after installation into _TRANSLATIONS_DIR_ English and Italian translations for Simplex core messages are stored
+        * when local translations are added run script to update local messages, .po and .mo files are saved into _TRANSLATIONS_DIR_ for every language defined into _private/local/simplex/config/languages.json_:
 
-    php private/share/vukbgit/simplex/bin/translations.php create share
-    
-* in case site uses a PHP version different from system one if must be specified te complete path to PHP binary, i.e.
+            php private/share/vukbgit/simplex/bin/translations.php update local
+        * download .po files, translate with [Poedit](https://poedit.net/) or other similar software
+        * upload resulting .po and .mo fiels back to _TRANSLATIONS_DIR_
+    * in case site uses a PHP version different from system one if must be specified te complete path to PHP binary, i.e.
 
-    /opt/php-7.3.5/bin/php private/share/vukbgit/simplex/bin/translations.php create share
-    
-Besides, Simplex encourages a localization ready database architecture, even when site uses justy one lunguage (see [Subject set up](#Subject-set-up) > _database architecture_)
+        /opt/php-7.3.5/bin/php private/share/vukbgit/simplex/bin/translations.php update local
+* __database__: Simplex encourages a localization ready database architecture, even when site uses just one language (see [Subject set up](#Subject-set-up) > _database architecture_)
 
 ## Icon Fonts ##
 
