@@ -1311,7 +1311,7 @@ var simplexValidation = {
                 'blur',
                 function (event) {
                     // Only run if the element is a form field (and not a dropzone for example) and the form needs to be validated
-                    if (typeof event.target.form == 'undefined' || (!event.target.form.classList.contains('needs-validation') || event.target.form.classList.contains('do-not-validate-on-blur'))) return;
+                    if (typeof event.target.form == 'undefined' || event.target.form == null || (!event.target.form.classList.contains('needs-validation') || event.target.form.classList.contains('do-not-validate-on-blur'))) return;
                     // Validate the field
                     var error = simplexValidation.hasError(event.target);
                     if(error) {
