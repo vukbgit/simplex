@@ -175,7 +175,7 @@ For details see _Folders and Files Structure_ below
     * _private/local/simplex/config/sass.config_ contains a map of SASS to CSS files, each couple marked by an id (see file for explanations) 
     * _sass.sh_ is the soft link to a shell script that is used to compile css files, into root folder:
 
-        ./sass.sh id-of-sass-file-to-be-compiled
+            ./sass.sh id-of-sass-file-to-be-compiled
     
     * Simplex need the compilation of at least these files:
         * simplex: the Simplex style, cannot be customized: `./sass.sh sx`
@@ -201,7 +201,7 @@ Simplex include an ERP namespace and uses it to build backends and ERP applicati
     * _htpasswd_: (enabled by default)
         * points to a htpasswd file that must be set manually, cd into desired folder (defaults to _private/local/simplex/Backend/config_):
 
-            htpasswd -c .htpasswd your-username
+                htpasswd -c .htpasswd your-username
             
         * every user defined in this file must be given a role into _private/local/simplex/Backend/config/users-roles.php_
     
