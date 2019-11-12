@@ -270,17 +270,110 @@ This is the Backend folder structure:
 
 The following steps show how to set up an ERP subject, that is a subject which implies a database model and the related CRUD UI, as the major part of a backend's subjects should be; it is also possible to use into a backend other kind of subjects (a dasboard for example), in this case see the frontend explanation below
 
-* set up _database architecture_
-    * tipically a subject is the representation of one _table_ 
-    * Simplex aims to be localization ready, so model data should be divided in two tables:
-        * one main table for language-indipendent data, at least the primary key; it should be named after the model key, usually snake case even if it can be any name as long as it is set into _config/crudl.php_
-        * one for any language-dependent information (if any), named _main-table-name_locales_ (with the mandatory _locales suffix), with the following structure (naming convention is to be sctrictly followed for Simplex to handle correctly data saving):
-            * a primary key (integer autoincrement) named _this-table-name_id_ (with the mandatory _id suffix)
-            * a _language_code_ (char 2) field, which hold the languages codes used as key into _config/languages.json_ (the ISO-639-1 codes)
+* set up subject _database architecture_: besides a main table, in order to deal with internazionalization and file upload, Simplex relies over two accessory table, here is the complete overview of the possible subject architecture:
+    * the main _table_ holds language-indipendent data, at least the primary key; it should be named after the model key, usually snake case even if it can be any name as long as it is set into _config/crudl.php_
+    * _internazionalization_: Simplex aims to be localization ready, so there should be a table for any language-dependent information, named _main-table-name_locales_ (with the mandatory _locales suffix), with the following structure (naming convention is to be sctrictly followed for Simplex to handle correctly data saving):
+        * a primary key (integer autoincrement) named _this-table-name_id_ (with the mandatory _id suffix)
+        * a _language_code_ (char 2) field, which hold the languages codes used as key into _config/languages.json_ (the ISO-639-1 codes)
+        * a _foreign key_ field targeted to the main table primary key with a CASCADE delete setting
+        * any custom field (text or varchar) for localized pieces of information as needed by subject
+    * in case subject needs _files upload_, a table named _main-table-name_uploads_ (with the mandatory _uploads suffix), is __automatically created__ by the Model class first time a record is inserted
+        * this is the table structure:
+            * a primary key (integer autoincrement) named _this-table-name_id_
             * a _foreign key_ field targeted to the main table primary key with a CASCADE delete setting
-            * any custom field (text or varchar) for localized pieces of information as needed by subject
-    * although not strictly necessary there should also be a correspondent _view_, in case of a localized subject a localized view is mandatory which must join main table oover the locales one and expose primary keys fields, _language_code_ field (besides localized informations of course)
-    * Simplex is shipped with a convenient _private/local/simplex/docs/views.sql_ where views definition can be written; often database manager SQL editor are not handy, storing views definition into a plain SQL/text file, editing through an editor with synthax highlighting and copy and paste into the db application can be a solution and provides also a backup
+            * a field named _upload_key_ (varchar 64 should be enough) to store the record type of upload (the "field" used as key into the "uploads" array defined into _/config/model.php_)
+            * a field named _file_name_ (varchar 256) to store the record type of upload (the "field" used as key into the "uploads" array defined into _/config/model.php_)
+        * uploads information need to be manually added to the view (see below)
+    * the _view_:
+        * a basic view should be created and set up into _config/model.php_
+        * in case of _uploads_ the view should be joined over the uplods table:
+            * for each upload field defined into _config/model.php_ add a a join to the uploads table on the primary key and the _upload_key_ field (with the value of the field key)
+            * extract _file_name_ field values with the name of the upload key
+            * group by primary key in case of upload fields that allow multiple uploads in the UI
+        * in case of a localized subject a localized view named _main-table-name_locales_ is mandatory: it must join main table over the locales one and expose primary keys fields, _language_code_ field (besides localized informations of course)
+        * example:
+            * table "foo" defined as 
+
+                    CREATE TABLE `foo` (
+                        `foo_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+                        `non_localized_string` varchar(48) NOT NULL,
+                        `date` date,
+                        PRIMARY KEY (`foo_id`)
+                    )
+            
+            * uploads definiton into subject _config/model.php_:
+
+                    ...
+                    'uploads' => [
+                        'pdf_file' => [
+                            'raw' => (object) []
+                        ],
+                        'image' => [
+                            'thumb' => (object) [
+                                'handler' => ['\Simplex\Local\notizie\notizie\Controller','resizeImage'],
+                                'parameters' => [100,100]
+                            ],
+                            'full' => (object) [
+                                'handler' => ['\Simplex\Local\notizie\notizie\Controller','resizeImage'],
+                                'parameters' => [800,600]
+                            ]
+                        ]
+                    ],
+                    ...
+                    
+            * the uploads automatic table:
+
+            
+                    CREATE TABLE `foo_uploads` (
+                    `foo_uploads_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+                    `foo_id` int(10) unsigned NOT NULL,
+                    `upload_key` varchar(64) NOT NULL,
+                    `file_name` varchar(256) NOT NULL,
+                    PRIMARY KEY (`foo_uploads_id`),
+                    KEY `foo_id` (`foo_id`),
+                    CONSTRAINT `foo_uploads_ibfk_1` FOREIGN KEY (`foo_id`) REFERENCES `foo` (`foo_id`) ON DELETE CASCADE
+                    ) 
+                
+            * basic view:
+
+                    CREATE VIEW v_foo AS SELECT
+                    f.*
+                    ,fupf.file_name AS pdf_file
+                    ,fui.file_name AS image
+                    FROM foo AS f
+                    LEFT JOIN foo_uploads AS fupf
+                    ON f.foo_id = fupf.foo_id
+                    AND fupf.upload_key = 'pdf_file'
+                    LEFT JOIN foo_uploads AS fui
+                    ON f.foo_id = fui.foo_id
+                    AND fui.upload_key = 'image'
+                    GROUP BY f.foo_id
+                    
+            * the internationalization table:
+
+                    CREATE TABLE `foo_locales` (
+                    `foo_locales_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+                    `language_code` char(2) NOT NULL,
+                    `foo_id` int(10) unsigned NOT NULL,
+                    `title` varchar(256) NOT NULL,
+                    `content` text NOT NULL,
+                    PRIMARY KEY (`foo_locales_id`),
+                    KEY `foo_id` (`foo_id`),
+                    CONSTRAINT `foo_locales_ibfk_1` FOREIGN KEY (`foo_id`) REFERENCES `foo` (`foo_id`) ON DELETE CASCADE
+                    )
+                    
+            * the internationalization view:
+
+                    CRETE VIEW v_foo_locales AS SELECT
+                    f.*
+                    ,fl.language_code
+                    ,fl.title
+                    ,fl.content
+                    FROM v_foo AS f
+                    LEFT JOIN foo_locales AS fl
+                    ON f.foo_id = fl.foo_id
+
+    * Simplex is shipped with a convenient _private/local/simplex/docs/views.sql_ text file where views definition can be written; often database manager SQL editor are not handy, storing views definition into a plain SQL/text file, editing through an editor with synthax highlighting and copy and paste into the db application can be a solution and provides also a backup
 * each subject files are contained into a folder named after the subject
 * ponder the position of the subject into application architecture:
     * it can be used application wide, so its folder should reside into _private/local/simplex_

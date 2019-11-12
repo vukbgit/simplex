@@ -558,7 +558,7 @@ abstract class ModelAbstract
           `$uploadTablePrimaryKeyField` int(10) unsigned NOT NULL AUTO_INCREMENT,
           `{$this->config->primaryKey}` int(10) unsigned NOT NULL,
           `upload_key` varchar(64) NOT NULL,
-          `file_name` varchar(64) NOT NULL,
+          `file_name` varchar(256) NOT NULL,
           PRIMARY KEY (`$uploadTablePrimaryKeyField`),
           KEY `{$this->config->primaryKey}` (`{$this->config->primaryKey}`),
           CONSTRAINT `$modelTableFK` FOREIGN KEY (`{$this->config->primaryKey}`) REFERENCES `{$this->table()}` (`{$this->config->primaryKey}`) ON DELETE CASCADE
