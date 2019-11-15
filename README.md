@@ -288,7 +288,7 @@ The following steps show how to set up an ERP subject, that is a subject which i
         * a basic view should be created and set up into _config/model.php_
         * in case of _uploads_ the view should be joined over the uplods table:
             * for each upload field defined into _config/model.php_ add a a join to the uploads table on the primary key and the _upload_key_ field (with the value of the field key)
-            * extract _file_name_ field values with the name of the upload key
+            * extract _file_name_ field values with the name of the upload key; if field allows mnultiple uploads, group values and join tem with a pipe: `,GROUP_CONCAT(DISTINCT join-table.file_name SEPARATOR '|') AS upload-key`
             * group by primary key in case of upload fields that allow multiple uploads in the UI
         * in case of a localized subject a localized view named _main-table-name_locales_ is mandatory: it must join main table over the locales one and expose primary keys fields, _language_code_ field (besides localized informations of course)
         * example:
@@ -308,13 +308,23 @@ The following steps show how to set up an ERP subject, that is a subject which i
                         'pdf_file' => [
                             'raw' => (object) []
                         ],
-                        'image' => [
+                        'single_image' => [
                             'thumb' => (object) [
-                                'handler' => ['\Simplex\Local\notizie\notizie\Controller','resizeImage'],
+                                'handler' => ['\Simplex\Local\SUBJECT\NAMESPACE\Controller','resizeImage'],
                                 'parameters' => [100,100]
                             ],
                             'full' => (object) [
-                                'handler' => ['\Simplex\Local\notizie\notizie\Controller','resizeImage'],
+                                'handler' => ['\Simplex\Local\SUBJECT\NAMESPACE\Controller','resizeImage'],
+                                'parameters' => [800,600]
+                            ]
+                        ],
+                        'multiple_image' => [
+                            'thumb' => (object) [
+                                'handler' => ['\Simplex\Local\SUBJECT\NAMESPACE\Controller','resizeImage'],
+                                'parameters' => [100,100]
+                            ],
+                            'full' => (object) [
+                                'handler' => ['\Simplex\Local\SUBJECT\NAMESPACE\Controller','resizeImage'],
                                 'parameters' => [800,600]
                             ]
                         ]
@@ -338,15 +348,15 @@ The following steps show how to set up an ERP subject, that is a subject which i
 
                     CREATE VIEW v_foo AS SELECT
                     f.*
-                    ,fupf.file_name AS pdf_file
-                    ,fui.file_name AS image
+                    ,fusi.file_name AS single_image
+                    ,GROUP_CONCAT(DISTINCT fumi.file_name SEPARATOR '|') AS multiple_image
                     FROM foo AS f
-                    LEFT JOIN foo_uploads AS fupf
-                    ON f.foo_id = fupf.foo_id
-                    AND fupf.upload_key = 'pdf_file'
-                    LEFT JOIN foo_uploads AS fui
-                    ON f.foo_id = fui.foo_id
-                    AND fui.upload_key = 'image'
+                    LEFT JOIN foo_uploads AS fusi
+                    ON f.foo_id = fusi.foo_id
+                    AND fusi.upload_key = 'single_image'
+                    LEFT JOIN foo_uploads AS fumi
+                    ON f.foo_id = fumi.foo_id
+                    AND fumi.upload_key = 'multiple_image'
                     GROUP BY f.foo_id
                     
             * the internationalization table:
