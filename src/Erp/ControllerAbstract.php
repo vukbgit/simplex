@@ -860,7 +860,7 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
     {
         Image::load($path)
            ->width($width)
-           ->height($width)
+           ->height($height)
            ->save();
     }
     
