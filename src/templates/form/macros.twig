@@ -598,7 +598,8 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
     </div>
     
     <script type="text/javascript">
-    var options = {
+    {% set jsOptions = 'js_options_%s'|format(inputId) %}
+    var {{ jsOptions }} = {
         language: '{{ attribute(context.language, 'ISO-639-1') }}',
         theme: 'simplex',
         showUpload: false,
@@ -636,7 +637,8 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
     {% endfor %}
     };
     {% set jsUploadObject = 'js_upload_%s'|format(inputId) %}
-    $("#{{ uploadId }}").fileinput(options)
+    
+    $("#{{ uploadId }}").fileinput({{ jsOptions }})
     //auto upload on file selection
     .on("fileselect", function(event, numFiles, label) {
         //upload only if there are files to upload so that triggered errors can be shown
@@ -721,7 +723,7 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
         **/
         appendFile: function(inputId, fileObject) {
             //make room if necessary
-            //this.makeRoom(inputId);
+            this.makeRoom(inputId);
             //append file
             var filesList = this.getInputFiles(inputId);
             filesList.push(fileObject.name);
@@ -751,7 +753,7 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
             //get current files list
             var filesList = this.getInputFiles(inputId);
             //check maxFileCount
-            var maxFileCount = options.maxFileCount ? options.maxFileCount : 0;
+            var maxFileCount = {{ jsOptions }}.maxFileCount ? {{ jsOptions }}.maxFileCount : 0;
             if(maxFileCount == filesList.length) {
                 //remove first file in the list to make room
                 this.removeFileFromInput(inputId, 0);
@@ -1587,7 +1589,6 @@ div.mce-fullscreen {
     $(document).ready(function(){
         //fix bug
         $('.file-drop-zone').addClass('clearfix');
-        console.log($('.file-drop-zone'));
     });
 </script>
 {% endmacro %}

@@ -8,6 +8,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Simplex\Controller\ControllerWithTemplateAbstract;
 use Spatie\Image\Image;
+use Spatie\Image\Manipulations;
 use function Simplex\getInstanceNamespace;
 use function Simplex\getInstancePath;
 
@@ -850,7 +851,10 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
     }
     
     /**
-     * Resizes an image
+     * Resizes an image proprtionally to fit into a box of given width and height
+     * @param string $path
+     * @param int $width
+     * @param int $height
      */
     protected static function resizeImage($path, $width, $height)
     {
@@ -858,5 +862,22 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
            ->width($width)
            ->height($width)
            ->save();
-    }    
+    }
+    
+    /**
+     * Resizes (proprtionally to fit into a box of given width and ratio) and crops an image
+     * @param string $path
+     * @param int $width
+     * @param float $imageRatio: $width / $height
+     * @param string $cropMethodConstantName: name of constant of the Spatie\Image\Manipulations class: CROP_TOP_LEFT, CROP_TOP, CROP_TOP_RIGHT, CROP_LEFT, CROP_CENTER, CROP_RIGHT, CROP_BOTTOM_LEFT, CROP_BOTTOM, CROP_BOTTOM_RIGHT (see https://docs.spatie.be/image/v1/image-manipulations/resizing-images/#crop)
+     */
+    protected static function resizeAndCropImage($path, $width, $imageRatio, $cropMethodConstantName)
+    {
+        $height = $width / $imageRatio;
+        Image::load($path)
+           ->width($width)
+           ->height($height)
+           ->crop(constant('Spatie\Image\Manipulations::' . $cropMethodConstantName), $width, $height)
+           ->save();
+    }
 };

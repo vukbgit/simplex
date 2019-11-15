@@ -7,6 +7,7 @@ return (object) [
         'UPLOAD-KEY' => [
             'OUTPUT-WITHOUT-HANDLER-KEY' => (object) [],
             'OUTPUT-WITH-HANDLER-KEY' => (object) [
+                //method must be static
                 'handler' => ['\Simplex\Local\PATH\TO\CONTROLLER\CLASS','STATIC-METHOD-NAME'],
                 'parameters' => [PARAMETER1,...]
             ]
