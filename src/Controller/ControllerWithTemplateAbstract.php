@@ -226,6 +226,35 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
                 $templateName
             );
         });
+        //processes a template for a file upload preview
+        $this->addTemplateFunction(
+            'getPublicOutputFilePath',
+            function($uploadKey, $outputKey, $fileName){
+                return $this->model->getPublicOutputFilePath($uploadKey, $outputKey, $fileName);
+            }
+        );
+        //processes a template for a file upload preview
+        $this->addTemplateFunction(
+            'formatUploadPreviewTemplate',
+            function($uploadKey, $fileName, $previewTemplate){
+                //file name
+                $previewTemplate = preg_replace(
+                    '/@name/',
+                    sprintf('%s', $fileName),
+                    $previewTemplate
+                );
+                //get field output keys
+                foreach ($this->model->getUploadKeyOutputs($uploadKey) as $outputKey) {
+                    $previewTemplate = preg_replace(
+                        sprintf('/@%s/', $outputKey),
+                        sprintf('%s', $this->model->getPublicOutputFilePath($uploadKey, $outputKey, $fileName)),
+                        $previewTemplate
+                    );
+                }
+                return $previewTemplate;
+            },
+            ['is_safe' => ['html']]
+        );
         /*********
         * LOCALE *
         *********/
@@ -266,28 +295,6 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         $this->addTemplateFilter('formatIdforJs', function(string $id): string {
             return str_replace(['[',']'], '_', $id);
         });
-        //processes a template for a file upload preview
-        $this->addTemplateFunction(
-            'formatUploadPreviewTemplate',
-            function($uploadKey, $fileName, $previewTemplate){
-                //file name
-                $previewTemplate = preg_replace(
-                    '/@name/',
-                    sprintf('%s', $fileName),
-                    $previewTemplate
-                );
-                //get field output keys
-                foreach ($this->model->getUploadKeyOutputs($uploadKey) as $outputKey) {
-                    $previewTemplate = preg_replace(
-                        sprintf('/@%s/', $outputKey),
-                        sprintf('%s', $this->model->getPublicOutputFilePath($uploadKey, $outputKey, $fileName)),
-                        $previewTemplate
-                    );
-                }
-                return $previewTemplate;
-            },
-            ['is_safe' => ['html']]
-        );
         /*********
         * LABELS *
         *********/
