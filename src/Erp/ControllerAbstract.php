@@ -94,6 +94,7 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
         $this->getSubjectCookie();
         //load navigation
         if($this->isAuthenticated()) {
+            //area navigation which is *always* needed for ERP 
             $this->loadAreaNavigation();
             $this->loadSubjectNavigation();
         }
@@ -269,23 +270,6 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
         $this->setSubjectAlert('danger', $exception->getMessage());
     }
 
-    /**
-     * Loads area navigation which is *always* needed for ERP 
-     */
-    protected function loadAreaNavigation()
-    {
-        //check path
-        if(!defined('AREA_NAVIGATION_PATH') || !is_file(AREA_NAVIGATION_PATH)) {
-            throw new \Exception('constant AREA_NAVIGATION_PATH *MUST* be defined for current area and must be a valid path');
-        }
-        //load navigation
-        $this->loadNavigation(AREA_NAVIGATION_PATH);
-        //check that there is one navigation named 'area'
-        if(!isset($this->navigations['area'])) {
-            throw new \Exception('There MUST be a loaded navigation named \'area\'');
-        }
-    }
-    
     /*************
     * NAVIGATION *
     *************/
