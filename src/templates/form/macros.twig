@@ -133,14 +133,16 @@ NOTE: to perform validation Simplex does not use browser built in (see https://w
 
 {# displays an input URL field
 @param hash config: hash for field properties (see setFieldAttributes macro explanation)
-NOTE: to perform validation Simplex does not use browser built in but a pattern that matches real world URLs (from http://regexlib.com/REDetails.aspx?regexp_id=90); and to avoid conflicts does not use both URL type AND pattern validation
+NOTE: to perform validation Simplex does not use browser built in but a pattern that matches real world URLs; and to avoid conflicts does not use both URL type AND pattern validation
 #}
 {% macro displayInputUrl(config) %}
     {% import _self as selfMacros %}
     {# set default validation pattern #}
     {% if config.validation.pattern is not defined or config.validation.pattern == '' %}
         {% set validation = config.validation ?? {} %}
-        {% set validation = updateProperty(validation, 'pattern', "^https?\://[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(/\S*)?$") %}
+        {#               protocol/2nd up domain / dot/1st domain   url levels         file with extension                         get data                                            #}
+        {% set regex = "^https?://[a-zA-Z0-9-\\.]+\\.[a-zA-Z]{2,}(/([0-9a-zA-Z-_]+/?)*(/[0-9a-zA-Z_\\-\\.]+(\\.[0-9a-zA-Z]{2,4}))?(\\?([0-9a-zA-Z-_\\[\\]]+=[0-9-a-zA-Z]+&?)+)?)?$" %}
+        {% set validation = updateProperty(validation, 'pattern', regex) %}
         {% set config = updateProperty(config, 'validation', validation) %}
     {% endif %}
     {# add input class #}
