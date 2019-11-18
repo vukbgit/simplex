@@ -575,10 +575,11 @@ EOT;
     public function saveUploadsFiles($primaryKeyValue, object $uploadsValues)
     {
         //create uploads table if necessary
-        $uploadTableName = sprintf('%s_uploads', $this->table());
+        //DISMISSED: when writing subject view uplaods table must already be defined
+        /*$uploadTableName = sprintf('%s_uploads', $this->table());
         if (!$this->query->tableExists($uploadTableName)) {
             $this->createUploadsTable();
-        }
+        }*/
         //loop uploads
         foreach ($this->getUploadKeys() as $uploadKey) {
             if($uploadsValues->$uploadKey) {
