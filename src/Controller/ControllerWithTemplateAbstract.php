@@ -484,11 +484,12 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
     protected function loadAreaNavigation()
     {
         //check path
-        if(!defined('AREA_NAVIGATION_PATH') || !is_file(AREA_NAVIGATION_PATH)) {
-            throw new \Exception('constant AREA_NAVIGATION_PATH *MUST* be defined for current area and must be a valid path');
+        $pathConstant = sprintf('%s_NAVIGATION_PATH', strtoupper($this->area));
+        if(!defined($pathConstant) || !is_file(constant($pathConstant))) {
+            throw new \Exception(sprintf('constant %s *MUST* be defined for current area and must be a valid path', $pathConstant));
         }
         //load navigation
-        $this->loadNavigation(AREA_NAVIGATION_PATH);
+        $this->loadNavigation(constant($pathConstant));
         //check that there is one navigation named 'area'
         if(!isset($this->navigations['area'])) {
             throw new \Exception('There MUST be a loaded navigation named \'area\'');
@@ -513,7 +514,7 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
     {
         foreach ($loadedNavigationLevel as $voiceKey => $voiceProperties) {
             //check voice permission (only if controller has been invoked by router and so request is defined)
-            if(isset($this->request) && isset($voiceProperties->permissions) && !$this->checkAtLeastOnePermission($voiceProperties->permissions)) {
+            if(isset($this->request) && $this->needsAuthentication && isset($voiceProperties->permissions) && !$this->checkAtLeastOnePermission($voiceProperties->permissions)) {
                 unset($loadedNavigationLevel[$voiceKey]);
                 continue;
             }

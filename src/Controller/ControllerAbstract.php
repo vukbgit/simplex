@@ -70,6 +70,12 @@ abstract class ControllerAbstract
     protected $action;
 
     /**
+    * @var bool
+    * whether subject needs authentication
+    */
+    protected $needsAuthentication = false;
+
+    /**
     * Constructor
     * @param ContainerInterface $DIContainer
     * @param ResponseInterface $response
@@ -93,7 +99,7 @@ abstract class ControllerAbstract
         //before action execution
         $this->doBeforeActionExecution($request);
         //verify authentication
-        if($this->verifyAuthentication($request)) {
+        if(!$this->needsAuthentication || $this->verifyAuthentication($request)) {
             //handle action
             $this->handleActionExecution();
         }
@@ -127,8 +133,8 @@ abstract class ControllerAbstract
     {
         //store request and its parameters
         $this->request = $request;
-        //xx($this->request->getUri()->getPath());
         $this->routeParameters = $request->getAttributes()['parameters'];
+        $this->needsAuthentication = isset($this->routeParameters->authentication);
     }
 
     /**
@@ -186,11 +192,11 @@ abstract class ControllerAbstract
     */
     protected function isAuthenticated(): bool
     {
-        $requestAttributes = $this->request->getAttributes();
         //no autentication needed
-        if(!isset($requestAttributes['parameters']->authentication)) {
+        if(!$this->needsAuthentication) {
             return false;
         } else {
+            $requestAttributes = $this->request->getAttributes();
             return $requestAttributes['authenticationResult']->{$this->area}->authenticated;
         }
     }
@@ -202,12 +208,7 @@ abstract class ControllerAbstract
     protected function verifyAuthentication(): bool
     {
         $requestAttributes = $this->request->getAttributes();
-        //no autentication needed
-        if(!isset($requestAttributes['parameters']->authentication)) {
-            return true;
-        } else {
-            return $requestAttributes['authenticationResult']->{$this->area}->authenticated;
-        }
+        return $requestAttributes['authenticationResult']->{$this->area}->authenticated;
     }
     
     /**
@@ -216,7 +217,7 @@ abstract class ControllerAbstract
     */
     protected function getAuthenticatedUserData()
     {
-        if($this->verifyAuthentication()) {
+        if($this->needsAuthentication && $this->verifyAuthentication()) {
             return $this->request->getAttributes()['userData'];
         } else {
             return null;
