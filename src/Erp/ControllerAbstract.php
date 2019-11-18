@@ -3,9 +3,14 @@ declare(strict_types=1);
 
 namespace Simplex\Erp;
 
+//contructor injections
+use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseInterface;
+use Twig\Environment;
+use Simplex\VanillaCookieExtended;
+
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Psr\Http\Message\ResponseInterface;
 use Simplex\Controller\ControllerWithTemplateAbstract;
 use Spatie\Image\Image;
 use Spatie\Image\Manipulations;
@@ -56,6 +61,20 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
     private $currentSubjectRoot;
     
     /**
+    * Constructor
+    * @param ContainerInterface $DIContainer
+    * @param ResponseInterface $response
+    * @param Environment $twigEnvironment
+    * @param VanillaCookieExtended $cookie
+    */
+    public function __construct(ContainerInterface $DIContainer, ResponseInterface $response, Environment $templateEngine, VanillaCookieExtended $cookie)
+    {
+        parent::__construct($DIContainer, $response, $templateEngine, $cookie);
+        //load ERP config
+        $this->loadCRUDLConfig();
+    }
+    
+    /**
     * Performs some operations before action execution
     * @param ServerRequestInterface $request
     */
@@ -71,8 +90,6 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
         $this->storeModel();
         //store ancestors
         $this->storeAncestors();
-        //load ERP config
-        $this->loadCRUDLConfig();
         //get cookie stored user options
         $this->getSubjectCookie();
         //load navigation
@@ -138,11 +155,24 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
             if(substr($parameter, 0, 8) == 'ancestor') {
                 //get the route fragment to this ancestor
                 preg_match(sprintf('~^[0-9a-zA-Z-_/]*/%s/~', $subjectKey), $this->currentSubjectRoot, $matches);
+                //controller
+                $controller = $this->DIContainer->get(sprintf('%s-controller', $subjectKey));
+                //model
+                $model = $this->DIContainer->get(sprintf('%s-model', $subjectKey));
+                //record
+                $primaryKey = $model->getConfig()->primaryKey;
+                $where = [[$primaryKey, $this->routeParameters->$primaryKey]];
+                $CRUDLConfig = $controller->getCRUDLConfig();
+                if(isset($CRUDLConfig->localized) && $CRUDLConfig->localized) {
+                    $where[] = ['language_code', $this->language->{'ISO-639-1'}];
+                }
+                $record = $model->first($where);
                 //suppose the main action to ancestor is list as it should
                 $routeBack = sprintf('%slist', $matches[0]);
                 $this->ancestors[$subjectKey] = (object) [
-                    'controller' => $this->DIContainer->get(sprintf('%s-controller', $subjectKey)),
-                    'model' => $this->DIContainer->get(sprintf('%s-model', $subjectKey)),
+                    'controller' => $controller,
+                    'model' => $model,
+                    'record' => $record,
                     'routeBack' => $routeBack
                 ];
             }
@@ -162,6 +192,14 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
         }
         //store config
         $this->CRUDLConfig = require $configPath;
+    }
+    
+    /**
+     * Gests CRUDL config
+     */
+    protected function getCRUDLConfig()
+    {
+        return $this->CRUDLConfig;
     }
     
     /**********
@@ -286,7 +324,7 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
     /**
     * Build common template helpers
     */
-    private function buildCommonTemplateHelpers()
+    protected function buildCommonTemplateHelpers()
     {
         //builds route to an action
         $this->addTemplateFunction(
@@ -316,6 +354,23 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
                 }
                 $route = preg_replace($placeholders, $replacements, $routePattern);
                 return $route;
+            }
+        );
+        //builds an ancestor label
+        $this->addTemplateFunction(
+            'buildAncestorRecordLabel',
+            function(string $subjectKey): string{
+                $ancestor = $this->ancestors[$subjectKey];
+                $CRUDLConfig = $ancestor->controller->getCRUDLConfig();
+                $label = '';
+                if(isset($CRUDLConfig->labelTokens)) {
+                    $labelTokens = [];
+                    foreach ((array) $CRUDLConfig->labelTokens as $token) {
+                        $labelTokens[] = isset($ancestor->record->$token) ? (is_array($ancestor->record->$token) ? $ancestor->record->$token[$this->language->{'ISO-639-1'}] : $ancestor->record->$token) : $token;
+                    }
+                    $label = implode('', $labelTokens);
+                }
+                return $label;
             }
         );
         //resets subject alerts

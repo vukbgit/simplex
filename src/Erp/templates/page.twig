@@ -56,6 +56,9 @@
                     {{- getLabel(ancestorKey, 'subject') }}
                     </a>
                 </li>
+                <li class="breadcrumb-item">
+                    {{- buildAncestorRecordLabel(ancestorKey) }}
+                </li>
             {% endfor %}
                 <li class="breadcrumb-item">
                     <a href="{{ buildRouteToActionFromRoot('list') }}">

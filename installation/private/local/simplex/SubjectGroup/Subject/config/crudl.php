@@ -23,5 +23,10 @@ return (object) [
             //input filter see https://www.php.net/manual/en/filter.filters.php
             'inputFilter' => ['filter' => FILTER_SANITIZE_STRING, 'flags' => FILTER_FLAG_NO_ENCODE_QUOTES],
         ]
-    ]
+    ],
+    /*//to build a label when subject is ancestor, fields names or raw strings
+    'labelTokens' => [
+        'FIELD-NAME',
+        'STRING-TOKEN'
+    ]*/
 ];
