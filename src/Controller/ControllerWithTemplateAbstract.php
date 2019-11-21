@@ -258,7 +258,7 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         /*********
         * LOCALE *
         *********/
-        /* get currently selected language locale
+        /* gets currently selected language locale
         * @param string $key: a specific property key of the language object to be returned
         */
         $this->addTemplateFunction('getLanguage', function(string $key = null){
@@ -267,6 +267,12 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
             } else {
                 return $this->language;
             }
+        });
+        /* gets a racord field value according to current language
+        * @param string $key: a specific property key of the language object to be returned
+        */
+        $this->addTemplateFunction('getLocaleRecordValue', function(array $field){
+            return $field[$this->language->{'ISO-639-1'}];
         });
         /*******
         * FORM *

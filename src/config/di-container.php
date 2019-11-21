@@ -31,6 +31,8 @@ use Simplex\SpreadsheetReaderWriter;
 use Simplex\PHPMailerExtended;
 //password generator
 use Hackzilla\PasswordGenerator\Generator\ComputerPasswordGenerator;
+//slugifier
+use Cocur\Slugify\Slugify;
 //to get LOCAL CLASSES
 use function Simplex\mergeArrayFromFiles;
 //definitions array
@@ -104,6 +106,8 @@ return array_merge(
         'mailer' => create(PHPMailerExtended::class),
         //password generator
         'passwordGenerator' => create(ComputerPasswordGenerator::class),
+        //slugifier
+        'slugifier' => create(Slugify::class),
         /**********************************
         * STOP ADDITIONAL FUNCTIONALITIES *
         **********************************/
