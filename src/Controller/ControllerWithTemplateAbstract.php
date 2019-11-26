@@ -229,8 +229,9 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         //processes a template for a file upload preview
         $this->addTemplateFunction(
             'getPublicOutputFilePath',
-            function($uploadKey, $outputKey, $fileName){
-                return $this->model->getPublicOutputFilePath($uploadKey, $outputKey, $fileName);
+            function($uploadKey, $outputKey, $fileName, $modelName = null){
+                $model = $modelName ? $this->$modelName : $this->model;
+                return $model->getPublicOutputFilePath($uploadKey, $outputKey, $fileName);
             }
         );
         //processes a template for a file upload preview
