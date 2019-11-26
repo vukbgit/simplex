@@ -6,6 +6,10 @@
         "dateFormat": {
             "PHP": "d-m-Y",
             "calendar": "DD-MM-YYYY"
+        },
+        "dateTimeFormat": {
+            "PHP": "d-m-Y H:i",
+            "calendar": "DD-MM-YYYY HH:mm"
         }
     },
     "en": {
@@ -15,6 +19,10 @@
         "dateFormat": {
             "PHP": "Y-m-d",
             "calendar": "YYYY-MM-DD"
+        },
+        "dateTimeFormat": {
+            "PHP": "Y-m-d H:i",
+            "calendar": "YYYY-MM-DD HH:mm"
         }
     }
 }
