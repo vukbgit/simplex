@@ -216,6 +216,17 @@ abstract class ModelAbstract
         return $date->format('Y-m-d');
     }
     
+    /**
+    * turns a datetime from the locale format to YYYY-MM-DD
+    * @param string $fromFormat: locale format
+    * @param string $datetime
+    */
+    public function formatDateTime(string $fromFormat, string $datetime): string
+    {
+        $date = \DateTime::createFromFormat($fromFormat, $datetime);
+        return $date->format('Y-m-d H:i');
+    }
+    
     /*********
     * SELECT *
     *********/

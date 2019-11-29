@@ -184,6 +184,10 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         $this->addTemplateFunction('convertByteUnit', function(float $value, string $fromUnit, string $toUnit): string{
             return \ByteUnits\parse(sprintf('%s%s', $value, $fromUnit))->format($toUnit, ' ');
         });
+        //ucwords wrapper
+        $this->addTemplateFilter('ucwords', function(string $string): string{
+            return ucwords($string);
+        });
         /********
         * DATES *
         ********/
@@ -272,7 +276,7 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         /* gets a racord field value according to current language
         * @param string $key: a specific property key of the language object to be returned
         */
-        $this->addTemplateFunction('getLocaleRecordValue', function(array $field){
+        $this->addTemplateFunction('getLocaleRecordValue', function(array $field = null){
             return $field[$this->language->{'ISO-639-1'}];
         });
         /*******

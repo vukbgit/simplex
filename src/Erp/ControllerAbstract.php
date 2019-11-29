@@ -118,7 +118,7 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
     protected function storeCurrentSubjectRoot()
     {
         $currentRoute = $this->request->getUri()->getPath();
-        $pattern = sprintf('~^[0-9a-zA-Z-_/]*/%s/~', $this->subject);
+        $pattern = sprintf('~^[0-9a-zA-Z-_/]*/%s/?~', $this->subject);
         preg_match($pattern , $currentRoute, $matches);
         //remove ending slash
         $this->currentSubjectRoot = substr($matches[0], 0, -1);
@@ -890,7 +890,7 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
     }
     
     /**
-     * Resizes an image proprtionally to fit into a box of given width and height
+     * Resizes an image proprtionally to fit into a box of given width and height, stretching if necessary
      * @param string $path
      * @param int $width
      * @param int $height
@@ -900,6 +900,20 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
         Image::load($path)
            ->width($width)
            ->height($height)
+           ->save();
+    }
+    
+    /**
+     * Resizes an image proprtionally to fit into a box of given width and height without stretching far original sizes
+     * @param string $path
+     * @param int $width
+     * @param int $height
+     * @param int $cropMethodConstantName: name of constant of the Spatie\Image\Manipulations class: FIT_CONTAIN, FIT_MAX, FIT_FILL, FIT_STRETCH, FIT_CROP (see https://docs.spatie.be/image/v1/image-manipulations/resizing-images/#fit)
+     */
+    protected static function fitImage($path, $width, $height, $cropMethodConstantName = 'FIT_MAX')
+    {
+        Image::load($path)
+           ->fit(constant('Spatie\Image\Manipulations::' . $cropMethodConstantName), $width, $height)
            ->save();
     }
     
