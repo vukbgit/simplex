@@ -409,7 +409,7 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
     {
         return $this->model->get(
             $this->buildListWhere(),
-            $this->subjectCookie->sorting ?? []
+            $this->subjectCookie->sorting ?? [[$this->model->getConfig()->primaryKey]]
         );
     }
     /**
