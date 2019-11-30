@@ -210,10 +210,14 @@ abstract class ModelAbstract
     * @param string $fromFormat: locale format
     * @param string $date
     */
-    public function formatDate(string $fromFormat, string $date): string
+    public function formatDate(string $fromFormat, $date)
     {
-        $date = \DateTime::createFromFormat($fromFormat, $date);
-        return $date->format('Y-m-d');
+        if($date) {
+            $date = \DateTime::createFromFormat($fromFormat, $date);
+            return $date->format('Y-m-d');
+        } else {
+            return null;
+        }
     }
     
     /**
@@ -221,10 +225,14 @@ abstract class ModelAbstract
     * @param string $fromFormat: locale format
     * @param string $datetime
     */
-    public function formatDateTime(string $fromFormat, string $datetime): string
+    public function formatDateTime(string $fromFormat, $datetime)
     {
-        $date = \DateTime::createFromFormat($fromFormat, $datetime);
-        return $date->format('Y-m-d H:i');
+        if($datetime) {
+            $date = \DateTime::createFromFormat($fromFormat, $datetime);
+            return $date->format('Y-m-d H:i');
+        } else {
+            return null;
+        }
     }
     
     /*********
