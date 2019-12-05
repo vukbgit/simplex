@@ -499,14 +499,16 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
 {# displays a date time picker
 @param hash config: hash for field properties (see setFieldAttributes macro explanation) plus
 - format (string, i.e. 'DD-MM-YYYY'), default to the one returnd by getdateFormat function
+- time (bool): whether the the time part is also present
 - options (hash): specific datetime options (see)
+@param bool time: whether the the time part is also present
 #}
 {% macro displayDateTimePicker(config) %}
     {% import _self as selfMacros %}
     {% set id = config.id ?? config.name %}
     {% set containerId = '%s_container'|format(id) %}
     {% if config.value %}
-        {% set config = updateProperty(config, 'value', config.value|date(attribute(getLanguage('dateFormat'), 'PHP'))) %}
+        {% set config = updateProperty(config, 'value', config.value|date(attribute(getLanguage(config.time ? 'dateTimeFormat' : 'dateFormat'), 'PHP'))) %}
     {% endif %}
     {% set config = updateProperty(config, 'autocomplete', 'off') %}
     {% set classes = config.classes ?? [] %}
@@ -521,9 +523,9 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
         </div>
     </div>
     <script type="text/javascript">
-       $(function () {
+      $(function () {
             $('#{{ containerId }}').datetimepicker({
-                format: '{{ config.format|default(attribute(getLanguage('dateFormat'), 'calendar')) }}',
+                format: '{{ config.format|default(attribute(getLanguage(config.time ? 'dateTimeFormat' : 'dateFormat'), 'calendar')) }}',
                 locale: '{{ getLanguage('ISO-639-1') }}',
                 allowInputToggle: true,
                 icons: {
@@ -550,7 +552,7 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
 #}
 {% macro displayDateTimePickerGroup(config) %}
     {% import _self as selfMacros %}
-    {% set format = config.format|default(attribute(getLanguage('dateFormat'), 'calendar')) %}
+    {% set format = config.format|default(attribute(getLanguage(config.time ? 'dateTimeFormat' : 'dateFormat'), 'calendar')) %}
     {% set config = updateProperty(config, 'format', format) %}
     {% set id = (config.id ?? config.name)|formatIdforJs %}
     {% set help = [config.help] ?? null %}
