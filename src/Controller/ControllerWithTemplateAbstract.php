@@ -201,6 +201,10 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         /********
         * PATHS *
         ********/
+        //gets current request URI
+        $this->addTemplateFunction('getUri', function(): string{
+            return $this->request->getUri()->getPath();
+        });
         //checks hether a file path is valid (is_file wrapper)
         $this->addTemplateFunction('isFile', function(string $path): bool{
             //remove trailing slash
