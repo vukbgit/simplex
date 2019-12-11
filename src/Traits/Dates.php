@@ -10,7 +10,7 @@ trait Dates {
      * useful to format user input for saving to database
      * @param string $dateLocale
      */
-    private function formatDateLocaleToEn($dateLocale)
+    protected function formatDateLocaleToEn($dateLocale)
     {
         return \DateTime::createFromFormat($this->language->dateFormat->PHP, $dateLocale)->format('Y-m-d');
     }

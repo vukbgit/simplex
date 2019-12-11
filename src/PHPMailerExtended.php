@@ -22,6 +22,7 @@ class PHPMailerExtended extends PHPMailer
      **/
     public function setSMTP($config)
     {
+        $this->CharSet = PHPMailer::CHARSET_UTF8;
         $this->IsSMTP();
         $this->Host = $config->host;
         if($config->username && $config->password) {
@@ -53,7 +54,7 @@ class PHPMailerExtended extends PHPMailer
      *                  ->name = file-name
      *                  ->content = path-toFile | content-string
      **/
-    public function sendEmail(string $from, string $to, string $subject, string $body, string $fromName = '', string $toName = '', array $cc = [], array $bcc = [], string $replyTo = '', string $replyToName = '', $attachments = null)
+    public function sendEmail(string $from, string $to, string $subject, string $body, string $fromName = null, string $toName = null, array $cc = [], array $bcc = [], string $replyTo = null, string $replyToName = null, $attachments = null)
     {
         //$this->debugEmail();
         //sender

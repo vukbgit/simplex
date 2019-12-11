@@ -953,7 +953,9 @@ NOTE: javascript validation function creates automatically if needed, this macro
 >
 {{ config.label|raw }}
 {% if config.validation.required and (config.hideMandatories is not defined or config.hideMandatories == false) %}
-*
+<span title="{{ 'This field is mandatory'|trans }}" aria-label="required">
+    {{ config.requiredLabel ?? '*' }}
+</span>
 {% endif %}
 {% if config.countryCode is defined %}
 <span class="{{ 'flag-icon flag-icon-%s'|format(config.countryCode) }}"></span>
@@ -1608,7 +1610,7 @@ div.mce-fullscreen {
 <script type="text/javascript">
 $(document).ready(function(){
     {% if config.reloadRoute is not defined %}
-    alert('captcha field needs reloadRoute configuration');
+    alert('captcha field needs reloadRoute configuration property');
     {% endif %}
     $('#captcha-icon-reload').click(function(){
         $.getJSON('{{ config.reloadRoute }}', function(captchaImage) {

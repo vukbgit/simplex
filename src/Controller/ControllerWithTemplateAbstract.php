@@ -193,10 +193,14 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         ********/
         /* formats a date with locale awareness
         */
-        $this->addTemplateFunction('dateLocale', function(string $date, string $format): string{
+        $this->addTemplateFunction('dateLocale', function(string $date, string $format = null): string{
             $date = \DateTime::createFromFormat('Y-m-d', $date);
-            $timestamp = (int) $date->format('U');
-            return strftime($format, $timestamp);
+            if(!$format) {
+                return $date->format($this->language->dateFormat->PHP);
+            } else {
+                $timestamp = (int) $date->format('U');
+                return strftime($format, $timestamp);
+            }
         });
         /********
         * PATHS *
@@ -281,7 +285,7 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         * @param string $key: a specific property key of the language object to be returned
         */
         $this->addTemplateFunction('getLocaleRecordValue', function(array $field = null){
-            return $field[$this->language->{'ISO-639-1'}];
+            return $field[$this->language->{'ISO-639-1'}] ?? null;
         });
         /*******
         * FORM *
