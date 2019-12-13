@@ -1,0 +1,6 @@
+
+.icon-social-facebook:before { content: '\01ca'; } /* 'Ǌ' */
+.icon-social-googleplus:before { content: '\01cb'; } /* 'ǋ' */
+.icon-social-linkedin:before { content: '\01cc'; } /* 'ǌ' */
+.icon-social-twitter:before { content: '\01cd'; } /* 'Ǎ' */
+.icon-social-whatsapp:before { content: '\01ce'; } /* 'ǎ' */

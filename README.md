@@ -439,10 +439,11 @@ The following steps show how to set up an ERP subject, that is a subject which i
 ## Icon Fonts ##
 
 Simplex uses [Fontello](http://fontello.com/) for icons and it breaks icons into logical groups, each with its Fontello folder, so far:
-* _public/share/simplex/form/Fontello_ for form related icons (unicode from 0100 to 017F)
-* _public/share/simplex/Erp/Fontello_ for ERP (Backend) related icons  (unicode from 0180 to 01FF)
+* _public/share/simplex/form/Fontello_ for form related icons (100 reserved unicode values, from 0100 to 0164)
+* _public/share/simplex/Erp/Fontello_ for ERP (Backend) related icons (100 reserved unicode values, from 0165 to 01C9)
+* _public/share/simplex/social/Fontello_ for Esocial media related icons (20 reserved unicode values, from 01CA to 01DE)
 
-Unicode codes are assigned so that, if icons are used into css (setting CSS properties _content_ to unicode code and _font-family_ to "fontello") icons do not overlap, if other application specific icons are added they should take unicode codes from 0200 (included) onward
+Unicode codes are assigned so that, if icons are used into css (setting CSS properties _content_ to unicode code and _font-family_ to "fontello") icons do not overlap, if other application specific icons are added they should take unicode codes from 02BC (included) onward
 
 ## Development to Production ##
 

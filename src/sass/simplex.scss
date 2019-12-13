@@ -4,9 +4,9 @@
     top:0;
     z-index:1000000;
 }
-//////////
-// FORM //
-//////////
+/*******
+* FORM *
+*******/
 .form-with-validation {
     .form-group {
         //for tooltip messages to work
@@ -19,4 +19,19 @@
 //seems to get lost somewhere
 .custom-select {
     -webkit-appearance: none;
+}
+/*********
+* SOCIAL *
+*********/
+iframe[id^="twitter-widget-"] {
+    vertical-align: bottom; //to align with FB button
+}
+.whatsapp-share-button {
+    display: inline-block;
+    border-radius: 3px;
+    background-color: darken(#00E676, 10%);
+    padding: 0.05rem 0.5rem;
+    color: #fff;
+    font-size: 12px;
+    font-weight:bold;
 }

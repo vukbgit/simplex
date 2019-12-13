@@ -122,6 +122,20 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
     }
 
     /**
+    * Turns a local path from root into an URL prepending current scheme and domain
+    * @param string $path
+    */
+    protected function turnPathToUrl(string $path): string
+    {
+        return sprintf(
+            '%s://%s%s',
+            $_SERVER['REQUEST_SCHEME'],
+            $_SERVER['HTTP_HOST'],
+            $path
+        );
+    }
+
+    /**
     * Build common template helpers
     */
     private function buildCommonTemplateHelpers()
@@ -132,8 +146,8 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         //dumps var in development environment
         $this->addTemplateFunction(
             'dump',
-            function($var){
-                x($var);
+            function($var, $expand = false){
+                x($var, $expand);
             },
             ['is_safe' => ['html']]
         );
@@ -209,6 +223,10 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         $this->addTemplateFunction('getUri', function(): string{
             return $this->request->getUri()->getPath();
         });
+        //turns a path from root to an URL prepending current scheme and domain
+        $this->addTemplateFunction('turnPathToUrl', function(string $path): string{
+            return $this->turnPathToUrl($path);
+        });
         //checks hether a file path is valid (is_file wrapper)
         $this->addTemplateFunction('isFile', function(string $path): bool{
             //remove trailing slash
@@ -241,7 +259,7 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         //processes a template for a file upload preview
         $this->addTemplateFunction(
             'getPublicOutputFilePath',
-            function($uploadKey, $outputKey, $fileName, $modelName = null){
+            function($uploadKey, $outputKey, $fileName, $modelName = null, $getAsUrl = false){
                 $model = $modelName ? $this->$modelName : $this->model;
                 return $model->getPublicOutputFilePath($uploadKey, $outputKey, $fileName);
             }
@@ -381,6 +399,7 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
     */
     private function setCommonTemplateParameters()
     {
+        $this->setTemplateParameter('server', $_SERVER);
         $this->setTemplateParameter('environment', ENVIRONMENT);
         $this->setTemplateParameter('brand', BRAND);
         $this->setTemplateParameter('area', $this->area);
