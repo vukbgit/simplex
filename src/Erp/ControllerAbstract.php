@@ -451,7 +451,9 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
                 'options' => array('regexp'=>'/asc|ASC|des|DESC/')
             ],
             //filter
-            'filter' => FILTER_SANITIZE_STRING
+            'filter' => FILTER_SANITIZE_STRING,
+            //custom conditions
+            'custom_conditions' => FILTER_UNSAFE_RAW
         ];
         $input = filter_input_array(INPUT_POST, $fieldsDefinitions);
         if($input) {
@@ -464,6 +466,10 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
                 //filter
                 case 'filter':
                     $this->replaceListFilter($input->filter);
+                break;
+                //custom conditions
+                case 'filter':
+                    $this->replaceListCustomConditions($input->custom_conditions);
                 break;
             }
         }
@@ -488,14 +494,25 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
     }
     
     /**
+    * Replaces current where custom conditions, any type of information to be processed by the buildListWhereCustomConditions method
+    * @param string $filter
+    */
+    public function replaceListCustomConditions(mixed $customConditions)
+    {
+        $this->setSubjectCookie('custom_conditions', $customConditions);
+    }
+    
+    /**
     * Builds list query where based on modifiers
+    * @param object $CRUDLConfig to use a different CRUD configuration
     * @return array as accepted by Pixie query builder
     */
-    protected function buildListWhere(): array
+    protected function buildListWhere(object $CRUDLConfig = null): array
     {
+        $CRUDLConfig = $CRUDLConfig ?? $this->CRUDLConfig;
         $where = [];
         //localized table
-        if(isset($this->CRUDLConfig->localized) && $this->CRUDLConfig->localized) {
+        if(isset($CRUDLConfig->localized) && $CRUDLConfig->localized) {
             $where[] = ['language_code', $this->language->{'ISO-639-1'}];
         }
         //filter
@@ -506,7 +523,7 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
                 'grouped' => true
             ];
             //loop config fields
-            foreach ((array) $this->CRUDLConfig->fields as $fieldName => $fieldConfig) {
+            foreach ((array) $CRUDLConfig->fields as $fieldName => $fieldConfig) {
                 if(!isset($fieldConfig->table->filter) || $fieldConfig->table->filter) {
                     //filter fields conditions are joined by the logical OR operator
                     $filterWhere[] = [$fieldName, 'LIKE', sprintf('%%%s%%', $subjectCookie->filter), 'logical' => 'OR'];
@@ -526,7 +543,17 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
             $parentPrimaryKeyValue = $this->routeParameters->{$parentConfig->primaryKey};
             $where[] = [$parentConfig->primaryKey, $parentPrimaryKeyValue];
         }
+        $this->buildListWhereCustomConditions($where);
         return $where;
+    }
+    
+    /**
+    * Processes any custom conditions saved into subject cookie and builds the relative list query where
+    * to be overridden by children classes
+    * @param array $where
+    */
+    protected function buildListWhereCustomConditions(&$where)
+    {
     }
     
     /***************
