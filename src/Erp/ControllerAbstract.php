@@ -198,7 +198,7 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
     /**
      * Gests CRUDL config
      */
-    protected function getCRUDLConfig()
+    public function getCRUDLConfig()
     {
         return $this->CRUDLConfig;
     }
@@ -412,6 +412,7 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
             $this->subjectCookie->sorting ?? [[$this->model->getConfig()->primaryKey]]
         );
     }
+    
     /**
      * Lists records
      */
