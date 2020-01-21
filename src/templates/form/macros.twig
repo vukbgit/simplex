@@ -6,13 +6,30 @@
 @param string type: text | email
 @param hash config: hash for field properties (see setFieldAttributes macro explanation)
 #}
-{% macro displayInput(type, config, prepend, append) %}
+{% macro displayInput(type, config) %}
     {% import _self as selfMacros %}
     {% set config = parseFieldConfig(config) %}
+    
+    {% if config.prepend or config.append %}
+        <div class="input-group">
+        {% if config.prepend %}
+            <div class="input-group-prepend">
+                <span class="input-group-text">{{ config.prepend|raw }}</span>
+            </div>
+        {% endif %}
+    {% endif %}
     <input 
     type="{{ type }}"
     {{ selfMacros.setFieldAttributes(config) }}
     >
+    {% if config.prepend or config.append %}
+        {% if config.append %}
+            <div class="input-group-append">
+                <span class="input-group-text">{{ config.append|raw }}</span>
+            </div>
+        {% endif %}
+        </div>
+    {% endif %}
 {% endmacro %}
 
 {# displays a text-like input field given the type, useful when type is condition dependant
@@ -196,24 +213,9 @@ NOTE: to perform validation Simplex does not use browser built in but a pattern 
     {% for inputConfig in inputsConfigs %}
     <div class="form-group" id="{{ '%s-container'|format(inputId) }}">
         {{ selfMacros.displayLabel(inputConfig) }}
-        
-    {% if config.prepend or config.append %}
-        <div class="input-group">
-        {% if config.prepend %}
-            <div class="input-group-prepend">
-                <span class="input-group-text">{{ config.prepend|raw }}</span>
-            </div>
-        {% endif %}
-    {% endif %}
+    
         {{ selfMacros.displayInputByTipe(type, inputConfig) }}
-    {% if config.prepend or config.append %}
-        {% if config.append %}
-            <div class="input-group-append">
-                <span class="input-group-text">{{ config.append|raw }}</span>
-            </div>
-        {% endif %}
-        </div>
-    {% endif %}
+    
         {{ selfMacros.displayHelp(config) }}
     </div>
     {% endfor %}
@@ -538,7 +540,7 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
                     today: 'icon-form-calendar-today',
                     clear: 'icon-form-trash',
                     close: 'icon-form-close'
-                }
+                },
            {% for option,value in config.options %}
                {{ option }}: {{ value|varToJs }},
            {% endfor %}
