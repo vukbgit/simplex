@@ -453,7 +453,10 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
             //filter
             'filter' => FILTER_SANITIZE_STRING,
             //custom conditions
-            'custom_conditions' => FILTER_UNSAFE_RAW
+            'custom_conditions' => [
+                'filter' => FILTER_UNSAFE_RAW,
+                'flags' => FILTER_REQUIRE_ARRAY
+            ]
         ];
         $input = filter_input_array(INPUT_POST, $fieldsDefinitions);
         if($input) {
@@ -468,7 +471,7 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
                     $this->replaceListFilter($input->filter);
                 break;
                 //custom conditions
-                case 'filter':
+                case 'custom_conditions':
                     $this->replaceListCustomConditions($input->custom_conditions);
                 break;
             }
@@ -497,7 +500,7 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
     * Replaces current where custom conditions, any type of information to be processed by the buildListWhereCustomConditions method
     * @param string $filter
     */
-    public function replaceListCustomConditions(mixed $customConditions)
+    public function replaceListCustomConditions($customConditions)
     {
         $this->setSubjectCookie('custom_conditions', $customConditions);
     }
