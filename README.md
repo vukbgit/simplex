@@ -136,7 +136,7 @@ For details see _Folders and Files Structure_ below
         * _domain\.ltd_ must be replaced by a valid domain name (beware the escaped dot)
         * _value_ can be either _development_ or _production_ and Simplex expects to have at least one domain mapped to _production_
     * set default redirections, i.e _/backend_ to _/backend/sign-in-form_; in any case either you're going to define a route for the plain domain request or you redirect domain request to a default route (i.e. `RewriteRule ^/?$ /my-default-route [R,L]`); for routes definitiosn see below
-* local __composer__ bash script: if your system has multiple PHP versions installed it can be useful to have a shortcut to use composer with a version different from the system default one; file _private\local\simplex\bin\composer.sh_ is an example containing PHP and Composer path to custom binaries and it can be softlinked into root folder, i.e. `ln -s private\local\simplex\bin\composer.sh composer`
+* local __composer__ bash script: if your system has multiple PHP versions installed it can be useful to have a shortcut to use composer with a version different from the system default one; file _private\local\simplex\bin\composer.sh_ is an example containing PHP and Composer path to custom binaries and it can be softlinked into root folder, i.e. `ln -s private\local\simplex\bin\composer.sh composer.sh`
 * install __yarn__ packages:
     * the _public\share\package.json_ file contains some NPM packages for:
         * the whole application:
