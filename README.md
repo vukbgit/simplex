@@ -183,7 +183,6 @@ For details see _Folders and Files Structure_ below
             ./sass.sh id-of-sass-file-to-be-compiled
     
     * Simplex need the compilation of at least these files:
-        * simplex: the Simplex style, cannot be customized: compile with `./sass.sh sx`
         * application (_private/local/simplex/sass/application.scss_): style for the whole application (included into _private/local/simplex/templates/application.twig_):
             * it includes:
                 * _share/vukbgit/simplex/src/sass/simplex.scss_ the Simplex style, cannot (should not...) be customized
