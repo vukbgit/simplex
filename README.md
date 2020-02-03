@@ -142,13 +142,17 @@ For details see _Folders and Files Structure_ below
         * the whole application:
             * [bootstrap 4](https://getbootstrap.com)
             * [jquery](http://jquery.com/)
+            * [js-cookie](https://github.com/js-cookie/js-cookie): javascript library to handle cookies
         * backends or enterprise web applications (ERP) mostly (even if they can be useful also in frontend development):
             * [parsleyjs](http://parsleyjs.org/): form validation
-            * [moment](https://momentjs.com/) for dates and time manipulation
-            * [tempus dominus](https://tempusdominus.github.io/bootstrap-4/) for date/time pickers
-            * [bootstrap-fileinput](https://plugins.krajee.com/file-input) for asyncronous file upload. NOTE: as for 2019-11-12 version is frozen to 5.0.4 due to a bug in auto upload
+            * [moment](https://momentjs.com/): for dates and time manipulation
+            * [bootstrap-fileinput](https://plugins.krajee.com/file-input): for asyncronous file upload. NOTE: as for 2019-11-12 version is frozen to 5.0.4 due to a bug in auto upload
+            * [tempusdominus-bootstrap-4](https://github.com/tempusdominus/bootstrap-4): for date/time input
+            * [tinymce](https://github.com/tinymce/tinymce-dist): for richtext input
+            * [hamburgers](https://github.com/jonsuh/hamburgers): CSS hamburger animated icons
         * frontend
-            * [jquery.safemail](https://github.com/leftclickcomau/jquery.safemail) for obfuscating email
+            * [jquery.safemail](https://github.com/leftclickcomau/jquery.safemail): for obfuscating email
+            * [flag-icon-css](https://github.com/lipis/flag-icon-css): SVG country flags
     * edit the file if needed to include/exclude packages
     * install packages: you can use the _yarn.sh_ symlink from the root folder:
         
