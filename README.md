@@ -191,8 +191,6 @@ For details see _Folders and Files Structure_ below
         * bootstrap: different application areas might need different Bootstrap components, so there is not a predefined SCSS but a couple of drafts:
             * minimal (_private/local/simplex/sass/bootstrap.scss): `./sass.sh bs`
             * backend (_private/local/simplex/Backend/sass/bootstrap.scss): all the components needed by the Simplex backend templates: `./sass.sh bsb`
-* bash scripts settings:
-    * _private/share/vukbgit/simplex/bin/clean-cache.sh_ took for granted that the tmp folder to clean is located one level above web root folder (the same path set into _private\local\simplex\config\constants.php_ for the TMP_DIR constant); since bash script is not aware of that settings this value is hard coded, and you should change it manually in this file for the cleaning operation to be successful
 
 ## Area set up ##
 
