@@ -172,7 +172,7 @@ For details see _Folders and Files Structure_ below
         * an empty route is defined
         * .htacces redirects requests for plain domain to a default route
     * routes are set up into route.php files, which are stored into _config_ folders
-    * as explained into the _terminology_ section above, Simplex logic is to devide application into logical areas, corresponding to folders; Simplex is shipped with a _private/local/simplex/Backend_ folder as a draft for building a backend for the application, it contains a _config/routes.php_ where 3 routes are defined for the login operation (display the login form, perform login authentication and logout)
+    * as explained into the _terminology_ section above, Simplex logic is to divide application into logical areas, corresponding to folders; Simplex is shipped with a _private/local/simplex/Backend_ folder as a draft for building a backend for the application, it contains a _config/routes.php_ where 3 routes are defined for the login operation (display the login form, perform login authentication and logout)
     * Backend folder can be renamed to something else to suit application logic but some adjustments must be made (area variable value in _routes.php_ and _templates/backend.twig_ file name)
     * there is also a _private/local/simplex/SubjectGroup_ folder which is a draft for the development of a subject
 * compile _SASS_ files to CSS:
@@ -183,9 +183,13 @@ For details see _Folders and Files Structure_ below
             ./sass.sh id-of-sass-file-to-be-compiled
     
     * Simplex need the compilation of at least these files:
-        * simplex: the Simplex style, cannot be customized: `./sass.sh sx`
-        * application (_private/local/simplex/sass/application.scss_): style for the whole application (included into _private/local/simplex/templates/application.twig_), it includes _private/local/simplex/sass/variable.scss_ which contains sass variables for the whole application, both files can/should be customized and extended: `./sass.sh app`
-        * bootstrap: differenta areas might need different Bootstrap components, so there is not a predefined SCSS but a couple of drafts:
+        * simplex: the Simplex style, cannot be customized: compile with `./sass.sh sx`
+        * application (_private/local/simplex/sass/application.scss_): style for the whole application (included into _private/local/simplex/templates/application.twig_):
+            * it includes:
+                * _share/vukbgit/simplex/src/sass/simplex.scss_ the Simplex style, cannot (should not...) be customized
+                * _private/local/simplex/sass/variable.scss_ which contains sass variables for the whole application, can/should be customized and extended
+            * compile with: `./sass.sh app`
+        * bootstrap: different application areas might need different Bootstrap components, so there is not a predefined SCSS but a couple of drafts:
             * minimal (_private/local/simplex/sass/bootstrap.scss): `./sass.sh bs`
             * backend (_private/local/simplex/Backend/sass/bootstrap.scss): all the components needed by the Simplex backend templates: `./sass.sh bsb`
 * bash scripts settings:
