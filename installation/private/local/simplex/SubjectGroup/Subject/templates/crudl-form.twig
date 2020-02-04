@@ -7,26 +7,55 @@
     {{ formMacros.setUpForm(
         _context,
         {
-            'assets': []
+            'assets': ['richTextEditor', 'fileUpload', 'captcha', 'dateTimePicker']
         }) }}
 {% endblock %}
 
 {% block modelInputs %}
-    {{ formMacros.DISPLAYMACRONAME(
-    {
-        'name': 'FIELD-NAME',
-        'value': record.FIELD-NAME,
-        'label': getLabel(subject, 'fields', 'FIELD-NAME'),
-        'help': fieldsLabels.FIELD-NAMEHelp,
-        'autofocus': true,
-        'disabled': action == 'delete-form',
-        'maxlength': FIELD-MAX-LENGTH,
-        'autocomplete': '',
-        'class': '',
-        'validation': {
-            'required': true,
-            'pattern': ''
+    {# a text input #}
+    {{ formMacros.displayInputGroup(
+        'text | email | password | url | textarea',
+        {
+            'name': 'FIELD-NAME',
+            'value': record.FIELD-NAME,
+            'label': getLabel(subject, 'fields', 'FIELD-NAME'),
+            'help': fieldsLabels.FIELD-NAMEHelp,
+            'autofocus': true,
+            'disabled': action == 'delete-form',
+            'maxlength': FIELD-MAX-LENGTH,
+            'autocomplete': '',
+            'class': '',
+            'validation': {
+                'required': true,
+                'pattern': ''
+            }
         }
-    }
+    ) }}
+    {# upload input #}
+    {{ formMacros.displayFileUpload(
+        _context,
+        buildRouteToActionFromRoot('upload'),
+        {
+            'name': 'UPLOAD-KEY',
+            'value': record.UPLOAD-KEY,
+            'label': getLabel(subject, 'fields', 'UPLOAD-KEY'),
+            'help': getLabel(subject, 'fields', 'UPLOAD-KEY_help'),
+            'autofocus': false,
+            'disabled': action == 'delete-form',
+            'autocomplete': '',
+            'class': '',
+            'validation': {
+                'required': false,
+                'pattern': ''
+            },
+            {# not an image #}
+            'previewTemplate': '<a href="@OUTPUT-KEY" target="_blank"><span class="ICON-CLASS"></span></a>',
+            {# an image #}
+            'previewTemplate': '<a href="@OUTPUT-KEY" target="_blank"><img src="@OUTPUT-KEY"></a>',
+            'options': {
+                'allowedFileExtensions': ['EXTENSION-1'],
+                'maxFileCount': 1
+            }
+        }
     ) }}
 {% endblock %}
