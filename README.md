@@ -213,8 +213,10 @@ Simplex include an ERP namespace and uses it to build backends and ERP applicati
     
     * _database_: (commented by default) uses a table or view, specifies fields names and conditions (like a boolean field which stores whether user is active)
 * set up _logoPath_ into _private/local/simplex/Backend/templates/sign-in-form.twig_ to point to a logo image to be displayted into login form
-* set up _logoPath_ into _private/local/simplex/Backend/templates/backend.twig_ to point to a logo image to be displayted into masthead, navbar hieigh defaults to 48px, it can be twiked into _private/local/simplex/sass/variables.scss_
-* compile the ERP SASS file: `./sass.sh erp`
+* set up _logoPath_ into _private/local/simplex/Backend/templates/backend.twig_ to point to a logo image to be displayted into masthead, navbar height defaults to 48px, it can be twiked into _private/local/simplex/sass/variables.scss_
+* compile the SASS files:
+    * sign-in: `./sass.sh si`
+    * ERP: `./sass.sh erp`
 * set up the _subject_ called by the $successfulSignInRoute route (see "Subject set-up below"):
 
 This is the Backend folder structure:
