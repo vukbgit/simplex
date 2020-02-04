@@ -15,5 +15,7 @@
         <img src="{{ getPublicOutputFilePath('UPLOAD-KEY', 'OUTPUT-KEY', record.UPLOAD-KEY) }}">
     </td>
     <td>{{ record.FIELD-NAME }}</td>
+    {# localized field #}
+    <td>{{ getLocaleRecordValue(record.nome) }}</td>
     {% endblock %}
 {% endfor %}
