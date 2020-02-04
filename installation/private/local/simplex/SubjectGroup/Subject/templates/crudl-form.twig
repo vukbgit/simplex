@@ -13,7 +13,7 @@
 {% endblock %}
 
 {% block modelInputs %}
-    {# a text input #}
+    {# text input #}
     {{ formMacros.displayInputGroup(
         'text | email | password | url | textarea',
         {
@@ -33,6 +33,23 @@
             {# for localized fields
             'locales' : languages#}
         }
+    ) }}
+    {# radio group #}
+    {{ formMacros.displayInputRadioGroup(
+        {
+            'name': 'FIELD-NAME',
+            'value': record.FIELD-NAME,
+            'label': getLabel(subject, 'fields', 'FIELD-NAME'),
+            'autofocus': false,
+            'inline': true,
+            'disabled': action == 'delete-form',
+            'class': '',
+            'validation': {
+                'required': false,
+                'pattern': ''
+            }
+        },
+        ITEMS
     ) }}
     {# upload input #}
     {{ formMacros.displayFileUpload(
