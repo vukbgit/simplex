@@ -16,6 +16,11 @@ return [
     ],
     //for record actions placeholder enclosed by curly brackets {} will be substituded by field values found into record
     'recordVisibleActions' => [
+        //manage children action
+        /*'CHILD-SUBJECT' => (object) [
+            'routeFromSubject' => sprintf('{%s}/CHILD-SUBJECT/list', $modelConfig->primaryKey),
+            'permissions' => ['manage-CHILD-SUBJECT'],
+        ],*/
         'update-form' => (object) [
             'routeFromSubject' => sprintf('update-form/{%s}', $modelConfig->primaryKey),
             'permissions' => [sprintf('manage-%s', $subject)],
