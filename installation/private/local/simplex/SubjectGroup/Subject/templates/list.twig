@@ -3,11 +3,17 @@
 {% import '@share/Erp/templates/macros/table.twig' as tableMacros %}
 
 {% block tableHeaders %}
+    {# unsortable header #}
+    <th>{{ getLabel(subject, 'fields', 'FIELD-NAME') }}</th>
+    {# sortable header #}
     {{ tableMacros.displaySortableHeader(_context, 'FIELD-NAME') }}
 {% endblock %}
 
 {% for record in records %}
     {% block rowFields %}
+    <td>
+        <img src="{{ getPublicOutputFilePath('UPLOAD-KEY', 'OUTPUT-KEY', record.UPLOAD-KEY) }}">
+    </td>
     <td>{{ record.FIELD-NAME }}</td>
     {% endblock %}
 {% endfor %}
