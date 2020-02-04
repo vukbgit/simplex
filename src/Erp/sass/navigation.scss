@@ -45,7 +45,7 @@
                 color: $white;
             }
             &[aria-expanded="false"]::after {
-                content: "\0184";
+                content: "\0169";
                 font-family: fontello;
                 display: inline;
                 text-align: right;
@@ -55,7 +55,7 @@
                 background-color: $darker;
             }
             &[aria-expanded="true"]::after {
-                content: "\0185";
+                content: "\016A";
                 font-family: fontello;
                 display: inline;
                 text-align: right;
