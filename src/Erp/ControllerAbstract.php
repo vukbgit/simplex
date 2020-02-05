@@ -909,7 +909,11 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
                 //handler
                 if(isset($output->handler)) {
                     $parameters = array_merge([$outputFilePath], $output->parameters ?? []);
-                    call_user_func_array($output->handler, $parameters);
+                    try {
+                        call_user_func_array($output->handler, $parameters);
+                    } catch(\Exception $exception) {
+                        $errors[] = $exception->getMessage();
+                    }
                 }
             }
             //delete original uploaded file
