@@ -105,7 +105,7 @@ abstract class ModelAbstract
     */
     public function hasLocales(): bool
     {
-        return isset($this->config->locales);
+        return isset($this->config->locales) && !empty($this->config->locales);
     }
     
     /**
