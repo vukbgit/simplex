@@ -334,8 +334,9 @@ abstract class ModelAbstract
     /**
     * Inserts a record
     * @param array $fieldsValues: indexes are fields names, values are fields values
+    * @return mixed primary key of inserted records or array in case of batch insert
     */
-    public function insert(array $fieldsValues): string
+    public function insert(array $fieldsValues)
     {
         //insert record
         $primaryKeyValue = $this->query
