@@ -217,6 +217,7 @@ Simplex include an ERP namespace and uses it to build backends and ERP applicati
 * compile the SASS files:
     * sign-in: `./sass.sh si`
     * ERP: `./sass.sh erp`
+    * table: `./sass.sh tb`
 * set up the _subject_ called by the $successfulSignInRoute route (see "Subject set-up below"):
 
 This is the Backend folder structure:

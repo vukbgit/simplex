@@ -1216,7 +1216,7 @@ var simplexValidation = {
             case 'radio':
             case 'checkbox':
                 //radio or checkbox input id contains also value, check on name (and therefore on group container)
-                id = field.name;
+                id = simplexValidation.formatId(field.name);
                 manuallyShowMessage = true;
             break;
             default:
@@ -1266,7 +1266,7 @@ var simplexValidation = {
         switch(fieldType) {
             case 'radio':
             case 'checkbox':
-                messageId = 'error-for-' + field.name;
+                messageId = 'error-for-' + simplexValidation.formatId(field.name);
                 manuallyHideMessage = true;
             break;
             default:
@@ -1285,6 +1285,12 @@ var simplexValidation = {
         // Check if an error message is in the DOM
         var message = field.form.querySelector('.invalid-tooltip#error-for-' + id + '');
         if (!message) return;
+    },
+    /*
+    Builds id from name
+    */
+    formatId: function (fieldName) {
+        return fieldName.replace(/\[/, '_').replace(/\]/, '_');
     }
 };
 simplexValidation.init();
