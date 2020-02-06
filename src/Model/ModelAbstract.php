@@ -25,6 +25,12 @@ abstract class ModelAbstract
     protected $config;
 
     /**
+    * @var bool
+    * whether model has a position field
+    */
+    public $hasPositionField;
+
+    /**
     * Constructor
     * @param QueryBuilderHandler $query
     * @param string $configPath
@@ -65,6 +71,8 @@ abstract class ModelAbstract
         }elseif(is_array($config->primaryKey)) {
             throw new \Exception(sprintf('Simplex model does not support composite primary keys, model %s configuration defined in %s must expose a single primary key', getInstanceNamespace($this), $configPath));
         }
+        //has position field
+        $this->hasPositionField = isset($config->position) && isset($config->position->field) && $config->position->field;
         $this->config = $config;
     }
     
@@ -665,5 +673,68 @@ EOT;
                 }
             }
         }
+    }
+    
+    /***********
+    * POSITION *
+    ***********/
+    
+    /**
+    * Gets next free position
+    * @param array $contextFieldsValues indexed by field names to narrow context in which to llok for next position
+    */
+    public function getNextPosition(array $contextFieldsValues = [])
+    {
+        $this->query
+            ->table($this->view());
+            foreach ($contextFieldsValues as $field => $value) {
+                $this->query->where($field, $value);
+            }
+        $lastRecord = $this->query->orderBy($this->config->position->field, 'DESC')
+            ->first();
+        return $lastRecord ? $lastRecord->posizione + 1 : 1;
+    }
+    
+    /**
+     * Moves record up/down
+     * @param mixed $primaryKeyValue
+     * @param string $direction: up | down
+     */
+    public function changeRecordPosition($primaryKeyValue, $direction)
+    {
+        $record = $this->first(
+            [
+                [$this->config->primaryKey, $primaryKeyValue]
+            ]
+        );
+        $positionField = $this->config->position->field;
+        //direction
+        switch ($direction) {
+            case 'down':
+                $siblingPosition = $record->$positionField + 1;
+            break;
+            case 'up':
+                $siblingPosition = $record->$positionField - 1;
+            break;
+        }
+        //get sibling
+        $this->query
+            ->table($this->table());
+        //filter
+        foreach ((array) $this->config->position->contextFields as $contextField) {
+            $this->query->where($contextField, $record->$contextField);
+        }
+        //position
+        $this->query->where($positionField, $siblingPosition);
+        $sibling = $this->query->first();
+        //switch positions
+        $this->query
+            ->table($this->table())
+            ->where($this->config->primaryKey, $record->{$this->config->primaryKey})
+            ->update([$positionField => $sibling->$positionField]);
+        $this->query
+            ->table($this->table())
+            ->where($this->config->primaryKey, $sibling->{$this->config->primaryKey})
+            ->update([$positionField => $record->$positionField]);
     }
 }

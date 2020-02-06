@@ -21,6 +21,19 @@ return [
             'routeFromSubject' => sprintf('{%s}/CHILD-SUBJECT/list', $modelConfig->primaryKey),
             'permissions' => ['manage-CHILD-SUBJECT'],
         ],*/
+        //manage record position
+        /*'move-down' => (object) [
+            'routeFromSubject' => sprintf('move-record-down/{%s}', $modelConfig->primaryKey),
+            'permissions' => [sprintf('manage-%s', $subject)],
+            'linkClass' => 'icon-erp-triangle-down',
+            'conditions' => ['moveDown']
+        ],
+        'move-up' => (object) [
+            'routeFromSubject' => sprintf('move-record-up/{%s}', $modelConfig->primaryKey),
+            'permissions' => [sprintf('manage-%s', $subject)],
+            'linkClass' => 'icon-erp-triangle-up',
+            'conditions' => ['moveUp']
+        ],*/
         'update-form' => (object) [
             'routeFromSubject' => sprintf('update-form/{%s}', $modelConfig->primaryKey),
             'permissions' => [sprintf('manage-%s', $subject)],

@@ -189,7 +189,7 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
         $configPath = sprintf('%s/config/crudl.php', getInstancePath($this));
         //check path
         if(!is_file($configPath)) {
-            throw new \Exception(sprintf('configuration CRUDL file \'%s\' for subject %s is not a valid path', $configPath, $this->subject));
+            throw new \Exception(sprintf('configuration CRUDL file \'%s\' for subject %s is not a valid path', $configPath, getInstanceNamespace($this)));
         }
         //store config
         $this->CRUDLConfig = require $configPath;
@@ -407,10 +407,20 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
      */
     protected function getList()
     {
-        return $this->model->get(
+        $records = $this->model->get(
             $this->buildListWhere(),
-            $this->subjectCookie->sorting ?? [[$this->model->getConfig()->primaryKey]]
+            $this->subjectCookie->sorting ?? [[$this->model->hasPositionField ?  $this->model->getConfig()->position->field : $this->model->getConfig()->primaryKey]]
         );
+        if($this->model->hasPositionField) {
+            $numRecords = count($records);
+            for ($i=0; $i < $numRecords; $i++) {
+                //move up?
+                $records[$i]->moveUp = $i > 0;
+                //move down?
+                $records[$i]->moveDown = $i < ($numRecords - 1);
+            }
+        }
+        return $records;
     }
     
     /**
@@ -709,6 +719,19 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
             }
         }
         $input = filter_input_array(INPUT_POST, $inputFieldsFilters);
+        //position field
+        if($this->model->hasPositionField) {
+            $modelPosition = $this->model->getConfig()->position;
+            $positionField = $modelPosition->field;
+            if(!$input[$positionField]) {
+                $contextFields = $modelPosition->contextFields;
+                $contextFieldsValues = [];
+                foreach ((array) $contextFields as $contextField) {
+                    $contextFieldsValues[$contextField] = $input[$contextField];
+                }
+                $input[$positionField] = $this->model->getNextPosition($contextFieldsValues);
+            }
+        }
         //process input
         $inputExtraData = $this->processSaveFormInput($input);
         //separate localized and non localized values
@@ -967,5 +990,35 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
            ->height($height)
            ->crop(constant('Spatie\Image\Manipulations::' . $cropMethodConstantName), $width, $height)
            ->save();
+    }
+    
+    /**********************************
+    * RECORD POSITION REALTED ACTIONS *
+    **********************************/
+    
+    /**
+     * Moves record down
+     */
+    protected function moveRecordDown()
+    {
+        $this->moveRecord('down');
+    }
+    
+    /**
+     * Moves record up
+     */
+    protected function moveRecordUp()
+    {
+        $this->moveRecord('up');
+    }
+    
+    /**
+     * Moves record up/down
+     * @param string $direction: up | down
+     */
+    protected function moveRecord($direction)
+    {
+        $this->model->changeRecordPosition($this->routeParameters->{$this->model->getConfig()->primaryKey}, $direction);
+        $this->redirect($this->buildRouteToActionFromRoot('list'));
     }
 };

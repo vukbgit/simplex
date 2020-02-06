@@ -16,5 +16,11 @@ return (object) [
     'locales' => [
         'LOCALE-FIELD-1',
         'LOCALE-FIELD-2',
+    ],
+    //whether model has a poistion field
+    'position' => (object) [
+        'field' => false,
+        //fields to narrow by next position look up
+        'contextFields' => []
     ]
 ];
