@@ -973,7 +973,7 @@ NOTE: javascript validation function creates automatically if needed, this macro
             {% set help = help|merge(['maximum length %s characters'|trans|format(config.maxlength)]) %}
         {% endif %}
         {% if help is not empty %}
-    <small id="{{ '%s-help'|format(config.id ?? config.name )|formatIdforJs }}" class="form-text text-muted">{{ help|join('; ') }}</small>
+    <small id="{{ '%s-help'|format(config.id ?? config.name )|formatIdforJs }}" class="form-text text-muted">{{ help|join('; ')|raw }}</small>
         {% endif %}
     {% endif %}
 {% endmacro %}
