@@ -634,15 +634,25 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
         $modelConfig = $this->model->getConfig();
         if(isset($modelConfig->uploads)) {
             //max file size
-            $uploadMaxFilesizeIni = ini_get('upload_max_filesize');
-            $uploadMaxFilesizeBytes = bytes(ini_get('upload_max_filesize'));
-            //in kB for client validation
-            $uploadMaxFilesizeKB = number_format((float) str_replace('kB', '', \ByteUnits\bytes($uploadMaxFilesizeBytes)->format('kB')), 2, '.', '');
-            //in MB to be displayed
-            $uploadMaxFilesizeMB = str_replace('MB', '', \ByteUnits\bytes($uploadMaxFilesizeBytes)->format('MB'));
-            $this->setTemplateParameter('uploadMaxFilesizeKB', $uploadMaxFilesizeKB);
-            $this->setTemplateParameter('uploadMaxFilesizeMB', $uploadMaxFilesizeMB);
+            $this->setUploadMaxFilesizeTemplateParameters();
         }
+    }
+    
+    /**
+     * Gets any data necessary to the save form
+     * to be overridden if necessary by derived classes
+     */
+    protected function setUploadMaxFilesizeTemplateParameters()
+    {
+        $uploadMaxFilesizeIni = ini_get('upload_max_filesize');
+        $uploadMaxFilesizeBytes = bytes(ini_get('upload_max_filesize'));
+        //in kB for client validation
+        $uploadMaxFilesizeKB = number_format((float) str_replace('kB', '', \ByteUnits\bytes($uploadMaxFilesizeBytes)->format('kB')), 2, '.', '');
+        //in MB to be displayed
+        $uploadMaxFilesizeMB = str_replace('MB', '', \ByteUnits\bytes($uploadMaxFilesizeBytes)->format('MB'));
+        $this->setTemplateParameter('uploadMaxFilesizeBytes', $uploadMaxFilesizeBytes);
+        $this->setTemplateParameter('uploadMaxFilesizeKB', $uploadMaxFilesizeKB);
+        $this->setTemplateParameter('uploadMaxFilesizeMB', $uploadMaxFilesizeMB);
     }
     
     /**
