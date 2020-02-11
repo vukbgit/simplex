@@ -102,6 +102,8 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
         $this->buildCommonTemplateHelpers();
         //set specific CRUDL template parameters
         $this->setCommonTemplateParameters();
+        //process input
+        $this->processPresetInputs();
     }
     
     /**
@@ -310,13 +312,31 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
     */
     protected function buildCommonTemplateHelpers()
     {
-        //builds route to an action
+        /*************
+        * NAVIGATION *
+        *************/
+        //gets a local controller navigationS object
+        $this->addTemplateFunction('getNavigations', function(ControllerWithTemplateAbstract $controller){
+            $controller->loadSubjectNavigation();
+            return $controller->getNavigations();
+        });
+        //builds route to an action from root
         $this->addTemplateFunction(
             'buildRouteToActionFromRoot',
             function(string $actionRoutePart){
                 return $this->buildRouteToActionFromRoot($actionRoutePart);
             }
         );
+        //Builds route to an action based on action configuration
+        $this->addTemplateFunction('buildRouteToAction', function(object $voiceProperties){
+            if(isset($voiceProperties->route)) {
+                return $voiceProperties->route;
+            }  elseif(isset($voiceProperties->routeFromSubject)) {
+                return $this->buildRouteToActionFromRoot($voiceProperties->routeFromSubject);
+            }  else {
+                return '#';
+            }
+        });
         //parses a record action route pattern replacing placeholders with record values
         $this->addTemplateFunction(
             'parseRecordActionRoute',
@@ -340,6 +360,9 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
                 return $route;
             }
         );
+        /*********
+        * LABELS *
+        *********/
         //builds an ancestor label
         $this->addTemplateFunction(
             'buildAncestorRecordLabel',
@@ -357,6 +380,9 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
                 return $label;
             }
         );
+        /*********
+        * ALERTS *
+        *********/
         //resets subject alerts
         $this->addTemplateFunction(
             'resetSubjectAlerts',
@@ -364,14 +390,8 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
                 return $this->resetSubjectAlerts();
             }
         );
-        /*************
-        * NAVIGATION *
-        *************/
-        //gets a local controller navigationS object
-        $this->addTemplateFunction('getNavigations', function(ControllerWithTemplateAbstract $controller){
-            $controller->loadSubjectNavigation();
-            return $controller->getNavigations();
-        });
+        
+        
         
     }
     
@@ -396,6 +416,26 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
         $this->setTemplateParameter('CRUDLConfig', $this->CRUDLConfig);
         $this->setTemplateParameter('currentNavigationVoice', $this->currentNavigationVoice);
         $this->setTemplateParameter('sideBarClosed', $this->getAreaCookie('sideBarClosed') ?? false);
+    }
+    
+    /**
+    * Processes input for rpeset operation (like bulk ones)
+    */
+    protected function processPresetInputs()
+    {
+        //POST
+        $possiblePostInputsDefinitions = [
+            //bulk records actions
+            'bulk_action_records_ids' => [
+                'filter' => FILTER_VALIDATE_REGEXP,
+                'options' => ['regexp' => '/([0-9]{1,}\|?)+/']
+            ]
+        ];
+        $postInput = (object) filter_input_array(INPUT_POST, $possiblePostInputsDefinitions);
+        //bulk operations, turn ids string into array
+        if(isset($postInput->bulk_action_records_ids)) {
+            $_POST['bulk_action_records_ids'] = explode('|', $postInput->bulk_action_records_ids);
+        }
     }
     
     /**************

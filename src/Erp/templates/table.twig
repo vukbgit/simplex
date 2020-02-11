@@ -24,10 +24,43 @@
 </nav>
     {% endblock tableNavBar %}
     {% if records|length %}
+    {# bulk actions form #}
+        {% if navigations.bulkActions|length %}
+            {% set bulkActionsLabel = 'selected records bulk actions'|trans %}
+<form method="post" id="bulk-actions-form" action="" class="form-inline">
+    <input type="hidden" name="bulk_action_records_ids" id="bulk_action_records_ids">
+    <nav class="navbar navbar-light bg-light justify-content-start w-100">
+        <span class="mr-3">
+            {{ bulkActionsLabel }}:
+        </span>
+        <div class="btn-group" role="group" aria-label="{{ bulkActionsLabel }}">
+            {% for actionKey, actionProperties in navigations.bulkActions %}
+                {% set actionLabel = getLabel('actions', actionKey) %}
+            <button type="submit" class="btn btn-sm btn-outline-secondary" data-route="{{ buildRouteToAction(actionProperties) }}">{{ actionLabel }}</button>
+            {% endfor %}
+        </div>
+    </nav>
+    <div class="w-100 collapse" id="bulk-warning">
+        <div class="alert alert-warning" role="alert">
+        {{ 'you need to select at least one record'|trans }}
+        <button type="button" class="close" data-toggle="collapse" href="#bulk-warning" aria-label="Close" aria-expanded="false" aria-controls="bulk-warning">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+    </div>
+</form>
+        {% endif %}
 <table class="table table-sm table-hover table-responsive-sm erp-table">
     <caption>{{- attribute(modelGlobalActionsNavigationLabels, currentNavigationVoice.modelGlobalActions) -}}</caption>
     <thead class="thead-light">
         <tr>
+        {% if navigations.bulkActions|length %}
+            <th class="align-middle">
+                <div>
+                    <input type="checkbox" id="toggle-records-ids">
+                </div>
+            </th>
+        {% endif %}
         {% block tableHeaders %}
         {% endblock %}
     {# record visible actions header #}
@@ -47,24 +80,31 @@
     {# ROWS LOOP #}
         {% for record in records %}
         <tr>
+            {% if navigations.bulkActions|length %}
+                <td class="align-middle">
+                    <div>
+                        <input type="checkbox" name="bulk_action_records_ids[]" value="{{ attribute(record, model.getConfig().primaryKey) }}">
+                    </div>
+                </td>
+            {% endif %}
             {% block rowFields %}
             {% endblock %}
-            {% for voiceKey, voiceProperties in navigations.recordVisibleActions %}
-                {% set voiceLabel = parseRecordActionRoute(getLabel('actions', voiceKey), record) %}
+            {% for actionKey, actionProperties in navigations.recordVisibleActions %}
+                {% set actionLabel = parseRecordActionRoute(getLabel('actions', actionKey), record) %}
             <td class="record-action text-right">
                 {% set allowed = true %}
-                {% if voiceProperties.conditions is defined %}
-                    {% for conditionField in voiceProperties.conditions %}
+                {% if actionProperties.conditions is defined %}
+                    {% for conditionField in actionProperties.conditions %}
                         {% if attribute(record, conditionField) == false %}
                             {% set allowed = false %}
                         {% endif %}
                     {% endfor %}
                 {% endif %}
                 {% if allowed %}
-                    {% set route = voiceProperties.routeFromSubject is defined ? buildRouteToActionFromRoot(voiceProperties.routeFromSubject) : voiceProperties.route %}
-                <a href="{{ parseRecordActionRoute(route, record) }}"{% if voiceProperties.linkClass is defined  %} class="{{ voiceProperties.linkClass }}"{% endif %} title="{{- voiceLabel|escape('html_attr') -}}">
-                    {% if voiceProperties.linkClass is not defined  %}
-                        {{- voiceLabel -}}
+                    {% set route = actionProperties.routeFromSubject is defined ? buildRouteToActionFromRoot(actionProperties.routeFromSubject) : actionProperties.route %}
+                <a href="{{ parseRecordActionRoute(route, record) }}"{% if actionProperties.linkClass is defined  %} class="{{ actionProperties.linkClass }}"{% endif %} title="{{- actionLabel|escape('html_attr') -}}">
+                    {% if actionProperties.linkClass is not defined  %}
+                        {{- actionLabel -}}
                     {% endif %}
                 </a>
                 {% endif %}
