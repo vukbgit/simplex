@@ -25,6 +25,7 @@ $(document).ready(function(){
     //intercept submit buttons to set action
     $('button[type=submit]').click(function(){
         $('#bulk-actions-form').attr('action', $(this).data('route'));
+        return confirm($(this).data('confirm'));
     });
     /* submit bulk action */
     $('#bulk-actions-form').submit(function(){

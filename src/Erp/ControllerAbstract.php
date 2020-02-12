@@ -924,6 +924,19 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
         $this->redirect($redirectRoute);
     }
     
+    /**
+     * Bulk deletion
+     */
+    protected function deleteBulk()
+    {
+        foreach ($_POST['bulk_action_records_ids'] as $primaryKeyValue) {
+            $this->model->delete($primaryKeyValue);
+        }
+        $this->setSubjectAlert('success', (object) ['code' => 'delete_bulk_success']);
+        $redirectRoute = $this->buildRouteToActionFromRoot('list');
+        $this->redirect($redirectRoute);
+    }
+    
     /**********
      * UPLOAD *
      *********/

@@ -31,13 +31,18 @@
     'insert-form': 'insert'|trans,
     'update-form': 'update'|trans,
     'delete-form': 'delete'|trans,
+    'delete-bulk': 'delete'|trans,
     'cancel': 'cancel'|trans,
     'move-up': 'move up'|trans,
-    'move-down': 'move down'|trans
+    'move-down': 'move down'|trans,
+    'clone': 'clone'|trans,
+    'clone-bulk': 'clone'|trans
 }) %}
 {% set labels = setLabels('alerts', {
     'save_success': 'Record saved'|trans,
     'delete_success': 'Record deleted'|trans,
+    'delete_bulk_success': 'Records deleted'|trans,
+    'bulk_confirm': 'Do you confirm action \'%s\' over selected records?'|trans,
     'SQLSTATE_23000_duplicate_entry': 'There is already another record with the same %s'|trans,
     'SQLSTATE_23000_fk_constraint': 'Missing value for mandatory foreign key %s'|trans,
     'SQLSTATE_23000_mandatory_null': 'Field "%s" cannot be null'|trans,

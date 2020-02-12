@@ -29,6 +29,12 @@ abstract class ModelAbstract
     * whether model has a position field
     */
     public $hasPositionField;
+    
+    /**
+    * @var string
+    * String to mark text cloned fields with
+    */
+    private $cloneMark = '*';
 
     /**
     * Constructor
@@ -162,6 +168,7 @@ abstract class ModelAbstract
     */
     public function handleException(\PDOException $exception): object
     {
+        xx($exception);
         //get error code and message
         $errorCode = $exception->getCode();
         $errorMessage = $exception->getMessage();
@@ -333,7 +340,7 @@ abstract class ModelAbstract
     
     /**
     * Inserts a record
-    * @param array $fieldsValues: indexes are fields names, values are fields values
+    * @param array $fieldsValues: indexes are fields names, values are fields values, it can be an array of arrays in case of batch insert
     * @return mixed primary key of inserted records or array in case of batch insert
     */
     public function insert(array $fieldsValues)
@@ -413,19 +420,90 @@ abstract class ModelAbstract
         }
     }
     
+    /********
+    * CLONE *
+    ********/
+    
+    /**
+    * Cloines one or more records record
+    * @param mixed $primaryKeyValues: a single primary key or an array of values for batch cloning
+    * @param array $fieldsToMark: text fields to be marked
+    */
+    public function clone($primaryKeyValues, array $fieldsToMark)
+    {
+        if(!is_array($primaryKeyValues)) {
+            $primaryKeyValues = [$primaryKeyValues];
+        }
+        foreach ($primaryKeyValues as $originalPrimaryKeyValue) {
+            $fieldsValues = (array) $this->query
+                ->table($this->table())
+                ->where($this->config->primaryKey, $originalPrimaryKeyValue)
+                ->first();
+            unset($fieldsValues[$this->config->primaryKey]);
+            //insert record
+            $clonePrimaryKeyValue = $this->query
+                ->table($this->table())
+                ->insert($fieldsValues);
+            //locales
+            if($this->hasLocales()) {
+                $localesTableName = $this->localesTable();
+                $localesPrimaryKeyField = sprintf('%s_id', $localesTableName);
+                $localesRecords = $this->query
+                    ->table($localesTableName)
+                    ->where($this->config->primaryKey, $originalPrimaryKeyValue)
+                    ->get();
+                
+                    //xx($localesRecords);
+                foreach ((array) $localesRecords as $localesRecord) {
+                    $localesRecord = (array) $localesRecord;
+                    unset($localesRecord[$localesPrimaryKeyField]);
+                    $localesRecord[$this->config->primaryKey] = $clonePrimaryKeyValue;
+                    foreach ($fieldsToMark as $fieldToMark) {
+                        $localesRecord[$fieldToMark] = sprintf('%s%s', $this->cloneMark, $localesRecord[$fieldToMark]);
+                    }
+                    $this->query
+                        ->table($localesTableName)
+                        ->insert($localesRecord);
+                }
+            }
+            //uploads
+            if($this->hasUploads()) {
+                $uploadsTableName = $this->uploadTable();
+                $uploadsPrimaryKeyField = sprintf('%s_id', $uploadsTableName);
+                $uploadRecords = $this->getUploadedFiles([[$this->config->primaryKey, $originalPrimaryKeyValue]]);
+                foreach ((array) $uploadRecords as $uploadRecord) {
+                    $uploadRecord = (array) $uploadRecord;
+                    unset($uploadRecord[$uploadsPrimaryKeyField]);
+                    $uploadRecord[$this->config->primaryKey] = $clonePrimaryKeyValue;
+                    $this->query
+                        ->table($uploadsTableName)
+                        ->insert($uploadRecord);
+                }
+            }
+        }
+    }
+    
     /**********
     * LOCALES *
     **********/
     
     /**
+    * Builds locales table name
+    */
+    public function localesTable()
+    {
+        return sprintf('%s_locales', $this->table());
+    }
+    
+    /**
     * Saves locales values
     * @param mixed $primaryKeyValue
-    * @param array $localesValues: indexes are localized fields names, values are array indexed by language code with localized values
+    * @param array $localesValues: indexes are language codes, values are array indexed by localized fields name with localized values
     */
     public function saveLocales($primaryKeyValue, $localesValues)
     {
-        //create uploads table if necessary
-        $localesTableName = sprintf('%s_locales', $this->table());
+        //check locales table
+        $localesTableName = localesTable();
         if (!$this->query->tableExists($localesTableName)) {
             throw new \Exception(sprintf('missing %s locales tables for model %s', $localesTableName, getInstanceNamespace($this)));
             

@@ -36,7 +36,12 @@
         <div class="btn-group" role="group" aria-label="{{ bulkActionsLabel }}">
             {% for actionKey, actionProperties in navigations.bulkActions %}
                 {% set actionLabel = getLabel('actions', actionKey) %}
-            <button type="submit" class="btn btn-sm btn-outline-secondary" data-route="{{ buildRouteToAction(actionProperties) }}">{{ actionLabel }}</button>
+            <button
+                type="submit"
+                class="btn btn-sm btn-outline-secondary"
+                data-route="{{ buildRouteToAction(actionProperties) }}"
+                data-confirm="{{ getLabel('alerts', 'bulk_confirm')|format(actionLabel)|escape('html_attr') }}"
+                >{{ actionLabel }}</button>
             {% endfor %}
         </div>
     </nav>
