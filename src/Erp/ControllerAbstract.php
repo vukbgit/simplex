@@ -149,6 +149,18 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
     }
     
     /**
+     * Loads model at runtime
+     */
+    protected function loadModel($subject)
+    {
+        $modelClassKey = sprintf('%s-model', $subject);
+        //if model class has been defined into subject di-container config file load it
+        if($this->DIContainer->has($modelClassKey)) {
+            $this->model = $this->DIContainer->get($modelClassKey);
+        }
+    }
+    
+    /**
      * Stores ancestors models searching for a ancestor-namespace\Model class
      */
     protected function storeAncestors()

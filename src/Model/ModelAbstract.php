@@ -168,7 +168,6 @@ abstract class ModelAbstract
     */
     public function handleException(\PDOException $exception): object
     {
-        xx($exception);
         //get error code and message
         $errorCode = $exception->getCode();
         $errorMessage = $exception->getMessage();
@@ -428,22 +427,36 @@ abstract class ModelAbstract
     * Cloines one or more records record
     * @param mixed $primaryKeyValues: a single primary key or an array of values for batch cloning
     * @param array $fieldsToMark: text fields to be marked
+    * @param array $fieldsToUpdate: array indexed by fields names for fields whose values is to be changed (i.e. foreign keys)
+    * @return array with primaryt keys of cloned records
     */
-    public function clone($primaryKeyValues, array $fieldsToMark)
+    public function clone($primaryKeyValues, array $fieldsToMark, array $fieldsToUpdate = [])
     {
         if(!is_array($primaryKeyValues)) {
             $primaryKeyValues = [$primaryKeyValues];
         }
+        $clonedRrecordsPrimaryKeyValues = [];
         foreach ($primaryKeyValues as $originalPrimaryKeyValue) {
             $fieldsValues = (array) $this->query
                 ->table($this->table())
                 ->where($this->config->primaryKey, $originalPrimaryKeyValue)
                 ->first();
             unset($fieldsValues[$this->config->primaryKey]);
+            //fields to mark
+            foreach ($fieldsToMark as $fieldToMark) {
+                if(isset($fieldsValues[$fieldToMark])) {
+                    $fieldsValues[$fieldToMark] = sprintf('%s%s', $this->cloneMark, $fieldsValues[$fieldToMark]);
+                }
+            }
+            //fields to update
+            foreach ($fieldsToUpdate as $field => $value) {
+                $fieldsValues[$field] = $value;
+            }
             //insert record
             $clonePrimaryKeyValue = $this->query
                 ->table($this->table())
                 ->insert($fieldsValues);
+            $clonedRrecordsPrimaryKeyValues[] = $clonePrimaryKeyValue;
             //locales
             if($this->hasLocales()) {
                 $localesTableName = $this->localesTable();
@@ -452,14 +465,14 @@ abstract class ModelAbstract
                     ->table($localesTableName)
                     ->where($this->config->primaryKey, $originalPrimaryKeyValue)
                     ->get();
-                
-                    //xx($localesRecords);
                 foreach ((array) $localesRecords as $localesRecord) {
                     $localesRecord = (array) $localesRecord;
                     unset($localesRecord[$localesPrimaryKeyField]);
                     $localesRecord[$this->config->primaryKey] = $clonePrimaryKeyValue;
                     foreach ($fieldsToMark as $fieldToMark) {
-                        $localesRecord[$fieldToMark] = sprintf('%s%s', $this->cloneMark, $localesRecord[$fieldToMark]);
+                        if(isset($localesRecord[$fieldToMark])) {
+                            $localesRecord[$fieldToMark] = sprintf('%s%s', $this->cloneMark, $localesRecord[$fieldToMark]);
+                        }
                     }
                     $this->query
                         ->table($localesTableName)
@@ -480,6 +493,7 @@ abstract class ModelAbstract
                         ->insert($uploadRecord);
                 }
             }
+            return $clonedRrecordsPrimaryKeyValues;
         }
     }
     
@@ -503,7 +517,7 @@ abstract class ModelAbstract
     public function saveLocales($primaryKeyValue, $localesValues)
     {
         //check locales table
-        $localesTableName = localesTable();
+        $localesTableName = $this->localesTable();
         if (!$this->query->tableExists($localesTableName)) {
             throw new \Exception(sprintf('missing %s locales tables for model %s', $localesTableName, getInstanceNamespace($this)));
             

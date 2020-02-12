@@ -23,7 +23,7 @@ $(document).ready(function(){
         $("[name='bulk_action_records_ids\[\]']").prop('checked', checked);
     });
     //intercept submit buttons to set action
-    $('button[type=submit]').click(function(){
+    $('#bulk-actions-form button[type=submit]').click(function(){
         $('#bulk-actions-form').attr('action', $(this).data('route'));
         return confirm($(this).data('confirm'));
     });

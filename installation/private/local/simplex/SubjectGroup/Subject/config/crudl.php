@@ -29,4 +29,8 @@ return (object) [
         'FIELD-NAME',
         'STRING-TOKEN'
     ]*/
+    /*//fields to be marked during cloning
+    'clone' => [
+        'FIELD-NAME',
+    ]*/
 ];
