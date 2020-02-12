@@ -4,6 +4,9 @@
         background-color:transparent;
         padding:0;
     }
+    th {
+        vertical-align: top !important;
+    }
     td {
         &.record-action {
             width:1%;
