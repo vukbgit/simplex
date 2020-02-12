@@ -56,7 +56,7 @@
 </form>
         {% endif %}
 <table class="table table-sm table-hover table-responsive-sm erp-table">
-    <caption>{{- attribute(modelGlobalActionsNavigationLabels, currentNavigationVoice.modelGlobalActions) -}}</caption>
+    <caption>{{- getLabel('table', 'caption')|format(records|length) -}}</caption>
     <thead class="thead-light">
         <tr>
         {% if navigations.bulkActions|length %}
