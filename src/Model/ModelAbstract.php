@@ -249,9 +249,27 @@ abstract class ModelAbstract
         }
     }
     
-    /*********
-    * SELECT *
-    *********/
+    /***************
+    * MAINTAINANCE *
+    ***************/
+    
+    /**
+    * Resets auto increment
+    * @param string $table
+    */
+    public function resetAutoIncrement()
+    {
+        $this->query
+            ->statement(sprintf('ALTER TABLE %s AUTO_INCREMENT = 1;', $this->table()));
+        if($this->hasLocales()) {
+            $this->query
+                ->statement(sprintf('ALTER TABLE %s AUTO_INCREMENT = 1;', $this->localesTable()));
+        }
+        if($this->hasUploads()) {
+            $this->query
+                ->statement(sprintf('ALTER TABLE %s AUTO_INCREMENT = 1;', $this->uploadTable()));
+        }
+    }
     
     /*********
     * SELECT *
