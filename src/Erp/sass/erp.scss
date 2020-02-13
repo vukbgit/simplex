@@ -27,3 +27,28 @@ main {
         margin-left:0;
     }
 }
+//form fieldsets
+$fieldsetSpacing: 10px;
+fieldset {
+    padding: $fieldsetSpacing;
+    border: 2px solid $gray-400;
+    border-radius: $fieldsetSpacing;
+    legend {
+        width:auto;
+        padding: 0 $fieldsetSpacing;
+        &[aria-expanded="false"]::after {
+            content: "\0169";
+            font-family: fontello;
+            display: inline;
+            text-align: right;
+            padding-left: 5px;
+        }
+        &[aria-expanded="true"]::after {
+            content: "\016A";
+            font-family: fontello;
+            display: inline;
+            text-align: right;
+            padding-left: 5px;
+        }
+    }
+}
