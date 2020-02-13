@@ -1,4 +1,6 @@
 <?php
+//import subject variables
+require 'variables.php';
 return (object) [
     'table' => 'TABLE-NAME',
     'view' => 'VIEW-NAME',
@@ -8,7 +10,7 @@ return (object) [
             'OUTPUT-WITHOUT-HANDLER-KEY' => (object) [],
             'OUTPUT-WITH-HANDLER-KEY' => (object) [
                 //method must be static
-                'handler' => ['\Simplex\Local\PATH\TO\CONTROLLER\CLASS','STATIC-METHOD-NAME'],
+                'handler' => [sprintf('\%s\Controller', $subjectNamespace),'STATIC-METHOD-NAME'],
                 'parameters' => [PARAMETER1,...]
             ]
         ]
