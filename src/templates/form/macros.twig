@@ -387,7 +387,7 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
         {% if config.value is iterable %}
             {% set itemConfig = updateProperty(itemConfig, 'checked', item.value in config.value) %}
         {% else %}
-            {% set itemConfig = updateProperty(itemConfig, 'checked', item.value == config.value) %}
+            {% set itemConfig = updateProperty(itemConfig, 'checked', item.value is same as (config.value)) %}
         {% endif %}
         {# value #}
         {% set itemConfig = updateProperty(itemConfig, 'value', item.value) %}
