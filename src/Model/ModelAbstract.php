@@ -780,7 +780,9 @@ EOT;
                 //loop outputs
                 foreach ($this->getUploadKeyOutputs($uploadKey) as $outputKey) {
                     $outputFilePath = $this->getOutputFilePath($uploadKey, $outputKey, $uploadedFileToDelete->file_name);
-                    unlink($outputFilePath);
+                    if(is_file($outputFilePath)) {
+                        unlink($outputFilePath);
+                    }
                 }
             }
         }
