@@ -644,7 +644,7 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
             $label = '';
             foreach ($labelTokens as $labelToken) {
                 //dealing with a record field
-                if(isset($record->$labelToken)) {
+                if(property_exists($record, $labelToken)) {
                     //localized field
                     if(is_array($record->$labelToken)) {
                         $tokenLabel = $record->$labelToken[$languageCode];
