@@ -457,11 +457,11 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
     {% set config = updateProperty(config, 'inline', true) %}
     {% set items = [
         {
-            'value': 0,
+            'value': '0',
             'label': 'No'|trans
         },
         {
-            'value': 1,
+            'value': '1',
             'label': 'Yes'|trans
         }
     ] %}
@@ -709,7 +709,13 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
             var list = this.getPreviewsList();
             for (var i = 0; i < list.length; i++) {
                 $(list[i]).find('src');
+                //for images
                 match = $(list[i]).find('[src*="/' + key + '"]');
+                if(match.length) {
+                    return i;
+                }
+                //for other files
+                match = $(list[i]).find('[href*="/' + key + '"]');
                 if(match.length) {
                     return i;
                 }
