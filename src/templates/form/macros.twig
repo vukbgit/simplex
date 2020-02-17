@@ -669,8 +669,6 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
         {{ jsUploadObject }}.saveSorting('{{ inputId }}', params.oldIndex, params.newIndex);
     })
     .on('filebeforedelete', function(event, key, data) {
-        console.log('filebeforedelete');
-        console.log(key);
         var fileIndex = {{ jsUploadObject }}.getPreviewIndexByKey(key);
         if(fileIndex !== false) {
             {{ jsUploadObject }}.removeFileFromPreviews(fileIndex);
