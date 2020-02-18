@@ -954,7 +954,7 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
      *********/
     
     /**
-     * Uploads a file
+     * Uploads a file posted through the upload field of a form
      */
     protected function upload()
     {
@@ -963,6 +963,14 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
         $inputName = array_keys($_FILES)[0];
         $uploadKey = str_replace('-upload', '', $inputName);
         $fileName = $_FILES[$inputName]['name'];
+        $this->uploadCore($uploadKey, $fileName, $_FILES[$inputName]['tmp_name']);
+    }
+    
+    /**
+     * Uploads a file
+     */
+    protected function uploadCore($uploadKey, $fileName, $fileSourcePath, $isUploadedFile = true)
+    {
         //return object
         $return = new \stdClass;
         $errors = [];
@@ -988,7 +996,11 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
             }
             //move uploaded file to upload folder so that each output can access it (because move_uploaded_file deletes file)
             $uploadFilePath = sprintf('%s/%s', $uploadFolder, $fileName);
-            move_uploaded_file($_FILES[$inputName]['tmp_name'], $uploadFilePath);
+            if($isUploadedFile) {
+                move_uploaded_file($fileSourcePath, $uploadFilePath);
+            } else {
+                rename($fileSourcePath, $uploadFilePath);
+            }
             //loop outputs
             foreach ($modelConfig->uploads[$uploadKey] as $outputKey => $output) {
                 //check output folder

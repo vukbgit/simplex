@@ -731,7 +731,7 @@ EOT;
     * @param string $uploadKey
     * @param array $filesList: array of file names
     */
-    protected function saveUploadFiles($primaryKeyValue, string $uploadKey, array $filesList = null)
+    public function saveUploadFiles($primaryKeyValue, string $uploadKey, array $filesList = null)
     {
         //get upload files and candidate them for deletion
         $uploadedFilesToDelete = $this->getUploadedFiles([
