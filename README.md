@@ -296,7 +296,7 @@ The following steps show how to set up an ERP subject, that is a subject which i
         * a basic view should be created and set up into _config/model.php_
         * in case of _uploads_ the view should be joined over the uplods table:
             * for each upload field defined into _config/model.php_ add a left join to the uploads table on the primary key and the _upload_key_ field (with the value of the field key)
-            * extract _file_name_ field values with the name of the upload key; if field allows mnultiple uploads, group values and join tem with a pipe: `,GROUP_CONCAT(DISTINCT join-table.file_name SEPARATOR '|') AS upload-key`
+            * extract _file_name_ field values with the name of the upload key; if field allows multiple uploads, group values, order them by primary key (so that order can by set by dragging files in the GUI) and join tem with a pipe: `,GROUP_CONCAT(DISTINCT join-table.file_name ORDER BY join-table.primary-key SEPARATOR '|') AS upload-key`
             * group by primary key in case of upload fields that allow multiple uploads in the UI
         * in case of a localized subject a localized view named _main-table-name_locales_ is mandatory: it must join main table over the locales one and expose primary keys fields, _language_code_ field (besides localized informations of course)
         * example:
@@ -357,7 +357,7 @@ The following steps show how to set up an ERP subject, that is a subject which i
                     CREATE VIEW v_foo AS SELECT
                     f.*
                     ,fusi.file_name AS single_image
-                    ,GROUP_CONCAT(DISTINCT fumi.file_name SEPARATOR '|') AS multiple_image
+                    ,GROUP_CONCAT(DISTINCT fumi.file_name ORDER BY fumi.foo_uploads_id SEPARATOR '|') AS multiple_image
                     FROM foo AS f
                     LEFT JOIN foo_uploads AS fusi
                     ON f.foo_id = fusi.foo_id
