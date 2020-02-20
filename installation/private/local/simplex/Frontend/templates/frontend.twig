@@ -1,5 +1,12 @@
 {% extends '@local/templates/application.twig' %}
 
+{% block head %}
+    {{ parent() }}
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="/public/local/simplex/Frontend/css/bootstrap.min.css">
+    <script src="{{ 'bootstrap/dist/js/bootstrap.bundle.min.js'|pathToNpmAsset }}"></script>
+{% endblock %}
+
 {% block body %}
 <h2>frontend</h2>
 {% block pageContent %}{% endblock %}
