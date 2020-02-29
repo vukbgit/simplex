@@ -136,7 +136,7 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
     }
 
     /**
-    * Build common template helpers
+    * Builds common template helpers
     */
     private function buildCommonTemplateHelpers()
     {
@@ -240,7 +240,6 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
             return sprintf('/%s/node_modules/%s', PUBLIC_SHARE_DIR, $path);
         });
         //checks whether a given path is the requested URI path
-        //returns path to yarn packages asset
         $this->addTemplateFilter('isNavigationRouteCurrentRoute', function($path){
             return $this->isNavigationRouteCurrentRoute($path);
         });

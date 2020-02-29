@@ -306,6 +306,7 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
 #########}
 
 {# displays a select
+WARNING: uses Bootstrap custom select, so BS custom-forms component must be included
 @param hash config: hash for field properties (see setFieldAttributes macro explanation) plus specific properties:
     noOption0 (bool) whether not to display the first zero-value option
     option0Label (string) label to be used for the first option instead of the default one
@@ -493,6 +494,30 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
     {{ selfMacros.displayLabel(config, classes) }}
     </div>
 {% endmacro %}
+
+{########
+# RANGE #
+########}
+
+{# displays a range input field block
+WARNING: uses Bootstrap custom range input, so BS custom-forms component must be included
+@param hash config: hash for field properties (see setFieldAttributes macro explanation) plus:
+    prepended: content to be prepended to input
+    append: content to be appended to input
+#}
+{% macro displayInputRange(config) %}
+    {% import _self as selfMacros %}
+    {% set inputId = (config.id ?? config.name)|formatIdforJs %}
+    <div class="form-group range-group" id="{{ '%s-container'|format(inputId) }}">
+        {{ selfMacros.displayLabel(config) }}
+        {% set classes = config.classes ?? [] %}
+        {% set classes = ['custom-range']|merge(classes) %}
+        {% set config = updateProperty(config, 'classes', classes) %}
+        {{ selfMacros.displayInput('range', config) }}
+        {{ selfMacros.displayHelp(config) }}
+    </div>
+{% endmacro %}
+
 
 {###################
 # DATE TIME PICKER #
