@@ -941,6 +941,7 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
      */
     protected function deleteBulk()
     {
+        //loop bulk_action_records_ids (automatically exploded into $_POST)
         foreach ($_POST['bulk_action_records_ids'] as $primaryKeyValue) {
             $this->model->delete($primaryKeyValue);
         }
@@ -948,6 +949,53 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
         $redirectRoute = $this->buildRouteToActionFromRoot('list');
         $this->redirect($redirectRoute);
     }
+    
+    /**
+     * Clones record
+     * @param int $primaryKeyFieldValue
+     * @param string $parentPrimaryKeyField
+     * @param int $parentPrimaryKeyFieldValue
+     * @return int cloned record id
+     */
+    public function clone($primaryKeyFieldValue, $parentPrimaryKeyField = null, $parentPrimaryKeyFieldValue = null)
+    {
+        //load model in case you're cloning from another subject
+        $this->loadModel($this->subject);
+        //get fields to be marked
+        $fieldsToMark = $this->getCRUDLConfig()->clone ?? [];
+        $fieldsToUpdate = [];
+        //optional change of parent
+        if($parentPrimaryKeyFieldValue) {
+            $fieldsToUpdate[$parentPrimaryKeyField ] = $parentPrimaryKeyFieldValue;
+        }
+        $cloned_record_id = current($this->model->clone($primaryKeyFieldValue, $fieldsToMark, $fieldsToUpdate));
+        return $cloned_record_id;
+    }
+    
+    /**
+     * Bulk cloning
+     */
+    protected function cloneBulk()
+    {
+        $fieldsDefinition = [
+            'parent_primary_key_field' => FILTER_SANITIZE_STRING,
+            'parent_id' => FILTER_VALIDATE_INT
+            
+        ];
+        $input = (object) filter_input_array(INPUT_POST, $fieldsDefinition);
+        if(($input->parent_primary_key_field && !$input->parent_id) || (!$input->parent_primary_key_field && $input->parent_id)) {
+            throw new \Exception('parent_primary_key_field and parent_id fields must be both set or neither');
+        }
+        //loop selected records ids (automatically exploded into $_POST)
+        foreach ($_POST['bulk_action_records_ids'] as $primaryKeyFieldValue) {
+            //clone
+            $this->clone($primaryKeyFieldValue, $input->parent_primary_key_field, $input->parent_id);
+        }
+        //redirect
+        $redirectRoute = $this->buildRouteToActionFromRoot('list');
+        $this->redirect($redirectRoute);
+    }
+    
     
     /**********
      * UPLOAD *
