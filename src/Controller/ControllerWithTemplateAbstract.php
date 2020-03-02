@@ -370,6 +370,9 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
             **/
             function() {
                 $arguments = func_get_args();
+                if(count($arguments) == 1 && is_array($arguments)) {
+                    $arguments = $arguments[0];
+                }
                 $category = array_shift($arguments);
                 $result = $this->labels->$category;
                 foreach($arguments as $key) {
