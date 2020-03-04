@@ -682,7 +682,8 @@ WARNING: uses Bootstrap custom range input, so BS custom-forms component must be
     //after upload append file to input value
     .on('fileuploaded', function(event, data, previewId, index) {
         //get file name
-        var fileName = data.files[0].name;
+        //var fileName = data.files[0].name;
+        var fileName = data.response.fileName;
         {{ jsUploadObject }}.appendFile('{{ inputId }}', {name: fileName});
     })
     //preview of just uploaded file has been deleted

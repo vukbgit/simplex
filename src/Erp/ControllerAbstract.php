@@ -1020,7 +1020,9 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
     protected function uploadCore($uploadKey, $fileName, $fileSourcePath, $isUploadedFile = true)
     {
         //return object
-        $return = new \stdClass;
+        $return = (object) [
+            'fileName' => $fileName
+        ];
         $errors = [];
         //check uploads folder
         $uploadsFolder = $this->model->getUploadsFolder();
