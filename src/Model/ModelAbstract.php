@@ -334,7 +334,12 @@ abstract class ModelAbstract
                 }
                 //loop record's localized fields
                 foreach ($this->config->locales as $field) {
-                    $recordsByPK[$PKValue]->$field[$record->language_code] = $record->$field;
+                    //in case a locale field is added lately
+                    if(isset($record->$field)) {
+                        $recordsByPK[$PKValue]->$field[$record->language_code] = $record->$field;
+                    } else {
+                        $recordsByPK[$PKValue]->$field[$record->language_code] = null;
+                    }
                 }
             }
             $records = array_values($recordsByPK);
