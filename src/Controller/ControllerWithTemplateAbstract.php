@@ -633,6 +633,23 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
     ********/
     
     /**
+     * Sets template parameters necessary to file upload
+     * to be overridden if necessary by derived classes
+     */
+    protected function setUploadMaxFilesizeTemplateParameters()
+    {
+        $uploadMaxFilesizeIni = ini_get('upload_max_filesize');
+        $uploadMaxFilesizeBytes = bytes(ini_get('upload_max_filesize'));
+        //in kB for client validation
+        $uploadMaxFilesizeKB = number_format((float) str_replace('kB', '', \ByteUnits\bytes($uploadMaxFilesizeBytes)->format('kB')), 2, '.', '');
+        //in MB to be displayed
+        $uploadMaxFilesizeMB = str_replace('MB', '', \ByteUnits\bytes($uploadMaxFilesizeBytes)->format('MB'));
+        $this->setTemplateParameter('uploadMaxFilesizeBytes', $uploadMaxFilesizeBytes);
+        $this->setTemplateParameter('uploadMaxFilesizeKB', $uploadMaxFilesizeKB);
+        $this->setTemplateParameter('uploadMaxFilesizeMB', $uploadMaxFilesizeMB);
+    }
+    
+    /**
     * Processes a recordset to be used in a radio, checkbox or select mapping fields to value and label
     * @param string $valueField
     * @param mixed $labelTokens: the neme of one field or an array of fields names and strings to be joined to form label
