@@ -469,15 +469,6 @@ WARNING: uses Bootstrap custom select, so BS custom-forms component must be incl
     {{ selfMacros.displayInputRadioCheckboxGroup('radio', config, items) }}
 {% endmacro %}
 
-{# displays a checkboxes fields block
-@param hash config: hash for field properties (see setFieldAttributes macro explanation)
-@param array items: array of hashes each with value and label property
-#}
-{% macro displayInputCheckboxGroup(config, items) %}
-    {% import _self as selfMacros %}
-    {{ selfMacros.displayInputRadioCheckboxGroup('checkbox', config, items) }}
-{% endmacro %}
-
 {# displays a block with a checkbox formatted as a switch
 @param hash config: hash for field properties (see setFieldAttributes macro explanation)
 #}
