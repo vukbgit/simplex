@@ -70,8 +70,6 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
     public function __construct(ContainerInterface $DIContainer, ResponseInterface $response, Environment $templateEngine, VanillaCookieExtended $cookie)
     {
         parent::__construct($DIContainer, $response, $templateEngine, $cookie);
-        //load ERP config
-        $this->loadCRUDLConfig();
     }
     
     /**
@@ -80,6 +78,8 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
     */
     protected function doBeforeActionExecution(ServerRequestInterface $request)
     {
+        //load ERP config
+        $this->loadCRUDLConfig();
         //Parent jobs
         parent::doBeforeActionExecution($request);
         //store subject
