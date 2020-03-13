@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Simplex\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-12 10:22+0100\n"
-"PO-Revision-Date: 2019-11-12 10:28+0100\n"
+"POT-Creation-Date: 2020-03-13 12:05+0100\n"
+"PO-Revision-Date: 2020-03-13 12:17+0100\n"
 "Language: it_IT\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,15 +38,16 @@ msgstr "annulla"
 #. line 26
 #. line 39
 #. line 38
+#. line 41
 msgid "Record saved"
-msgstr "Record salvato"
+msgstr "Riga salvata"
 
 msgid "Record deleted"
-msgstr "Record eliminato"
+msgstr "Riga eliminata"
 
 #, php-format
 msgid "There is already another record with the same %s"
-msgstr "Esiste già un altro record con lo stesso valore di %s"
+msgstr "Esiste già un'altra riga con lo stesso valore di %s"
 
 #, php-format
 msgid "Missing value for mandatory foreign key %s"
@@ -55,6 +56,7 @@ msgstr "Manca il vaore per la chiave esterna obbligatoria %s"
 #. line 32
 #. line 33
 #. line 46
+#. line 51
 msgid "sort ascending"
 msgstr "imposta ordine alfabetico ascendente"
 
@@ -64,6 +66,9 @@ msgstr "imposta ordine alfabetico discendente"
 msgid "Please sign in"
 msgstr "Prego, effettuare l'accesso"
 
+#. line 30
+#. line 31
+#. line 32
 #. line 30
 #. line 31
 #. line 32
@@ -189,6 +194,8 @@ msgstr "Nome utente errato"
 #. line 55
 #. line 54
 #. line 55
+#. line 54
+#. line 55
 msgid "Password"
 msgstr "Password errata"
 
@@ -229,6 +236,7 @@ msgstr "Esci"
 #. line 57
 #. line 83
 #. line 81
+#. line 84
 msgid "Close"
 msgstr "Chiudi"
 
@@ -248,6 +256,7 @@ msgstr "nessun limite"
 #. line 464
 #. line 704
 #. line 798
+#. line 833
 msgid "Control Code"
 msgstr "Codice di Verifica"
 
@@ -256,6 +265,7 @@ msgstr "Codice di Verifica"
 #. line 481
 #. line 721
 #. line 815
+#. line 850
 msgid ""
 "Type code displayed into image, if you are not able to read the code click "
 "on the reload icon to generate a new image"
@@ -270,9 +280,12 @@ msgstr ""
 #. line 818
 #. line 1068
 #. line 1447
+#. line 1224
 msgid "The value you entered for this field is invalid."
 msgstr "Il valore digitato per questo campo non è valido."
 
+#. line 20
+#. line 21
 #. line 20
 #. line 21
 #. line 20
@@ -332,6 +345,7 @@ msgstr "lunghezza massima: %s caratteri"
 #. line 746
 #. line 996
 #. line 1375
+#. line 1152
 msgid "Please fill out this field"
 msgstr "Prego, compilare questo campo"
 
@@ -341,6 +355,7 @@ msgstr "Prego, compilare questo campo"
 #. line 749
 #. line 999
 #. line 1378
+#. line 1155
 msgid "Please enter an email address"
 msgstr "Prego, digitare un indirizzo di posta elettronica"
 
@@ -350,6 +365,7 @@ msgstr "Prego, digitare un indirizzo di posta elettronica"
 #. line 752
 #. line 1002
 #. line 1381
+#. line 1158
 msgid "Please enter a URL"
 msgstr "Prego, digitare un URL"
 
@@ -359,6 +375,7 @@ msgstr "Prego, digitare un URL"
 #. line 755
 #. line 1005
 #. line 1384
+#. line 1161
 #, php-format
 msgid ""
 "Please lengthen this text to %s characters or more. You are currently using "
@@ -373,6 +390,7 @@ msgstr ""
 #. line 758
 #. line 1008
 #. line 1387
+#. line 1164
 #, php-format
 msgid ""
 "Please short this text to no more than %s characters. You are currently "
@@ -387,6 +405,7 @@ msgstr ""
 #. line 761
 #. line 1011
 #. line 1390
+#. line 1167
 msgid "Please enter a number"
 msgstr "Prego, digitare un numero"
 
@@ -396,6 +415,7 @@ msgstr "Prego, digitare un numero"
 #. line 764
 #. line 1014
 #. line 1393
+#. line 1170
 msgid "Please select a valid value"
 msgstr "Prego, selezionare un valore valido"
 
@@ -405,6 +425,7 @@ msgstr "Prego, selezionare un valore valido"
 #. line 767
 #. line 1017
 #. line 1396
+#. line 1173
 #, php-format
 msgid "Please select a value that is no more than %s"
 msgstr "Prego, selezionare un valore che non sia maggiore di %s"
@@ -415,6 +436,7 @@ msgstr "Prego, selezionare un valore che non sia maggiore di %s"
 #. line 770
 #. line 1020
 #. line 1399
+#. line 1176
 #, php-format
 msgid "Please select a value that is no less than %s"
 msgstr "Prego, selezionare un valore che non sia minore di %s"
@@ -425,14 +447,16 @@ msgstr "Prego, selezionare un valore che non sia minore di %s"
 #. line 773
 #. line 1023
 #. line 1402
+#. line 1179
 msgid "Please match the requested format"
 msgstr "Prego, conformarsi al formato richiesto"
 
 #. line 58
 #. line 72
 #. line 96
+#. line 141
 msgid "No records saved"
-msgstr "Nessun record salvato"
+msgstr "Nessuna riga salvata"
 
 #. line 19
 msgid "fields marked with * are mandatory"
@@ -461,5 +485,29 @@ msgstr "Il campo \"%s\" deve essere compilato"
 msgid "Field \"%s\" not found"
 msgstr "Il campo \"%s\" non è stato trovato"
 
-#~ msgid "Column \"%s\" not found"
-#~ msgstr "Campo \"%s\" non trovato "
+msgid "clone"
+msgstr "clona"
+
+msgid "Records deleted"
+msgstr "Righe eliminate"
+
+#, php-format
+msgid "Do you confirm action '%s' over selected records?"
+msgstr "Si conferma l'operazione  '%s' sulle righe selezionate?"
+
+#, php-format
+msgid "%d records"
+msgstr "%d righe"
+
+msgid "share"
+msgstr "condividi"
+
+msgid "selected records bulk actions"
+msgstr "azioni di massa sulle righe selezionate"
+
+#. line 50
+msgid "you need to select at least one record"
+msgstr "è necessario selezionare almeno una riga"
+
+msgid "This field is mandatory"
+msgstr "Questo campo è obbligatorio"

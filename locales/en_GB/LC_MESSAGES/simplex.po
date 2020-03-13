@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Simplex\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-12 10:22+0100\n"
-"PO-Revision-Date: 2019-11-12 10:29+0100\n"
+"POT-Creation-Date: 2020-03-13 12:05+0100\n"
+"PO-Revision-Date: 2020-03-13 12:12+0100\n"
 "Language: en_GB\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,6 +38,7 @@ msgstr "cancel"
 #. line 26
 #. line 39
 #. line 38
+#. line 41
 msgid "Record saved"
 msgstr "Record saved"
 
@@ -55,6 +56,7 @@ msgstr "Missing value for mandatory foreign key %s"
 #. line 32
 #. line 33
 #. line 46
+#. line 51
 msgid "sort ascending"
 msgstr "sort ascending"
 
@@ -64,6 +66,9 @@ msgstr "sort descending"
 msgid "Please sign in"
 msgstr "Please sign in"
 
+#. line 30
+#. line 31
+#. line 32
 #. line 30
 #. line 31
 #. line 32
@@ -169,6 +174,8 @@ msgstr "Wrong username"
 #. line 55
 #. line 54
 #. line 55
+#. line 54
+#. line 55
 msgid "Password"
 msgstr "Password"
 
@@ -207,6 +214,7 @@ msgstr "Sign out"
 #. line 57
 #. line 83
 #. line 81
+#. line 84
 msgid "Close"
 msgstr "Close"
 
@@ -225,6 +233,7 @@ msgstr "no limit"
 #. line 464
 #. line 704
 #. line 798
+#. line 833
 msgid "Control Code"
 msgstr "Control Code"
 
@@ -232,6 +241,7 @@ msgstr "Control Code"
 #. line 481
 #. line 721
 #. line 815
+#. line 850
 msgid ""
 "Type code displayed into image, if you are not able to read the code click "
 "on the reload icon to generate a new image"
@@ -248,9 +258,12 @@ msgstr "maximum length %s characters"
 #. line 818
 #. line 1068
 #. line 1447
+#. line 1224
 msgid "The value you entered for this field is invalid."
 msgstr "The value you entered for this field is invalid."
 
+#. line 20
+#. line 21
 #. line 20
 #. line 21
 #. line 20
@@ -297,6 +310,7 @@ msgstr "Filter"
 #. line 746
 #. line 996
 #. line 1375
+#. line 1152
 msgid "Please fill out this field"
 msgstr "Please fill out this field"
 
@@ -305,6 +319,7 @@ msgstr "Please fill out this field"
 #. line 749
 #. line 999
 #. line 1378
+#. line 1155
 msgid "Please enter an email address"
 msgstr "Please enter an email address"
 
@@ -313,6 +328,7 @@ msgstr "Please enter an email address"
 #. line 752
 #. line 1002
 #. line 1381
+#. line 1158
 msgid "Please enter a URL"
 msgstr "Please enter a URL"
 
@@ -321,6 +337,7 @@ msgstr "Please enter a URL"
 #. line 755
 #. line 1005
 #. line 1384
+#. line 1161
 #, php-format
 msgid ""
 "Please lengthen this text to %s characters or more. You are currently using "
@@ -334,6 +351,7 @@ msgstr ""
 #. line 758
 #. line 1008
 #. line 1387
+#. line 1164
 #, php-format
 msgid ""
 "Please short this text to no more than %s characters. You are currently "
@@ -347,6 +365,7 @@ msgstr ""
 #. line 761
 #. line 1011
 #. line 1390
+#. line 1167
 msgid "Please enter a number"
 msgstr "Please enter a number"
 
@@ -355,6 +374,7 @@ msgstr "Please enter a number"
 #. line 764
 #. line 1014
 #. line 1393
+#. line 1170
 msgid "Please select a valid value"
 msgstr "Please select a valid value"
 
@@ -363,6 +383,7 @@ msgstr "Please select a valid value"
 #. line 767
 #. line 1017
 #. line 1396
+#. line 1173
 #, php-format
 msgid "Please select a value that is no more than %s"
 msgstr "Please select a value that is no more than %s"
@@ -372,6 +393,7 @@ msgstr "Please select a value that is no more than %s"
 #. line 770
 #. line 1020
 #. line 1399
+#. line 1176
 #, php-format
 msgid "Please select a value that is no less than %s"
 msgstr "Please select a value that is no less than %s"
@@ -381,6 +403,7 @@ msgstr "Please select a value that is no less than %s"
 #. line 773
 #. line 1023
 #. line 1402
+#. line 1179
 msgid "Please match the requested format"
 msgstr "Please match the requested format"
 
@@ -391,6 +414,7 @@ msgstr "fields marked with * are mandatory"
 #. line 58
 #. line 72
 #. line 96
+#. line 141
 msgid "No records saved"
 msgstr "No records saved"
 
@@ -417,5 +441,29 @@ msgstr "Field \"%s\" cannot be null"
 msgid "Field \"%s\" not found"
 msgstr "Field \"%s\" not found"
 
-#~ msgid "Column \"%s\" not found"
-#~ msgstr "Column \"%s\" not found"
+msgid "clone"
+msgstr "clone"
+
+msgid "Records deleted"
+msgstr "Records deleted"
+
+#, php-format
+msgid "Do you confirm action '%s' over selected records?"
+msgstr "Do you confirm action '%s' over selected records?"
+
+#, php-format
+msgid "%d records"
+msgstr "%d records"
+
+msgid "share"
+msgstr "share"
+
+msgid "selected records bulk actions"
+msgstr "selected records bulk actions"
+
+#. line 50
+msgid "you need to select at least one record"
+msgstr "you need to select at least one record"
+
+msgid "This field is mandatory"
+msgstr "This field is mandatory"
