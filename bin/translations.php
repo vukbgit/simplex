@@ -48,6 +48,14 @@ $DIContainerBuilder->useAutowiring(false);
 $DIContainerBuilder->useAnnotations(false);
 $DIContainerBuilder->addDefinitions(require sprintf('%s/di-container.php', SHARE_CONFIG_DIR));
 $DIContainer = $DIContainerBuilder->build();
+
+/********************************
+* build local templates helpers *
+********************************/
+foreach (\Nette\Utils\Finder::findFiles('templates-helpers.php')->from(sprintf('%s/private/local/simplex', $absPathToRoot)) as $file) {
+    $filePath = $file->__toString();
+    require $filePath;
+}
 /*************************
 * TRANSLATIONS EXTRACTOR *
 *************************/

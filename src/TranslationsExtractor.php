@@ -186,7 +186,7 @@ EOT;
         $package = 'Simplex';
         //destination po file location changes by context
         $pathToShareLocalesRoot = sprintf('%s/../locales', PRIVATE_SHARE_DIR);
-        $pathToLocalLocalesRoot = LOCALES_DIR;
+        $pathToLocalLocalesRoot = TRANSLATIONS_DIR;
         $pathToSharePoFolder = sprintf('%s/%s/LC_MESSAGES', $pathToShareLocalesRoot, $languageIETF);
         $pathToLocalPoFolder = sprintf('%s/%s/LC_MESSAGES', $pathToLocalLocalesRoot, $languageIETF);
         $pathToSharePoFile = sprintf('%s/%s.po', $pathToSharePoFolder, $domain);
