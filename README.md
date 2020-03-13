@@ -434,7 +434,7 @@ The following steps show how to set up an ERP subject, that is a subject which i
     * this is the translations workflow:
         * after installation, into _TRANSLATIONS_DIR_ English and Italian translations for Simplex core messages are stored
         * translations extraction from relies on Twig templates cache; if your local templates use any user defined Twig filter or function templates cache building will be broken, so you need to:
-            * put the Twig filter/function int a public method of some of your local classes
+            * put the Twig filters/functions definitions into a public method of some of your local classes
             * create one or more files under _private/local/simplex_ named _templates-helpers.php_: if this file exists it sill be automatically included by the translation script
             * into the _templates-helpers.php_ fiels call all of the template helpers builder methods
         * when local translations are added run script to update local messages, .po and .mo files are saved into _TRANSLATIONS_DIR_ for every language defined into _private/local/simplex/config/languages.json_:
@@ -443,7 +443,7 @@ The following steps show how to set up an ERP subject, that is a subject which i
             
         * download .po files, translate with [Poedit](https://poedit.net/) or other similar software
         * upload resulting .po and .mo fiels back to _TRANSLATIONS_DIR_
-    * in case site uses a PHP version different from system one if must be specified te complete path to PHP binary, i.e.
+    * in case site uses a PHP version different from system one if must be specified the complete path to PHP binary, i.e.
 
             /opt/php-7.3.5/bin/php private/share/vukbgit/simplex/bin/translations.php update local
 * __database__: Simplex encourages a localization ready database architecture, even when site uses just one language (see [Subject set up](#Subject-set-up) > _database architecture_)
