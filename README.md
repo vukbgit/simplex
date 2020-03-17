@@ -446,6 +446,16 @@ The following steps show how to set up an ERP subject, that is a subject which i
     * in case site uses a PHP version different from system one if must be specified the complete path to PHP binary, i.e.
 
             /opt/php-7.3.5/bin/php private/share/vukbgit/simplex/bin/translations.php update local
+            
+    * at installation time it is also created the script _private/local/simplex/bin/translations.sh_ that can be used to shortcut translation process:
+        * edit the file and set the PHP binary path according to your system
+        * soft link the script into webroot, for example:
+        
+                ln -s private/local/simplex/bin/translations.sh translations.sh
+                
+        * call it fromn webroot, for example:
+
+                ./translations.sh update local
 * __database__: Simplex encourages a localization ready database architecture, even when site uses just one language (see [Subject set up](#Subject-set-up) > _database architecture_)
 
 ## Icon Fonts ##
