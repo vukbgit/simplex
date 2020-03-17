@@ -453,7 +453,7 @@ The following steps show how to set up an ERP subject, that is a subject which i
         
                 ln -s private/local/simplex/bin/translations.sh translations.sh
                 
-        * call it fromn webroot, for example:
+        * call it from webroot, for example:
 
                 ./translations.sh update local
 * __database__: Simplex encourages a localization ready database architecture, even when site uses just one language (see [Subject set up](#Subject-set-up) > _database architecture_)
