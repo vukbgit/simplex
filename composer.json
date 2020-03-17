@@ -54,7 +54,6 @@
         "bin/git-setup-dev.sh",
         "bin/git-setup-prod.sh",
         "bin/update-all.sh",
-        "bin/git-push-all.sh",
-        "bin/translations.sh"
+        "bin/git-push-all.sh"
     ]
 }
