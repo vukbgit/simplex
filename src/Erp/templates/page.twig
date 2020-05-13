@@ -4,7 +4,7 @@
 
 {% block subjectHeader %}
     {% if displayBreadcrumb is not defined or displayBreadcrumb == true  %}
-    <nav aria-label="breadcrumb" class="my-3">
+    <nav aria-label="breadcrumb" class="subject-breadcrumb my-3">
         <ol class="breadcrumb">
         {% for ancestorKey, ancestor in ancestors %}
             <li class="breadcrumb-item">
@@ -12,7 +12,7 @@
                 {{- getLabel(ancestorKey, 'subject') }}
                 </a>
             </li>
-            <li class="breadcrumb-item">
+            <li class="breadcrumb-item breadcrumb-label">
                 {{- buildAncestorRecordLabel(ancestorKey) }}
             </li>
         {% endfor %}

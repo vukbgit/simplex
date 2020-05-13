@@ -89,6 +89,12 @@
         position: sticky;
     }
 }*/
+/* subject breadcrumb */
+.subject-breadcrumb {
+    .breadcrumb-label {
+        font-weight:bold;
+    }
+}
 /* hamburgers override*/
 $hamburger-layer-height        : 4px !default;
 $hamburger-layer-spacing       : 6px !default;
