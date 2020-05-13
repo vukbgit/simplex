@@ -214,6 +214,7 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
      */
     public function getCRUDLConfig()
     {
+        $this->loadCRUDLConfig();
         return $this->CRUDLConfig;
     }
     
