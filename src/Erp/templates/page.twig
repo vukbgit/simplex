@@ -1,94 +1,46 @@
-{% extends '@share/Erp/templates/erp.twig' %}
+{% extends '@share/Erp/templates/frame.twig' %}
 
 {% import '@share/Erp/templates/macros/navigation.twig' as navigationMacros %}
 
-{% block body %}
-    {{ parent() }}
-<nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap justify-content-start p-0 shadow" id="navbar-top">
-    <div id="sidebar-hat">
-        <button type="button" name="button" class="pf-c-button hamburger hamburger--collapse{% if sideBarClosed == false %} is-active{% endif %}" id="sidebar-toggle">
-            <span class="hamburger-box">
-                <span class="hamburger-inner"></span>
-            </span>
-        </button>
-    </div>
-    <div class="navbar-brand">
-        <h1 class="h2">
-            {{ '%s :: %s'|format(brand, area) }}
-        </h1>
-        {% if logoPath %}
-            <img src="{{ logoPath }}" alt="{{ brand }}">
-        {% endif %}
-    </div>
-    <div class="flex-grow-1 text-right">
-        <span>{{ userData.username }}</span>
-        <i class="icon-erp-user"></i>
-    </div>
-    <ul class="navbar-nav ml-auto px-3">
-        <li class="nav-item text-nowrap">
-            <a class="nav-link" href="{{ routeParameters.authentication.urls.signOut }}">
-                {{ 'Sign out'|trans }}
-                <i class="icon-erp-sign-out"></i>
-            </a>
-        </li>
-    </ul>
-</nav>
-
-<div class="container-fluid">
-    {# sidebar #}
-    <nav class="bg-dark text-light sidebar{% if sideBarClosed %} closed{% endif %}" id="sidebar">
-        <div class="sidebar-sticky">
-            <nav class="nav flex-column" id="navigation-top">
-        {% for voiceKey, voiceProperties in navigations.area %}
-            {{ navigationMacros.displaySidebarVoice(voiceKey, voiceProperties, areaNavigationLabels, 'navigation-top', 1) }}
+{% block subjectHeader %}
+    {% if displayBreadcrumb is not defined or displayBreadcrumb == true  %}
+    <nav aria-label="breadcrumb" class="my-3">
+        <ol class="breadcrumb">
+        {% for ancestorKey, ancestor in ancestors %}
+            <li class="breadcrumb-item">
+                <a href="{{ ancestor.routeBack }}">
+                {{- getLabel(ancestorKey, 'subject') }}
+                </a>
+            </li>
+            <li class="breadcrumb-item">
+                {{- buildAncestorRecordLabel(ancestorKey) }}
+            </li>
         {% endfor %}
-            </nav>
-        </div>
+            <li class="breadcrumb-item">
+                <a href="{{ buildRouteToActionFromRoot('list') }}">
+                {{- getLabel(subject, 'subject') }}
+                </a>
+            </li>
+            <li class="breadcrumb-item active text-capitalize" aria-current="page">
+        {%- block actionLabel %}{{ getLabel('actions', action) }}{% endblock %}
+            </li>
+        </ol>
     </nav>
-    {# main content #}
-    <main role="main" class="{% if sideBarClosed %} wide{% endif %}">
-        {% if displayBreadcrumb is not defined or displayBreadcrumb == true  %}
-        <nav aria-label="breadcrumb" class="my-3">
-            <ol class="breadcrumb">
-            {% for ancestorKey, ancestor in ancestors %}
-                <li class="breadcrumb-item">
-                    <a href="{{ ancestor.routeBack }}">
-                    {{- getLabel(ancestorKey, 'subject') }}
-                    </a>
-                </li>
-                <li class="breadcrumb-item">
-                    {{- buildAncestorRecordLabel(ancestorKey) }}
-                </li>
-            {% endfor %}
-                <li class="breadcrumb-item">
-                    <a href="{{ buildRouteToActionFromRoot('list') }}">
-                    {{- getLabel(subject, 'subject') }}
-                    </a>
-                </li>
-                <li class="breadcrumb-item active text-capitalize" aria-current="page">
-            {%- block actionLabel %}{{ getLabel('actions', action) }}{% endblock %}
-                </li>
-            </ol>
-        </nav>
     {% endif %}
-        {# model global actions navigation #}
-        {{ navigationMacros.displaySubjectGlobalActionsNavigation(_context, navigations.globalActions, globalActionsLabels) }}
-        {# subject alerts #}
-        {% for severity, alerts in attribute(attribute(areaCookie, subject), 'alerts')|objectToArray %}
-            <div class="alert {{ 'alert-%s'|format(severity) }} alert-dismissible fade show" role="alert">
-            {% set severityAlerts = [] %}
-            {% for alert in alerts %}
-                {% set severityAlerts = severityAlerts|merge([getLabel('alerts', alert.code)|formatArray(alert.data)]) %}
-            {% endfor %}
-            {{ severityAlerts|join('<br>')|raw }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="{{ 'Close'|trans }}">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            </div>
+    {# model global actions navigation #}
+    {{ navigationMacros.displaySubjectGlobalActionsNavigation(_context, navigations.globalActions, globalActionsLabels) }}
+    {# subject alerts #}
+    {% for severity, alerts in attribute(attribute(areaCookie, subject), 'alerts')|objectToArray %}
+        <div class="alert {{ 'alert-%s'|format(severity) }} alert-dismissible fade show" role="alert">
+        {% set severityAlerts = [] %}
+        {% for alert in alerts %}
+            {% set severityAlerts = severityAlerts|merge([getLabel('alerts', alert.code)|formatArray(alert.data)]) %}
         {% endfor %}
-        {{ resetSubjectAlerts() }}
-        {% block pageContent %}
-        {% endblock %}
-    </main>
-</div>
+        {{ severityAlerts|join('<br>')|raw }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="{{ 'Close'|trans }}">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+    {% endfor %}
+    {{ resetSubjectAlerts() }}
 {% endblock %}

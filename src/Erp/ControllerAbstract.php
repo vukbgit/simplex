@@ -327,27 +327,10 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
         /*************
         * NAVIGATION *
         *************/
-        //gets a local controller navigationS object
+        //gets a local controller navigations object
         $this->addTemplateFunction('getNavigations', function(ControllerWithTemplateAbstract $controller){
             $controller->loadSubjectNavigation();
             return $controller->getNavigations();
-        });
-        //builds route to an action from root
-        $this->addTemplateFunction(
-            'buildRouteToActionFromRoot',
-            function(string $actionRoutePart){
-                return $this->buildRouteToActionFromRoot($actionRoutePart);
-            }
-        );
-        //Builds route to an action based on action configuration
-        $this->addTemplateFunction('buildRouteToAction', function(object $voiceProperties){
-            if(isset($voiceProperties->route)) {
-                return $voiceProperties->route;
-            }  elseif(isset($voiceProperties->routeFromSubject)) {
-                return $this->buildRouteToActionFromRoot($voiceProperties->routeFromSubject);
-            }  else {
-                return '#';
-            }
         });
         //parses a record action route pattern replacing placeholders with record values
         $this->addTemplateFunction(

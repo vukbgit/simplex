@@ -1,0 +1,59 @@
+{% extends '@share/Erp/templates/erp.twig' %}
+
+{% import '@share/Erp/templates/macros/navigation.twig' as navigationMacros %}
+
+{% block body %}
+    {{ parent() }}
+<nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap justify-content-start p-0 shadow" id="navbar-top">
+    <div id="sidebar-hat">
+        <button type="button" name="button" class="pf-c-button hamburger hamburger--collapse{% if sideBarClosed == false %} is-active{% endif %}" id="sidebar-toggle">
+            <span class="hamburger-box">
+                <span class="hamburger-inner"></span>
+            </span>
+        </button>
+    </div>
+    <div class="navbar-brand">
+    {% block headerLogo %}
+        {{ parent() }}
+        {% if logoPath %}
+        <img src="{{ logoPath }}" alt="{{ brand }}">
+        {% endif %}
+    {% endblock %}
+        <h1 class="h2">
+        {{ '%s :: %s'|format(brand, area) }}
+        </h1>
+    </div>
+    <div class="flex-grow-1 text-right">
+        <span>{{ userData.username }}</span>
+        <i class="icon-erp-user"></i>
+    </div>
+    <ul class="navbar-nav ml-auto px-3">
+        <li class="nav-item text-nowrap">
+            <a class="nav-link" href="{{ routeParameters.authentication.urls.signOut }}">
+                {{ 'Sign out'|trans }}
+                <i class="icon-erp-sign-out"></i>
+            </a>
+        </li>
+    </ul>
+</nav>
+
+<div class="container-fluid">
+    {# sidebar #}
+    <nav class="bg-dark text-light sidebar{% if sideBarClosed %} closed{% endif %}" id="sidebar">
+        <div class="sidebar-sticky">
+            <nav class="nav flex-column" id="navigation-top">
+        {% for voiceKey, voiceProperties in navigations.area %}
+            {{ navigationMacros.displaySidebarVoice(voiceKey, voiceProperties, areaNavigationLabels, 'navigation-top', 1) }}
+        {% endfor %}
+            </nav>
+        </div>
+    </nav>
+    {# main content #}
+    <main role="main" class="{% if sideBarClosed %} wide{% endif %}">
+    {% block subjectHeader %}
+    {% endblock %}
+    {% block pageContent %}
+    {% endblock %}
+    </main>
+</div>
+{% endblock %}
