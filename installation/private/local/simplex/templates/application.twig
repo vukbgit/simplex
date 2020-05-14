@@ -29,7 +29,7 @@ var area = '{{ area }}';
 <link rel="stylesheet" href="/public/local/simplex/css/application.min.css">
 {% endblock %}
 </head>
-<body class="{% block bodyClass %}{% endblock %}" id="{% block bodyId %}{{ action }}{% endblock %}">
+<body class="{% block bodyClass %}{% endblock %}" id="{% block bodyId %}{{ 'body-%s'|format(action) }}{% endblock %}">
 {% block body %}
 {% endblock %}
 </body>
