@@ -107,7 +107,12 @@
                 {% endif %}
                 {% if allowed %}
                     {% set route = actionProperties.routeFromSubject is defined ? buildRouteToActionFromRoot(actionProperties.routeFromSubject) : actionProperties.route %}
-                <a href="{{ parseRecordActionRoute(route, record) }}"{% if actionProperties.linkClass is defined  %} class="{{ actionProperties.linkClass }}"{% endif %} title="{{- actionLabel|escape('html_attr') -}}">
+                <a
+                    href="{{ parseRecordActionRoute(route, record) }}"
+                    {% if actionProperties.linkClass is defined  %} class="{{ actionProperties.linkClass }}"{% endif %}
+                {% if actionProperties.target is defined  %} target="{{ actionProperties.target }}"{% endif %}
+                    title="{{- actionLabel|escape('html_attr') -}}"
+                >
                     {% if actionProperties.linkClass is not defined  %}
                         {{- actionLabel -}}
                     {% endif %}
