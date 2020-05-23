@@ -174,6 +174,8 @@ abstract class ModelAbstract
         //extract SQL-92 error class and subclass from code
         $class = substr($errorCode, 0, 2);
         $subclass = substr($errorCode, 2);
+        $rawMessage = null;
+        $data = null;
         switch($class) {
             //Integrity constraint violation
             case '23':
@@ -198,6 +200,7 @@ abstract class ModelAbstract
                     preg_match("/Column \'([0-9a-zA-Z_]+)\'/", $errorMessage, $matches);
                     $data = [$matches[1]];
                 }
+                $code = sprintf('SQLSTATE_%s_%s', $errorCode, $errorType);
             break;
             //Column not found
             case '42':
@@ -207,11 +210,17 @@ abstract class ModelAbstract
                     preg_match("/Unknown column '([0-9a-zA-Z_]+)'/", $errorMessage, $matches);
                     $data = [$matches[1]];
                 }
+                $code = sprintf('SQLSTATE_%s_%s', $errorCode, $errorType);
+            break;
+            default:
+                $code = null;
+                $rawMessage = sprintf('error code: %s; error message: %s', $errorCode, $errorMessage);
             break;
         }
         return (object) [
-            'code' => sprintf('SQLSTATE_%s_%s', $errorCode, $errorType),
-            'data' => $data
+            'code' => $code,
+            'data' => $data,
+            'rawMessage' => $rawMessage
         ];
     }
     

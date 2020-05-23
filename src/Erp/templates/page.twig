@@ -34,7 +34,7 @@
         <div class="alert {{ 'alert-%s'|format(severity) }} alert-dismissible fade show" role="alert">
         {% set severityAlerts = [] %}
         {% for alert in alerts %}
-            {% set severityAlerts = severityAlerts|merge([getLabel('alerts', alert.code)|formatArray(alert.data)]) %}
+            {% set severityAlerts = severityAlerts|merge([(alert.rawMessage ?? getLabel('alerts', alert.code))|formatArray(alert.data)]) %}
         {% endfor %}
         {{ severityAlerts|join('<br>')|raw }}
         <button type="button" class="close" data-dismiss="alert" aria-label="{{ 'Close'|trans }}">
