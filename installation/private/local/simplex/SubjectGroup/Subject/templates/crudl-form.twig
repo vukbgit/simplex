@@ -51,6 +51,22 @@
         },
         ITEMS
     ) }}
+    {# radio boolean group #}
+    {{ formMacros.displayInputRadioBooleanGroup(
+        {
+            'name': 'FIELD-NAME',
+            'value': record.FIELD-NAME,
+            'label': getLabel(subject, 'fields', 'FIELD-NAME'),
+            'autofocus': false,
+            'inline': true,
+            'disabled': action == 'delete-form',
+            'class': '',
+            'validation': {
+                'required': false,
+                'pattern': ''
+            }
+        }
+    ) }}
     {# upload input #}
     {{ formMacros.displayFileUpload(
         _context,
