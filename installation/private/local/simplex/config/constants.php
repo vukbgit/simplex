@@ -32,6 +32,12 @@ define('TMP_DIR', sprintf('%s/../tmp', ABS_PATH_TO_ROOT));
 //folder with HTTP errors pages
 define('ERROR_DIR', sprintf('%s/errors', PRIVATE_SHARE_DIR));
 /**********
+* SESSION *
+**********/
+//session.cookie_path (defaults to /), useful to host multiple applications with distinct backend under the same domain
+//in this case backend routes must begin with SESSION_COOKIE_PATH
+define('SESSION_COOKIE_PATH', null);
+/**********
 * COOKIES *
 **********/
 //cookies default duration  in minutes (525600 minutes = 1 year)
