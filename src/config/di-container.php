@@ -83,6 +83,13 @@ return array_merge(
         'cookieManager' => create(VanillaCookieExtended::class)
             ->constructor(),
         //query builder
+        'dbDriver' => function(){
+            $config = require sprintf('%s/db.php', LOCAL_CONFIG_DIR);
+            if(!isset($config[ENVIRONMENT])) {
+                throw new \Exception(sprintf('There is no databsae configuration for current environment \'%s\'', ENVIRONMENT));
+            }
+            return $config[ENVIRONMENT]['driver'];
+        },
         'dbConfig' => function(){
             $config = require sprintf('%s/db.php', LOCAL_CONFIG_DIR);
             if(!isset($config[ENVIRONMENT])) {
@@ -91,7 +98,8 @@ return array_merge(
             return $config[ENVIRONMENT];
         },
         'pixieConnection' => create(Connection::class)
-            ->constructor('mysql', get('dbConfig'), 'QB'),
+            //->constructor('mysql', get('dbConfig'), 'QB'),
+            ->constructor(get('dbDriver'), get('dbConfig'), 'QB'),
         'queryBuilder' => create(PixieExtended::class)
             ->constructor(get('pixieConnection')),
         //authentication
