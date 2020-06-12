@@ -45,33 +45,25 @@ setAreaCookie = function(area,  propertyName, propertyValue)
  * . -> dot
  * spaces are trimmed
  */
-function EmailUnobsfuscate() {
-    // find all links in HTML
-    var link = document.getElementsByTagName && document.getElementsByTagName("a");
-    var email, e;
-    
-    // examine all links
-    for (e = 0; link && e < link.length; e++) {
-        
-        // does the link have use a class named "email"
-        if ((" "+link[e].className+" ").indexOf(" obfuscated-email ") >= 0) {
-            
-            // get the obfuscated email address
-            email = link[e].firstChild.nodeValue.toLowerCase() || "";
-            
-            // transform into real email address
-            email = email.replace(/dot/ig, ".");
-            email = email.replace(/\(at\)/ig, "@");
-            email = email.replace(/\s/g, "");
-            
-            // is email valid?
-            if (/^[^@]+@[a-z0-9]+([_.-]{0,1}[a-z0-9]+)*([.]{1}[a-z0-9]+)+$/.test(email)) {
-                // change into a real mailto link
-                link[e].href = "mailto:" + email;
-                link[e].firstChild.nodeValue = email;
-                
+function EmailUnobsfuscate(atReplacement, dotReplacement) {
+    if(!atReplacement || !dotReplacement) {
+        alert('for mail obfuscation to be used, MAIL_AT_REPLACEMENT and MAIL_DOT_REPLACEMENT constants must be defined');
+    } else {
+        // find all links in HTML
+        var obfuscatedEmail, email;
+        var emails = $(".obfuscated-email").each(function(){
+            obfuscatedEmail = $(this)
+                .attr('href');
+            email = obfuscatedEmail
+                .replace(/mailto:/, '')
+                .replace(atReplacement, "@")
+                .replace(dotReplacement, ".")
+                ;
+                $(this).attr('href', 'mailto:' + email);
+            if($(this).text() == obfuscatedEmail) {
+                $(this).text(email);
             }
-        }
+        });
     }
 }
-window.onload = EmailUnobsfuscate;
+//window.onload = EmailUnobsfuscate;
