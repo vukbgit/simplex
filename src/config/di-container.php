@@ -17,7 +17,8 @@ use Twig\Loader\FilesystemLoader;
 use \Simplex\TwigExtended;
 use Simplex\VanillaCookieExtended;
 //query builder
-use \Pixie\Connection;
+//use \Pixie\Connection;
+use \Simplex\PixieConnectionExtended;
 use \Simplex\PixieExtended;
 //authentication
 use \Simplex\Authentication;
@@ -97,7 +98,7 @@ return array_merge(
             }
             return $config[ENVIRONMENT];
         },
-        'pixieConnection' => create(Connection::class)
+        'pixieConnection' => create(PixieConnectionExtended::class)
             //->constructor('mysql', get('dbConfig'), 'QB'),
             ->constructor(get('dbDriver'), get('dbConfig'), 'QB'),
         'queryBuilder' => create(PixieExtended::class)

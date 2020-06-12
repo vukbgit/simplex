@@ -12,6 +12,31 @@ use \Pixie\QueryBuilder\QueryBuilderHandler;
 class PixieExtended extends QueryBuilderHandler
 {
     /**
+    * Checks whether connection is alive
+    * @return bool
+    **/
+    public function isConnectionAlive()
+    {
+        $this->connection->reconnect();
+        try {
+            return (bool) $this->query('SELECT 1')->get();
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+    
+    /**
+    * Checks whether connection is alive and reconnects if necessary
+    * @return bool
+    **/
+    public function checkConnection()
+    {
+        if(!$this->isConnectionAlive()) {
+            $this->connection->reconnect();
+        }
+    }
+    
+    /**
     * Sets table
     * @param string $table
     **/
