@@ -17,7 +17,6 @@ use Twig\Loader\FilesystemLoader;
 use \Simplex\TwigExtended;
 use Simplex\VanillaCookieExtended;
 //query builder
-//use \Pixie\Connection;
 use \Simplex\PixieConnectionExtended;
 use \Simplex\PixieExtended;
 //authentication

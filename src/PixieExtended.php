@@ -12,14 +12,18 @@ use \Pixie\QueryBuilder\QueryBuilderHandler;
 class PixieExtended extends QueryBuilderHandler
 {
     /**
+     * whether to check connection to database on every Simplex\Model select, insert, update and delete operation, usefull for long lived scripts (i.e. websocket server)
+     */
+     private $checkConnection = false;
+    
+    /**
     * Checks whether connection is alive
     * @return bool
     **/
-    public function isConnectionAlive()
+    private function isConnectionAlive()
     {
-        $this->connection->reconnect();
         try {
-            return (bool) $this->query('SELECT 1')->get();
+            $this->getConnection()->getPdoInstance()->query('SELECT 1');
         } catch (PDOException $e) {
             return false;
         }
@@ -29,11 +33,24 @@ class PixieExtended extends QueryBuilderHandler
     * Checks whether connection is alive and reconnects if necessary
     * @return bool
     **/
-    public function checkConnection()
+    private function checkConnection()
     {
+        if($this->checkConnection === false) {
+            return;
+        }
         if(!$this->isConnectionAlive()) {
             $this->connection->reconnect();
         }
+    }
+    
+    /**
+    * Sets whether to check if connection is alive and reconnects if necessary
+    * it can be set at runtime through container for *all* of classes the use a PixieExtend, i.e in a controller: $this->DIContainer->get('queryBuilder')->setCheckConnection(true);
+    * @param bool $set
+    **/
+    public function setCheckConnection(bool $set)
+    {
+        $this->checkConnection = $set;
     }
     
     /**
@@ -132,5 +149,18 @@ class PixieExtended extends QueryBuilderHandler
                 }
             }
         }
+    }
+    
+    /**
+     * Get all rows
+     *
+     * @return \stdClass|array
+     * @throws Exception
+     */
+    public function get()
+    {
+        //x('get');
+        $this->checkConnection();
+        return parent::get();
     }
 }

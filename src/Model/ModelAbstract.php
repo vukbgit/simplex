@@ -291,8 +291,6 @@ abstract class ModelAbstract
     */
     public function get(array $where = [], array $order = [])
     {
-        //check connection
-        $this->query->checkConnection();
         //table
         $this->query
             ->table($this->view());
@@ -378,8 +376,6 @@ abstract class ModelAbstract
     */
     public function insert(array $fieldsValues)
     {
-        //check connection
-        $this->query->checkConnection();
         //insert record
         $primaryKeyValue = $this->query
             ->table($this->table())
@@ -398,8 +394,6 @@ abstract class ModelAbstract
     */
     public function update($primaryKeyValue = null, array $fieldsValues = [])
     {
-        //check connection
-        $this->query->checkConnection();
         $this->query
             ->table($this->table());
         if($primaryKeyValue) {
@@ -421,8 +415,6 @@ abstract class ModelAbstract
     */
     public function delete($primaryKeyValue = null, $where = [])
     {
-        //check connection
-        $this->query->checkConnection();
         //set where conditions
         if($primaryKeyValue) {
             $where = array_merge(
@@ -472,8 +464,6 @@ abstract class ModelAbstract
     */
     public function clone($primaryKeyValues, array $fieldsToMark, array $fieldsToUpdate = [])
     {
-        //check connection
-        $this->query->checkConnection();
         if(!is_array($primaryKeyValues)) {
             $primaryKeyValues = [$primaryKeyValues];
         }
