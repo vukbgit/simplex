@@ -24,11 +24,11 @@
 {# displays a sanitized email link
 @param string email
 #}
-{% macro sanitizeEmail(context, email) %}
+{% macro sanitizeEmail(context, email, extraClasses) %}
     {% if context.mailAtReplacement is not defined or context.mailDotReplacement is not defined %}
     for mail sanitize to be used, mailAtReplacement and mailDotReplacement template variables must be defined into calling context
     {% else %}
         {% set email = email|replace({'@': ' %s '|format(context.mailAtReplacement), '.': ' %s '|format(context.mailDotReplacement)}) %}
-    <a href="mailto:{{ email }}" class="sanitized-email">{{ email }}</a>
+    <a href="mailto:{{ email }}" class="sanitized-email{% if extraClasses %} {{ extraClasses }}{% endif %}">{{ email }}</a>
     {% endif %}
 {% endmacro %}
