@@ -23,8 +23,8 @@ class PixieExtended extends QueryBuilderHandler
     private function isConnectionAlive()
     {
         try {
-            $this->getConnection()->getPdoInstance()->query('SELECT 1');
-        } catch (PDOException $e) {
+            $this->pdo()->query('SELECT 1');
+        } catch (\PDOException $e) {
             return false;
         }
     }
@@ -40,6 +40,7 @@ class PixieExtended extends QueryBuilderHandler
         }
         if(!$this->isConnectionAlive()) {
             $this->connection->reconnect();
+            $this->pdo = $this->connection->getPdoInstance();
         }
     }
     
@@ -159,7 +160,6 @@ class PixieExtended extends QueryBuilderHandler
      */
     public function get()
     {
-        //x('get');
         $this->checkConnection();
         return parent::get();
     }
