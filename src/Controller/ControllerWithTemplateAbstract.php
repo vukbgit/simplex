@@ -137,8 +137,9 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
 
     /**
     * Builds common template helpers
+    * NOTE: do not change visibility
     */
-    protected function buildCommonTemplateHelpers()
+    private function buildCommonTemplateHelpers()
     {
         /********
         * DEBUG *
