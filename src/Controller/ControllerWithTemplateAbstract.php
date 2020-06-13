@@ -138,7 +138,7 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
     /**
     * Builds common template helpers
     */
-    private function buildCommonTemplateHelpers()
+    protected function buildCommonTemplateHelpers()
     {
         /********
         * DEBUG *
@@ -396,6 +396,21 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         //checks a user permission
         $this->addTemplateFunction('checkPermission', function(string $permission){
             return $this->checkPermission($permission);
+        });
+        /********
+        * EMAIL *
+        ********/
+        //obfuscate an email address
+        $this->addTemplateFunction('obfuscateEmail', function(string $email){
+            if(!defined('MAIL_AT_REPLACEMENT') || !defined('MAIL_DOT_REPLACEMENT')) {
+                return 'for mail obfuscation to be used, MAIL_AT_REPLACEMENT and MAIL_DOT_REPLACEMENT constants must be defined';
+            } else {
+                return str_replace(
+                    ['@', '.'],
+                    [MAIL_AT_REPLACEMENT, MAIL_DOT_REPLACEMENT],
+                    $email
+                );
+            }
         });
         /***********
         * SUBJECTS *
