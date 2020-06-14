@@ -44,19 +44,16 @@ class FastRouteMiddleware implements MiddlewareInterface
      */
     public function __construct(string $environment, array $routes, string $tmpFolderPath = null, ResponseFactoryInterface $responseFactory = null)
     {
-        //set routes caching
-        switch($environment) {
-            case 'development':
-                $fastRouteDispatcherClass = 'FastRoute\simpleDispatcher';
-                $fastRouteCacheOptions = [];
-            break;
-            default:
-                $fastRouteDispatcherClass = 'FastRoute\cachedDispatcher';
-                $fastRouteCacheOptions = [
-                    'cacheFile' => $tmpFolderPath . '/fastroute.cache', /* required */
-                    'cacheDisabled' => false,     /* optional, enabled by default */
-                ];
-            break;
+        //until PHP 7.3 var_export uses stdClass::__setState() which causes problems
+        if($environment == 'production' && version_compare(PHP_VERSION, '7.3.0') >= 0) {
+            $fastRouteDispatcherClass = 'FastRoute\cachedDispatcher';
+            $fastRouteCacheOptions = [
+                'cacheFile' => $tmpFolderPath . '/fastroute.cache', /* required */
+                'cacheDisabled' => false,     /* optional, enabled by default */
+            ];
+        }else {
+            $fastRouteDispatcherClass = 'FastRoute\simpleDispatcher';
+            $fastRouteCacheOptions = [];
         }
         //router instance
         $router = $fastRouteDispatcherClass(
