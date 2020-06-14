@@ -465,8 +465,6 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
     protected function list()
     {
         $parser = new \FastRoute\RouteParser\Std();
-        $route = $parser->parse('/backend/{subject}/list');
-        $route = $parser->parse('/backend/{subject}/insert-form');
         //check list query modifiers
         $this->setListQueryModifiers();
         //get model list
