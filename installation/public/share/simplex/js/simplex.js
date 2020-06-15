@@ -53,9 +53,9 @@ function EmailUnobsfuscate(atReplacement, dotReplacement) {
         var obfuscatedEmail, email;
         var emails = $(".obfuscated-email").each(function(){
             obfuscatedEmail = $(this)
-                .attr('href');
+                .attr('href')
+                .replace(/mailto:/, '');
             email = obfuscatedEmail
-                .replace(/mailto:/, '')
                 .replace(atReplacement, "@")
                 .replace(dotReplacement, ".")
                 ;
