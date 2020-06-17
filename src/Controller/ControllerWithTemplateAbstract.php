@@ -217,6 +217,17 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
                 return strftime($format, $timestamp);
             }
         });
+        /* formats a date with locale awareness
+        */
+        $this->addTemplateFunction('datetimeLocale', function(string $date, string $format = null): string{
+            $date = \DateTime::createFromFormat('Y-m-d H:i:s', $date);
+            if(!$format) {
+                return $date->format($this->language->dateTimeFormat->PHP);
+            } else {
+                $timestamp = (int) $date->format('U');
+                return strftime($format, $timestamp);
+            }
+        });
         /********
         * PATHS *
         ********/
