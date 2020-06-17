@@ -1261,11 +1261,11 @@ var simplexValidation = {
             message.className = 'invalid-tooltip';
             message.id = 'error-for-' + id;
             messageContainer.append(message);
-            // Update error message
-            message.innerHTML = error;
         } else {
             manuallyShowMessage = true;
         }
+        // Update error message in any case to overwrite eventual previous errors
+        message.innerHTML = error;
         // Add ARIA role to the field
         field.setAttribute('aria-describedby', 'error-for-' + id);
         //show manually if necessary
