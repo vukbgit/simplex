@@ -1293,7 +1293,8 @@ var simplexValidation = {
                 manuallyHideMessage = true;
             break;
             default:
-                manuallyHideMessage = false;
+                messageId = 'error-for-' + simplexValidation.formatId(field.name);
+                manuallyHideMessage = true;
             break;
         }
         //hide manually if necessary
