@@ -271,13 +271,13 @@ class Middleware implements MiddlewareInterface
      * @param string $username
      * @param string $password
      * @param string $pathToDbConfigFile path to db configuration file
-     * @param string $algo hashing algorithm for the hash() function
+     * @param string $algo hashing algorithm for the hash() function, see https://github.com/auraphp/Aura.Auth PDO Adapter
      * @param string $table table or view to be quieried
      * @param array $fields: username field, password field, any other field
      * @param string $condition: query where condition portion
      * @return string return code: 1 = wrong username, 2 = wrong password, 3 = sign in correct
      **/
-    private function signInWithDb(string $username, string $password, string $pathToDbConfigFile, string $algo, string $table, array $fields, string $condition = null): int
+    private function signInWithDb(string $username, string $password, string $pathToDbConfigFile, $algo, string $table, array $fields, string $condition = null): int
     {
         //create PDO instance
         $dbConfig = (require $pathToDbConfigFile)[ENVIRONMENT];
@@ -307,7 +307,7 @@ class Middleware implements MiddlewareInterface
             $userData = $auth->getUserData();
             $userData['username'] = $username;
             $userData['role'] = $userData[$fields[2]];
-            unset($userData[$fields[2]]);
+            //unset($userData[$fields[2]]);
             $this->setUserData($userData);
             $returnCode = 4;
         } catch(UsernameNotFound $e) {
