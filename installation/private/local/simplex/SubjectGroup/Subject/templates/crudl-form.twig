@@ -67,6 +67,23 @@
             }
         }
     ) }}
+    {# date #}
+    {{ formMacros.displayDateTimePickerGroup(
+    {
+        'name': 'FIELD-NAME',
+        'value': record.FIELD-NAME,
+        'label': getLabel(subject, 'fields', 'FIELD-NAME'),
+        'help': null,
+        'autofocus': false,
+        'disabled': action == 'delete-form',
+        'autocomplete': '',
+        'class': '',
+        'validation': {
+            'required': false,
+            'pattern': ''
+        }
+    }
+    ) }}
     {# upload input #}
     {{ formMacros.displayFileUpload(
         _context,
