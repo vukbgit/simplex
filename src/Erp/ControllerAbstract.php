@@ -464,7 +464,6 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
      */
     protected function list()
     {
-        $parser = new \FastRoute\RouteParser\Std();
         //check list query modifiers
         $this->setListQueryModifiers();
         //get model list
