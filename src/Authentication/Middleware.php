@@ -203,7 +203,7 @@ class Middleware implements MiddlewareInterface
                             throw new \Exception('db authentication method must have a \'table\' property with the name of the db table to query');
                         }
                         //check fields
-                        if(!isset($methodProperties->fields) || !is_array($methodProperties->fields) || count($methodProperties->fields) != 3) {
+                        if(!isset($methodProperties->fields) || !is_array($methodProperties->fields) || count($methodProperties->fields) < 3) {
                             throw new \Exception('db authentication method must have a \'fields\' property, an array of columns table names with 3 elements, first is the username field, second the password field, third is user role field');
                         }
                         $returnCode = $this->signInWithDb($username, $password, $methodProperties->path, $methodProperties->algo, $methodProperties->table, $methodProperties->fields, $methodProperties->condition ?? null);
