@@ -872,7 +872,7 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
      * Performs action after record save
      * to be overridden by children classes if necessary
      * @param mixed $primaryKeyValue
-     * @param object $fieldsData as returnd by getSaveFormData method
+     * @param object $fieldsData as returnd by getSaveFieldsData method
      */
     protected function doAfterRecordSave($primaryKeyValue, $fieldsData)
     {
