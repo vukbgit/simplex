@@ -19,9 +19,13 @@
         <img src="{{ logoPath }}" alt="{{ brand }}">
         {% endif %}
     {% endblock %}
+    {% block headerTitle %}
+        {% if hideHeaderTitle is not defined or hideHeaderTitle == false %}
         <h1 class="h2">
         {{ '%s :: %s'|format(brand, area) }}
         </h1>
+        {% endif %}
+    {% endblock %}
     </div>
     <div class="flex-grow-1 text-right">
         <span>{{ userData.username }}</span>
