@@ -785,8 +785,9 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
             $uploadsFilters = [];
             foreach ($this->model->getUploadKeys() as $uploadKey) {
                 $uploadsFilters[$uploadKey] = [
-                    'filter' => FILTER_VALIDATE_REGEXP,
-                    'options' => ['regexp'=>'/^([0-9a-zA-z_\-\.\s\p{L}]+\.[1-9a-zA-Z]{3,4}\|?)+$/u']
+                    'filter' => FILTER_SANITIZE_STRING,
+                    //'filter' => FILTER_VALIDATE_REGEXP,
+                    //'options' => ['regexp'=>'/^([0-9a-zA-z_\-\.\s\p{L}]+\.[1-9a-zA-Z]{3,4}\|?)+$/u']
                 ];
             }
             $uploadsInput = (object) filter_input_array(INPUT_POST, $uploadsFilters);
