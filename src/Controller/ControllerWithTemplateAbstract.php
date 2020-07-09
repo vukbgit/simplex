@@ -231,6 +231,10 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         /********
         * PATHS *
         ********/
+        //Turns a word in slug notation (route part) into a form as defined by PSR1 standard (https://www.php-fig.org/psr/psr-1/) for class names, method names and such
+        $this->addTemplateFunction('slugToPSR1Name', function(string $slug, string $type): string{
+            return slugToPSR1Name($slug, $type);
+        });
         //gets current request URI
         $this->addTemplateFunction('getUri', function(): string{
             return $this->request->getUri()->getPath();
