@@ -6,4 +6,5 @@ if [ -f ./composer.sh ]; then
 else
     composer update
 fi
+./yarn.sh install
 ./yarn.sh upgrade
