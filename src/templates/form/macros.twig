@@ -456,6 +456,7 @@ WARNING: uses Bootstrap custom select, so BS custom-forms component must be incl
 {% macro displayInputRadioBooleanGroup(config) %}
     {% import _self as selfMacros %}
     {% set config = updateProperty(config, 'inline', true) %}
+    {% set config = updateProperty(config, 'value', int(config.value)) %}
     {% set items = [
         {
             'value': 0,

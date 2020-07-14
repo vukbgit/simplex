@@ -155,6 +155,10 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         /************
         * VARIABLES *
         ************/
+        //cast to int
+        $this->addTemplateFunction('int', function($value) {
+            return intval($value);
+        });
         //changes an array or object property
         $this->addTemplateFunction('updateProperty', function($input, $property, $value) {
             if(is_array($input)) {
