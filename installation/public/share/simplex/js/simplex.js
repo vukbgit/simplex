@@ -51,15 +51,18 @@ function EmailUnobsfuscate(atReplacement, dotReplacement) {
     } else {
         // find all links in HTML
         var obfuscatedEmail, email;
+        var atRegex = RegExp(atReplacement);
+        var dotRegex = RegExp(dotReplacement, 'g');
         var emails = $(".obfuscated-email").each(function(){
             obfuscatedEmail = $(this)
                 .attr('href')
                 .replace(/mailto:/, '');
             email = obfuscatedEmail
-                .replace(atReplacement, "@")
-                .replace(dotReplacement, ".")
+                .replace(atRegex, "@")
+                //.replace(/dotReplacement/g, ".")
+                .replace(dotRegex, ".")
                 ;
-                $(this).attr('href', 'mailto:' + email);
+            $(this).attr('href', 'mailto:' + email);
             if($(this).text() == obfuscatedEmail) {
                 $(this).text(email);
             }
