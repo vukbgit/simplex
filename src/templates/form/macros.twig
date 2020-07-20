@@ -832,19 +832,24 @@ NOTE: controller class must inject a Simplex\ZendCaptchaImageExtended instance
 <div class="form-row form-group" id="captcha-container">
     <div class="col-12">
         <label for="captcha">{% trans 'Control Code' %}</label>
-        <i class="icon-form-reload" id="captcha-icon-reload"></i>
+        {#<i class="icon-form-reload" id="captcha-icon-reload"></i>#}
     </div>
     <div class="col-6">
         <img src="{{ captchaImage.imageUrl }}" id="captcha-image">
         <input type="hidden" name="captcha_id" id="captcha_id" value="{{ captchaImage.id }}">
     </div>
     <div class="col-6">
+        <div class="input-group">
         {{ selfMacros.displayInputText({
             'name': 'captcha',
             'validation': {
                 'required': true
             }
         }) }}
+            <div class="input-group-append">
+                <button type="button" class="icon-form-reload border-0" id="captcha-icon-reload"></button>
+            </div>
+        </div>
     </div>
     <div class="col-12">
         <small class="form-text text-muted">
