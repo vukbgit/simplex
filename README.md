@@ -428,12 +428,12 @@ The following steps show how to set up an ERP subject, that is a subject which i
     * Simplex uses [gettext](https://www.gnu.org/software/gettext/) and is shipped with a set of English and Italian translations for the messages contained into the provided UI
     * translations can be inserted into:
         * _PHP_ files using the gettext() function or the _() alias (see [PHP gettext documentation](https://www.php.net/gettext))
-        * _Twig templates_ using the trans block and filter from the (included by default) i18n extension (see [documentation](https://twig-extensions.readthedocs.io/en/latest/i18n.html))
+        * _Twig templates_ using the _trans_ block and filter from the (included by default) i18n extension (see [documentation](https://twig-extensions.readthedocs.io/en/latest/i18n.html))
     * _private/share/vukbgit/simplex/bin/translations.php_ script can be used to extract translations
     * folder where translations files are stored is specified by the _TRANSLATIONS_DIR_ constant and defaults to _private/local/simplex/locales_
     * this is the translations workflow:
         * after installation, into _TRANSLATIONS_DIR_ English and Italian translations for Simplex core messages are stored
-        * translations extraction from relies on Twig templates cache; if your local templates use any user defined Twig filter or function templates cache building will be broken, so you need to:
+        * translations extraction from templates relies on Twig cache; if your local templates use any user defined Twig filter or function templates cache building will be broken, so you need to:
             * put the Twig filters/functions definitions into a public method of some of your local classes
             * create one or more files under _private/local/simplex_ named _templates-helpers.php_: if this file exists it sill be automatically included by the translation script
             * into the _templates-helpers.php_ fiels call all of the template helpers builder methods
