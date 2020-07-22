@@ -5,9 +5,9 @@ return [
     'timeout' => 300,
     'useNumbers' => true,
     //font shipped with Simplex
-    'font' => 'private/share/vukbgit/simplex/fonts/Lato/Lato-Regular.ttf',
+    'font' => sprintf('%s/fonts/Lato/Lato-Regular.ttf', PRIVATE_SHARE_SIMPLEX_DIR),
     'height' => 100,
     //will be created if does not exist
-    'imgDir' => 'public/local/simplex/captcha',
+    'imgDir' => sprintf('%s/captcha', PUBLIC_LOCAL_SIMPLEX_DIR),
     'expiration' => 400
 ];

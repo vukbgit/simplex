@@ -18,12 +18,17 @@ if(getenv('REDIRECT_ENVIRONMENT')) {
     echo 'No evironment defined, you must set up root .htaccess';
     exit;
 }
-define('PRIVATE_SHARE_DIR', sprintf('%s/private/share/vukbgit/simplex/src', ABS_PATH_TO_ROOT));
+define('PRIVATE_SHARE_BASE_DIR', sprintf('%s/private/share', ABS_PATH_TO_ROOT));
+define('PRIVATE_SHARE_PACKAGIST_DIR', sprintf('%s/packagist', PRIVATE_SHARE_BASE_DIR));
+define('PRIVATE_SHARE_SIMPLEX_DIR', sprintf('%s/vukbgit/simplex', PRIVATE_SHARE_PACKAGIST_DIR));
+define('PRIVATE_SHARE_DIR', sprintf('%s/src', PRIVATE_SHARE_SIMPLEX_DIR));
 define('PRIVATE_LOCAL_DIR', sprintf('%s/private/local/simplex', ABS_PATH_TO_ROOT));
 define('SHARE_CONFIG_DIR', sprintf('%s/config', PRIVATE_SHARE_DIR));
 define('LOCAL_CONFIG_DIR', sprintf('%s/config', PRIVATE_LOCAL_DIR));
 define('MIDDLEWARE_QUEUE_PATH', sprintf('%s/middleware.php', SHARE_CONFIG_DIR));
 define('PUBLIC_SHARE_DIR', 'public/share');
+define('PUBLIC_LOCAL_DIR', 'public/local');
+define('PUBLIC_LOCAL_SIMPLEX_DIR', sprintf('%s/simplex', PUBLIC_LOCAL_DIR));
 /*****************
 * CACHE & ERRORS *
 *****************/
@@ -47,7 +52,7 @@ define('COOKIE_DURATION', 525600 * 5);
 ************/
 //folder where Twig template engine starts looking for templates files
 //namespaced into twig as @share
-define('SHARE_TEMPLATES_DIR', sprintf('%s/private/share/vukbgit/simplex/src', ABS_PATH_TO_ROOT));
+define('SHARE_TEMPLATES_DIR', PRIVATE_SHARE_DIR);
 //namespaced into twig as @local
 define('LOCAL_TEMPLATES_DIR', PRIVATE_LOCAL_DIR);
 //twig template files extension

@@ -9,7 +9,7 @@ use function Simplex\requireFromFiles;
 /***********
 * COMPOSER *
 ***********/
-require_once 'private/share/autoload.php';
+require_once 'private/share/packagist/autoload.php';
 /**************
 * ENVIRONMENT *
 **************/

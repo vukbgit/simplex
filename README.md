@@ -89,7 +89,7 @@ Create a Composer.json in the root folder:
             "vukbgit/simplex": "^1.1.0"
         },
         "config": {
-            "vendor-dir": "private/share",
+            "vendor-dir": "private/share/packagist",
             "bin-dir": "./"
         },
         "autoload": {
@@ -104,7 +104,7 @@ Create a Composer.json in the root folder:
        },
        "extra": {
            "copy-file": {
-               "private/share/vukbgit/simplex/installation/": "."
+               "private/share/packagist/vukbgit/simplex/installation/": "."
            }
        }
     }
