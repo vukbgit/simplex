@@ -80,9 +80,11 @@ class PHPMailerExtended extends PHPMailer
             foreach ($attachments as $attachment) {
                 switch($attachment->type) {
                     case 'f':
+                    case 'file':
                         $this->addAttachment($attachment->content, $attachment->name);
                     break;
                     case 's':
+                    case 'string':
                         $this->addStringAttachment($attachment->content, $attachment->name);
                     break;
                 }
