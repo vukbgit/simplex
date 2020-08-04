@@ -61,7 +61,7 @@ class Middleware implements MiddlewareInterface
     public function __construct(VanillaCookieExtended $cookie)
     {
         session_start([
-            'cookie_secure' => true,
+            'cookie_secure' => SESSION_COOKIE_SECURE ?? true,
             'cookie_path' => SESSION_COOKIE_PATH ? sprintf('/%s/', SESSION_COOKIE_PATH) : '/'
         ]);
         $this->cookie = $cookie;
