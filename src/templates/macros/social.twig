@@ -83,7 +83,7 @@
 #}
     
 {% macro linkedinShareButton(context) %}
-<script src="https://platform.linkedin.com/in.js" type="text/javascript">lang: {{ '%_%'|format(attribute(context.language, 'ISO-639-1'),
+<script src="https://platform.linkedin.com/in.js" type="text/javascript">lang: {{ '%s_%s'|format(attribute(context.language, 'ISO-639-1'),
 attribute(context.language, 'ISO-3166-1-2')) }}</script>
 <script type="IN/Share" data-url="{{ context.server.SCRIPT_URI }}"></script>
 {% endmacro %}
