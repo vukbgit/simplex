@@ -981,18 +981,20 @@ NOTE: javascript validation function creates automatically if needed, this macro
 @param string classes: optional label css classes
 #}
 {% macro displayLabel(config, classes) %}
+    {% if config.label != false %}
 <label for="{{ (config.id ?? config.name)|formatIdforJs }}"{% if classes %} class="{{ classes }}"{% endif %}
 >
 {{ config.label|raw }}
-{% if config.validation.required and (config.hideMandatories is not defined or config.hideMandatories == false) %}
+        {% if config.validation.required and (config.hideMandatories is not defined or config.hideMandatories == false) %}
 <span title="{{ 'This field is mandatory'|trans }}" aria-label="required">
     {{ config.requiredLabel ?? '*' }}
 </span>
-{% endif %}
-{% if config.countryCode is defined %}
+        {% endif %}
+        {% if config.countryCode is defined %}
 <span class="{{ 'flag-icon flag-icon-%s'|format(config.countryCode) }}"></span>
-{% endif %}
+        {% endif %}
 </label>
+    {% endif %}
 {% endmacro %}
 
 {# displays help
