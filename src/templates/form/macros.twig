@@ -870,6 +870,7 @@ for autocomplete see https://developer.mozilla.org/en-US/docs/Web/HTML/Attribute
     'id': '',
     'value': '',
     'label': fieldsLabels.,
+    'placeholder': by defult placeholder is filled by label, in case label is not to be displayed it can be set explicitily
     'help': fieldsLabels.,
     'autofocus': true,
     'maxlength': '',
@@ -893,7 +894,9 @@ for autocomplete see https://developer.mozilla.org/en-US/docs/Web/HTML/Attribute
     name="{{ config.name }}"
     id="{{ (config.id ?? config.name)|formatIdforJs }}"
     value="{{ config.value|escape('html_attr') }}"
-    {% if config.label %}
+    {% if config.placeholder %}
+    placeholder="{{ config.placeholder }}"
+    {% elseif config.label %}
     placeholder="{{ config.label }}"
     {% endif %}
     {% if config.autofocus %}
