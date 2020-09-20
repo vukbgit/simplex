@@ -163,11 +163,14 @@ abstract class ControllerAbstract
     
     /**
     * Gets & sets language
+    * @param string $languageCode: to force a specific language at runtime
     */
-    protected function setLanguage()
+    protected function setLanguage($languageCode = null)
     {
         //try to get language form route
-        $languageCode = $this->routeParameters->lang ?? null;
+        if(!$languageCode) {
+            $languageCode = $this->routeParameters->lang ?? null;
+        }
         //load configured languages
         $this->loadLanguages();
         //set current language
