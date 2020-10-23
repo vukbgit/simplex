@@ -235,7 +235,7 @@ This is the Backend folder structure:
         * _sass_:
             * _bootstrap.scss_: Bootstrap 4 components to be included in Bootstrap area style sheet, preset for minimal standard functionalities (menu, form, tables...), customize and recompile at need
         * _templates_: sign-in form and area shared template, used mainly to store translations and logo path, to be customized
-    * _SubjectGroup_: subjects namespece can be organized into levels, useful when there are more the ten subjects at play
+    * _SubjectGroup_: subjects namespace can be organized into levels, useful when there are more the ten subjects at play
         * _Subject_: sdubjec level files, every type of file regarding the subject should be stored into its folder
             * _config_:
                 * _crudl.php_: definitions for CRUDL functionalities, such as input filters to be used to grab fields values from save form or whether to use field to filter displayed table records
