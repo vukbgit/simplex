@@ -630,7 +630,7 @@ abstract class ModelAbstract
     public function getPublicOutputFilePath(string $uploadKey, string $outputKey, string $fileName): string
     {
         $absolutePath = $this->getOutputFilePath($uploadKey, $outputKey, $fileName);
-        return str_replace(ABS_PATH_TO_ROOT, '', $absolutePath);
+        return str_replace(ABS_PATH_TO_ROOT . '/', '', $absolutePath);
         
     }
     
