@@ -256,6 +256,14 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
             return is_file($path);
         });
         //returns path to yarn packages asset
+        $this->addTemplateFilter('pathToShareAsset', function(string $path){
+            return sprintf('/%s/%s', PUBLIC_SHARE_DIR, $path);
+        });
+        //returns path to yarn packages asset
+        $this->addTemplateFilter('pathToLocalAsset', function(string $path){
+            return sprintf('/%s/%s', PUBLIC_LOCAL_DIR, $path);
+        });
+        //returns path to yarn packages asset
         $this->addTemplateFilter('pathToNpmAsset', function(string $path){
             return sprintf('/%s/node_modules/%s', PUBLIC_SHARE_DIR, $path);
         });

@@ -6,7 +6,7 @@
     {{ parent() }}
     {{ formMacros.setUpForm(_context) }}
     <!-- sign in assets -->
-    <link rel="stylesheet" href="/public/share/simplex/Authentication/css/sign-in.min.css">
+    <link rel="stylesheet" href="{{ 'simplex/Authentication/css/sign-in.min.css'|pathToShareAsset }}">
 {% endblock %}
 
 {# variables used into signInForm block that must/can be set in the calling scope

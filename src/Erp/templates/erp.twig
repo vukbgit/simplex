@@ -9,10 +9,10 @@
         {{ parent() }}
     {% endblock %}
     <!-- ERP assets -->
-    <link rel="stylesheet" href="/public/share/simplex/Erp/css/erp.min.css">
-    <script type="text/javascript" src="/public/share/simplex/Erp/js/erp.js"></script>
+    <link rel="stylesheet" href="{{ 'simplex/Erp/css/erp.min.css'|pathToShareAsset }}">
+    <script type="text/javascript" src="{{ 'simplex/Erp/js/erp.js'|pathToShareAsset }}"></script>
     <!-- Fontello icons -->
-    <link rel="stylesheet" href="/public/share/simplex/Erp/Fontello/css/fontello.css">
+    <link rel="stylesheet" href="{{ 'simplex/Erp/Fontello/css/fontello.css'|pathToShareAsset }}">
 {% endblock %}
 
 {# include subject and ancestors labels #}
