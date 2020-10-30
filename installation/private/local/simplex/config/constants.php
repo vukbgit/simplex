@@ -42,11 +42,15 @@ define('ERROR_DIR', sprintf('%s/errors', PRIVATE_SHARE_DIR));
 //session.cookie_path (defaults to /), useful to host multiple applications with distinct backend under the same domain
 //in this case backend routes must begin with SESSION_COOKIE_PATH
 define('SESSION_COOKIE_PATH', null);
-if(!isset($_SERVER['HTTPS'])) {
-    echo 'It is not possible to check HTTPS by $_SERVER[\'HTTPS\'] and therefore it is not possible to set SESSION_COOKIE_SECURE constant';
-    exit;
+if(php_sapi_name() != 'cli') {    
+    if(!isset($_SERVER['HTTPS'])) {
+        echo 'It is not possible to check HTTPS by $_SERVER[\'HTTPS\'] and therefore it is not possible to set SESSION_COOKIE_SECURE constant';
+        exit;
+    } else {
+        define('SESSION_COOKIE_SECURE', $_SERVER['HTTPS'] == 'on');
+    }
 } else {
-    define('SESSION_COOKIE_SECURE', $_SERVER['HTTPS'] == 'on');
+    define('SESSION_COOKIE_SECURE', false);
 }
 /**********
 * COOKIES *
