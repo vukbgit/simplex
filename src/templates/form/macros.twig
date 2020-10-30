@@ -250,7 +250,7 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
     {% import _self as selfMacros %}
     {# check locale file path #}
     {% set languageCode = attribute(context.language, 'ISO-639-1') %}
-    {% set localePath = '/public/share/rich-text-editor/locales/%s.js'|format(languageCode) %}
+    {% set localePath = 'rich-text-editor/locales/%s.js'|format(languageCode)|pathToShareAsset %}
     {% if isFile(localePath) == false %}
         {% set config = updateProperty(config, 'validation', updateProperty(config.validation, 'invalidMessage', 'TinyMCE local file missing in %s'|format(localePath))) %}
         {% set loadLocale = false %}
