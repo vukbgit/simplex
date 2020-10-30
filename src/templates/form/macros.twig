@@ -1027,7 +1027,7 @@ NOTE: javascript validation function creates automatically if needed, this macro
 {% macro setUpForm(context, config) %}
     {% import _self as selfMacros %}
     <!-- Fontello form icons -->
-    <link rel="stylesheet" href="public/share/simplex/form/Fontello/css/fontello.css">
+    <link rel="stylesheet" href="{{ 'simplex/form/Fontello/css/fontello.css'|pathToShareAsset }}">
     {# validation #}
     {% if (config.noValidation is not defined) or config.noValidation == false %}
         {{ selfMacros.formValidation(config.customValidation) }}
