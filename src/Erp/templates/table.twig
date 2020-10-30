@@ -3,7 +3,7 @@
 {% block head %}
     {{ parent() }}
     <!-- ERP table style -->
-    <link rel="stylesheet" href="/public/share/simplex/Erp/css/table.min.css">
+    <link rel="stylesheet" href="{{ 'simplex/Erp/css/table.min.css'|pathToShareAsset }}">
 {% endblock %}
 
 {% block pageContent %}
