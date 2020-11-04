@@ -68,6 +68,10 @@ if($HTTPStatusCode !== 200 && !$response->hasHeader('Location')) {
 /*****************************
 * SEND RESPONSE TO WEBSERVER *
 *****************************/
-//~r($response->getStatusCode());
 $emitter = $DIContainer->get('emitter');
-$emitter->emit($response);
+//in case any output disturbs emitter, catch the exception and display the output
+try {
+    $emitter->emit($response);
+} catch(\Exception $e) {
+    xx($e);
+}
