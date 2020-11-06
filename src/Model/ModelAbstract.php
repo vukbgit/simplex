@@ -616,7 +616,7 @@ abstract class ModelAbstract
     */
     public function getOutputFilePath(string $uploadKey, string $outputKey, string $fileName): string
     {
-        $path = sprintf('%s/%s/%s', $this->getUploadFolder($uploadKey), $outputKey, $fileName);
+        return sprintf('%s/%s/%s', $this->getUploadFolder($uploadKey), $outputKey, $fileName);
         //return str_replace(ABS_PATH_TO_ROOT, '', $absolutePath);
         return str_replace('public/local/simplex', '/' . PUBLIC_LOCAL_SIMPLEX_DIR, $path);
         
@@ -631,7 +631,7 @@ abstract class ModelAbstract
     public function getPublicOutputFilePath(string $uploadKey, string $outputKey, string $fileName): string
     {
         $absolutePath = $this->getOutputFilePath($uploadKey, $outputKey, $fileName);
-        return str_replace(ABS_PATH_TO_ROOT . '/', '', $absolutePath);
+        return str_replace('public/local', '/' . PUBLIC_LOCAL_DIR, str_replace(ABS_PATH_TO_ROOT . '/', '', $absolutePath));
         
     }
     
