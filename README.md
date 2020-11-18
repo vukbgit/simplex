@@ -200,7 +200,7 @@ For details see _Folders and Files Structure_ below
 
 ### Backend / ERP ###
 
-Simplex include an ERP namespace and uses it to build backends and ERP applications, besides the common operations discussed above, here are the steps to configure the provided Backend area :
+Simplex is shipped with an ERP namespace draft and uses it to build backends and ERP applications. Here we assume the area name is "Backend" but it can be changed to anything else, you just need to rename Backend folder accordingly and substitute the "backend" word (minding letters case) accordingly. Besides the common operations discussed above, here are the steps to configure the provided Backend area :
 * _.htaccess_: set redirection of _/backend_ route to _/backend/sign-in-form_
 * check and set up _variables_ into _private/local/simplex/Backend/config/variables.php_, at least _$successfulSignInRoute_, the other default values should be ok out of the box
 * set up _authentication_ methods into _private/local/simplex/Backend/config/routes.php_ :
