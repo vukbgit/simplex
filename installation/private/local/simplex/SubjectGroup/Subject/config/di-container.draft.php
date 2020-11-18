@@ -7,8 +7,6 @@ declare(strict_types=1);
 //PHP-DI functions
 use function DI\create;
 use function DI\get;
-//import area variables
-require sprintf('%s/Backend/config/variables.php', PRIVATE_LOCAL_DIR);
 //import subject variables
 require 'variables.php';
 //definitions array

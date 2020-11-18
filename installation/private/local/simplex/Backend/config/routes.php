@@ -19,7 +19,7 @@ use Simplex\Authentication;
 use Simplex\Local\Partners;
 use function Simplex\slugToPSR1Name;
 //import area variables
-require sprintf('%s/Backend/config/variables.php', PRIVATE_LOCAL_DIR);
+require 'variables.php';
 //definitions array
 return [
     /*****************
