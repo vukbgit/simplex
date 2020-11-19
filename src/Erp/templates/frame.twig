@@ -16,7 +16,7 @@
     {% block headerLogo %}
         {{ parent() }}
         {% if logoPath %}
-        <img src="{{ logoPath }}" alt="{{ brand }}">
+        <img src="{{ logoPath }}" alt="{{ brand }}" class="logo">
         {% endif %}
     {% endblock %}
     {% block headerTitle %}
