@@ -292,7 +292,17 @@ class Middleware implements MiddlewareInterface
         //xx(hash($algo, $password));
         $hash = new PasswordVerifier($algo);
         $auth = $this->authFactory->newInstance();
-        $pdoAdapter = $this->authFactory->newPdoAdapter($pdo, $hash, $fields, $table, $condition);
+        //fix problem when the role field is named group (SQL reserved word for GROUP BY)
+        $encloseCharacters = [
+            'mysql' => '`',
+            'pgsql' => '"'
+        ];
+        $fieldsForPDO = $fields;
+        $groupFieldIndex = array_search('group', $fields);
+        if($groupFieldIndex !== false) {
+            $fieldsForPDO[$groupFieldIndex] = sprintf('%1$s%2$s%1$s', $encloseCharacters[$dbConfig['driver']], $fieldsForPDO[$groupFieldIndex]);
+        }
+        $pdoAdapter = $this->authFactory->newPdoAdapter($pdo, $hash, $fieldsForPDO, $table, $condition);
         $loginService = $this->authFactory->newLoginService($pdoAdapter);
         try {
             //success
