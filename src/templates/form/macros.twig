@@ -170,7 +170,8 @@ NOTE: to perform validation Simplex does not use browser built in but a pattern 
 {% endmacro %}
 
 {# displays an input password field
-@param hash config: hash for field properties (see setFieldAttributes macro explanation)
+@param hash config: hash for field properties (see setFieldAttributes macro explanation) plus specific properties:
+    generator: boolean whether to append a button to generate password; in this case input type will not be passwoird but text, to let generated alue be copied
 #}
 {% macro displayInputPassword(config) %}
     {% import _self as selfMacros %}
@@ -178,7 +179,13 @@ NOTE: to perform validation Simplex does not use browser built in but a pattern 
     {% set classes = config.classes ?? [] %}
     {% set classes = ['form-control']|merge(classes) %}
     {% set config = updateProperty(config, 'classes', classes) %}
-    {{ selfMacros.displayInput('password', config) }}
+    {% if config.generator is defined and config.generator %}
+        {% set config = updateProperty(config, 'append', '<button class="border-0 generate-password icon-erp-password" type="button"></button>') %}
+        {% set type = 'text' %}
+    {% else %}
+        {% set type = 'password' %}
+    {% endif %}
+    {{ selfMacros.displayInput(type, config) }}
 {% endmacro %}
 
 {# displays a file input field
@@ -1020,9 +1027,11 @@ NOTE: javascript validation function creates automatically if needed, this macro
 @param hash config: hash for form properties
     noValidation (bool): whether NOT to load JavaScript validation API
     locales (bool): whether there is at least one localized field
-    assets (list): ['richTextEditor', 'fileUpload', 'captcha', 'dateTimePicker'] list of the field types included into form that need some asset to be included
+    assets (list): ['richTextEditor', 'fileUpload', 'captcha', 'dateTimePicker', 'passwordGenerator'] list of the field types included into form that need some asset to be included
     captcha (object): captcha config object, properties:
         reloadRoute (string): route for image reloading, it must be mapped and must return Simplex\ZendCaptchaImageExtended::reloadCaptcha
+    passwordGenerator (object): password generator config object, properties:
+        generateRoute (string): route for generating password, it must be mapped and must return the string with the generated password
 #}
 {% macro setUpForm(context, config) %}
     {% import _self as selfMacros %}
@@ -1048,6 +1057,9 @@ NOTE: javascript validation function creates automatically if needed, this macro
     {% endif %}
     {% if 'captcha' in config.assets %}
         {{ selfMacros.captchaAssets(context, config.captcha) }}
+    {% endif %}
+    {% if 'passwordGenerator' in config.assets %}
+        {{ selfMacros.passwordGeneratorAssets(context, config.passwordGenerator) }}
     {% endif %}
 {% endmacro %}
 
@@ -1401,6 +1413,24 @@ $(document).ready(function(){
         $.getJSON('{{ config.reloadRoute }}', function(captchaImage) {
             $('#captcha-image').attr('src', captchaImage.imageUrl);
             $('#captcha_id').val(captchaImage.id);
+        });
+    });
+});
+</script>
+{% endmacro %}
+
+{# password generator assets 
+@param object context
+@param object config: password generator config object, properties:
+    generateRoute (string): route for generating password
+#}
+{% macro passwordGeneratorAssets(context, config) %}
+<script type="text/javascript">
+$(document).ready(function(){
+    $('.generate-password').click(function() {
+        var input = $($(this).parents('.input-group').children('input')[0]);
+        $.get('{{ config.generateRoute }}', function(response) {
+            input.val(response).select();
         });
     });
 });
