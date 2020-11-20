@@ -258,6 +258,15 @@ abstract class ModelAbstract
         }
     }
     
+    /**
+    * Builds a raw field
+    * @param string $sql: the piece of SQL code to be used for field
+    */
+    public function rawField(string $sql)
+    {
+        return $this->query->raw($sql);
+    }
+    
     /***************
     * MAINTAINANCE *
     ***************/
