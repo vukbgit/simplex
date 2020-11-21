@@ -82,8 +82,8 @@
     max: for integer numbers, maximum value
     precision: for decimal numbers, defaults to locale frac_digits
     integerPrecision: for decimal numbers, number of digits for the integer part
-    isCurrency: adds currency symbol
-    isFraction: adds fraction symbol
+    currency: adds currency symbol
+    isPercent: adds percent symbol
 #}
 {% macro displayInputNumber(config) %}
     {% import _self as selfMacros %}
@@ -122,6 +122,12 @@
     {% set classes = config.classes ?? [] %}
     {% set classes = ['form-control']|merge(classes) %}
     {% set config = updateProperty(config, 'classes', classes) %}
+    {% if config.isPercent is defined and config.isPercent %}
+        {% set config = updateProperty(config, 'append', '%') %}
+    {% endif %}
+    {% if config.isCurrency is defined and config.isCurrency %}
+        {% set config = updateProperty(config, 'append', getLanguage().localeconv.currency_symbol) %}
+    {% endif %}
     {{ selfMacros.displayInput(inputType, config) }}
 {% endmacro %}
 
