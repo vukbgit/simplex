@@ -174,9 +174,11 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
                 $controller = $this->DIContainer->get(sprintf('%s-controller', $subjectKey));
                 //model
                 $model = $this->DIContainer->get(sprintf('%s-model', $subjectKey));
+                $modelConfig = $model->getConfig();
+                $modelPrimaryKey = $model->getConfig()->primaryKey;
                 //record
-                $primaryKey = $model->getConfig()->primaryKey;
-                $where = [[$primaryKey, $this->routeParameters->$primaryKey]];
+                $primaryKey = $this->getAncestorPrimaryKeyFromRoute($subjectKey, $modelConfig);
+                $where = [[$modelPrimaryKey, $primaryKey->value]];
                 $CRUDLConfig = $controller->getCRUDLConfig();
                 if(isset($CRUDLConfig->localized) && $CRUDLConfig->localized) {
                     $where[] = ['language_code', $this->language->{'ISO-639-1'}];
@@ -192,6 +194,37 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
                 ];
             }
         }
+    }
+    
+    /**
+     * Loads CRUDL config which is mandatory for ERP and contains informations for the CRUDL interface to be exposed
+     */
+    protected function getAncestorPrimaryKeyFromRoute($ancestorSubjectKey, $ancestorModelConfig)
+    {
+        try {
+            //primary key field from config file
+            $ancestorPrimaryKey = $ancestorModelConfig->primaryKey;
+            $primaryKeyValue = $this->routeParameters->$ancestorPrimaryKey;
+        } catch (\Exception $e) {
+            try {
+                //primary key field alias from config file
+                $ancestorPrimaryKey = $ancestorModelConfig->primaryKeyAlias;
+                $primaryKeyValue = $this->routeParameters->$ancestorPrimaryKey;
+            } catch (\Exception $e) {
+                try {
+                    //primary key automatically built
+                    //sometimes tables primary key fields in a schema have all the same name (i.e. 'id') and therefor must be mapped into same route with made-up names in the form subjectKey_id
+                    $ancestorPrimaryKey = sprintf('%s_id', $ancestorSubjectKey);
+                    $primaryKeyValue = $this->routeParameters->$ancestorPrimaryKey;
+                } catch (\Exception $e) {
+                    throw new \Exception(sprintf('Controller %s has defined ancestor "%s" into current route but ancestor primary key is not found', getInstanceNamespace($this), $ancestorSubjectKey));
+                }
+            }
+        }
+        return (object) [
+            'field' => $ancestorPrimaryKey,
+            'value' => $primaryKeyValue
+        ];
     }
     
     /**
@@ -582,12 +615,10 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
             $parent = end($this->ancestors)->model;
             $parentConfig = $parent->getConfig();
             //check parent primary key into route
-            if(!isset($this->routeParameters->{$parentConfig->primaryKey})) {
-                throw new \Exception(sprintf('Controller %s has defined the ancestor %s into route but ancestor primary key %s value is not set into route', getInstanceNamespace($this), getInstanceNamespace($parent), $parentConfig->primaryKey));
-                
-            }
-            $parentPrimaryKeyValue = $this->routeParameters->{$parentConfig->primaryKey};
-            $where[] = [$parentConfig->primaryKey, $parentPrimaryKeyValue];
+            $ancestorsChain = array_keys($this->ancestors);
+            $ancestorSubjectKey = end($ancestorsChain);
+            $parentPrimaryKey = $this->getAncestorPrimaryKeyFromRoute($ancestorSubjectKey, $parentConfig);
+            $where[] = [$parentPrimaryKey->field, $parentPrimaryKey->value];
         }
         $this->buildListWhereCustomConditions($where);
         return $where;
