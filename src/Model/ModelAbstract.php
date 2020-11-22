@@ -169,11 +169,18 @@ abstract class ModelAbstract
     public function handleException(\PDOException $exception): object
     {
         //get error code and message
-        $errorCode = $exception->getCode();
+        $errorCode = (string) $exception->getCode();
         $errorMessage = $exception->getMessage();
         //extract SQL-92 error class and subclass from code
-        $class = substr($errorCode, 0, 2);
-        $subclass = substr($errorCode, 2);
+        //proper PDO exception
+        if(strlen((string) $errorCode) >= 2) {
+            $class = substr($errorCode, 0, 2);
+            $subclass = substr($errorCode, 2);
+        } else {
+        //probably a custom PDO exception with a fake code thrown to be displaied into UI
+            $class = null;
+            $subclass = null;
+        }
         $rawMessage = null;
         $data = null;
         switch($class) {
