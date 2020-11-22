@@ -52,7 +52,7 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
     * @param object
     * current user options, set by the UI and stored into area cookie under subject property
     **/
-    private $subjectCookie;
+    protected $subjectCookie;
     
     /**
     * @param string
