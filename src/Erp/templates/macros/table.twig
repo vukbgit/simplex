@@ -22,7 +22,14 @@
         <input type="hidden" name="modifier" value="sort">
         <input type="hidden" name="field" value="{{ fieldName }}">
         <input type="hidden" name="direction" value="{{ reverseDirection }}">
-        <div class="d-flex align-items-start align-content-center">
+    {% if align is not defined or align == 'left' %}
+        {% set justifyContent = 'start' %}
+    {% elseif align == 'center' %}
+        {% set justifyContent = 'center' %}
+    {% elseif align == 'right' %}
+        {% set justifyContent = 'end' %}
+    {% endif %}
+        <div class="d-flex align-items-start align-content-center justify-content-{{ justifyContent }}">
             <label class="font-weight-bold">{{ label ?? getLabel(context.subject, 'fields', fieldName) }}</label>
             <button type="submit" class="{{ buttonClass }}" title="{{ buttonTitle }}"></button>
         </div>
