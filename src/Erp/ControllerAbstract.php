@@ -605,7 +605,8 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
             foreach ((array) $CRUDLConfig->fields as $fieldName => $fieldConfig) {
                 if(!isset($fieldConfig->table->filter) || $fieldConfig->table->filter) {
                     //filter fields conditions are joined by the logical OR operator
-                    $filterWhere[] = [$fieldName, 'LIKE', sprintf('%%%s%%', $subjectCookie->filter), 'logical' => 'OR'];
+                    //$filterWhere[] = [$fieldName, 'LIKE', sprintf('%%%s%%', $subjectCookie->filter), 'logical' => 'OR'];
+                    $filterWhere[] = [$fieldName, $this->model->getQuery()->getDriverOption('caseInsensitiveLikeOperator'), sprintf('%%%s%%', $subjectCookie->filter), 'logical' => 'OR'];
                 }
             }
             $where[] = $filterWhere;

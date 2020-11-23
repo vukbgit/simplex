@@ -35,7 +35,7 @@ abstract class ModelAbstract
     * String to mark text cloned fields with
     */
     private $cloneMark = '*';
-
+    
     /**
     * Constructor
     * @param QueryBuilderHandler $query
@@ -88,6 +88,14 @@ abstract class ModelAbstract
     public function getConfig(): object
     {
         return $this->config;
+    }
+    
+    /**
+    * Returns the query instance
+    */
+    public function getQuery(): PixieExtended
+    {
+        return $this->query;
     }
     
     /**

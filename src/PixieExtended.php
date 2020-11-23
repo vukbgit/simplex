@@ -16,6 +16,26 @@ class PixieExtended extends QueryBuilderHandler
      */
      private $checkConnection = false;
     
+     /**
+     * @var array
+     * driver dependent options
+     */
+     private $optionsByDriver = [
+         'caseInsensitiveLikeOperator' => [
+             'mysql' => 'LIKE',
+             'pgsql' => 'ILIKE'
+         ]
+     ];
+     
+    /**
+    * Checks whether connection is alive
+    * @return bool
+    **/
+    public function getDriverOption($optionName)
+    {
+        return $this->optionsByDriver[$optionName][$this->getConnection()->getAdapter()] ?? null;
+    }
+    
     /**
     * Checks whether connection is alive
     * @return bool
