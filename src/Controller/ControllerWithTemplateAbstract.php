@@ -413,7 +413,7 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
                 $category = array_shift($arguments);
                 $result = $this->labels->$category;
                 foreach($arguments as $key) {
-                    $result = is_array($result->$key) ? (object) $result->$key : $result->$key;
+                    $result = isset($result->$key) ? (is_array($result->$key) ? (object) $result->$key : $result->$key) : sprintf('<span class="alert alert-danger"><b>LABEL NOT FOUND</b>: %s.%s</span>', $category, implode('.', $arguments));
                 }
                 return $result;
             }
