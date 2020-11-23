@@ -16,12 +16,25 @@
 <nav class="navbar navbar-light bg-light">
         {% block tableFilter %}
         {% set fieldsFilter = attribute(attribute(areaCookie, subject), 'filter') ?? null %}
-    <form method="post" action="" class="form-inline">
+    <form method="post" action="" class="form-inline" id="default-filter-form">
         <input type="hidden" name="modifier" value="filter">
-        <input name="filter" value="{{ fieldsFilter }}" type="search"
-        class="form-control form-control-sm mr-sm-2" placeholder="{{ 'Filter'|trans }}" aria-label="{{ 'Filter'|trans }}">
-        <button class="btn btn-sm btn-outline-success my-2 my-sm-0" type="submit">{{ 'Filter'|trans }}</button>
+        <div class="input-group">
+            <input name="filter" value="{{ fieldsFilter }}" type="text"
+        class="form-control form-control-sm" placeholder="{{ 'Filter'|trans }}" aria-label="{{ 'Filter'|trans }}">
+            <div class="input-group-append">
+                <button class="btn btn-sm btn-outline-secondary" type="reset">{{ 'Reset'|trans }}</button>
+                <button class="btn btn-sm btn-outline-success" type="submit">{{ 'Filter'|trans }}</button>
+            </div>
+        </div>
     </form>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#default-filter-form button[type="reset"]').click(function(){
+                $($('#default-filter-form input[type="text"]')[0]).attr('value','');
+                $('#default-filter-form').submit();
+            });
+        });
+    </script>
         {% endblock tableFilter %}
 </nav>
     {% endblock tableNavBar %}
