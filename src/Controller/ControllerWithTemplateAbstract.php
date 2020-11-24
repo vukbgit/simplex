@@ -720,7 +720,7 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
     * @param string $languageCode: optional language code to use for localized fields
     * @return array of records
     */
-    protected function processRecordsetForInput(string $valueField, $labelTokens, array $recordset, string $languageCode = null): array
+    protected function processRecordsetForInput(string $valueField, $labelTokens, array $recordset, string $languageCode = null, $valueProperty = 'value', $labelProperty = 'label'): array
     {
         //check labelfields and turn into an array if it's a string
         if(is_string($labelTokens)) {
@@ -750,8 +750,8 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
                 $label .= $tokenLabel;
             }
             $items[] = (object) [
-                'value' => $record->$valueField,
-                'label' => $label
+                $valueProperty => $record->$valueField,
+                $labelProperty => $label
             ];
         }
         return $items;

@@ -357,6 +357,77 @@ WARNING: uses Bootstrap custom select, so BS custom-forms component must be incl
     </div>
 {% endmacro %}
 
+{##############
+# RICH SELECT #
+##############}
+{# displays a riche select field block
+@param hash config: hash for field properties (see setFieldAttributes macro explanation) plus specific properties (see displaySelect)
+@param array items: array of hashes each with value and label property
+#}
+{% macro displayRichSelectGroup(config, items) %}
+    {% import _self as selfMacros %}
+    {% set id = (config.id ?? config.name)|formatIdforJs %}
+    <div class="form-group" id="{{ '%s-container'|format(id) }}">
+        {{ selfMacros.displayLabel(config) }}
+        {{ selfMacros.displayRichSelect(config, items) }}
+        {{ selfMacros.displayHelp(config) }}
+    </div>
+{% endmacro %}
+
+{# displays a rich select, a select with enhanced features like remote data sources and autocomplete
+@param hash config: hash for field properties (see setFieldAttributes macro explanation) plus specific properties:
+    minimumInputLength minimum number of characters to type to trigger search; if it is set items (when present) are not showed by default
+    remoteDataRoute route to remote data search action; input will be split by spaces and searched into subject fields whose crudl table filter property is set to true
+    valueLabel: 
+@param array items: array of hashes each with value and label property, alternative to remoteDataRoute; if minimumInputLength is passed they are not shown but searched
+#}
+{% macro displayRichSelect(config, items) %}
+    {% import _self as selfMacros %}
+    {% set value = config.value %}
+    {% set config = deleteProperty(config, 'value') %}
+    {% set classes = config.classes ?? [] %}
+    {#% set classes = ['js-example-responsive']|merge(classes) %#}
+    {% set config = updateProperty(config, 'classes', classes) %}
+    {% set id = config.id ?? config.name|formatIdforJs %}
+    {% set option0Label = config.option0Label ?? 'please select an item '|trans %}
+    
+<select {{ selfMacros.setFieldAttributes(config) }}>
+    {% if config.noOption0 is not defined or config.noOption0 == false %}
+    <option value="">{{ option0Label }}</option>
+    {% endif %}
+    {% for item in items %}
+        {% set selected = item.value == value %}
+    <option value="{{ item.value }}"{% if selected %} selected="selected"{% endif %}>{{ item.label }}</option>
+    {% endfor %}
+    {% if config.remoteDataRoute is defined and config.remoteDataRoute and value is defined and value and config.valueLabel is defined and config.valueLabel %}
+    <option value="{{ value }}" selected="selected">{{ config.valueLabel }}</option>
+    {% endif %}
+</select>
+<script type="text/javascript">
+$(document).ready(function() {
+    $('{{ '#%s'|format(id) }}').select2({
+        minimumInputLength: {{ config.minimumInputLength ?? 0 }},
+        theme: 'bootstrap4',
+        allowClear: true,
+        width: '100%',
+        placeholder: "{{ option0Label }}",
+        language: '{{ getLanguage('ISO-639-1') }}',
+    {% if config.remoteDataRoute %}
+        ajax: {
+            url: '{{ config.remoteDataRoute }}',
+            dataType: 'json',
+            processResults: function (data) {
+                return {
+                    results: data
+                };
+            }
+        }
+    {% endif %}
+    });
+});
+</script>
+{% endmacro %}
+
 {#################
 # RADIO/CHECKBOX #
 #################}
@@ -1033,7 +1104,7 @@ NOTE: javascript validation function creates automatically if needed, this macro
 @param hash config: hash for form properties
     noValidation (bool): whether NOT to load JavaScript validation API
     locales (bool): whether there is at least one localized field
-    assets (list): ['richTextEditor', 'fileUpload', 'captcha', 'dateTimePicker', 'passwordGenerator'] list of the field types included into form that need some asset to be included
+    assets (list): ['richTextEditor', 'fileUpload', 'captcha', 'dateTimePicker', 'passwordGenerator','richSelect'] list of the field types included into form that need some asset to be included
     captcha (object): captcha config object, properties:
         reloadRoute (string): route for image reloading, it must be mapped and must return Simplex\ZendCaptchaImageExtended::reloadCaptcha
     passwordGenerator (object): password generator config object, properties:
@@ -1066,6 +1137,9 @@ NOTE: javascript validation function creates automatically if needed, this macro
     {% endif %}
     {% if 'passwordGenerator' in config.assets %}
         {{ selfMacros.passwordGeneratorAssets(context, config.passwordGenerator) }}
+    {% endif %}
+    {% if 'richSelect' in config.assets %}
+        {{ selfMacros.richSelectAssets(context, config.passwordGenerator) }}
     {% endif %}
 {% endmacro %}
 
@@ -1441,4 +1515,17 @@ $(document).ready(function(){
     });
 });
 </script>
+{% endmacro %}
+
+{# rich select assets 
+@param object context
+@param object config: password generator config object, properties:
+    generateRoute (string): route for generating password
+#}
+{% macro richSelectAssets(context) %}
+<!-- select2 -->
+<link href="{{ 'select2/dist/css/select2.min.css'|pathToNpmAsset }}" rel="stylesheet" />
+<link href="{{ '@ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.min.css'|pathToNpmAsset }}" rel="stylesheet" />
+<script src="{{ 'select2/dist/js/select2.min.js'|pathToNpmAsset }}"></script>
+<script src="{{ 'select2/dist/js/i18n/%s.js'|format(getLanguage('ISO-639-1'))|pathToNpmAsset }}"></script>
 {% endmacro %}
