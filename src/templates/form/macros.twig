@@ -374,7 +374,7 @@ WARNING: uses Bootstrap custom select, so BS custom-forms component must be incl
     </div>
 {% endmacro %}
 
-{# displays a rich select, a select with enhanced features like remote data sources and autocomplete
+{# displays a rich select using select2 (https://select2.org/), a select with enhanced features like remote data sources and autocomplete
 @param hash config: hash for field properties (see setFieldAttributes macro explanation) plus specific properties:
     minimumInputLength minimum number of characters to type to trigger search; if it is set items (when present) are not showed by default
     remoteDataRoute route to remote data search action; input will be split by spaces and searched into subject fields whose crudl table filter property is set to true

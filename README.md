@@ -149,6 +149,7 @@ For details see _Folders and Files Structure_ below
             * [bootstrap-fileinput](https://plugins.krajee.com/file-input): for asyncronous file upload. NOTE: as for 2019-11-12 version is frozen to 5.0.4 due to a bug in auto upload
             * [tempusdominus-bootstrap-4](https://github.com/tempusdominus/bootstrap-4): for date/time input
             * [tinymce](https://github.com/tinymce/tinymce-dist): for richtext input
+            * [select2](https://select2.org): for richselect input with autocomplete, with [@ttskch/select2-bootstrap4-theme](https://github.com/ttskch/select2-bootstrap4-theme) for skinning
             * [hamburgers](https://github.com/jonsuh/hamburgers): CSS hamburger animated icons
         * frontend
             * [jquery.safemail](https://github.com/leftclickcomau/jquery.safemail): for obfuscating email
