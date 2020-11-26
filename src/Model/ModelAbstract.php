@@ -224,6 +224,8 @@ abstract class ModelAbstract
                     //extract field name
                     preg_match("/Unknown column '([0-9a-zA-Z_]+)'/", $errorMessage, $matches);
                     $data = [$matches[1]];
+                } else {
+                    xx($exception);
                 }
                 $code = sprintf('SQLSTATE_%s_%s', $errorCode, $errorType);
             break;

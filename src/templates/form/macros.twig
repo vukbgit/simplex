@@ -224,12 +224,19 @@ NOTE: to perform validation Simplex does not use browser built in but a pattern 
         {% endfor %}
     {% endif %}
     {% for inputConfig in inputsConfigs %}
-    <div class="form-group" id="{{ '%s-container'|format(inputId) }}">
+        {{ selfMacros.displayFormGroup(config, inputId) }}
         {{ selfMacros.displayLabel(inputConfig) }}
-    
+        {% if config.cols is defined %}
+        <div class="col-12 col-sm-{{ config.cols[1] }}">
+        {% endif %}
+        
         {{ selfMacros.displayInputByTipe(type, inputConfig) }}
-    
         {{ selfMacros.displayHelp(config) }}
+        
+        {% if config.cols is defined %}
+        </div>
+        {% endif %}
+    
     </div>
     {% endfor %}
 {% endmacro %}
@@ -289,10 +296,20 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
     {% endif %}
 
     {% for inputConfig in inputsConfigs %}
-    <div class="form-group" id="{{ '%s-container'|format(inputConfig.id) }}">
+        {{ selfMacros.displayFormGroup(config, inputConfig.id) }}
         {{ selfMacros.displayLabel(inputConfig) }}
+        
+        {% if config.cols is defined %}
+        <div class="col-12 col-sm-{{ config.cols[1] }}">
+        {% endif %}
+        
         {{ selfMacros.displayTextarea(inputConfig) }}
         {{ selfMacros.displayHelp(config) }}
+        
+        {% if config.cols is defined %}
+        </div>
+        {% endif %}
+        
         <script type="text/javascript">
             var options = {
                 selector: '#{{ inputConfig.id }}',
@@ -350,10 +367,16 @@ WARNING: uses Bootstrap custom select, so BS custom-forms component must be incl
 {% macro displaySelectGroup(config, items) %}
     {% import _self as selfMacros %}
     {% set id = (config.id ?? config.name)|formatIdforJs %}
-    <div class="form-group" id="{{ '%s-container'|format(id) }}">
+        {{ selfMacros.displayFormGroup(config, id) }}
         {{ selfMacros.displayLabel(config) }}
+        {% if config.cols is defined %}
+        <div class="col-12 col-sm-{{ config.cols[1] }}">
+        {% endif %}
         {{ selfMacros.displaySelect(config, items) }}
         {{ selfMacros.displayHelp(config) }}
+        {% if config.cols is defined %}
+        </div>
+        {% endif %}
     </div>
 {% endmacro %}
 
@@ -367,10 +390,16 @@ WARNING: uses Bootstrap custom select, so BS custom-forms component must be incl
 {% macro displayRichSelectGroup(config, items) %}
     {% import _self as selfMacros %}
     {% set id = (config.id ?? config.name)|formatIdforJs %}
-    <div class="form-group" id="{{ '%s-container'|format(id) }}">
+        {{ selfMacros.displayFormGroup(config, id) }}
         {{ selfMacros.displayLabel(config) }}
+        {% if config.cols is defined %}
+        <div class="col-12 col-sm-{{ config.cols[1] }}">
+        {% endif %}
         {{ selfMacros.displayRichSelect(config, items) }}
         {{ selfMacros.displayHelp(config) }}
+        {% if config.cols is defined %}
+        </div>
+        {% endif %}
     </div>
 {% endmacro %}
 
@@ -518,10 +547,16 @@ $(document).ready(function() {
 #}
 {% macro displayInputRadioCheckboxGroup(type, config, items) %}
     {% import _self as selfMacros %}
-    <div class="form-group" id="{{ '%s-container'|format(config.name|formatIdforJs) }}">
+        {{ selfMacros.displayFormGroup(config, config.name|formatIdforJs) }}
         {{ selfMacros.displayLabel(config) }}
+        {% if config.cols is defined %}
+        <div class="col-12 col-sm-{{ config.cols[1] }}">
+        {% endif %}
         {{ selfMacros.displayInputRadioCheckbox(type, config, items) }}
         {{ selfMacros.displayHelp(config) }}
+        {% if config.cols is defined %}
+        </div>
+        {% endif %}
     </div>
 {% endmacro %}
 
@@ -584,13 +619,19 @@ WARNING: uses Bootstrap custom range input, so BS custom-forms component must be
 {% macro displayInputRange(config) %}
     {% import _self as selfMacros %}
     {% set inputId = (config.id ?? config.name)|formatIdforJs %}
-    <div class="form-group range-group" id="{{ '%s-container'|format(inputId) }}">
+        {{ selfMacros.displayFormGroup(config, inputId, 'range-group') }}
         {{ selfMacros.displayLabel(config) }}
         {% set classes = config.classes ?? [] %}
         {% set classes = ['custom-range']|merge(classes) %}
         {% set config = updateProperty(config, 'classes', classes) %}
+        {% if config.cols is defined %}
+        <div class="col-12 col-sm-{{ config.cols[1] }}">
+        {% endif %}
         {{ selfMacros.displayInput('range', config) }}
         {{ selfMacros.displayHelp(config) }}
+        {% if config.cols is defined %}
+        </div>
+        {% endif %}
     </div>
 {% endmacro %}
 
@@ -661,10 +702,16 @@ WARNING: uses Bootstrap custom range input, so BS custom-forms component must be
     {% set help = [config.help] ?? null %}
     {% set help = ['Format: %s'|format(format)]|merge(help) %}
     {% set config = updateProperty(config, 'help', help) %}
-    <div class="form-group" id="{{ '%s-container'|format(id) }}">
+        {{ selfMacros.displayFormGroup(config, id) }}
         {{ selfMacros.displayLabel(config) }}
+        {% if config.cols is defined %}
+        <div class="col-12 col-sm-{{ config.cols[1] }}">
+        {% endif %}
         {{ selfMacros.displayDateTimePicker(config) }}
         {{ selfMacros.displayHelp(config) }}
+        {% if config.cols is defined %}
+        </div>
+        {% endif %}
     </div>
 {% endmacro %}
 
@@ -686,24 +733,30 @@ WARNING: uses Bootstrap custom range input, so BS custom-forms component must be
 {% macro displayFileUpload(context, uploadRoute, config) %}
     {% import _self as selfMacros %}
     {# build uplaod route #}
-    <div class="form-group">
-        {{ selfMacros.displayLabel(config) }}
-        {% set inputId = (config.id ?? config.name)|formatIdforJs %}
-        {% set uploadKey = config.name %}
-        {{ selfMacros.displayInputHidden(config) }}
-        {# format upload input id to be used by javascript #}
-        {% set uploadId = '%s-upload'|format(inputId) %}
-        {% set config = updateProperty(config, 'name', uploadId) %}
-        {% set config = updateProperty(config, 'id', uploadId) %}
-        {{ selfMacros.displayInputFile(config) }}
-        {# set help infos #}
-        {% set help = config.help ? [config.help] : [] %}
-        {# maximum file size #}
-        {% set help = help|merge(['maximum allowed upload size: %s MB'|trans|format(context.uploadMaxFilesizeMB)]) %}
-        {# number of files #}
-        {% set help = help|merge(['maximum number of files: %s'|trans|format(config.options.maxFileCount ? config.options.maxFileCount : 'no limit'|trans)]) %}
-        {% set config = updateProperty(config, 'help', help) %}
-        {{ selfMacros.displayHelp(config) }}
+    {% set inputId = (config.id ?? config.name)|formatIdforJs %}
+    {{ selfMacros.displayFormGroup(config, inputId) }}
+    {{ selfMacros.displayLabel(config) }}
+    {% set uploadKey = config.name %}
+    {{ selfMacros.displayInputHidden(config) }}
+    {% if config.cols is defined %}
+        <div class="col-12 col-sm-{{ config.cols[1] }}">
+    {% endif %}
+    {# format upload input id to be used by javascript #}
+    {% set uploadId = '%s-upload'|format(inputId) %}
+    {% set config = updateProperty(config, 'name', uploadId) %}
+    {% set config = updateProperty(config, 'id', uploadId) %}
+    {{ selfMacros.displayInputFile(config) }}
+    {# set help infos #}
+    {% set help = config.help ? [config.help] : [] %}
+    {# maximum file size #}
+    {% set help = help|merge(['maximum allowed upload size: %s MB'|trans|format(context.uploadMaxFilesizeMB)]) %}
+    {# number of files #}
+    {% set help = help|merge(['maximum number of files: %s'|trans|format(config.options.maxFileCount ? config.options.maxFileCount : 'no limit'|trans)]) %}
+    {% set config = updateProperty(config, 'help', help) %}
+    {{ selfMacros.displayHelp(config) }}
+    {% if config.cols is defined %}
+        </div>
+    {% endif %}
     </div>
     
     <script type="text/javascript">
@@ -752,7 +805,13 @@ WARNING: uses Bootstrap custom range input, so BS custom-forms component must be
     .on("fileselect", function(event, numFiles, label) {
         //upload only if there are files to upload so that triggered errors can be shown
         if($('#{{ uploadId }}').fileinput('getFilesCount')) {
-            $("#{{ uploadId }}").fileinput('upload');
+            //uplaod method trigger delayed by 500ms because otherwise from bootstrap-file-input version 5.0.5 onward method is not triggered
+            setTimeout(
+                function() {
+                    $("#{{ uploadId }}").fileinput('upload');
+                },
+                500
+            );
         }
     })
     //after upload append file to input value
@@ -1060,14 +1119,36 @@ NOTE: javascript validation function creates automatically if needed, this macro
 </div>
 {% endmacro %}
 
+{# displays form group container
+@param hash config: hash for field properties (see setFieldAttributes macro explanation)
+@param string inputId
+@param string customClasses: optional label css classes
+#}
+{% macro displayFormGroup(config, inputId, customClasses) %}
+    {% set classes = ['form-group'] %}
+    {% if config.cols is defined %}
+        {% set classes = classes|merge(['row']) %}
+    {% endif %}
+    {% if customClasses %}
+        {% set classes = classes|merge([customClasses]) %}
+    {% endif %}
+    <div class="{{ classes|join(' ') }}" id="{{ '%s-container'|format(inputId) }}">
+{% endmacro %}
+
 {# displays label
 @param hash config: hash for field properties (see setFieldAttributes macro explanation)
-@param string classes: optional label css classes
+@param string customClasses: optional label css classes
 #}
-{% macro displayLabel(config, classes) %}
+{% macro displayLabel(config, customClasses) %}
     {% if config.label != false %}
-<label for="{{ (config.id ?? config.name)|formatIdforJs }}"{% if classes %} class="{{ classes }}"{% endif %}
->
+        {% set classes = [] %}
+        {% if config.cols is defined %}
+            {% set classes = classes|merge(['col-form-label col-12 col-sm-%d text-right'|format(config.cols[0])]) %}
+        {% endif %}
+        {% if customClasses %}
+            {% set classes = classes|merge([customClasses]) %}
+        {% endif %}
+<label for="{{ (config.id ?? config.name)|formatIdforJs }}" class="{{ classes|join(' ') }}">
 {{ config.label|raw }}
         {% if config.validation.required and (config.hideMandatories is not defined or config.hideMandatories == false) %}
 <span title="{{ 'This field is mandatory'|trans }}" aria-label="required">
@@ -1352,8 +1433,8 @@ var simplexValidation = {
         }
         if (!id) return;
         messageContainer = $('#' + id + '-container');
-        //input groups
-        if(!messageContainer.length || $(field).parent().hasClass('input-group')) {
+        //input groups or BS horizontal form
+        if(!messageContainer.length || $(field).parent().hasClass('input-group') || messageContainer.hasClass('row')) {
             messageContainer = $(field).parent();
         }
         // Check if error message field already exists

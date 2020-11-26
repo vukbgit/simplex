@@ -47,7 +47,7 @@
         <div class="sidebar-sticky">
             <nav class="nav flex-column" id="navigation-top">
         {% for voiceKey, voiceProperties in navigations.area %}
-            {{ navigationMacros.displaySidebarVoice(voiceKey, voiceProperties, areaNavigationLabels, 'navigation-top', 1) }}
+            {{ navigationMacros.displaySidebarVoice(routeParameters, voiceKey, voiceProperties, areaNavigationLabels, 'navigation-top', 1) }}
         {% endfor %}
             </nav>
         </div>
