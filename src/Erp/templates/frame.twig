@@ -20,6 +20,7 @@
         {% endif %}
     {% endblock %}
     {% block headerTitle %}
+        {{ parent() }}
         {% if hideHeaderTitle is not defined or hideHeaderTitle == false %}
         <h1 class="h2">
         {{ '%s :: %s'|format(brand, area) }}
