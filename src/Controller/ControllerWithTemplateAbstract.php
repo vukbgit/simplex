@@ -370,6 +370,14 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         $this->addTemplateFilter('formatIdforJs', function(string $id): string {
             return str_replace(['[',']'], '_', $id);
         });
+        //clears regexp to be used as form validation pattern
+        $this->addTemplateFilter('cleanRegexp', function(string $regexp): string {
+            if(substr($regexp, 0, 1) == substr($regexp, -1)) {
+                return substr($regexp, 1, strlen($regexp) - 2);
+            } else {
+                return $regexp;
+            }
+        });
         /*********
         * LABELS *
         *********/
