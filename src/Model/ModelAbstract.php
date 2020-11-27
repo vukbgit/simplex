@@ -201,6 +201,13 @@ abstract class ModelAbstract
                     preg_match("/'([0-9a-zA-Z_]+)'$/", $errorMessage, $matches);
                     $data = [$matches[1]];
                 }
+                if(preg_match('/duplicate key value/', $errorMessage) === 1) {
+                    $errorCode = '23000';
+                    $errorType = 'duplicate_entry';
+                    //extract field name
+                    preg_match("/Key \(([0-9a-zA-Z_]+)\)/", $errorMessage, $matches);
+                    $data = [$matches[1]];
+                }
                 //failed foreign key constraint
                 if(preg_match('/a foreign key constraint fails/', $errorMessage) === 1) {
                     $errorType = 'fk_constraint';
