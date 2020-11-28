@@ -1433,8 +1433,11 @@ var simplexValidation = {
         }
         if (!id) return;
         messageContainer = $('#' + id + '-container');
+        //radio and checkboxes
+        if(fieldType == 'radio' || fieldType == 'checkbox') {
+            messageContainer = $(field).parent().parent();
         //input groups or BS horizontal form
-        if(!messageContainer.length || $(field).parent().hasClass('input-group') || messageContainer.hasClass('row')) {
+        } else if(!messageContainer.length || $(field).parent().hasClass('input-group') || messageContainer.hasClass('row')) {
             messageContainer = $(field).parent();
         }
         // Check if error message field already exists
