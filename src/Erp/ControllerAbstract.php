@@ -202,14 +202,14 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
     protected function getAncestorPrimaryKeyFromRoute($ancestorSubjectKey, $ancestorModelConfig)
     {
         try {
+            //primary key field alias from config file
+            $ancestorPrimaryKey = $ancestorModelConfig->primaryKeyAlias;
+            $primaryKeyValue = $this->routeParameters->$ancestorPrimaryKey;
+        } catch (\Exception $e) {
             //primary key field from config file
             $ancestorPrimaryKey = $ancestorModelConfig->primaryKey;
             $primaryKeyValue = $this->routeParameters->$ancestorPrimaryKey;
-        } catch (\Exception $e) {
             try {
-                //primary key field alias from config file
-                $ancestorPrimaryKey = $ancestorModelConfig->primaryKeyAlias;
-                $primaryKeyValue = $this->routeParameters->$ancestorPrimaryKey;
             } catch (\Exception $e) {
                 try {
                     //primary key automatically built
