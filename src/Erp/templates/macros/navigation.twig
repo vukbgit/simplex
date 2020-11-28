@@ -11,6 +11,7 @@
     {% import _self as selfMacros %}
     {% set voiceId = 'voice-%s-%d'|format(voiceKey, level) %}
     {% set voiceLabelId = '%s-label'|format(voiceId) %}
+    {% set isActive = voiceProperties.isActive or (attribute(routeParameters, 'subject') == voiceKey) or (attribute(routeParameters, 'ancestor%d'|format(level - 1)) == voiceKey) %}
     {% if voiceProperties.navigation %}
         {% set subLevelId = '%s-sublevel'|format(voiceId) %}
     {% endif %}
@@ -19,10 +20,10 @@
             href="{{ voiceProperties.route|default('#') }}"
             id="{{ voiceLabelId }}"
             class="nav-link {{ 'pl-%d'|format((level + 1)) }}
-    {%- if voiceProperties.isActive or (attribute(routeParameters, 'subject') == voiceKey) or (attribute(routeParameters, 'ancestor%d'|format(level - 1)) == voiceKey) %} active text-white{% endif -%}
+    {%- if active %} active text-white{% endif -%}
             "
             {%- if voiceProperties.navigation -%}
-            data-toggle="collapse" aria-expanded="{{ voiceProperties.isActive ? 'true' : 'false' }}" data-target="#{{ subLevelId }}" aria-controls="{{ subLevelId }}"
+            data-toggle="collapse" aria-expanded="{{ isActive ? 'true' : 'false' }}" data-target="#{{ subLevelId }}" aria-controls="{{ subLevelId }}"
             {%- endif -%}
             >
     {%- if voiceProperties.icon -%}
@@ -30,12 +31,12 @@
     {%- endif -%}
     {# labels have been set in the area template #}
                 {{- attribute(navigationLabels, voiceKey) -}}
-    {%- if voiceProperties.isActive %}
+    {%- if isActive %}
                 <span class="sr-only">({% trans 'current' %})</span>
     {%- endif -%}
             </a>
     {% if voiceProperties.navigation %}
-<nav class="nav flex-column flex-nowrap collapse{% if voiceProperties.isActive %} show{% endif %}" id="{{ subLevelId }}"
+<nav class="nav flex-column flex-nowrap collapse{% if isActive %} show{% endif %}" id="{{ subLevelId }}"
              aria-labelledby="{{ voiceLabelId }}" data-parent="#{{ parentId }}">
         {% for voiceKey, voiceProperties in voiceProperties.navigation %}
             {{ selfMacros.displaySidebarVoice(routeParameters, voiceKey, voiceProperties, navigationLabels, subLevelId, level + 1) }}
