@@ -1184,6 +1184,8 @@ NOTE: javascript validation function creates automatically if needed, this macro
 {# sets up form and include assets, to be called inside head tag
 @param hash config: hash for form properties
     noValidation (bool): whether NOT to load JavaScript validation API
+    customValidation (function): function to be executed at the end of form submit
+    onFieldError (function name): function to be executed on field object whe an error occours
     locales (bool): whether there is at least one localized field
     assets (list): ['richTextEditor', 'fileUpload', 'captcha', 'dateTimePicker', 'passwordGenerator','richSelect'] list of the field types included into form that need some asset to be included
     captcha (object): captcha config object, properties:
@@ -1197,7 +1199,7 @@ NOTE: javascript validation function creates automatically if needed, this macro
     <link rel="stylesheet" href="{{ 'simplex/form/Fontello/css/fontello.css'|pathToShareAsset }}">
     {# validation #}
     {% if (config.noValidation is not defined) or config.noValidation == false %}
-        {{ selfMacros.formValidation(config.customValidation) }}
+        {{ selfMacros.formValidation(config.customValidation, config.onFieldError) }}
     {% endif %}
     {# locales #}
     {% if config.locales %}
@@ -1227,7 +1229,7 @@ NOTE: javascript validation function creates automatically if needed, this macro
 {#
 builds validation javascript API
 #}
-{% macro formValidation(customValidation) %}
+{% macro formValidation(customValidation, onFieldError) %}
 <script>
 /*************
 * VALIDATION *
@@ -1310,6 +1312,9 @@ var simplexValidation = {
                     if (hasErrors) {
                         event.preventDefault();
                         hasErrors.focus();
+    {% if onFieldError %}
+                        {{ onFieldError }}(hasErrors);
+    {% endif %}
                     }
                     {% if customValidation %}
                     if(!{{ customValidation }}) {
