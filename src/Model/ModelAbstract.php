@@ -195,6 +195,7 @@ abstract class ModelAbstract
             //Integrity constraint violation
             case '23':
                 //duplicate entry
+                $errorType = false;
                 if(preg_match('/Duplicate entry/', $errorMessage) === 1) {
                     $errorType = 'duplicate_entry';
                     //extract field name
@@ -222,7 +223,12 @@ abstract class ModelAbstract
                     preg_match("/Column \'([0-9a-zA-Z_]+)\'/", $errorMessage, $matches);
                     $data = [$matches[1]];
                 }
-                $code = sprintf('SQLSTATE_%s_%s', $errorCode, $errorType);
+                if(!$errorType) {
+                    $code = null;
+                    $rawMessage = sprintf('error code: %s; error message: %s', $errorCode, $errorMessage);
+                } else {
+                    $code = sprintf('SQLSTATE_%s_%s', $errorCode, $errorType);
+                }
             break;
             //Column not found
             case '42':
