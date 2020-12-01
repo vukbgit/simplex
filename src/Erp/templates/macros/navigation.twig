@@ -49,7 +49,6 @@
 {##
 # Displays model global actions navigation
 # @param array navigation: the navigation array containing objects With actions properties, as loaded from PHP navigation definition file
-# @param object navigationLabels: object With voices labels, indexed by voiceKey
 ##}
 {% macro displaySubjectGlobalActionsNavigation(context, navigation) %}
     {% if navigation|length %}
@@ -57,12 +56,92 @@
         <ul class="nav nav-tabs">
             {% for voiceKey, voiceProperties in navigation %}
             <li class="nav-item">
-            <a href="{{ buildRouteToAction(voiceProperties) }}" class="nav-link{% if voiceProperties.isActive %} active{% endif %} text-capitalize">
+                <a href="{{ buildRouteToAction(voiceProperties) }}" class="nav-link{% if voiceProperties.isActive %} active{% endif %} text-capitalize">
                 {{- getLabel('actions', voiceKey) -}}
                 </a>
             </li>
             {% endfor %}
         </ul>
     </nav>
+    {% endif %}
+{% endmacro %}
+
+{##
+# Displays model record actions navigation
+# @param array navigations: the navigation object containing recordVisibleActions and recordHiddenActions, as loaded from PHP navigation definition file
+##}
+{#% macro displaySubjectRecordActionsNavigation(context, navigations) %}
+    {% import _self as selfMacros %}
+    {% set recordActions = [] %}
+    {% set recordActions = recordActions|merge(navigations.recordVisibleActions) %}
+    {% set recordActions = recordActions|merge(navigations.recordHiddenActions) %}
+    {% if context.CRUDLConfig.showRecordNavigation and attribute(context.routeParameters, context.model.getConfig().primaryKey) and recordActions|length %}
+    <nav class="mb-3">
+        <ul class="nav nav-tabs">
+            {% for voiceKey, voiceProperties in recordActions %}
+                {% set class = 'nav-link' %}
+                {% if voiceKey == context.routeParameters.action %}
+                    {% set class = class ~ ' active' %}
+                {% endif %}
+                {% set voiceProperties = updateProperty(voiceProperties, 'linkClass', class) %}
+            <li class="nav-item">
+                {{ selfMacros.displayRecordActionLink(voiceProperties, getLabel('actions', voiceKey), context.record) }}
+            </li>
+            {% endfor %}
+        </ul>
+    </nav>
+    {% endif %}
+{% endmacro %#}
+
+{% macro displaySubjectRecordMenu(context, controllerName, primaryKeyField, record) %}
+    {% import _self as selfMacros %}
+    {% set controller = getInstanceFromDIContainer(controllerName) %}
+    {% set navigations = controller.getNavigations() %}
+    {% if navigations.recordMenuActions is defined and navigations.recordMenuActions|length and attribute(context.routeParameters, primaryKeyField) %}
+        {% set recordActions = {} %}
+        {% for action in navigations.recordMenuActions %}
+            {% set actionDefinition = attribute(navigations.recordVisibleActions, action) ?? (attribute(navigations.recordHiddenActions, action) ?? null) %}
+            {% if actionDefinition %}
+                {% set recordActions = updateProperty(recordActions, action, actionDefinition) %}
+            {% endif %}
+        {% endfor %}
+        <nav class="mb-3">
+            <ul class="nav nav-tabs">
+                {% for voiceKey, voiceProperties in recordActions %}
+                    {% set class = 'nav-link' %}
+                    {% if voiceKey == context.routeParameters.action %}
+                        {% set class = class ~ ' active' %}
+                    {% endif %}
+                    {% set voiceProperties = updateProperty(voiceProperties, 'linkClass', class) %}
+                <li class="nav-item">
+                    {{ selfMacros.displayRecordActionLink(voiceProperties, getLabel('actions', voiceKey), record) }}
+                </li>
+                {% endfor %}
+            </ul>
+        </nav>
+    {% endif %}
+{% endmacro %}
+
+{% macro displayRecordActionLink(actionProperties, actionLabel, record) %}
+    {% set allowed = true %}
+    {% if actionProperties.conditions is defined %}
+        {% for conditionField in actionProperties.conditions %}
+            {% if attribute(record, conditionField) == false %}
+                {% set allowed = false %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+    {% if allowed %}
+        {% set route = actionProperties.routeFromSubject is defined ? buildRouteToActionFromRoot(actionProperties.routeFromSubject) : actionProperties.route %}
+    <a
+        href="{{ parseRecordActionRoute(route, record) }}"
+        {% if actionProperties.linkClass is defined  %} class="{{ actionProperties.linkClass }}"{% endif %}
+    {% if actionProperties.target is defined  %} target="{{ actionProperties.target }}"{% endif %}
+        title="{{- actionLabel|escape('html_attr') -}}"
+    >
+        {% if actionProperties.hideLabel is not defined or actionProperties.hideLabel == false %}
+            {{- actionLabel -}}
+        {% endif %}
+    </a>
     {% endif %}
 {% endmacro %}

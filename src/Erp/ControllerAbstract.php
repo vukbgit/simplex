@@ -419,9 +419,6 @@ abstract class ControllerAbstract extends ControllerWithTemplateAbstract
                 return $this->resetSubjectAlerts();
             }
         );
-        
-        
-        
     }
     
     /**

@@ -1,5 +1,6 @@
 {% extends '@share/Erp/templates/page.twig' %}
 
+{% import '@share/Erp/templates/macros/navigation.twig' as navigationMacros %}
 {% import '@share/Erp/templates/macros/table.twig' as tableMacros %}
 
 {% block head %}
@@ -113,7 +114,7 @@
             {% for actionKey, actionProperties in navigations.recordVisibleActions %}
                 {% set actionLabel = parseRecordActionRoute(getLabel('actions', actionKey), record) %}
             <td class="record-action text-right">
-                {{ tableMacros.displayRecordActionLink(actionProperties, actionLabel, record)}}
+                {{ navigationMacros.displayRecordActionLink(actionProperties, actionLabel, record)}}
                 {#% set allowed = true %}
                 {% if actionProperties.conditions is defined %}
                     {% for conditionField in actionProperties.conditions %}
@@ -148,7 +149,7 @@
                 {% for actionKey, actionProperties in navigations.recordHiddenActions %}
                     {% set actionLabel = parseRecordActionRoute(getLabel('actions', actionKey), record) %}
                     {% set actionProperties = updateProperty(actionProperties, 'linkClass', 'dropdown-item') %}
-                    {{ tableMacros.displayRecordActionLink(actionProperties, actionLabel, record)}}
+                    {{ navigationMacros.displayRecordActionLink(actionProperties, actionLabel, record)}}
                 {% endfor %}
                     </div>
                 </div>

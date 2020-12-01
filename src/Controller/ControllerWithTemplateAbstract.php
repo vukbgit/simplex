@@ -207,6 +207,10 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         $this->addTemplateFilter('ucwords', function(string $string): string{
             return ucwords($string);
         });
+        //gets an instance from container 
+        $this->addTemplateFunction('getInstanceFromDIContainer', function(string $key) {
+            return $this->DIContainer->get($key);
+        });
         /********
         * DATES *
         ********/

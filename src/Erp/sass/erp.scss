@@ -30,6 +30,7 @@ main {
 /* tabs */
 .nav-tabs {
     .nav-link {
+        text-transform: capitalize;
         &.active {
             font-weight: bold;
         }

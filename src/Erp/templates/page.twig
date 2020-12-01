@@ -29,6 +29,9 @@
     {% endif %}
     {# model global actions navigation #}
     {{ navigationMacros.displaySubjectGlobalActionsNavigation(_context, navigations.globalActions, globalActionsLabels) }}
+    {# model global actions navigation #}
+    {% block subjectExtraNavigation %}
+    {% endblock %}
     {# subject alerts #}
     {% for severity, alerts in attribute(attribute(areaCookie, subject), 'alerts')|objectToArray %}
         <div class="alert {{ 'alert-%s'|format(severity) }} alert-dismissible fade show" role="alert">
