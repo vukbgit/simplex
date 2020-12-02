@@ -859,7 +859,8 @@ EOT;
             }
         $lastRecord = $this->query->orderBy($this->config->position->field, 'DESC')
             ->first();
-        return $lastRecord ? $lastRecord->posizione + 1 : 1;
+        $positionField = $this->config->position->field;
+        return $lastRecord ? $lastRecord->$positionField + 1 : 1;
     }
     
     /**
