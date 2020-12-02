@@ -126,7 +126,12 @@
     {% set allowed = true %}
     {% if actionProperties.conditions is defined %}
         {% for conditionField in actionProperties.conditions %}
-            {% if attribute(record, conditionField) == false %}
+            {# ! in front of field name negates #}
+            {% if 
+                (conditionField|first != '!' and attribute(record, conditionField) == false)
+                or
+                (conditionField|first == '!' and attribute(record, conditionField[1:]) == true)
+            %}
                 {% set allowed = false %}
             {% endif %}
         {% endfor %}
