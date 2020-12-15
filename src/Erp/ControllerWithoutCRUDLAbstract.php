@@ -15,6 +15,24 @@ use Psr\Http\Message\ServerRequestInterface;
 abstract class ControllerWithoutCRUDLAbstract extends ControllerWithTemplateAbstract
 {
     /**
+    * @var string
+    * subject of the controller
+    */
+    protected $subject;
+
+    /**
+    * @param string
+    * current route root till subject (included)
+    **/
+    private $currentSubjectRoot;
+
+    /**
+    * @var mixed
+    * model passed by route
+    */
+    protected $model;
+    
+    /**
     * Performs some operations before action execution
     * @param ServerRequestInterface $request
     */
@@ -28,6 +46,38 @@ abstract class ControllerWithoutCRUDLAbstract extends ControllerWithTemplateAbst
         if($this->isAuthenticated()) {
             //area navigation which is *always* needed for ERP 
             $this->loadAreaNavigation();
+        }
+    }
+    
+    /**
+    * Stores subject
+    */
+    protected function storeSubject()
+    {
+        $this->subject = $this->routeParameters->subject;
+    }
+
+    /**
+     * Stores current route subject root
+     */
+    protected function storeCurrentSubjectRoot()
+    {
+        $currentRoute = $this->request->getUri()->getPath();
+        $pattern = sprintf('~^[0-9a-zA-Z-_/]*/%s/?~', $this->subject);
+        preg_match($pattern , $currentRoute, $matches);
+        //remove ending slash
+        $this->currentSubjectRoot = substr($matches[0], 0, -1);
+    }
+    
+    /**
+     * Stores model searching for a subject-namespace\Model class
+     */
+    protected function storeModel()
+    {
+        $modelClassKey = sprintf('%s-model', $this->subject);
+        //if model class has been defined into subject di-container config file load it
+        if($this->DIContainer->has($modelClassKey)) {
+            $this->model = $this->DIContainer->get($modelClassKey);
         }
     }
     

@@ -18,18 +18,6 @@ use function Simplex\getInstancePath;
 abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
 {
     /**
-    * @var string
-    * subject of the controller
-    */
-    protected $subject;
-    
-    /**
-    * @var mixed
-    * model passed by route
-    */
-    protected $model;
-    
-    /**
     * @var array
     * ancestors models passed by route
     */
@@ -46,12 +34,6 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
     * current user options, set by the UI and stored into area cookie under subject property
     **/
     protected $subjectCookie;
-    
-    /**
-    * @param string
-    * current route root till subject (included)
-    **/
-    private $currentSubjectRoot;
     
     /**
     * Performs some operations before action execution
@@ -83,25 +65,6 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
         $this->processPresetInputs();
     }
     
-    /**
-    * Stores subject
-    */
-    protected function storeSubject()
-    {
-        $this->subject = $this->routeParameters->subject;
-    }
-
-    /**
-     * Stores current route subject root
-     */
-    protected function storeCurrentSubjectRoot()
-    {
-        $currentRoute = $this->request->getUri()->getPath();
-        $pattern = sprintf('~^[0-9a-zA-Z-_/]*/%s/?~', $this->subject);
-        preg_match($pattern , $currentRoute, $matches);
-        //remove ending slash
-        $this->currentSubjectRoot = substr($matches[0], 0, -1);
-    }
     
     /**
      * Builds the route to an action from current route subject root
@@ -113,18 +76,6 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
         return sprintf('%s/%s', $this->currentSubjectRoot, $actionRoutePart);
     }
 
-    /**
-     * Stores model searching for a subject-namespace\Model class
-     */
-    protected function storeModel()
-    {
-        $modelClassKey = sprintf('%s-model', $this->subject);
-        //if model class has been defined into subject di-container config file load it
-        if($this->DIContainer->has($modelClassKey)) {
-            $this->model = $this->DIContainer->get($modelClassKey);
-        }
-    }
-    
     /**
      * Loads model at runtime
      */
