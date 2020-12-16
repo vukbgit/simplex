@@ -200,7 +200,7 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         },
         ['is_safe' => ['html']]);
         //convert metric byte units
-        $this->addTemplateFunction('convertByteUnit', function(float $value, string $fromUnit, string $toUnit): string{
+        $this->addTemplateFunction('convertByteUnit', function(float $value, string $fromUnit, string $toUnit = ''): string{
             return \ByteUnits\parse(sprintf('%s%s', $value, $fromUnit))->format($toUnit, ' ');
         });
         //ucwords wrapper
