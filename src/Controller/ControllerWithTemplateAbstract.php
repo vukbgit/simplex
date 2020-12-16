@@ -558,9 +558,7 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
     {
         $html = $this->renderTemplateCode($templatePath);
         //send HTML to response
-        $response = $this->response->withHeader('Content-Type', 'text/html');
-        $response->getBody()
-            ->write($html);
+        $this->output('text/html', $html);
     }
     
     /*************

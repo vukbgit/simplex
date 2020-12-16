@@ -276,6 +276,17 @@ abstract class ControllerAbstract
     }
     
     /**
+    * Outputs
+    * @param string $route
+    */
+    protected function output(string $contentType, string $content)
+    {
+        $response = $this->response->withHeader('Content-Type', $contentType);
+        $response->getBody()
+            ->write($content);
+    }
+    
+    /**
     * Redirects to a route
     * @param string $route
     */
