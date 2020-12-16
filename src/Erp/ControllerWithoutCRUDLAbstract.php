@@ -24,7 +24,7 @@ abstract class ControllerWithoutCRUDLAbstract extends ControllerWithTemplateAbst
     * @param string
     * current route root till subject (included)
     **/
-    private $currentSubjectRoot;
+    protected $currentSubjectRoot;
 
     /**
     * @var mixed
