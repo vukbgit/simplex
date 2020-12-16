@@ -242,12 +242,22 @@ abstract class ModelAbstract
                 }
                 $code = sprintf('SQLSTATE_%s_%s', $errorCode, $errorType);
             break;
+            //Object not in prerequisite state, PostgreSQL primary key without sequence
+            case '55':
+                if(preg_match('/Object not in prerequisite state/', $errorMessage) === 1) {
+                    $errorType = 'object_not_in_prerequisite_state';
+                } else {
+                    xx($exception);
+                }
+                $code = sprintf('SQLSTATE_%s_%s', $errorCode, $errorType);
+            break;
             default:
                 $code = null;
                 $rawMessage = sprintf('error code: %s; error message: %s', $errorCode, $errorMessage);
             break;
         }
         return (object) [
+            'erroCode' => $errorCode,
             'code' => $code,
             'data' => $data,
             'rawMessage' => $rawMessage
