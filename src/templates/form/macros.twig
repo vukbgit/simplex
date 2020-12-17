@@ -406,7 +406,10 @@ WARNING: uses Bootstrap custom select, so BS custom-forms component must be incl
 {# displays a rich select using select2 (https://select2.org/), a select with enhanced features like remote data sources and autocomplete
 @param hash config: hash for field properties (see setFieldAttributes macro explanation) plus specific properties:
     minimumInputLength minimum number of characters to type to trigger search; if it is set items (when present) are not showed by default
-    remoteDataRoute route to remote data search action; input will be split by spaces and searched into subject fields whose crudl table filter property is set to true
+    remoteDataRoute route to remote data search action
+        search terms will be passed into GET 'term' parameter
+        search action must return json
+    remoteDataRouteExtraParameters: object with extra parameters to be passed into route
     valueLabel: 
 @param array items: array of hashes each with value and label property, alternative to remoteDataRoute; if minimumInputLength is passed they are not shown but searched
 #}
@@ -445,6 +448,14 @@ $(document).ready(function() {
         ajax: {
             url: '{{ config.remoteDataRoute }}',
             dataType: 'json',
+            data: function (params) {
+        {% if config.remoteDataRouteExtraParameters %}
+            {% for parameter, value in config.remoteDataRouteExtraParameters %}
+                {{ 'params.%s = %s;'|format(parameter, value|varToJs) }}
+            {% endfor %}
+        {% endif %}
+                return params;
+            },
             processResults: function (data) {
                 return {
                     results: data
