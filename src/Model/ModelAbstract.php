@@ -39,7 +39,6 @@ abstract class ModelAbstract
     /**
     * Constructor
     * @param QueryBuilderHandler $query
-    * @param string $configPath
     */
     public function __construct(PixieExtended $query)
     {
