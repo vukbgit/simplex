@@ -460,40 +460,41 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
             }
         }
         if($filterString) {
-            //clean multiple white spaces
-            $filterString = preg_replace('/\h{2,}/iu', ' ', $filterString);    
-            //search for "" quotes
-            $quotedTokensNumber = preg_match_all('/"[\w\h?]+"/iu', $filterString, $quotedTokens);
-            if($quotedTokensNumber > 0) {
-                $filterString = preg_replace('/"[\w\h?]+"/iu', '', $filterString);    
-            }
-            preg_match_all('/\w+/i', $filterString, $notQuotedTokens);
-            $filterTokens = array_merge($quotedTokens[0], $notQuotedTokens[0]);
-            foreach ($filterTokens as $filterToken) {
-                $filterToken = trim($filterToken);
-                if(!$filterToken) {
-                    continue;
-                }
-                //create a grouped where for the filter
-                $filterWhere = [
-                    'grouped' => true,
-                    'logical' => 'AND'
-                ];
-                //loop config fields
-                foreach ((array) $CRUDLConfig->fields as $fieldName => $fieldConfig) {
-                    if(!isset($fieldConfig->table->filter) || $fieldConfig->table->filter) {
-                        //filter fields conditions are joined by the logical OR operator
-                        //$filterWhere[] = [$fieldName, 'LIKE', sprintf('%%%s%%', $filterString), 'logical' => 'OR'];
-                        $filterWhere[] = [
-                            $fieldName,
-                            $this->model->getQuery()->getDriverOption('caseInsensitiveLikeOperator'),
-                            sprintf('%%%s%%', $filterToken),
-                            'logical' => 'OR'
-                        ];
-                    }
-                }
-                $where[] = $filterWhere;
-            }
+            // //clean multiple white spaces
+            // $filterString = preg_replace('/\h{2,}/iu', ' ', $filterString);    
+            // //search for "" quotes
+            // $quotedTokensNumber = preg_match_all('/"[\w\h?]+"/iu', $filterString, $quotedTokens);
+            // if($quotedTokensNumber > 0) {
+            //     $filterString = preg_replace('/"[\w\h?]+"/iu', '', $filterString);    
+            // }
+            // preg_match_all('/\w+/i', $filterString, $notQuotedTokens);
+            // $filterTokens = array_merge($quotedTokens[0], $notQuotedTokens[0]);
+            // foreach ($filterTokens as $filterToken) {
+            //     $filterToken = trim($filterToken);
+            //     if(!$filterToken) {
+            //         continue;
+            //     }
+            //     //create a grouped where for the filter
+            //     $filterWhere = [
+            //         'grouped' => true,
+            //         'logical' => 'AND'
+            //     ];
+            //     //loop config fields
+            //     foreach ((array) $CRUDLConfig->fields as $fieldName => $fieldConfig) {
+            //         if(!isset($fieldConfig->table->filter) || $fieldConfig->table->filter) {
+            //             //filter fields conditions are joined by the logical OR operator
+            //             //$filterWhere[] = [$fieldName, 'LIKE', sprintf('%%%s%%', $filterString), 'logical' => 'OR'];
+            //             $filterWhere[] = [
+            //                 $fieldName,
+            //                 $this->model->getQuery()->getDriverOption('caseInsensitiveLikeOperator'),
+            //                 sprintf('%%%s%%', $filterToken),
+            //                 'logical' => 'OR'
+            //             ];
+            //         }
+            //     }
+            //     $where[] = $filterWhere;
+            // }
+            $where = array_merge($where, $this->buildFilterWhere($CRUDLConfig, $filterString));
         }
         //parent primary key
         if(!empty($this->ancestors)) {
@@ -506,6 +507,51 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
             $where[] = [$parentPrimaryKey->field, $parentPrimaryKey->value];
         }
         $this->buildListWhereCustomConditions($where);
+        return $where;
+    }
+    
+    /**
+    * Builds where conditions on CRUDL filter fields given a search string to be tokenized
+    * @param object $CRUDLConfig to use a different CRUD configuration
+    * @param string $filterString
+    */
+    protected function buildFilterWhere($CRUDLConfig, $filterString): array
+    {
+        $where = [];
+        //clean multiple white spaces
+        $filterString = preg_replace('/\h{2,}/iu', ' ', $filterString);    
+        //search for "" quotes
+        $quotedTokensNumber = preg_match_all('/"[\w\h?]+"/iu', $filterString, $quotedTokens);
+        if($quotedTokensNumber > 0) {
+            $filterString = preg_replace('/"[\w\h?]+"/iu', '', $filterString);    
+        }
+        preg_match_all('/\w+/i', $filterString, $notQuotedTokens);
+        $filterTokens = array_merge($quotedTokens[0], $notQuotedTokens[0]);
+        foreach ($filterTokens as $filterToken) {
+            $filterToken = trim($filterToken);
+            if(!$filterToken) {
+                continue;
+            }
+            //create a grouped where for the filter
+            $filterWhere = [
+                'grouped' => true,
+                'logical' => 'AND'
+            ];
+            //loop config fields
+            foreach ((array) $CRUDLConfig->fields as $fieldName => $fieldConfig) {
+                if(!isset($fieldConfig->table->filter) || $fieldConfig->table->filter) {
+                    //filter fields conditions are joined by the logical OR operator
+                    //$filterWhere[] = [$fieldName, 'LIKE', sprintf('%%%s%%', $filterString), 'logical' => 'OR'];
+                    $filterWhere[] = [
+                        $fieldName,
+                        $this->model->getQuery()->getDriverOption('caseInsensitiveLikeOperator'),
+                        sprintf('%%%s%%', $filterToken),
+                        'logical' => 'OR'
+                    ];
+                }
+            }
+            $where[] = $filterWhere;
+        }
         return $where;
     }
     
