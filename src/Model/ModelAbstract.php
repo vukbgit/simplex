@@ -38,7 +38,7 @@ abstract class ModelAbstract
     
     /**
     * Constructor
-    * @param PixieExtended $query
+    * @param PixieExtendedx $query
     */
     public function __construct(PixieExtended $query)
     {
