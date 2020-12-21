@@ -500,7 +500,7 @@ $(document).ready(function() {
 #}
 {% macro displayInputRadioCheckbox(type, config, items) %}
     {% import _self as selfMacros %}
-    <div>
+    {#<div>#}
     {% for item in items %}
          {% set itemConfig = config %}
 <div class="form-check{% if config.inline %} form-check-inline{% endif %}">
@@ -530,7 +530,7 @@ $(document).ready(function() {
         </small>
     </div>
     {% endfor %}
-    </div>
+    {#</div>#}
 {% endmacro %}
 
 {# displays a radios fields block
@@ -561,7 +561,7 @@ $(document).ready(function() {
         {{ selfMacros.displayFormGroup(config, config.name|formatIdforJs) }}
         {{ selfMacros.displayLabel(config) }}
         {% if config.cols is defined %}
-        <div class="col-12 col-sm-{{ config.cols[1] }}">
+        <div class="col-12 col-sm-{{ config.cols[1] }}{% if config.inline %} d-flex align-items-center{% endif %}">
         {% endif %}
         {{ selfMacros.displayInputRadioCheckbox(type, config, items) }}
         {{ selfMacros.displayHelp(config) }}
@@ -655,6 +655,8 @@ WARNING: uses Bootstrap custom range input, so BS custom-forms component must be
 @param hash config: hash for field properties (see setFieldAttributes macro explanation) plus
 - format (string, i.e. 'DD-MM-YYYY'), default to the one returnd by getdateFormat function
 - time (bool): whether the the time part is also present
+- before (string): another dateTimePicker input name whose minimum date value will be syncronized with selected date
+- after (string): another dateTimePicker input name whose maximum date value will be syncronized with selected date
 - options (hash): specific datetime options (see)
 @param bool time: whether the the time part is also present
 #}
