@@ -264,6 +264,14 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
             }
             return is_file($path);
         });
+        //wrapper for the pathinfo function
+        $this->addTemplateFunction('pathinfo', function(string $path, string $option = '') {
+            if($option) {
+                return pathinfo($path, constant($option));
+            } else {
+                return pathinfo($path);
+            }
+        });
         //returns path to yarn packages asset
         $this->addTemplateFilter('pathToShareAsset', function(string $path){
             return sprintf('/%s/%s', PUBLIC_SHARE_DIR, $path);
