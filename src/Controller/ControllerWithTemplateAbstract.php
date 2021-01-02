@@ -152,8 +152,8 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         //dumps var in development environment
         $this->addTemplateFunction(
             'dump',
-            function($var, $expand = false){
-                x($var, $expand);
+            function($var, $expand = false, $force = false){
+                x($var, $expand, $force);
             },
             ['is_safe' => ['html']]
         );

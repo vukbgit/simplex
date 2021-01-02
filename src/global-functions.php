@@ -12,8 +12,8 @@ Kint::$aliases[] = 'xx';
 * @param mixed $var
 * @param bool $expand whether to expand objects by default
 **/
-function x($var, $expand = false) {
-    if(ENVIRONMENT == 'development') {
+function x($var, $expand = false, $force = false) {
+    if(ENVIRONMENT == 'development' || $force == true) {
         if($expand) {
             Kint::$expanded = true;
         }
