@@ -422,12 +422,14 @@ abstract class ModelAbstract
     * @param array $fieldsValues: indexes are fields names, values are fields values, it can be an array of arrays in case of batch insert
     * @return mixed primary key of inserted records or array in case of batch insert
     */
-    public function insert(array $fieldsValues)
+    public function insert(array &$fieldsValues)
     {
         //insert record
         $primaryKeyValue = $this->query
             ->table($this->table())
             ->insert($fieldsValues);
+        //add primary key to values
+        $fieldsValues[$this->config->primaryKey] = $primaryKeyValue;
         return $primaryKeyValue;
     }
     
@@ -440,7 +442,7 @@ abstract class ModelAbstract
     * @param mixed $primaryKeyValue
     * @param array $fieldsValues: indexes are fields names, values are fields values
     */
-    public function update($primaryKeyValue = null, array $fieldsValues = [])
+    public function update($primaryKeyValue = null, array &$fieldsValues = [])
     {
         $this->query
             ->table($this->table());
@@ -450,6 +452,8 @@ abstract class ModelAbstract
         }
         $this->query
             ->update($fieldsValues);
+        //add primary key to values
+        $fieldsValues[$this->config->primaryKey] = $primaryKeyValue;
     }
     
     /*********

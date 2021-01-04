@@ -254,27 +254,47 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
      */
     public function loadSubjectNavigation()
     {
-        //config file must be into class-folder/config/model.php
+        //config file must be into class-folder/config/navigation.php
         $configPath = sprintf('%s/config/navigation.php', getInstancePath($this));
         //check path
         if(!is_file($configPath)) {
-            throw new \Exception(sprintf('configuration file \'%s\' for model navigation %s is not a valid path', $configPath, getInstanceNamespace($this)));
+            throw new \Exception(sprintf('configuration file \'%s\' for subject %s navigation is not a valid path', $configPath, getInstanceNamespace($this)));
         }
         //load navigation
         $this->loadNavigation($configPath);
     }
     
     /**
-     * Loads actions definitions which are *always* needed for ERP 
-     */
-    protected function loadActions()
+    * Redirects after checking if for current action a redirect action has been defined
+    * @param string $route
+    * @param object $record: in case route action has to be built over a record datas
+    */
+    protected function redirect(string $route, $record = null)
     {
-        //config file must be into class-folder/config/actions.php
-        $configPath = sprintf('%s/config/actions.php', getInstancePath($this));
-        //check path
-        if(!is_file($configPath)) {
-            throw new \Exception(sprintf('Actions configuration file \'%s\' for %s is not a valid path', $configPath, getInstanceNamespace($this)));
+        if(isset($this->getCRUDLConfig()->actions[$this->action]->redirectTo)) {
+            $isRecordAction = false;
+            $redirectActionKey = $this->getCRUDLConfig()->actions[$this->action]->redirectTo;
+            //GET REDIRECT ACTION OBJECT
+            //redirect action is global
+            if(isset($this->navigations['globalActions'][$redirectActionKey])) {
+                $redirectAction = $this->navigations['globalActions'][$redirectActionKey];
+            } elseif(isset($this->navigations['recordVisibleActions'][$redirectActionKey]) || isset($this->navigations['recordVisibleActions'][$redirectActionKey])) {
+            //redirect action is related to a record
+                $isRecordAction = true;
+                $redirectAction = isset($this->navigations['recordVisibleActions'][$redirectActionKey]) ? $this->navigations['recordVisibleActions'][$redirectActionKey] : $this->navigations['recordVisibleActions'][$redirectActionKey];    
+            }
+            //GET DEFINED REDIRECT ACTION ROUTE
+            $route = isset($redirectAction->routeFromSubject) ? $this->buildRouteToActionFromRoot($redirectAction->routeFromSubject) : $redirectAction->route;
+            //MANAGE RECORD ACTION
+            if($isRecordAction) {
+                if(!is_object($record)) {
+                    throw new \Exception(sprintf("cannot redirect to action %s because a null record has been passed", $redirectActionKey), 1);
+                } else {
+                    $route = $this->parseRecordActionRoute($route, $record);
+                }
+            }
         }
+        parent::redirect($route);
     }
 
     /***********
@@ -794,7 +814,7 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
             $redirectRoute = $this->buildRouteToActionFromRoot('insert-form');
         }
         //redirect
-        $this->redirect($redirectRoute);
+        $this->redirect($redirectRoute, (object) $fieldsData->saveFieldsValues);
     }
     
     /**
@@ -828,7 +848,7 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
             $redirectRoute = $this->buildRouteToActionFromRoot(sprintf('update-form/%s', $fieldsData->primaryKeyValue));
         }
         //redirect
-        $this->redirect($redirectRoute);
+        $this->redirect($redirectRoute, (object) $fieldsData->saveFieldsValues);
     }
     
     /**

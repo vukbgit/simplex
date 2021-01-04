@@ -83,6 +83,32 @@ abstract class ControllerWithoutCRUDLAbstract extends ControllerWithTemplateAbst
     
     /**
     * Build common template helpers
+    * @param string $routePattern
+    * @param  object $record
+    */
+    protected function parseRecordActionRoute(string $routePattern, object $record)
+    {
+        //get route pattern placeholders
+        preg_match_all('/\{([a-z0-9_]+)\}/', $routePattern, $placeholders);
+        $placeholders = $placeholders[1];
+        //loop placeholders to find replacements
+        $replacements = [];
+        foreach ($placeholders as $placeholderIndex => $placeholder) {
+            $placeholders[$placeholderIndex] = sprintf('/{(%s)}/', $placeholder);
+            //placeholder value found
+            if(isset($record->$placeholder)) {
+                $replacements[$placeholderIndex] = $record->$placeholder;
+                continue;
+            }
+            //default placeholder value is null
+            $replacements[$placeholderIndex] = null;
+        }
+        $route = preg_replace($placeholders, $replacements, $routePattern);
+        return $route;
+    }
+    
+    /**
+    * Builds common template helpers
     */
     protected function buildCommonTemplateHelpers()
     {
@@ -98,7 +124,7 @@ abstract class ControllerWithoutCRUDLAbstract extends ControllerWithTemplateAbst
         $this->addTemplateFunction(
             'parseRecordActionRoute',
             function(string $routePattern, object $record){
-                //get route pattern placeholders
+                /*//get route pattern placeholders
                 preg_match_all('/\{([a-z0-9_]+)\}/', $routePattern, $placeholders);
                 $placeholders = $placeholders[1];
                 //loop placeholders to find replacements
@@ -114,7 +140,8 @@ abstract class ControllerWithoutCRUDLAbstract extends ControllerWithTemplateAbst
                     $replacements[$placeholderIndex] = null;
                 }
                 $route = preg_replace($placeholders, $replacements, $routePattern);
-                return $route;
+                return $route;*/
+                return $this->parseRecordActionRoute($routePattern, $record);
             }
         );
         /*********
