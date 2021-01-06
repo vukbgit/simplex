@@ -701,12 +701,12 @@ WARNING: uses Bootstrap custom range input, so BS custom-forms component must be
            {% endfor %}
            });
     {% if config.before %}
-            $("#{{ containerId }}").on("change.datetimepicker", function (e) {
+            $("#{{ containerId }}").on("hide.datetimepicker", function (e) {
                 $('#{{ config.before }}_container').datetimepicker('minDate', e.date);
             });
     {% endif %}
     {% if config.after %}
-            $("#{{ containerId }}").on("change.datetimepicker", function (e) {
+            $("#{{ containerId }}").on("hide.datetimepicker", function (e) {
                 $('#{{ config.after }}_container').datetimepicker('maxDate', e.date);
             });
     {% endif %}
