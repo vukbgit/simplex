@@ -1522,14 +1522,14 @@ var simplexValidation = {
         var id = field.id || field.name;
         if (!id) return;
         // Check if an error message is in the DOM
-        var message = field.form.querySelector('.invalid-tooltip#error-for-' + id + '');
+        var message = field.form.querySelector('.invalid-tooltip#error-for-' + simplexValidation.formatId(id) + '');
         if (!message) return;
     },
     /*
     Builds id from name
     */
     formatId: function (fieldName) {
-        return fieldName.replace(/\[/, '_').replace(/\]/, '_');
+        return fieldName.replace(/\[/g, '_').replace(/\]/g, '_');
     }
 };
 simplexValidation.init();
