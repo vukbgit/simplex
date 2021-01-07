@@ -93,10 +93,10 @@
     {% endif %}
 {% endmacro %#}
 
-{% macro displaySubjectRecordMenu(context, controllerName, primaryKeyField, record) %}
+{% macro displaySubjectRecordMenu(context, controllerName, primaryKeyField, record, baseRoute, title) %}
     {% import _self as selfMacros %}
     {% set controller = getInstanceFromDIContainer(controllerName) %}
-    {% set navigations = controller.getNavigations() %}
+    {% set navigations = getNavigations(controller) %}
     {% if navigations.recordMenuActions is defined and navigations.recordMenuActions|length and attribute(context.routeParameters, primaryKeyField) %}
         {% set recordActions = {} %}
         {% for action in navigations.recordMenuActions %}
@@ -105,7 +105,10 @@
                 {% set recordActions = updateProperty(recordActions, action, actionDefinition) %}
             {% endif %}
         {% endfor %}
-        <nav class="mb-3">
+        <nav class="mb-3 d-flex align-items-center subject-record-menu">
+        {% if title %}
+            <span class="title">{{ title }}</span>
+        {% endif %}
             <ul class="nav nav-tabs">
                 {% for voiceKey, voiceProperties in recordActions %}
                     {% set class = 'nav-link' %}
@@ -114,7 +117,7 @@
                     {% endif %}
                     {% set voiceProperties = updateProperty(voiceProperties, 'linkClass', class) %}
                 <li class="nav-item">
-                    {{ selfMacros.displayRecordActionLink(voiceProperties, getLabel('actions', voiceKey), record) }}
+                    {{ selfMacros.displayRecordActionLink(voiceProperties, getLabel('actions', voiceKey), record, baseRoute) }}
                 </li>
                 {% endfor %}
             </ul>
@@ -122,7 +125,7 @@
     {% endif %}
 {% endmacro %}
 
-{% macro displayRecordActionLink(actionProperties, actionLabel, record) %}
+{% macro displayRecordActionLink(actionProperties, actionLabel, record, baseRoute) %}
     {% set allowed = true %}
     {% if actionProperties.conditions is defined %}
         {% for conditionField in actionProperties.conditions %}
@@ -137,7 +140,7 @@
         {% endfor %}
     {% endif %}
     {% if allowed %}
-        {% set route = actionProperties.routeFromSubject is defined ? buildRouteToActionFromRoot(actionProperties.routeFromSubject) : actionProperties.route %}
+        {% set route = actionProperties.routeFromSubject is defined ? buildRouteToActionFromRoot(actionProperties.routeFromSubject, baseRoute) : actionProperties.route %}
     <a
         href="{{ parseRecordActionRoute(route, record) }}"
         {% if actionProperties.linkClass is defined  %} class="{{ actionProperties.linkClass }}"{% endif %}

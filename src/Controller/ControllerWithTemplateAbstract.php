@@ -471,8 +471,8 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         //builds route to an action from root
         $this->addTemplateFunction(
             'buildRouteToActionFromRoot',
-            function(string $actionRoutePart){
-                return $this->buildRouteToActionFromRoot($actionRoutePart);
+            function(string $actionRoutePart, string $baseroute = null){
+                return $this->buildRouteToActionFromRoot($actionRoutePart, $baseroute);
             }
         );
         //Builds route to an action based on action configuration

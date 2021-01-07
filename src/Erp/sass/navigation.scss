@@ -95,6 +95,13 @@
         font-weight:bold;
     }
 }
+/* subject record menu */
+.subject-record-menu {
+    .title {
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+}
 /* hamburgers override*/
 $hamburger-layer-height        : 4px !default;
 $hamburger-layer-spacing       : 6px !default;

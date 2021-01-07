@@ -71,9 +71,9 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
      * @param string $actionRoutePart: the last part of the route wit action name and optional other parameters (such as primary key value)
      * @return string the built route
      */
-    protected function buildRouteToActionFromRoot(string $actionRoutePart): string
+    protected function buildRouteToActionFromRoot(string $actionRoutePart, string $baseRoute = null): string
     {
-        return sprintf('%s/%s', $this->currentSubjectRoot, $actionRoutePart);
+        return sprintf('%s/%s', $baseRoute ?? $this->currentSubjectRoot, $actionRoutePart);
     }
 
     /**
