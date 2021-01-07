@@ -664,9 +664,10 @@ WARNING: uses Bootstrap custom range input, so BS custom-forms component must be
     {% import _self as selfMacros %}
     {% set id = config.id ?? config.name %}
     {% set containerId = '%s_container'|format(id) %}
-    {% if config.value %}
+    {% if config.value and config.format != 'HH:mm' %}
         {% set config = updateProperty(config, 'value', config.value|date(attribute(getLanguage(config.time ? 'dateTimeFormat' : 'dateFormat'), 'PHP'))) %}
     {% endif %}
+    
     {% set config = updateProperty(config, 'autocomplete', 'off') %}
     {% set classes = config.classes ?? [] %}
     {% set classes = ['form-control', 'datetimepicker-input']|merge(classes) %}
