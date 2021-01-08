@@ -15,13 +15,12 @@
     <link rel="stylesheet" href="{{ 'simplex/Erp/Fontello/css/fontello.css'|pathToShareAsset }}">
 {% endblock %}
 
-{# include subject and ancestors labels #}
-
+{# include ancestors and subject labels, in this order to let subject override labels if necessary #}
 {% block body %}
-    {{ include(getInstanceTemplate(null, 'labels.twig'), {'labels': labels}, with_context = true) }}
     {% for ancestor in ancestors %}
         {{ include(getInstanceTemplate(ancestor.controller, 'labels.twig'), {'labels': labels}, with_context = true) }}
     {% endfor %}
+    {{ include(getInstanceTemplate(null, 'labels.twig'), {'labels': labels}, with_context = true) }}
     {{ parent() }}
 {% endblock %}
 
