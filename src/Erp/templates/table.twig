@@ -92,7 +92,7 @@
     </thead>
     <tbody>
     {# init totals #}
-    {% set tableTotals = {} %}
+    {% set tableTotals = tableTotals ?? {} %}
     {% for fieldName, field in CRUDLConfig.fields %}
         {% if field.table.total %}
             {% set tableTotals = updateProperty(tableTotals, fieldName, 0) %}
@@ -115,27 +115,6 @@
                 {% set actionLabel = parseRecordActionRoute(getLabel('actions', actionKey), record) %}
             <td class="record-action text-right">
                 {{ navigationMacros.displayRecordActionLink(actionProperties, actionLabel, record)}}
-                {#% set allowed = true %}
-                {% if actionProperties.conditions is defined %}
-                    {% for conditionField in actionProperties.conditions %}
-                        {% if attribute(record, conditionField) == false %}
-                            {% set allowed = false %}
-                        {% endif %}
-                    {% endfor %}
-                {% endif %}
-                {% if allowed %}
-                    {% set route = actionProperties.routeFromSubject is defined ? buildRouteToActionFromRoot(actionProperties.routeFromSubject) : actionProperties.route %}
-                <a
-                    href="{{ parseRecordActionRoute(route, record) }}"
-                    {% if actionProperties.linkClass is defined  %} class="{{ actionProperties.linkClass }}"{% endif %}
-                {% if actionProperties.target is defined  %} target="{{ actionProperties.target }}"{% endif %}
-                    title="{{- actionLabel|escape('html_attr') -}}"
-                >
-                    {% if actionProperties.linkClass is not defined  %}
-                        {{- actionLabel -}}
-                    {% endif %}
-                </a>
-                {% endif %#}
             </td>
             {% endfor %}
             {# record hidden actions #}
@@ -170,7 +149,7 @@
         {% endblock %}
     {# record visible actions header #}
         {% if navigations.recordVisibleActions|length %}
-        <th colspan="{{ navigations.recordVisibleActions|length }}"></th>
+        <th colspan="{{ navigations.recordVisibleActions|length + (navigations.recordHiddenActions|length ? 1 : 0) }}"></th>
         {% endif %}
         </tr>
     </tfoot>
