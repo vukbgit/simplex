@@ -27,8 +27,10 @@
         </ol>
     </nav>
     {% endif %}
-    {# model global actions navigation #}
-    {{ navigationMacros.displaySubjectGlobalActionsNavigation(_context, navigations.globalActions, globalActionsLabels) }}
+    {% block subjectGlobalNavigation %}
+        {# model global actions navigation #}
+        {{ navigationMacros.displaySubjectGlobalActionsNavigation(_context, navigations.globalActions, globalActionsLabels) }}
+    {% endblock %}
     {# model global actions navigation #}
     {% block subjectExtraNavigation %}
     {% endblock %}
