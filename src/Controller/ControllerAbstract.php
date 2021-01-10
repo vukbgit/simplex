@@ -123,8 +123,26 @@ abstract class ControllerAbstract
         $this->action = $this->routeParameters->action;
         //check language
         $this->setLanguage();
+        //init traits
+        $this->initTraits();
     }
     
+    /**
+    * Inits used traits searching for magic method __initTrait[trait-name]
+    */
+    protected function initTraits()
+    {
+        //loop used traits
+        foreach ((array) class_uses($this) as $traitNamespace) {
+            //build magic method name
+            list($traitName) = array_reverse(explode('\\', $traitNamespace));
+            $methodName = sprintf('__initTrait%s', $traitName);
+            //call method
+            if(method_exists($this, $methodName)) {
+                call_user_func([$this, $methodName]);
+            }
+        };
+    }
     /**
     * Stores request and related informations
     * @param ServerRequestInterface $request
