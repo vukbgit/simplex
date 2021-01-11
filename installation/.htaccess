@@ -10,3 +10,4 @@ SetEnvIf Host ^prod-host\.ltd$ ENVIRONMENT=production
 RewriteRule ^backend/?$ /backend/sign-in-form [R,L]
 #default entry point
 RewriteRule ^(.*)$ index.php [NC]
+RedirectMatch 404 /\.git
