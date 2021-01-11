@@ -65,12 +65,6 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
     protected $labels;
     
     /**
-    * @var object
-    * local helpers to be built, with properties 'filters' and 'functions' which are arrays, each array item an object with 'name' and 'body' properties
-    */
-    protected $localTemplateHelpers;
-
-    /**
     * Constructor
     * @param ContainerInterface $DIContainer
     * @param ResponseInterface $response
@@ -92,10 +86,6 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
             'alerts' => (object) [],
             'table' => (object) []
         ];
-        $this->localTemplateHelpers = (object) [
-            'filters' => [],
-            'functions' => []
-        ];
     }
 
     /**
@@ -108,7 +98,6 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         parent::doBeforeActionExecution($request);
         //build common and local template helpers
         $this->buildCommonTemplateHelpers();
-        $this->buildLocalTemplateHelpers();
         //set common template parameters
         $this->setCommonTemplateParameters();
     }
@@ -499,76 +488,11 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
     }
     
     /**
-    * Adds a local template helper
-    * @param string $type: filter | function
-    * @param string $name
-    * @param callable $body
-    * @param array $options
-    */
-    protected function addLocalTemplateHelper(string $type, string $name, callable $body, array $options = [])
-    {
-        $this->localTemplateHelpers->{$type}[] = (object) [
-            'name' => $name,
-            'body' => $body,
-            'options' => $options
-        ];
-    }
-    
-    /**
-    * Adds a local template filter
-    * @param string $name
-    * @param callable $body
-    * @param array $options
-    */
-    protected function addLocalTemplateFilter(string $name, callable $body, array $options = [])
-    {
-        $this->addLocalTemplateHelper('filter', $name, $body, $options);
-    }
-    
-    /**
-    * Adds a local template function
-    * @param string $name
-    * @param callable $body
-    * @param array $options
-    */
-    protected function addLocalTemplateFunction(string $name, callable $body, array $options = [])
-    {
-        $this->addLocalTemplateHelper('function', $name, $body, $options);
-    }
-    
-    /**
-    * Builds local template helpers
-    * NOTE: do not change visibility
-    */
-    private function buildLocalTemplateHelpers()
-    {
-        foreach ($this->localTemplateHelpers as $type => $helpers) {
-            switch($type) {
-                case 'filters':
-                    $methodName = 'addTemplateFilter';
-                break;
-                case 'functions':
-                    $methodName = 'addTemplateFunction';
-                break;
-            }
-            foreach ((array) $helpers as $helper) {
-                call_user_func(
-                    [$this, $methodName],
-                    $helper->name,
-                    $helper->body,
-                    $helper->options
-                );
-            }
-        }
-    }
-    
-    /**
     * Build common template helpers going up the inheritance chain, used to generate templates cache during translations extraction
     */
     protected function buildTemplateHelpersBack()
     {
         $this->buildCommonTemplateHelpers();
-        $this->buildLocalTemplateHelpers();
     }
     
     /**
