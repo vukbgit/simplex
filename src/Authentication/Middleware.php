@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Simplex\Authentication;
 
+use Psr\Container\ContainerInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -30,12 +31,22 @@ class Middleware implements MiddlewareInterface
     protected $authFactory;
     
     /**
+    * @var ContainerInterface
+    * DI container, to create/get instances of classes needed at runtime (such as models)
+    */
+    protected $DIContainer;
+    
+    /**
     * @var VanillaCookieExtended
     * cookies manager
     */
     protected $cookie;
     
+    /**
+    * @var ServerRequestInterface
+    */
     private $request;
+    
     /*
     * Authentication area
     * @var string
@@ -52,18 +63,23 @@ class Middleware implements MiddlewareInterface
     * @var array
     * Methods that can be used to sign in
     */
-    private $signInMethods = ['htpasswd', 'db'];
+    private $signInMethods = ['htpasswd', 'db', 'custom'];
     
     /**
     * Constructor
+    * @param ContainerInterface $DIContainer
     * @param VanillaCookieExtended $cookie
     */
-    public function __construct(VanillaCookieExtended $cookie)
+    public function __construct(
+        ContainerInterface $DIContainer,
+        VanillaCookieExtended $cookie
+    )
     {
         session_start([
             'cookie_secure' => SESSION_COOKIE_SECURE ?? true,
             'cookie_path' => SESSION_COOKIE_PATH ? sprintf('/%s/', SESSION_COOKIE_PATH) : '/'
         ]);
+        $this->DIContainer = $DIContainer;
         $this->cookie = $cookie;
     }
     
@@ -136,23 +152,25 @@ class Middleware implements MiddlewareInterface
      * 2 = wrong username
      * 3 = wrong password
      * 4 = correct sign in
+     * 5 = custom validation failed
      */
     private function signIn(object $authenticationParameters)
     {
         $returnCode = 0;
+        if($authenticationParameters)
         //get input
         $args = array(
             'username' => FILTER_SANITIZE_STRING,
             'password' => FILTER_SANITIZE_STRING
         );
         $input = filter_input_array(INPUT_POST, $args);
-        $username = trim($input['username']);
-        $password = trim($input['password']);
+        $username = trim($input['username'] ?? '');
+        $password = trim($input['password'] ?? '');
         //check input
-        if(!$username || !$password) {
+        /*if(!$username || !$password) {
             //missing field(s)
             $returnCode = 1;
-        } else {
+        } else {*/
             //check urls
             $mandatoryUrls = ['signInForm', 'successDefault'];
             foreach ($mandatoryUrls as $parameter) {
@@ -180,6 +198,12 @@ class Middleware implements MiddlewareInterface
                 }
                 switch ($method) {
                     case 'htpasswd':
+                        //check input
+                        if(!$username || !$password) {
+                            //missing field(s)
+                            $returnCode = 1;
+                            break;
+                        } 
                         //check htpasswd file path
                         if(!isset($methodProperties->path)) {
                             throw new \Exception('htpasswd authentication method must have a \'path\' property with path to the htpasswd file');
@@ -190,6 +214,12 @@ class Middleware implements MiddlewareInterface
                         $returnCode = $this->signInWithHtpasswd($username, $password, $methodProperties->path);
                     break;
                     case 'db':
+                        //check input
+                        if(!$username || !$password) {
+                            //missing field(s)
+                            $returnCode = 1;
+                            break;
+                        }
                         //check connection configuration file path
                         if(!isset($methodProperties->path)) {
                             throw new \Exception('db authentication method must have a \'path\' property with path to the database configuration file');
@@ -208,12 +238,23 @@ class Middleware implements MiddlewareInterface
                         }
                         $returnCode = $this->signInWithDb($username, $password, $methodProperties->path, $methodProperties->algo, $methodProperties->table, $methodProperties->fields, $methodProperties->condition ?? null);
                     break;
+                    case 'custom':
+                        //check controller
+                        if(!isset($methodProperties->handler)) {
+                            throw new \Exception('custom authentication method must have a \'handler\' property with controller name to be used by DI-container');
+                        }
+                        //check controller method
+                        if(!isset($methodProperties->handlerMethod)) {
+                            throw new \Exception('custom authentication method must have a \'handlerMethod\' property with controller method name to be called');
+                        }
+                        $returnCode = $this->signInCustom($methodProperties->handler, $methodProperties->handlerMethod);
+                    break;
                 }
                 if($returnCode == 4) {
                     break;
                 }
             }
-        }
+        //}
         switch ($returnCode) {
             //success
             case 4:
@@ -223,7 +264,7 @@ class Middleware implements MiddlewareInterface
                 $this->loadPermissionsRoles($authenticationParameters);
                 //set authentication status
                 //redirect
-                $location = $this->cookie->getAreaCookie($this->area, 'signInRequestedUrl') ?? $authenticationParameters->urls->successDefault;
+                $location = $this->cookie->getAreaCookie($this->area, 'signInRequestedUrl') ?? $this->getUserData()->redirectTo ?? $authenticationParameters->urls->successDefault;
                 $this->setAuthenticationStatus(true, 4, $location);
             break;
             //failure
@@ -239,7 +280,7 @@ class Middleware implements MiddlewareInterface
      * @param string $username
      * @param string $password
      * @param string $pathToHtpasswdFile path to htpassword file
-     * @return int return code: 1 = wrong username, 2 = wrong password, 3 = sign in correct
+     * @return int return code: 2 = wrong username, 3 = wrong password, 4 = sign in correct
      **/
     private function signInWithHtpasswd(string $username, string $password, string $pathToHtpasswdFile): int
     {
@@ -275,7 +316,7 @@ class Middleware implements MiddlewareInterface
      * @param string $table table or view to be quieried
      * @param array $fields: username field, password field, any other field
      * @param string $condition: query where condition portion
-     * @return string return code: 1 = wrong username, 2 = wrong password, 3 = sign in correct
+     * @return int return code: 2 = wrong username, 3 = wrong password, 4 = sign in correct
      **/
     private function signInWithDb(string $username, string $password, string $pathToDbConfigFile, $algo, string $table, array $fields, string $condition = null): int
     {
@@ -326,6 +367,36 @@ class Middleware implements MiddlewareInterface
         } catch(PasswordIncorrect $e) {
             //wrong password
             $returnCode = 3;
+        }
+        return $returnCode;
+    }
+    
+    /**
+     * Checks sign in by a custom method
+     * @param string $handlerName
+     * @param string $handlerMethod
+     * @return int return code: 4 = sign in correct | 5 = custom validation failed
+     **/
+    private function signInCustom(string $handlerName, string $handlerMethod): int
+    {
+        $handler = $this->DIContainer->get($handlerName);
+        $userData = [];
+        $authenticated = call_user_func_array([$handler, $handlerMethod], [$this->request, &$userData]);
+        //check controller
+        if(!is_bool($authenticated)) {
+            throw new \Exception(sprintf('custom authentication handler %s::%s method must return a boolean value', get_class($handler), $handlerMethod));
+        }
+        //check userdata
+        if(!isset($userData['username']) || !isset($userData['role'])) {
+            throw new \Exception(sprintf('custom authentication handler %s::%s method must take userdata array by reference as second parameter and fill it at least with \'username\' and \'role\' properties', get_class($handler), $handlerMethod));
+        }
+        if($authenticated) {
+            $auth = $this->authFactory->newInstance();
+            $loginService = $this->authFactory->newLoginService();
+            $loginService->forceLogin($auth, $userData['username'], $userData);
+            $returnCode = 4;
+        } else {
+            $returnCode = 5;
         }
         return $returnCode;
     }

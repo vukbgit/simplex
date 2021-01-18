@@ -104,7 +104,7 @@ return array_merge(
             ->constructor(get('pixieConnection')),
         //authentication
         'simplexAuthenticationMiddleware' => create(Authentication\Middleware::class)
-            ->constructor(get('cookieManager')),
+            ->constructor(get('DIContainer'), get('cookieManager')),
         //captcha
         'captcha' => create(ZendCaptchaImageExtended::class)
             ->constructor(require CAPTCHA_CONFIG_PATH),
