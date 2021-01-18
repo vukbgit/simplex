@@ -57,6 +57,7 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
         $this->getSubjectCookie();
         //load navigation
         if($this->isAuthenticated()) {
+            $this->checkActionPermission();
             $this->loadSubjectNavigation();
         }
         //set specific CRUDL template parameters
@@ -168,6 +169,17 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
         }
         //store config
         $this->CRUDLConfig = require $configPath;
+    }
+    
+    /**
+     * Loads subject navigation which is *always* needed for ERP 
+     */
+    private function checkActionPermission()
+    {
+        //check subject level permissions
+        if(isset($this->CRUDLConfig->actions['subjectPermissions']) && !$this->checkAtLeastOnePermission($this->CRUDLConfig->actions['subjectPermissions'])) {
+            throw new \Exception("Current user has no permission to perform current action", 1);
+        }
     }
     
     /**
