@@ -5,6 +5,7 @@
 {% block body %}
     {{ parent() }}
 <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap justify-content-start p-0 shadow" id="navbar-top">
+    {% if hideSideBar == false %}
     <div id="sidebar-hat">
         <button type="button" name="button" class="pf-c-button hamburger hamburger--collapse{% if sideBarClosed == false %} is-active{% endif %}" id="sidebar-toggle">
             <span class="hamburger-box">
@@ -12,6 +13,7 @@
             </span>
         </button>
     </div>
+    {% endif %}
     <div class="navbar-brand">
     {% block headerLogo %}
         {{ parent() }}
@@ -28,6 +30,7 @@
         {% endif %}
     {% endblock %}
     </div>
+    {% if hideUser == false %}
     <div class="flex-grow-1 text-right">
         <span>{{ userData.username }}</span>
         <i class="icon-erp-user"></i>
@@ -40,9 +43,11 @@
             </a>
         </li>
     </ul>
+    {% endif %}
 </nav>
 
 <div class="container-fluid">
+    {% if hideSideBar == false %}
     {# sidebar #}
     <nav class="bg-dark text-light sidebar{% if sideBarClosed %} closed{% endif %}" id="sidebar">
         <div class="sidebar-sticky">
@@ -53,8 +58,9 @@
             </nav>
         </div>
     </nav>
+    {% endif %}
     {# main content #}
-    <main role="main" class="{% if sideBarClosed %} wide{% endif %}">
+<main role="main" class="{% if sideBarClosed or hideSideBar %} wide{% endif %}">
     {% block subjectHeader %}
     {% endblock %}
     {% block pageContent %}
