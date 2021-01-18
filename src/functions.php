@@ -114,12 +114,18 @@ if (!function_exists('Simplex\getInstanceNamespace')) {
     function getInstanceNamespace($instance, bool $fromWithinSimplex = false) : string
     {
         $reflection = new \ReflectionClass($instance);
-        $namespace = $reflection->getName();
+        /*$namespace = $reflection->getName();
         $search = [sprintf('\%s', $reflection->getShortName())];
         if($fromWithinSimplex) {
             $search[] = 'Simplex\Local\\';
         }
-        return str_replace($search, '', $namespace);
+        return str_replace($search, '', $namespace);*/
+        $namespace = $reflection->getNamespaceName();
+        if($fromWithinSimplex) {
+            $search = 'Simplex\Local\\';
+            $namespace = str_replace($search, '', $namespace);
+        }
+        return $namespace;
     }
 }
 
