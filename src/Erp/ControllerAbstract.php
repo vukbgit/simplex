@@ -176,9 +176,16 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
      */
     private function checkActionPermission()
     {
+        //check action level permissions
+        if(isset($this->CRUDLConfig->actions[$this->action]->permissions)) {
+            if(!$this->checkAtLeastOnePermission($this->CRUDLConfig->actions[$this->action]->permissions)) {
+                throw new \Exception("Specific permissions have been set for current subject action but current user has none of them", 1);
+            }
         //check subject level permissions
-        if(isset($this->CRUDLConfig->actions['subjectPermissions']) && !$this->checkAtLeastOnePermission($this->CRUDLConfig->actions['subjectPermissions'])) {
-            throw new \Exception("Current user has no permission to perform current action", 1);
+        } elseif(isset($this->CRUDLConfig->subjectPermissions)) {
+            if(!$this->checkAtLeastOnePermission($this->CRUDLConfig->subjectPermissions)) {
+                throw new \Exception("Global permissions have been set for current subject but current user has none of them", 1);
+            }
         }
     }
     
