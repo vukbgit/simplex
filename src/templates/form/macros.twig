@@ -561,7 +561,7 @@ $(document).ready(function() {
         {{ selfMacros.displayFormGroup(config, config.name|formatIdforJs) }}
         {{ selfMacros.displayLabel(config) }}
         {% if config.cols is defined %}
-        <div class="col-12 col-sm-{{ config.cols[1] }}{% if config.inline %} d-flex align-items-center{% endif %}">
+        <div class="col-12 col-sm-{{ config.cols[1] }}{% if config.inline %} d-flex align-items-center flex-wrap{% endif %}">
         {% endif %}
         {{ selfMacros.displayInputRadioCheckbox(type, config, items) }}
         {{ selfMacros.displayHelp(config) }}
