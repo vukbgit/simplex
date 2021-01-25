@@ -7,6 +7,9 @@ use Simplex\Controller\ControllerWithTemplateAbstract;
 
 use Psr\Http\Message\ServerRequestInterface;
 
+use function Simplex\getInstanceNamespace;
+use function Simplex\PSR1NameToSlug;
+
 /*
 * Extends the ControllerAbstract class adding CRUDL (https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) funcionalities:
 * - handling of list, create-form, update-form, delete-form, create, update and delete actions
@@ -74,7 +77,9 @@ abstract class ControllerWithoutCRUDLAbstract extends ControllerWithTemplateAbst
      */
     protected function storeModel()
     {
-        $modelClassKey = sprintf('%s-model', $this->subject);
+        $nameSpace = explode('\\', getInstanceNamespace($this));
+        $classSlug = PSR1NameToSlug(array_pop($nameSpace));
+        $modelClassKey = sprintf('%s-model', $classSlug);
         //if model class has been defined into subject di-container config file load it
         if($this->DIContainer->has($modelClassKey)) {
             $this->model = $this->DIContainer->get($modelClassKey);

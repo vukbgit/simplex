@@ -3,6 +3,12 @@ declare(strict_types=1);
 
 namespace Simplex\Erp;
 
+//contructor injections
+use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseInterface;
+use Twig\Environment;
+use Simplex\VanillaCookieExtended;
+
 use Psr\Http\Message\ServerRequestInterface;
 use Spatie\Image\Image;
 use Spatie\Image\Manipulations;
@@ -36,6 +42,25 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
     protected $subjectCookie;
     
     /**
+    * Constructor
+    * @param ContainerInterface $DIContainer
+    * @param ResponseInterface $response
+    * @param Environment $twigEnvironment
+    * @param VanillaCookieExtended $cookie
+    */
+    public function __construct(
+        ContainerInterface $DIContainer,
+        ResponseInterface $response,
+        Environment $templateEngine,
+        VanillaCookieExtended $cookie
+    )
+    {
+        parent::__construct($DIContainer, $response, $templateEngine, $cookie);
+        //store model
+        $this->storeModel();
+    }
+    
+    /**
     * Performs some operations before action execution
     * @param ServerRequestInterface $request
     */
@@ -50,7 +75,7 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
         //store current route subject root
         $this->storeCurrentSubjectRoot();
         //store model
-        $this->storeModel();
+        //$this->storeModel();
         //store ancestors
         $this->storeAncestors();
         //get cookie stored user options
