@@ -560,11 +560,8 @@ $(document).ready(function() {
     {% import _self as selfMacros %}
         {{ selfMacros.displayFormGroup(config, config.name|formatIdforJs) }}
         {{ selfMacros.displayLabel(config) }}
-        {#% if config.cols is defined %}
-        <div class="col-12 col-sm-{{ config.cols[1] }}{% if config.inline %} d-flex align-items-center flex-wrap{% endif %}">
-        {% endif %#}
         {% if config.cols is defined %}
-        <div class="col-12 col-sm-{{ config.cols[1] }}">
+        <div class="col-12 col-sm-{{ config.cols[1] }} d-flex align-items-center">
         {% endif %}
         {% if config.inline %}
         <div class="d-flex align-items-center flex-wrap">
@@ -1070,7 +1067,7 @@ for autocomplete see https://developer.mozilla.org/en-US/docs/Web/HTML/Attribute
     name="{{ config.name }}"
     id="{{ (config.id ?? config.name)|formatIdforJs }}"
     value="{{ config.value|escape('html_attr') }}"
-    {% if config.placeholder %}
+    {% if config.placeholder is defined %}
     placeholder="{{ config.placeholder }}"
     {% elseif config.label %}
     placeholder="{{ config.label }}"
