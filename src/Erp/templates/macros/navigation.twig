@@ -56,7 +56,11 @@
         <ul class="nav nav-tabs">
             {% for voiceKey, voiceProperties in navigation %}
             <li class="nav-item">
-                <a href="{{ buildRouteToAction(voiceProperties) }}" class="nav-link{% if voiceProperties.isActive %} active{% endif %} text-capitalize">
+                <a
+                    href="{{ buildRouteToAction(voiceProperties) }}"
+                    class="nav-link{% if voiceProperties.isActive %} active{% endif %} text-capitalize"
+                {% if voiceProperties.target %}target="{{ voiceProperties.target }}"{% endif %}
+                >
                 {{- getLabel('actions', voiceKey) -}}
                 </a>
             </li>
