@@ -8,6 +8,7 @@ use Simplex\Controller\ControllerWithTemplateAbstract;
 use Psr\Http\Message\ServerRequestInterface;
 
 use function Simplex\getInstanceNamespace;
+use function Simplex\getInstancePath;
 use function Simplex\PSR1NameToSlug;
 
 /*
@@ -30,6 +31,12 @@ abstract class ControllerWithoutCRUDLAbstract extends ControllerWithTemplateAbst
     protected $currentSubjectRoot;
 
     /**
+    * @param object
+    * subject config object
+    **/
+    private $subjectConfig;
+
+    /**
     * @var mixed
     * model passed by route
     */
@@ -48,7 +55,9 @@ abstract class ControllerWithoutCRUDLAbstract extends ControllerWithTemplateAbst
         //load navigation
         if($this->isAuthenticated()) {
             //area navigation which is *always* needed for ERP 
+            $this->loadSubjectConfig();
             $this->loadAreaNavigation();
+            $this->checkActionPermission();
         }
     }
     
@@ -73,6 +82,21 @@ abstract class ControllerWithoutCRUDLAbstract extends ControllerWithTemplateAbst
     }
     
     /**
+     * Loads subject config which is not (yet) mandatory for ERP
+     * TODO should hold actions informations currently stored into navigation configuration
+     */
+    protected function loadSubjectConfig()
+    {
+        //config file must be into class-folder/config/subject.php
+        $configPath = sprintf('%s/config/subject.php', getInstancePath($this));
+        //check path
+        if(is_file($configPath)) {
+            //store config
+            $this->subjectConfig = require $configPath;
+        }
+    }
+    
+    /**
      * Stores model searching for a subject-namespace\Model class
      */
     protected function storeModel()
@@ -87,7 +111,25 @@ abstract class ControllerWithoutCRUDLAbstract extends ControllerWithTemplateAbst
     }
     
     /**
-    * Build common template helpers
+     * Loads subject navigation which is *always* needed for ERP 
+     */
+    private function checkActionPermission()
+    {
+        //check action level permissions
+        if(isset($this->subjectConfig->actions[$this->action]->permissions)) {
+            if(!$this->checkAtLeastOnePermission($this->subjectConfig->actions[$this->action]->permissions)) {
+                throw new \Exception("Specific permissions have been set for current subject action but current user has none of them", 1);
+            }
+        //check subject level permissions
+        } elseif(isset($this->subjectConfig->subjectPermissions)) {
+            if(!$this->checkAtLeastOnePermission($this->subjectConfig->subjectPermissions)) {
+                throw new \Exception("Global permissions have been set for current subject but current user has none of them", 1);
+            }
+        }
+    }
+    
+    /**
+    * Parses a route which refers to a record
     * @param string $routePattern
     * @param  object $record
     */

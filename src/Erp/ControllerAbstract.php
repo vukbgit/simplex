@@ -82,7 +82,6 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
         $this->getSubjectCookie();
         //load navigation
         if($this->isAuthenticated()) {
-            $this->checkActionPermission();
             $this->loadSubjectNavigation();
         }
         //set specific CRUDL template parameters
@@ -186,7 +185,7 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
      */
     protected function loadCRUDLConfig()
     {
-        //config file must be into class-folder/config/model.php
+        //config file must be into class-folder/config/crudl.php
         $configPath = sprintf('%s/config/crudl.php', getInstancePath($this));
         //check path
         if(!is_file($configPath)) {
@@ -194,24 +193,6 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
         }
         //store config
         $this->CRUDLConfig = require $configPath;
-    }
-    
-    /**
-     * Loads subject navigation which is *always* needed for ERP 
-     */
-    private function checkActionPermission()
-    {
-        //check action level permissions
-        if(isset($this->CRUDLConfig->actions[$this->action]->permissions)) {
-            if(!$this->checkAtLeastOnePermission($this->CRUDLConfig->actions[$this->action]->permissions)) {
-                throw new \Exception("Specific permissions have been set for current subject action but current user has none of them", 1);
-            }
-        //check subject level permissions
-        } elseif(isset($this->CRUDLConfig->subjectPermissions)) {
-            if(!$this->checkAtLeastOnePermission($this->CRUDLConfig->subjectPermissions)) {
-                throw new \Exception("Global permissions have been set for current subject but current user has none of them", 1);
-            }
-        }
     }
     
     /**
