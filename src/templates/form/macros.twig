@@ -1173,7 +1173,7 @@ NOTE: javascript validation function creates automatically if needed, this macro
     {% if config.label != false %}
         {% set classes = [] %}
         {% if config.cols is defined %}
-            {% set classes = classes|merge(['col-form-label col-12 col-sm-%d text-right'|format(config.cols[0])]) %}
+            {% set classes = classes|merge(['col-form-label col-12 col-sm-%d text-sm-right'|format(config.cols[0])]) %}
         {% endif %}
         {% if customClasses %}
             {% set classes = classes|merge([customClasses]) %}
