@@ -466,6 +466,16 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
                 );
             }
         });
+        /**********
+        * COOKIES *
+        **********/
+        //sets an area cookie
+        $this->addTemplateFunction(
+            'setAreaCookieArray',
+            function(array $propertyNames, $propertyValue){
+                return $this->setAreaCookieArray($propertyNames, $propertyValue);
+            }
+        );
         /***********
         * SUBJECTS *
         ***********/
@@ -701,6 +711,30 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         //set area cookie
         $this->cookie->setAreaCookie($this->area, $propertyName, $propertyValue);
         $areaCookie = $this->cookie->getAreaCookie($this->area);
+        //update template parameter
+        $this->setTemplateParameter('areaCookie', $areaCookie);
+    }
+    
+    /**
+    * Sets a cookie into current area cookies portion
+    * @param string $propertyName: name of property to be set into area cookie
+    * @param mixed $propertyValue: value of property to be set into area cookie
+    */
+    protected function setAreaCookieArray(array $propertyNames, $propertyValue)
+    {
+        //get area cookie
+        $areaCookie = $this->cookie->getAreaCookie($this->area);
+        //get top level property name
+        $topPropertyName = array_shift($propertyNames);
+        $property =& $areaCookie->$topPropertyName;
+        //loop other property names
+        foreach ((array) $propertyNames as $propertyName) {
+            $property =& $property->$propertyName;
+        }
+        //set value
+        $property = $propertyValue;
+        //set area cookie
+        $this->cookie->setAreaCookie($this->area, $topPropertyName, $areaCookie);
         //update template parameter
         $this->setTemplateParameter('areaCookie', $areaCookie);
     }
