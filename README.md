@@ -89,7 +89,7 @@ Create a Composer.json in the root folder:
             "vukbgit/simplex": "^1.1.2"
         },
         "config": {
-            "vendor-dir": "private/share",
+            "vendor-dir": "private/share/packagist",
             "bin-dir": "./"
         },
         "autoload": {
@@ -104,7 +104,7 @@ Create a Composer.json in the root folder:
        },
        "extra": {
            "copy-file": {
-               "private/share/vukbgit/simplex/installation/": "."
+               "private/share/packagist/vukbgit/simplex/installation/": "."
            }
        }
     }
@@ -246,7 +246,7 @@ This is the Backend folder structure:
                 * _routes.php_: definition for routes associated to subject actions, shipped with one definition that covers default CRUDL actions (list, insert, update and delete), and any action identified by one slugged action key and an optional primary key value, it should be enough for standard subjects
                 * _variables_: subject level variables (such as subject namespace and slugged subject name )
             * _templates_: subject related templates, shape up subject UI and provide translations
-                * _crudl-form.twig_: HTML for subject insert, update and delete forms by using macros defined into _private/share/vukbgit/simplex/src/templates/form/macros.twig_ or by writing HTML code directly
+                * _crudl-form.twig_: HTML for subject insert, update and delete forms by using macros defined into _private/share/packagist/vukbgit/simplex/src/templates/form/macros.twig_ or by writing HTML code directly
                 * _list.twig_: template for subject records list, defaults to table, it's necessary to set up table headers and cells
                 * _subject.twig_: contains subject labels
             * _Controller.php_: base subject controller class, extends _Simplex\Erp\ControllerAbstract_, correct namespace must be set but already inherits all of the methods needed by CRUDL operations, to be extended for additional actions (with protected methods named after the PSR1 form of the slugged action name)
@@ -410,7 +410,7 @@ The following steps show how to set up an ERP subject, that is a subject which i
     * _config/navigation.php_ contains rules to display the UI navigation for basic CRUD actions, it can be customized to remove some of them or add more actions, for permissions logic see _subject permission_ below
 * set up subject _template labels_ in ___templates/labels.twig___, at least subject label is required but fields labels are used int list and save form templates
 * edit ___templates/list.twig___ to set up fields displayed into records table, there is a tableheader block for headers and a records loop for table cells with fields values
-* edit ___templates/crudl-form.twig___ to set up fields displayed into insert/update and delete forms; any valid html can be inserted into modelInputs block but a bunch of useful Twig macros are defined into _/private/share/vukbgit/simplex/src/templates/form/macros.twig_ which is included by default; use macros whose name end by 'group' di build a Bootsrap field form complete with label
+* edit ___templates/crudl-form.twig___ to set up fields displayed into insert/update and delete forms; any valid html can be inserted into modelInputs block but a bunch of useful Twig macros are defined into _/private/share/packagist/vukbgit/simplex/src/templates/form/macros.twig_ which is included by default; use macros whose name end by 'group' di build a Bootsrap field form complete with label
 * set up _subject permission_ for roles into ___private/local/simplex/Backend/config/permissions-roles.php___:; by default into _private/local/simplex/Backend/config/navigation.php_ permission _manage-SUBJECT-KEY_ is required for the user to use global (list and insert) and record actions (update and delete), so permission _manage-SUBJECT-KEY_ must be added and user's role must be included into permission's allowed roles array
 * include subject into area navigation into ___private/local/simplex/Backend/config/navigation.php___
 * set up subject _navigation label_ in ___private/local/simplex/Backend/templates/backend.twig___, into the _areaNavigationLabels_ hash
@@ -430,7 +430,7 @@ The following steps show how to set up an ERP subject, that is a subject which i
     * translations can be inserted into:
         * _PHP_ files using the gettext() function or the _() alias (see [PHP gettext documentation](https://www.php.net/gettext))
         * _Twig templates_ using the trans block and filter from the (included by default) i18n extension (see [documentation](https://twig-extensions.readthedocs.io/en/latest/i18n.html))
-    * _private/share/vukbgit/simplex/bin/translations.php_ script can be used to extract translations
+    * _private/share/packagist/vukbgit/simplex/bin/translations.php_ script can be used to extract translations
     * folder where translations files are stored is specified by the _TRANSLATIONS_DIR_ constant and defaults to _private/local/simplex/locales_
     * this is the translations workflow:
         * after installation, into _TRANSLATIONS_DIR_ English and Italian translations for Simplex core messages are stored
@@ -440,13 +440,13 @@ The following steps show how to set up an ERP subject, that is a subject which i
             * into the _templates-helpers.php_ fiels call all of the template helpers builder methods
         * when local translations are added run script to update local messages, .po and .mo files are saved into _TRANSLATIONS_DIR_ for every language defined into _private/local/simplex/config/languages.json_:
 
-                php private/share/vukbgit/simplex/bin/translations.php update local
+                php private/share/packagist/vukbgit/simplex/bin/translations.php update local
             
         * download .po files, translate with [Poedit](https://poedit.net/) or other similar software
         * upload resulting .po and .mo fiels back to _TRANSLATIONS_DIR_
     * in case site uses a PHP version different from system one if must be specified the complete path to PHP binary, i.e.
 
-            /opt/php-7.3.5/bin/php private/share/vukbgit/simplex/bin/translations.php update local
+            /opt/php-7.3.5/bin/php private/share/packagist/vukbgit/simplex/bin/translations.php update local
             
     * at installation time it is also created the script _private/local/simplex/bin/translations.sh_ that can be used to shortcut translation process:
         * edit the file and set the PHP binary path according to your system
@@ -528,9 +528,9 @@ If you keep separate development and production environment and manage pubblicat
     * requires Composer autoload
     * searches for files named _constants.php_ under folder _private/local/simplex_, during installation _private/local/simplex/config/constants.php_ is created (see file for details)
     * set up the __Error Handler__ based on the environment
-    * instances a __[Dipendency Injector Container](https://github.com/php-fig/container)__ loading definitions from _private/share/vukbgit/simplex/config/di-container.php_ (see file for details)
+    * instances a __[Dipendency Injector Container](https://github.com/php-fig/container)__ loading definitions from _private/share/packagist/vukbgit/simplex/config/di-container.php_ (see file for details)
     * the __DI Container__ instances the __Dispatcher__ (which is another name for a [request handler](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-15-request-handlers.md#21-psrhttpserverrequesthandlerinterface))
-    * the dispatcher loads the __middleware queue__ from the MIDDLEWARE_QUEUE_PATH constant value (defaults to _private/share/vukbgit/simplex/config/middleware.php_), Simplex default queue is composed by:
+    * the dispatcher loads the __middleware queue__ from the MIDDLEWARE_QUEUE_PATH constant value (defaults to _private/share/packagist/vukbgit/simplex/config/middleware.php_), Simplex default queue is composed by:
         * the __Router__ which loads routes definitions from any file named "routes.php" stored under the _private/local/simplex_ folder (even in subdirectories); the route definition must contain an "action" parameter (_private/local/simplex/config/route.php_ contains more details about routes definitions)
         * the Simplex __Authentication__ middleware that:
             * fires conditionally if an "authentication" parameter is found inside the current route definition
@@ -541,7 +541,7 @@ If you keep separate development and production environment and manage pubblicat
             * calls a method named after the "action" route parameter
             * this method performs all the tasks needed by the action and usually renders a template injecting HTML code into the response
         * the __Dispatcher__ returns the response to the _index.php_ scope
-    * the HTTP status code of the response is checked and if different from 200 (which means "everything went fine") gets the appropriate HTML code from a _private/share/vukbgit/simplex/src/errors/_ file and injects it into the response
+    * the HTTP status code of the response is checked and if different from 200 (which means "everything went fine") gets the appropriate HTML code from a _private/share/packagist/vukbgit/simplex/src/errors/_ file and injects it into the response
     * the __Emitter__ is instantiated and returns the response to the browser
 
 ## Folders and Files Structure ##
@@ -600,13 +600,13 @@ So here are folders and files as installed from Simplex, from the installation r
         * how to read them: Apache renames them prepending 'REDIRECT_' (since every route is redirected to public/index.php), so use for example `getenv('REDIRECT_ENVIRONMENT')`
     * redirects ALL requests for the root directory to public/index.php
 * __composer.json__:
-    * sets vendor directory to _private/share_
+    * sets vendor directory to _private/share/packagist_
     * sets bin directory to _./_ so that symlinks are created into root for some shell scripts
     * sets autoload application directory to _private/local/simplex_ mapping this path to _Simplex\Local_ namespace
     * requires the Simplex package (which takes care of requiring the other needed packages)
 * __index.php__: application bootstrap file, since it is stored into site root all PHP includes in every file work with absolute path form site root, see "Application Flow" above for details
-* __sass.sh__: soft link to the helper script _private/share/vukbgit/simplex/bin/sass.sh_ to compile Sass files, see the _private/local/simplex/config/sass.config_ explanation above for details
-* __yarn.sh__: soft link to the helper script _private/share/vukbgit/simplex/bin/yarn.sh_ to manage yarn packages into _public/share_ folder (instead of the predefined node_modules one), call it `./yarn.sh yarn-command`, i.e `./yarn.sh install foolibrary` to perform the installation into _local/share/foolibrary_
+* __sass.sh__: soft link to the helper script _private/share/packagist/vukbgit/simplex/bin/sass.sh_ to compile Sass files, see the _private/local/simplex/config/sass.config_ explanation above for details
+* __yarn.sh__: soft link to the helper script _private/share/packagist/vukbgit/simplex/bin/yarn.sh_ to manage yarn packages into _public/share_ folder (instead of the predefined node_modules one), call it `./yarn.sh yarn-command`, i.e `./yarn.sh install foolibrary` to perform the installation into _local/share/foolibrary_
 
 ## Considerations ##
 
