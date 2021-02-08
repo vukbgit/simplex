@@ -1,5 +1,5 @@
 #!/bin/bash
-private/share/vukbgit/simplex/bin/clean-cache.sh
+private/share/packagist/vukbgit/simplex/bin/clean-cache.sh
 git pull
 if [ -f ./composer.sh ]; then
     ./composer.sh update
