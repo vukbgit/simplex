@@ -31,13 +31,12 @@ $modelConfig = require 'model.php';
 return [
     [
         'method' => ['GET','POST'],
-        'route' => sprintf('/%s/{subject:%s}/{action}[/{%s}]', 'AREA', $subject, $modelConfig->primaryKey),
+        'route' => sprintf('/{area:%s}/{subject:%s}/{action}[/{%s}]', $area, $subject, $modelConfig->primaryKey),
         //children route
-        //'route' => sprintf('/%s/{ancestor0:ANCESTOR-SUBJECT}/{ANCESTOR-PRIMARY-KEY}/{subject:%s}/{action}[/{%s}]', 'AREA', $subject, $modelConfig->primaryKey),
+        //'route' => sprintf('/{area:%s}/{ancestor0:ANCESTOR-SUBJECT}/{ANCESTOR-PRIMARY-KEY}/{subject:%s}/{action}[/{%s}]', $area, $subject, $modelConfig->primaryKey),
         'handler' => [
             sprintf('%s-controller', $subject),
             [
-                'area' => 'AREA',
                 'authentication' => $authentication
             ]
         ]
