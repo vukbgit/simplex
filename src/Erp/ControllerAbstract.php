@@ -896,8 +896,15 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
     protected function delete()
     {
         $primaryKeyField = $this->model->getConfig()->primaryKey;
-        $primayKeyFilter = $this->CRUDLConfig->fields[$primaryKeyField]->inputFilter;
-        $primaryKeyValue = filter_input(INPUT_POST, $primaryKeyField, $primayKeyFilter);
+        //$primayKeyFilter = $this->CRUDLConfig->fields[$primaryKeyField]->inputFilter;
+        if(is_array($this->CRUDLConfig->fields[$primaryKeyField]->inputFilter)) {
+            $primayKeyFilter = $this->CRUDLConfig->fields[$primaryKeyField]->inputFilter['filter'];
+            $primayKeyOptions = $this->CRUDLConfig->fields[$primaryKeyField]->inputFilter;
+        } else {
+            $primayKeyFilter = $this->CRUDLConfig->fields[$primaryKeyField]->inputFilter;
+            $primayKeyOptions = 0;
+        }
+        $primaryKeyValue = filter_input(INPUT_POST, $primaryKeyField, $primayKeyFilter, $primayKeyOptions);
         try {
             //delete record
             $this->model->delete($primaryKeyValue);
