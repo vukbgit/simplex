@@ -849,6 +849,10 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
     {
         $fieldsData = $this->getSaveFieldsData();
         try {
+            //check primary key
+            if(!$fieldsData->primaryKeyValue) {
+                throw new \Exception("No primary key value", 1);
+            }
             //save record
             if(!empty($fieldsData->saveFieldsValues)) {
                 $this->model->update($fieldsData->primaryKeyValue, $fieldsData->saveFieldsValues);
