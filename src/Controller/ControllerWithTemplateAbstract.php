@@ -451,6 +451,10 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         $this->addTemplateFunction('checkPermission', function(string $permission){
             return $this->checkPermission($permission);
         });
+        //checks a user permission amongst a list
+        $this->addTemplateFunction('checkAtLeastOnePermission', function(array $permissions){
+            return $this->checkAtLeastOnePermission($permissions);
+        });
         /********
         * EMAIL *
         ********/
