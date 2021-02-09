@@ -45,8 +45,20 @@
     {
       "uid": "3fce1eca43f917c8f23e532749abae5d",
       "css": "erp-user",
-      "code": 363,
+      "code": 62142,
       "src": "fontawesome"
+    },
+    {
+      "uid": "750058837a91edae64b03d60fc7e81a7",
+      "css": "erp-ellipsis-vert",
+      "code": 364,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "8beac4a5fd5bed9f82ca7a96cc8ba218",
+      "css": "erp-password",
+      "code": 365,
+      "src": "entypo"
     }
   ]
 }

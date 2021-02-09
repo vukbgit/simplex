@@ -1,7 +1,7 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg xmlns="http://www.w3.org/2000/svg">
-<metadata>Copyright (C) 2019 by original authors @ fontello.com</metadata>
+<metadata>Copyright (C) 2020 by original authors @ fontello.com</metadata>
 <defs>
 <font id="fontello" horiz-adv-x="1000" >
 <font-face font-family="fontello" font-weight="400" font-stretch="normal" units-per-em="1000" ascent="850" descent="-150" />
@@ -18,7 +18,11 @@
 
 <glyph glyph-name="erp-minus-circle" unicode="&#x16a;" d="M1000 349q0-136-67-251t-182-182-251-67-251 67-182 182-67 251 67 251 182 182 251 67 251-67 182-182 67-251z m-794-58h589v118h-589v-118z" horiz-adv-x="1000" />
 
-<glyph glyph-name="erp-user" unicode="&#x16b;" d="M500 850q102 0 194-40t160-106 106-160 40-194q0-101-39-194t-107-159-159-107-195-40-195 40-159 106-106 160-40 194 40 194 106 160 160 106 194 40z m345-754q84 115 84 254 0 87-34 166t-92 137-137 92-166 34-166-34-137-92-91-137-35-166q0-139 84-254 36 183 170 183 73-72 175-72t175 72q134 0 170-183z m-131 361q0 89-62 152t-152 62-151-62-63-152 63-151 151-63 152 63 62 151z" horiz-adv-x="1000" />
+<glyph glyph-name="erp-ellipsis-vert" unicode="&#x16c;" d="M214 154v-108q0-22-15-37t-38-16h-107q-23 0-38 16t-16 37v108q0 22 16 38t38 15h107q22 0 38-15t15-38z m0 285v-107q0-22-15-38t-38-15h-107q-23 0-38 15t-16 38v107q0 23 16 38t38 16h107q22 0 38-16t15-38z m0 286v-107q0-22-15-38t-38-16h-107q-23 0-38 16t-16 38v107q0 22 16 38t38 16h107q22 0 38-16t15-38z" horiz-adv-x="214.3" />
+
+<glyph glyph-name="erp-password" unicode="&#x16d;" d="M774 612q20-116-28-215t-150-117q-66-12-130-2l-118-194-70-12-104-166q-14-28-46-32l-76-14q-12-4-22 4t-12 22l-16 98q-8 30 12 56l258 386q-24 50-38 120-18 106 53 187t185 101q106 20 195-45t107-177z m-126-76q30 44 21 97t-51 83q-42 32-92 22t-80-54q-8-12-12-23t-1-20 5-16 13-17 18-15 22-16 23-17q6-4 22-16t23-16 19-12 19-8 17 1 18 8 16 19z" horiz-adv-x="780" />
+
+<glyph glyph-name="erp-user" unicode="&#xf2be;" d="M500 850q102 0 194-40t160-106 106-160 40-194q0-101-39-194t-107-159-159-107-195-40-195 40-159 106-106 160-40 194 40 194 106 160 160 106 194 40z m345-754q84 115 84 254 0 87-34 166t-92 137-137 92-166 34-166-34-137-92-91-137-35-166q0-139 84-254 36 183 170 183 73-72 175-72t175 72q134 0 170-183z m-131 361q0 89-62 152t-152 62-151-62-63-152 63-151 151-63 152 63 62 151z" horiz-adv-x="1000" />
 </font>
 </defs>
 </svg>
