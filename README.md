@@ -258,7 +258,7 @@ This is the Backend folder structure:
         * _db.php_: database account settings
         * _languages.json_: languages available to application, first one is used as default, shipped with Italian (default for most of my applications) and English, customize at need
         * _sass.config_: used by the web root _sass.sh_ bash script to speed up SASS files compilation, shipped with some ready to use common paths, see file for details on format
-    * _docs_: this folder might contain useful text files
+    * _sql_: this folder might contain useful text files with SQL commands and snippets
         * _views.sql_: databases views definition, I usually keep them here since I find it more handy for editing
     * _sass_: application level SASS files
         * _application.scss_: rules to be applied to the whole applications
