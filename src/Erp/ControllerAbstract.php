@@ -33,7 +33,7 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
     * @param object
     * CRUDL config object
     **/
-    private $CRUDLConfig;
+    protected $CRUDLConfig;
     
     /**
     * @param object
