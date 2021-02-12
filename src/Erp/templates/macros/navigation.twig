@@ -20,7 +20,7 @@
             href="{{ voiceProperties.route|default('#') }}"
             id="{{ voiceLabelId }}"
             class="nav-link {{ 'pl-%d'|format((level + 1)) }}
-    {%- if active %} active text-white{% endif -%}
+    {%- if isActive %} active text-white{% endif -%}
             "
             {%- if voiceProperties.navigation -%}
             data-toggle="collapse" aria-expanded="{{ isActive ? 'true' : 'false' }}" data-target="#{{ subLevelId }}" aria-controls="{{ subLevelId }}"
