@@ -59,6 +59,8 @@ abstract class ControllerWithoutCRUDLAbstract extends ControllerWithTemplateAbst
             $this->loadAreaNavigation();
             $this->checkActionPermission();
         }
+        //set template parameters
+        $this->setCommonTemplateParameters();
     }
     
     /**
@@ -152,6 +154,14 @@ abstract class ControllerWithoutCRUDLAbstract extends ControllerWithTemplateAbst
         }
         $route = preg_replace($placeholders, $replacements, $routePattern);
         return $route;
+    }
+    
+    /**
+    * Sets common template parameters
+    */
+    protected function setCommonTemplateParameters()
+    {
+        $this->setTemplateParameter('userData', $this->getAuthenticatedUserData());
     }
     
     /**
