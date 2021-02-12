@@ -1032,6 +1032,66 @@ NOTE: controller class must inject a Simplex\ZendCaptchaImageExtended instance
 </div>
 {% endmacro %}
 
+{###############
+# COLOR PICKER #
+###############}
+
+{# displays a color picker
+@param hash config: hash for field properties (see setFieldAttributes macro explanation) plus
+- options (hash): specific color picker options options (see https://itsjavi.com/bootstrap-colorpicker/module-options.html)
+#}
+{% macro displayColorPicker(config) %}
+    {% import _self as selfMacros %}
+    {% set id = config.id ?? config.name %}
+    {% set containerId = '%s_container'|format(id) %}
+    {% set config = updateProperty(config, 'autocomplete', 'off') %}
+    {% set classes = config.classes ?? [] %}
+    {% set classes = ['form-control']|merge(classes) %}
+    {% set config = updateProperty(config, 'classes', classes) %}
+    <div class="input-group" id="{{ containerId }}">
+        {{ selfMacros.displayInputText(config) }}
+        <div class="input-group-append">
+            <span class="input-group-text colorpicker-input-addon"><i></i></span>
+        </div>
+    </div>
+    <script type="text/javascript">
+      $(function () {
+            $('#{{ containerId }}').colorpicker(
+                {
+                    container: '#{{ id }}',
+                    popover: {
+                        placement: 'auto'
+                    }
+           {#% for option,value in config.options %}
+               {{ option }}: {{ value|varToJs }},
+           {% endfor %#}
+                }
+            );
+       });
+   </script>
+{% endmacro %}
+
+{# displays a color picker block
+@param hash config: hash for field properties (see setFieldAttributes macro explanation) plus specific properties (see displayDateTimePicker)
+#}
+{% macro displayColorPickerGroup(config) %}
+    {% import _self as selfMacros %}
+    {% set id = (config.id ?? config.name)|formatIdforJs %}
+    {% set help = [config.help] ?? null %}
+    {% set config = updateProperty(config, 'help', help) %}
+        {{ selfMacros.displayFormGroup(config, id) }}
+        {{ selfMacros.displayLabel(config) }}
+        {% if config.cols is defined %}
+        <div class="col-12 col-sm-{{ config.cols[1] }}">
+        {% endif %}
+        {{ selfMacros.displayColorPicker(config) }}
+        {{ selfMacros.displayHelp(config) }}
+        {% if config.cols is defined %}
+        </div>
+        {% endif %}
+    </div>
+{% endmacro %}
+
 {#################
 # FIELD BUILDING #
 #################}
@@ -1217,7 +1277,7 @@ NOTE: javascript validation function creates automatically if needed, this macro
     customValidation (function): function to be executed at the end of form submit
     onFieldError (function name): function to be executed on field object whe an error occours
     locales (bool): whether there is at least one localized field
-    assets (list): ['richTextEditor', 'fileUpload', 'captcha', 'dateTimePicker', 'passwordGenerator','richSelect'] list of the field types included into form that need some asset to be included
+    assets (list): ['richTextEditor', 'fileUpload', 'captcha', 'dateTimePicker', 'passwordGenerator', 'richSelect', 'colorPicker'] list of the field types included into form that need some asset to be included
     captcha (object): captcha config object, properties:
         reloadRoute (string): route for image reloading, it must be mapped and must return Simplex\ZendCaptchaImageExtended::reloadCaptcha
     passwordGenerator (object): password generator config object, properties:
@@ -1253,6 +1313,9 @@ NOTE: javascript validation function creates automatically if needed, this macro
     {% endif %}
     {% if 'richSelect' in config.assets %}
         {{ selfMacros.richSelectAssets(context) }}
+    {% endif %}
+    {% if 'colorPicker' in config.assets %}
+        {{ selfMacros.colorPickerAssets(context) }}
     {% endif %}
 {% endmacro %}
 
@@ -1638,8 +1701,6 @@ $(document).ready(function(){
 
 {# rich select assets 
 @param object context
-@param object config: password generator config object, properties:
-    generateRoute (string): route for generating password
 #}
 {% macro richSelectAssets(context) %}
 <!-- select2 -->
@@ -1647,4 +1708,14 @@ $(document).ready(function(){
 <link href="{{ '@ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.min.css'|pathToNpmAsset }}" rel="stylesheet" />
 <script src="{{ 'select2/dist/js/select2.min.js'|pathToNpmAsset }}"></script>
 <script src="{{ 'select2/dist/js/i18n/%s.js'|format(getLanguage('ISO-639-1'))|pathToNpmAsset }}"></script>
+{% endmacro %}
+
+{# color picker assets
+    uses https://itsjavi.com/bootstrap-colorpicker
+@param object context
+#}
+{% macro colorPickerAssets(context) %}
+<!-- select2 -->
+<link href="{{ 'bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css'|pathToNpmAsset }}" rel="stylesheet" />
+<script src="{{ 'bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js'|pathToNpmAsset }}"></script>
 {% endmacro %}
