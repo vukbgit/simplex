@@ -821,8 +821,6 @@ EOT;
             ];
             $this->query
                 ->table($this->uploadTable())
-                ->where($this->config->primaryKey, $primaryKeyValue)
-                ->where('upload_key', $uploadKey)
                 ->insert($record);
         }
         //handle files no longer needed by this upload key deletion
