@@ -341,6 +341,7 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
     */
     protected function setCommonTemplateParameters()
     {
+        $this->setTemplateParameter('userData', $this->getAuthenticatedUserData());
         $this->setTemplateParameter('subject', $this->subject);
         $this->setTemplateParameter('model', $this->model);
         $this->setTemplateParameter('ancestors', $this->ancestors);
