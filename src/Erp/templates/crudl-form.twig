@@ -19,6 +19,8 @@
     {% trans "fields marked with * are mandatory" %}
     </p>
     {# buttons #}
-    {{ crudlFormMacros.displayDefaultButtons(_context) }}
+    {% block crudlFormButtons %}
+        {{ crudlFormMacros.displayDefaultButtons(_context) }}
+    {% endblock %}
     </form>
 {% endblock pageContent %}
