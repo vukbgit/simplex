@@ -42,6 +42,9 @@ class SpreadsheetReaderWriter
             case 'csv':
                 $this->reader = ReaderEntityFactory::createCSVReader();
             break;
+            case 'xslx':
+                $this->reader = ReaderEntityFactory::createXLSXReader();
+            break;
             default:
                 $this->reader = ReaderEntityFactory::createReaderFromFile($path);
             break;
