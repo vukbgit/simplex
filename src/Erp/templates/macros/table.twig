@@ -1,4 +1,11 @@
 {% macro displaySortableHeader(context, fieldName, align, label) %}
+    {% import _self as selfMacros %}
+<th>
+    {{ selfMacros.displaySortableField(context, fieldName, align, label) }}
+</th>
+{% endmacro %}
+
+{% macro displaySortableField(context, fieldName, align, label) %}
     {% set fieldsSorting = attribute(attribute(context.areaCookie, context.subject), 'sorting') ?? null %}
     {% set sorting = null %}
     {% for fieldSorting in fieldsSorting %}
@@ -17,7 +24,6 @@
         {% set reverseDirection = direction == 'asc' ? 'desc' : 'asc' %}
     {% endif %}
     {% set buttonTitle = getLabel('table', 'sort-%s'|format(reverseDirection)) %}
-<th>
     <form action="" method="post" class="w-100{% if align %} text-{{ align }}{% endif %}">
         <input type="hidden" name="modifier" value="sort">
         <input type="hidden" name="field" value="{{ fieldName }}">
@@ -34,7 +40,6 @@
             <button type="submit" class="{{ buttonClass }}" title="{{ buttonTitle }}"></button>
         </div>
     </form>
-</th>
 {% endmacro %}
 
 {% macro displayMoveRecordCell(context) %}
