@@ -80,7 +80,9 @@ abstract class ControllerWithoutCRUDLAbstract extends ControllerWithTemplateAbst
         $pattern = sprintf('~^[0-9a-zA-Z-_/]*/%s/?~', $this->subject);
         preg_match($pattern , $currentRoute, $matches);
         //remove ending slash
-        $this->currentSubjectRoot = substr($matches[0], 0, -1);
+        if(isset($matches[0])) {
+            $this->currentSubjectRoot = substr($matches[0], 0, -1);
+        }
     }
     
     /**
