@@ -125,6 +125,14 @@ class Middleware implements MiddlewareInterface
         //perform action
         $this->setAuthFactory();
         $this->{slugToPSR1Name($authenticationParameters->action, 'method')}($authenticationParameters);
+        //local processing
+        if(isset($authenticationParameters->localProcessing)) {
+            $localProcessingHandler = $this->DIContainer->get($authenticationParameters->localProcessing->handler);
+            $userData = $this->getUserData();
+            //method must take userdata as first argument and return it
+            $userData = call_user_func([$localProcessingHandler, $authenticationParameters->localProcessing->method], $userData);
+            $this->setUserData((array) $userData);
+        }
         //return response
         $response = $handler->handle($request);
         //update response with authentication result
