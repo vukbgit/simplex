@@ -464,6 +464,10 @@ $(document).ready(function() {
         }
     {% endif %}
     });
+    $('{{ '#%s'|format(id) }}').on('select2:select', function (e) {
+        //var data = e.params.data;
+        simplexValidation.validateField(e.target);
+    });
 });
 </script>
 {% endmacro %}
@@ -1369,13 +1373,14 @@ var simplexValidation = {
                     // Only run if the element is a form field (and not a dropzone for example) and the form needs to be validated
                     if (typeof event.target.form == 'undefined' || event.target.form == null || (!event.target.form.classList.contains('needs-validation') || event.target.form.classList.contains('do-not-validate-on-blur'))) return;
                     // Validate the field
-                    var error = simplexValidation.hasError(event.target);
+                    /*var error = simplexValidation.hasError(event.target);
                     if(error) {
                         simplexValidation.showError(event.target, error);
                     } else {
                         // Otherwise, remove any existing error message
                         simplexValidation.removeError(event.target);
-                    }
+                    }*/
+                    simplexValidation.validateField(event.target);
                 },
                 true
             );
@@ -1391,7 +1396,7 @@ var simplexValidation = {
                     // Store the first field with an error to a variable so we can bring it into focus later
                     var error, hasErrors;
                     for (var i = 0; i < fields.length; i++) {
-                        error = simplexValidation.hasError(fields[i]);
+                        /*error = simplexValidation.hasError(fields[i]);
                         if (error) {
                             simplexValidation.showError(fields[i], error);
                             if (!hasErrors) {
@@ -1399,6 +1404,9 @@ var simplexValidation = {
                             }
                         } else {
                             simplexValidation.removeError(fields[i]);
+                        }*/
+                        if(simplexValidation.validateField(fields[i]) == false && !hasErrors) {
+                            hasErrors = fields[i];
                         }
                     }
                     // If there are errors, don't submit form and focus on first element with error
@@ -1421,6 +1429,21 @@ var simplexValidation = {
             );
         },
         false);
+    },
+    /**
+    * Gets custom error message from the attribute named after data-validity-state-[validity-state]-message
+    * where [validity-state] is a name of a state as found to https://www.w3.org/TR/html5/sec-forms.html#validitystate
+    * with the uppercase letters substituted by hypen + correspondent lowercase letter
+     **/
+    validateField: function (field) {
+        var error = simplexValidation.hasError(field);
+        if(error) {
+            simplexValidation.showError(field, error);
+            return false;
+        } else {
+            simplexValidation.removeError(field);
+            return true;
+        }
     },
     /**
     * Gets custom error message from the attribute named after data-validity-state-[validity-state]-message
