@@ -34,7 +34,7 @@ abstract class ControllerWithoutCRUDLAbstract extends ControllerWithTemplateAbst
     * @param object
     * subject config object
     **/
-    private $subjectConfig;
+    protected $subjectConfig;
 
     /**
     * @var mixed

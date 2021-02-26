@@ -296,9 +296,11 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
     */
     protected function redirect(string $route, $record = null)
     {
-        if(isset($this->getCRUDLConfig()->actions[$this->action]->redirectTo)) {
+        $redirectActionKey = $this->subjectConfig->actions[$this->action]->redirectTo ?? $this->getCRUDLConfig()->actions[$this->action]->redirectTo ?? null;
+        //if(isset($this->getCRUDLConfig()->actions[$this->action]->redirectTo)) {
+        if($redirectActionKey) {
             $isRecordAction = false;
-            $redirectActionKey = $this->getCRUDLConfig()->actions[$this->action]->redirectTo;
+            //$redirectActionKey = $this->getCRUDLConfig()->actions[$this->action]->redirectTo;
             //GET REDIRECT ACTION OBJECT
             //redirect action is global
             if(isset($this->navigations['globalActions'][$redirectActionKey])) {
@@ -1006,8 +1008,13 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
     
     /**
      * Uploads a file
+     * @param string $uploadKey
+     * @param string $fieldName
+     * @param string $fileSourcePath
+     * @param bool $isUploadedFile: whether fiel is uploaded or already stored into filesystem
+     * @param bool $outputError: whether to outpu erro in json format
      */
-    protected function uploadCore($uploadKey, $fileName, $fileSourcePath, $isUploadedFile = true)
+    public function uploadCore(string $uploadKey, string $fileName, string $fileSourcePath, bool $isUploadedFile = true, bool $outputError = true)
     {
         //return object
         $return = (object) [
@@ -1071,7 +1078,9 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
         }
         //store error
         $return->error = implode('<br>', $errors);
-        echo json_encode($return);
+        if($outputError) {
+            echo json_encode($return);
+        }
     }
     
     /**
