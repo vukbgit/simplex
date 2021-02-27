@@ -830,9 +830,11 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
                 $this->model->saveUploadsFiles($primaryKeyValue, $fieldsData->uploadsValues);
             }
             //post save processing
-            $this->doAfterRecordSave($primaryKeyValue, $fieldsData);
+            $redirectRoute = $this->doAfterRecordSave($primaryKeyValue, $fieldsData);
             //redirect
-            $redirectRoute = $this->buildRouteToActionFromRoot('list');
+            if(!$redirectRoute) {
+                $redirectRoute = $this->buildRouteToActionFromRoot('list');
+            }
             //message
             $this->setSubjectAlert('success', (object) ['code' => 'save_success']);
         } catch(\PDOException $exception) {
@@ -868,9 +870,11 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
                 $this->model->saveUploadsFiles($fieldsData->primaryKeyValue, $fieldsData->uploadsValues);
             }
             //post save processing
-            $this->doAfterRecordSave($fieldsData->primaryKeyValue, $fieldsData);
+            $redirectRoute = $this->doAfterRecordSave($fieldsData->primaryKeyValue, $fieldsData);
             //redirect
-            $redirectRoute = $this->buildRouteToActionFromRoot('list');
+            if(!$redirectRoute) {
+                $redirectRoute = $this->buildRouteToActionFromRoot('list');
+            }
             //message
             $this->setSubjectAlert('success', (object) ['code' => 'save_success']);
         } catch(\PDOException $exception) {
