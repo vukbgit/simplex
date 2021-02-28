@@ -71,7 +71,7 @@
     </div>
 </form>
         {% endif %}
-<table class="table table-sm table-hover table-responsive-sm erp-table">
+<table class="{% block tableClass %}table table-sm table-hover table-responsive-sm erp-table{% endblock %}">
     <caption>{{- getLabel('table', 'caption')|format(records|length) -}}</caption>
     <thead class="thead-light">
         <tr>
