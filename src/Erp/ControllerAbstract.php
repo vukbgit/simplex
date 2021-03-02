@@ -830,13 +830,22 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
                 $this->model->saveUploadsFiles($primaryKeyValue, $fieldsData->uploadsValues);
             }
             //post save processing
-            $redirectRoute = $this->doAfterRecordSave($primaryKeyValue, $fieldsData);
+            $saveProcessing = $this->doAfterRecordSave($primaryKeyValue, $fieldsData);
             //redirect
-            if(!$redirectRoute) {
+            if(is_object($saveProcessing) && isset($saveProcessing->redirectRoute)) {
+                $redirectRoute = $saveProcessing->redirectRoute;
+            } else {
                 $redirectRoute = $this->buildRouteToActionFromRoot('list');
             }
             //message
-            $this->setSubjectAlert('success', (object) ['code' => 'save_success']);
+            if(is_object($saveProcessing) && isset($saveProcessing->messageCode)) {
+                $messageCode = $saveProcessing->messageCode;
+            } else {
+                $messageCode = 'save_success';
+            }
+            if($messageCode) {
+                $this->setSubjectAlert('success', (object) ['code' => $messageCode]);
+            }
         } catch(\PDOException $exception) {
             $error = $this->model->handleException($exception);
             $this->setSubjectAlert('danger', $error);
@@ -870,13 +879,20 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
                 $this->model->saveUploadsFiles($fieldsData->primaryKeyValue, $fieldsData->uploadsValues);
             }
             //post save processing
-            $redirectRoute = $this->doAfterRecordSave($fieldsData->primaryKeyValue, $fieldsData);
+            $saveProcessing = $this->doAfterRecordSave($fieldsData->primaryKeyValue, $fieldsData);
             //redirect
-            if(!$redirectRoute) {
+            if(is_object($saveProcessing) && isset($saveProcessing->redirectRoute)) {
+                $redirectRoute = $saveProcessing->redirectRoute;
+            } else {
                 $redirectRoute = $this->buildRouteToActionFromRoot('list');
             }
             //message
-            $this->setSubjectAlert('success', (object) ['code' => 'save_success']);
+            if(is_object($saveProcessing) && isset($saveProcessing->messageCode)) {
+                $messageCode = $saveProcessing->messageCode;
+            } else {
+                $messageCode = 'save_success';
+            }
+            $this->setSubjectAlert('success', (object) ['code' => $messageCode]);
         } catch(\PDOException $exception) {
             $error = $this->model->handleException($exception);
             $this->setSubjectAlert('danger', $error);
@@ -891,6 +907,9 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
      * to be overridden by children classes if necessary
      * @param mixed $primaryKeyValue
      * @param object $fieldsData as returnd by getSaveFieldsData method
+     * @return object
+     *    ->redirectRoute to override default redirectRoute
+     *    ->messageCode to override default message code
      */
     protected function doAfterRecordSave($primaryKeyValue, $fieldsData)
     {
