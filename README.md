@@ -21,6 +21,7 @@ A tool for web developers
     * [Application Flow](#Application-Flow)
 * [Folders and Files Structure](#Folders-and-Files-Structure)
 * [Considerations](#Considerations)
+* [API Documentation](#API-Documentation)
 * [References](#References)
 
 ## Introduction ##
@@ -616,6 +617,10 @@ So here are folders and files as installed from Simplex, from the installation r
 * design choices: I tried to search documentation, mostly seeking "no framework" suggestions (see references below), and taking a look to existing frameworks (although I am no expert in this field because I started structuring my code for re-use since 2000); I want Simplex to be up-to-date but also to be, well, simple and there is no agreement on every topic, for example [the use of a DI Container](https://hackernoon.com/you-dont-need-a-dependency-injection-container-10a5d4a5f878). Therefore I made my (very questionable) choices, keeping __always__ in mind the I needed a tool to build web applications in the fastest and most flexible way
 * So I ended up with a framework myself?! Honestly I do not know
 
+## API Documentation ##
+
+API dcoumentation generated with phpDocumentor can be found at [https://vukbgit.github.io/simplex]
+ 
 ## References ##
 
 * [https://github.com/PatrickLouys/no-framework-tutorial]
