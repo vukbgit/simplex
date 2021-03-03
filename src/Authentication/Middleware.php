@@ -155,7 +155,12 @@ class Middleware implements MiddlewareInterface
     /**
      * Performs sign in
      * @param object $authenticationParameters
-     * @return integer: 1 = missing field, 2 = wrong username, 3 = wrong password, 4 = correct sign in, 5 = custom validation failed
+     * @return int :
+     * 1 = missing field
+     * 2 = wrong username
+     * 3 = wrong password
+     * 4 = correct sign in
+     * 5 = custom validation failed
      */
     private function signIn(object $authenticationParameters)
     {
@@ -407,7 +412,7 @@ class Middleware implements MiddlewareInterface
     /**
      * Performs verification
      * @param object $authenticationParameters
-     * @return integer:
+     * @return int :
      * 1 = missing field
      * 2 = wrong username
      * 3 = wrong password

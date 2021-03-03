@@ -234,7 +234,7 @@ abstract class ControllerAbstract
     
     /**
     * Return authenticated user data (if any)
-    * @return mixed, object with user data or null
+    * @return mixed object with user data | null
     */
     protected function getAuthenticatedUserData()
     {
