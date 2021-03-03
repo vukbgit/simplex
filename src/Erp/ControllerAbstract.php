@@ -230,8 +230,8 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
 
     /**
      * Sets a feedback categorized alert into subject cookie
-     * @param string $severity: one of Bootstrap alert suffixes (https://getbootstrap.com/docs/4.3/components/alerts)
-     * @param object $alert: object with alert informations:
+     * @param string $severity one of Bootstrap alert suffixes (https://getbootstrap.com/docs/4.3/components/alerts)
+     * @param object $alert object with alert informations:
      *   ->code: alphanumeric message code to be searched for into template alerts texts container
      *   ->data: an array with any specific error code relevant data (such as involved field names)
      */
