@@ -1216,6 +1216,11 @@ Search.appendIndex(
             "summary": "formats\u0020a\u0020date\u0020from\u0020locale\u0020format\u0020\u0028as\u0020specified\u0020into\u0020language\u0020definition\u0029\u0020to\u0020English\u0020format\u0020YYYY\u002DMM\u002DDD\nuseful\u0020to\u0020format\u0020user\u0020input\u0020for\u0020saving\u0020to\u0020database",
             "url": "classes/Simplex-Traits-Dates.html#method_formatDateLocaleToEn"
         },                {
+            "fqsen": "\\Simplex\\Traits\\Dates\u003A\u003AintervalsOverlap\u0028\u0029",
+            "name": "intervalsOverlap",
+            "summary": "Checks\u0020whether\u0020two\u0020date\u0020intervals\u0020overlaps\u0020and\u0020returns\u0020the\u0020number\u0020of\u0020overlapping\u0020days\u0020if\u0020any",
+            "url": "classes/Simplex-Traits-Dates.html#method_intervalsOverlap"
+        },                {
             "fqsen": "\\Simplex\\Traits\\Numbers",
             "name": "Numbers",
             "summary": "",
