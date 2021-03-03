@@ -37,7 +37,8 @@
         "zendframework/zend-session": "^2.8",
         "box/spout": "^3.0",
         "phpmailer/phpmailer": "^6.0",
-        "hackzilla/password-generator": "^1.4"
+        "hackzilla/password-generator": "^1.4",
+        "clean/phpdoc-md": "^0.19"
     },
     "autoload": {
         "psr-4" : {
