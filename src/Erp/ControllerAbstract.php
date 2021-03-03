@@ -234,7 +234,7 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
      * @param object $alert object with alert informations:
      *   ->code: alphanumeric message code to be searched for into template alerts texts container
      *   ->rawMessage: a message (alternative to code)
-     *   ->data: an array with any specific error code relevant data (such as involved field names), inserted into message by means of temlate format filter
+     *   ->data: an array with any specific error code relevant data (such as involved field names), inserted into message by means of template format filter
      */
     protected function setSubjectAlert(string $severity, object $alert)
     {
