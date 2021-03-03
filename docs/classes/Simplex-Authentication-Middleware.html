@@ -259,7 +259,7 @@ Based on Middlewares\FastRoute with the addition of routes definition processing
             <dt class="phpdocumentor-table-of-contents__entry -method -private">
     <a href="classes/Simplex-Authentication-Middleware.html#method_signIn">signIn()</a>
     <span>
-                        &nbsp;: mixed    </span>
+                        &nbsp;: int    </span>
 </dt>
 <dd>Performs sign in</dd>
 
@@ -952,7 +952,7 @@ Based on Middlewares\FastRoute with the addition of routes definition processing
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
-                <span class="phpdocumentor-signature__name">signIn</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">object&nbsp;</span><span class="phpdocumentor-signature__argument__name">$authenticationParameters</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                <span class="phpdocumentor-signature__name">signIn</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">object&nbsp;</span><span class="phpdocumentor-signature__argument__name">$authenticationParameters</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">int</span></code>
 
         <section class="phpdocumentor-description"></section>
 
@@ -971,9 +971,15 @@ Based on Middlewares\FastRoute with the addition of routes definition processing
     
 
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">mixed</span>
+    <span class="phpdocumentor-signature__response_type">int</span>
             &mdash;
-            <section class="phpdocumentor-description"></section>
+            <section class="phpdocumentor-description"><p>:
+1 = missing field
+2 = wrong username
+3 = wrong password
+4 = correct sign in
+5 = custom validation failed</p>
+</section>
 
     
 </article>
