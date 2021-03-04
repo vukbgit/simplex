@@ -272,7 +272,16 @@ class Middleware implements MiddlewareInterface
                 $this->loadPermissionsRoles($authenticationParameters);
                 //set authentication status
                 //redirect
-                $location = $this->cookie->getAreaCookie($this->area, 'signInRequestedUrl') ?? $this->getUserData()->redirectTo ?? $authenticationParameters->urls->successDefault;
+                //$location = $this->cookie->getAreaCookie($this->area, 'signInRequestedUrl') ?? $this->getUserData()->redirectTo ?? $authenticationParameters->urls->successDefault;
+                $redirectToAfterLogin = $this->cookie->getAreaCookie($this->area, 'redirectToAfterLogin');
+                if($redirectToAfterLogin) {
+                    $location = $redirectToAfterLogin;
+                    $this->cookie->setAreaCookie($this->area, 'redirectToAfterLogin', null);
+                } elseif(isset($this->getUserData()->redirectTo)) {
+                    $location = $this->getUserData()->redirectTo;
+                } else {
+                    $location = $authenticationParameters->urls->successDefault;
+                }
                 $this->setAuthenticationStatus(true, 4, $location);
             break;
             //failure
@@ -435,7 +444,10 @@ class Middleware implements MiddlewareInterface
             $this->setUserData();
             $this->setAuthenticationStatus(true, 4);
         } else {
+            //status
             $this->setAuthenticationStatus(false, $returnCode, $authenticationParameters->urls->signInForm);
+            //store current route for redirect
+            $this->cookie->setAreaCookie($this->area, 'redirectToAfterLogin', $this->request->getUri()->getPath());
         }
     }
     
