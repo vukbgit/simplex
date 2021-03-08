@@ -75,6 +75,14 @@ class PixieExtended extends QueryBuilderHandler
     }
     
     /**
+    * Resets pdo statement
+    **/
+    public function resetPdoStatement()
+    {
+        $this->pdoStatement = null;
+    }
+    
+    /**
     * Sets table
     * @param string $table
     **/
