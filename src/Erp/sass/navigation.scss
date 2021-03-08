@@ -79,7 +79,7 @@
 .sidebar-sticky {
     position: relative;
     top: 0;
-    height: calc(100vh - $navBarHeight);
+    height: calc(100vh - #{$navBarHeight});
     overflow-x: hidden;
     overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
 }
