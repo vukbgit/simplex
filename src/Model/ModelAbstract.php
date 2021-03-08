@@ -71,9 +71,9 @@ abstract class ModelAbstract
             throw new \Exception(sprintf('configuration loaded from file \'%s\' for model %s must contain a \'table\' property', $configPath, getInstanceNamespace($this)));
         }
         //check primary key
-        if(!isset($config->primaryKey)) {
+        /*if(!isset($config->primaryKey)) {
             throw new \Exception(sprintf('configuration loaded from file \'%s\' for model %s must contain a \'primaryKey\' property', $configPath, getInstanceNamespace($this)));
-        }elseif(is_array($config->primaryKey)) {
+        }else*/if(is_array($config->primaryKey)) {
             throw new \Exception(sprintf('Simplex model does not support composite primary keys, model %s configuration defined in %s must expose a single primary key', getInstanceNamespace($this), $configPath));
         }
         //has position field
@@ -337,7 +337,7 @@ abstract class ModelAbstract
     * @param array $where: see Simplex\PixieExtended::buildWhere for details
     * @param array $order: array of arrays, each with 1 element (field name, direction defaults to 'ASC') or 2 elements (field name, order 'ASC' | 'DESC')
     */
-    public function get(array $where = [], array $order = [])
+    public function get(array $where = [], array $order = [], int $limit = null)
     {
         //table
         $this->query
@@ -349,6 +349,9 @@ abstract class ModelAbstract
             foreach ($order as $orderCondition) {
                 call_user_func_array([$this->query, 'orderBy'], $orderCondition);
             }
+        }
+        if($limit) {
+            $this->query->limit($limit);
         }
         $records = $this->query->get();
         //localized fields

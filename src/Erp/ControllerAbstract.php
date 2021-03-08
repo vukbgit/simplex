@@ -42,6 +42,12 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
     protected $subjectCookie;
     
     /**
+    * @param int
+    * query limit
+    **/
+    protected $queryLimit = null;
+    
+    /**
     * Constructor
     * @param ContainerInterface $DIContainer
     * @param ResponseInterface $response
@@ -382,9 +388,19 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
      */
     protected function getList()
     {
+        if(isset($this->subjectCookie->sorting)) {
+            $sorting = $this->subjectCookie->sorting;
+        } elseif($this->model->hasPositionField) {
+            $sorting = [[$this->model->getConfig()->position->field]];
+        } elseif($this->model->getConfig()->primaryKey) {
+            $sorting = [[$this->model->getConfig()->primaryKey]];
+        } else {
+            $sorting = [];
+        }
         $records = $this->model->get(
             $this->buildListWhere(),
-            $this->subjectCookie->sorting ?? [[$this->model->hasPositionField ?  $this->model->getConfig()->position->field : $this->model->getConfig()->primaryKey]]
+            $sorting,
+            $this->queryLimit
         );
         if($this->model->hasPositionField) {
             $numRecords = count($records);
@@ -485,6 +501,15 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
     public function replaceListCustomConditions($customConditions)
     {
         $this->setSubjectCookie('custom_conditions', $customConditions);
+    }
+    
+    /**
+    * Set query limit
+    * @param int $limit
+    */
+    public function setQueryLimit(int $limit)
+    {
+        $this->queryLimit = $limit;
     }
     
     /**
