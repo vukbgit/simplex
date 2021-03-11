@@ -1,11 +1,11 @@
-{% macro displaySortableHeader(context, fieldName, align, label) %}
+{% macro displaySortableHeader(context, fieldName, align, label, labelExtraClasses) %}
     {% import _self as selfMacros %}
 <th>
-    {{ selfMacros.displaySortableField(context, fieldName, align, label) }}
+    {{ selfMacros.displaySortableField(context, fieldName, align, label, labelExtraClasses) }}
 </th>
 {% endmacro %}
 
-{% macro displaySortableField(context, fieldName, align, label) %}
+{% macro displaySortableField(context, fieldName, align, label, labelExtraClasses) %}
     {% set fieldsSorting = attribute(attribute(context.areaCookie, context.subject), 'sorting') ?? null %}
     {% set sorting = null %}
     {% for fieldSorting in fieldsSorting %}
@@ -28,7 +28,7 @@
         <input type="hidden" name="modifier" value="sort">
         <input type="hidden" name="field" value="{{ fieldName }}">
         <input type="hidden" name="direction" value="{{ reverseDirection }}">
-    {% if align is not defined or align == 'left' %}
+    {% if align is not defined or align is null or align == 'left' %}
         {% set justifyContent = 'start' %}
     {% elseif align == 'center' %}
         {% set justifyContent = 'center' %}
@@ -36,7 +36,7 @@
         {% set justifyContent = 'end' %}
     {% endif %}
         <div class="d-flex align-items-start align-content-center justify-content-{{ justifyContent }}">
-            <label class="font-weight-bold">{{ label ?? getLabel(context.subject, 'fields', fieldName) }}</label>
+    <label class="font-weight-bold{% if labelExtraClasses %} {{ labelExtraClasses }}{% endif %}">{{ label ?? getLabel(context.subject, 'fields', fieldName) }}</label>
             <button type="submit" class="{{ buttonClass }}" title="{{ buttonTitle }}"></button>
         </div>
     </form>
