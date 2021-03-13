@@ -672,7 +672,7 @@ WARNING: uses Bootstrap custom range input, so BS custom-forms component must be
 #}
 {% macro displayDateTimePicker(config) %}
     {% import _self as selfMacros %}
-    {% set id = config.id ?? config.name %}
+    {% set id = (config.id ?? config.name)|formatIdforJs %}
     {% set containerId = '%s_container'|format(id) %}
     {% if config.value and config.format != 'HH:mm' %}
         {% set config = updateProperty(config, 'value', config.value|date(attribute(getLanguage(config.time ? 'dateTimeFormat' : 'dateFormat'), 'PHP'))) %}
@@ -696,6 +696,7 @@ WARNING: uses Bootstrap custom range input, so BS custom-forms component must be
                 format: '{{ config.format|default(attribute(getLanguage(config.time ? 'dateTimeFormat' : 'dateFormat'), 'calendar')) }}',
                 locale: '{{ getLanguage('ISO-639-1') }}',
                 allowInputToggle: true,
+                {% if config.options.icons is not defined %}
                 icons: {
                     time: 'icon-form-clock',
                     date: 'icon-form-calendar',
@@ -707,6 +708,14 @@ WARNING: uses Bootstrap custom range input, so BS custom-forms component must be
                     clear: 'icon-form-trash',
                     close: 'icon-form-close'
                 },
+                {% endif %}
+                {% if config.options.buttons is not defined %}
+                buttons: {
+                    showToday: true,
+                    showClear: true,
+                    showClose: true
+                },
+                {% endif %}
            {% for option,value in config.options %}
                {{ option }}: {{ value|varToJs }},
            {% endfor %}
