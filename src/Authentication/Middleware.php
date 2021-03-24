@@ -404,7 +404,7 @@ class Middleware implements MiddlewareInterface
             throw new \Exception(sprintf('custom authentication handler %s::%s method must return a boolean value', get_class($handler), $handlerMethod));
         }
         //check userdata
-        if(!isset($userData['username']) || !isset($userData['role'])) {
+        if($authenticated === true && (!isset($userData['username']) || !isset($userData['role']))) {
             throw new \Exception(sprintf('custom authentication handler %s::%s method must take userdata array by reference as second parameter and fill it at least with \'username\' and \'role\' properties', get_class($handler), $handlerMethod));
         }
         if($authenticated) {
