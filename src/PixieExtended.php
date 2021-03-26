@@ -24,7 +24,11 @@ class PixieExtended extends QueryBuilderHandler
          'caseInsensitiveLikeOperator' => [
              'mysql' => 'LIKE',
              'pgsql' => 'ILIKE'
-         ]
+         ],
+         'likeOperatorTextCastDataType' => [
+             'mysql' => 'CHAR',
+             'pgsql' => 'TEXT'
+         ],
      ];
      
     /**

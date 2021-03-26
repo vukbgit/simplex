@@ -615,10 +615,30 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
                 if(!isset($fieldConfig->table->filter) || $fieldConfig->table->filter) {
                     //filter fields conditions are joined by the logical OR operator
                     //$filterWhere[] = [$fieldName, 'LIKE', sprintf('%%%s%%', $filterString), 'logical' => 'OR'];
-                    $filterWhere[] = [
-                        $fieldName,
+                    /*$filterWhere[] = [
+                        //$fieldName
+                        $this->model->rawField(
+                            sprintf(
+                                'CAST("%s" AS %s)',
+                                $fieldName,
+                                $this->model->getQuery()->getDriverOption('likeOperatorTextCastDataType')
+                            )
+                        ),
                         $this->model->getQuery()->getDriverOption('caseInsensitiveLikeOperator'),
                         sprintf('%%%s%%', $filterToken),
+                        'logical' => 'OR'
+                    ];*/
+                    $filterWhere[] = [
+                        //$fieldName
+                        $this->model->rawField(
+                            sprintf(
+                                'CAST("%s" AS %s) %s \'%%%s%%\'',
+                                $fieldName,
+                                $this->model->getQuery()->getDriverOption('likeOperatorTextCastDataType'),
+                                $this->model->getQuery()->getDriverOption('caseInsensitiveLikeOperator'),
+                                $filterToken
+                            )
+                        ),
                         'logical' => 'OR'
                     ];
                 }
