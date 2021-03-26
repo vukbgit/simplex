@@ -632,7 +632,8 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
                         //$fieldName
                         $this->model->rawField(
                             sprintf(
-                                'CAST("%s" AS %s) %s \'%%%s%%\'',
+                                'CAST(%1$s%2$s%1$s AS %3$s) %4$s \'%%%5$s%%\'',
+                                $this->model->getQuery()->getDriverOption('labelDelimiter'),
                                 $fieldName,
                                 $this->model->getQuery()->getDriverOption('likeOperatorTextCastDataType'),
                                 $this->model->getQuery()->getDriverOption('caseInsensitiveLikeOperator'),

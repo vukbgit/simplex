@@ -21,6 +21,10 @@ class PixieExtended extends QueryBuilderHandler
      * driver dependent options
      */
      private $optionsByDriver = [
+         'labelDelimiter' => [
+             'mysql' => '`',
+             'pgsql' => '"'
+         ],
          'caseInsensitiveLikeOperator' => [
              'mysql' => 'LIKE',
              'pgsql' => 'ILIKE'
