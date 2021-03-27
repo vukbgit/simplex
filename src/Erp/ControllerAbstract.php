@@ -392,6 +392,8 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
             $sorting = $this->subjectCookie->sorting;
         } elseif($this->model->hasPositionField) {
             $sorting = [[$this->model->getConfig()->position->field]];
+        } elseif(isset($this->getCRUDLConfig()->listOrderBy)) {
+            $sorting = $this->getCRUDLConfig()->listOrderBy;
         } elseif($this->model->getConfig()->primaryKey) {
             $sorting = [[$this->model->getConfig()->primaryKey]];
         } else {
