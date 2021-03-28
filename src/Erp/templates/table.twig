@@ -14,7 +14,7 @@
     {% block tableIntro %}
     {% endblock %}
     {% block tableNavBar %}
-<nav class="navbar navbar-light bg-light justify-content-start">
+<nav class="navbar navbar-light bg-light justify-content-start" id="list-navbar">
         {% block tableFilter %}
         {% set fieldsFilter = attribute(attribute(areaCookie, subject), 'filter') ?? null %}
     <form method="post" action="" class="form-inline" id="default-filter-form">

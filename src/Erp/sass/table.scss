@@ -1,3 +1,10 @@
+#list-navbar {
+    padding-bottom:0;
+    > * {
+        margin-right: 1rem;
+        margin-bottom:.5rem;
+    }
+}
 .erp-table {
     button {
         border-width:0;

@@ -16,8 +16,11 @@
         padding-left:1rem;
         line-height:$navBarHeight;
         h1 {
-            display:inline-block;
+            display:none;
             color:$navbar-dark-active-color;
+            @include media-breakpoint-up(md) {
+                display:inline-block;
+            }
         }
         img {
             $logoMargin: 5px;
