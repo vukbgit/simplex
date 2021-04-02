@@ -945,7 +945,9 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
             } else {
                 $messageCode = 'save_success';
             }
-            $this->setSubjectAlert('success', (object) ['code' => $messageCode]);
+            if($messageCode) {
+                $this->setSubjectAlert('success', (object) ['code' => $messageCode]);
+            }
         } catch(\PDOException $exception) {
             $error = $this->model->handleException($exception);
             $this->setSubjectAlert('danger', $error);
