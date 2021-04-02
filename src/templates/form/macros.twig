@@ -804,45 +804,8 @@ WARNING: uses Bootstrap custom range input, so BS custom-forms component must be
     
     <script type="text/javascript">
     {% set jsOptions = 'js_options_%s'|format(inputId) %}
-    var {{ jsOptions }} = {
-        language: '{{ attribute(context.language, 'ISO-639-1') }}',
-        theme: 'simplex',
-        showUpload: false,
-        showRemove: false,
-        initialPreviewShowDelete: true,
-        deleteUrl: 'fake-delete-url',
-        showUploadStats: false,
-        showDrag: true,
-        showCaption: false,
-        browseOnZoneClick: false,
-        overwriteInitial: false,
-        maxFileSize: {{ context.uploadMaxFilesizeKB }},
-        uploadAsync: true,
-        uploadUrl: '{{ uploadRoute }}',
-    {# config tweaks #}
-    {% if config.options.maxFileCount and config.options.maxFileCount == 1 and config.options.autoReplace is not defined %}
-        {% set config = updateProperty(config, 'options', updateProperty(config.options, 'autoReplace', true)) %}
-    {% endif %}
-    {# preview #}
-    {#% if config.value and config.previewTemplate is defined %#}
-    {% if config.value %}
-        initialPreview: [
-        {% for fileName in config.value|split('|') %}
-            '{{ formatUploadPreviewTemplate(uploadKey, fileName, config.previewTemplate) }}',
-        {% endfor %}
-        ],
-        initialPreviewConfig: [
-        {% for fileName in config.value|split('|') %}
-            {caption: '{{ fileName }}', key: '{{ fileName }}'},
-        {% endfor %}
-        ],
-    {% endif %}
-    {% for option,value in config.options %}
-        {{ option }}: {{ value|varToJs }},
-    {% endfor %}
-    };
+    var {{ jsOptions }} = {{ selfMacros.buildFileUploadJsOptions(context, uploadKey, uploadRoute, config) }};
     {% set jsUploadObject = 'js_upload_%s'|format(inputId) %}
-    
     $("#{{ uploadId }}").fileinput({{ jsOptions }})
     //auto upload on file selection
     .on("fileselect", function(event, numFiles, label) {
@@ -1003,6 +966,46 @@ WARNING: uses Bootstrap custom range input, so BS custom-forms component must be
         
     }
     </script>
+{% endmacro %}
+
+{% macro buildFileUploadJsOptions(context, uploadKey, uploadRoute, config) %}
+{
+    language: '{{ attribute(context.language, 'ISO-639-1') }}',
+    theme: 'simplex',
+    showUpload: false,
+    showRemove: false,
+    initialPreviewShowDelete: true,
+    deleteUrl: 'fake-delete-url',
+    showUploadStats: false,
+    showDrag: true,
+    showCaption: false,
+    browseOnZoneClick: false,
+    overwriteInitial: false,
+    maxFileSize: {{ context.uploadMaxFilesizeKB }},
+    uploadAsync: true,
+    uploadUrl: '{{ uploadRoute }}',
+{# config tweaks #}
+{% if config.options.maxFileCount and config.options.maxFileCount == 1 and config.options.autoReplace is not defined %}
+    {% set config = updateProperty(config, 'options', updateProperty(config.options, 'autoReplace', true)) %}
+{% endif %}
+{# preview #}
+{#% if config.value and config.previewTemplate is defined %#}
+{% if config.value %}
+    initialPreview: [
+    {% for fileName in config.value|split('|') %}
+        '{{ formatUploadPreviewTemplate(uploadKey, fileName, config.previewTemplate) }}',
+    {% endfor %}
+    ],
+    initialPreviewConfig: [
+    {% for fileName in config.value|split('|') %}
+        {caption: '{{ fileName }}', key: '{{ fileName }}'},
+    {% endfor %}
+    ],
+{% endif %}
+{% for option,value in config.options %}
+    {{ option }}: {{ value|varToJs }},
+{% endfor %}
+}
 {% endmacro %}
 
 {##########
