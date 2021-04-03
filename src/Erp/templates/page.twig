@@ -28,8 +28,10 @@
     </nav>
     {% endif %}
     {% block subjectGlobalNavigation %}
-        {# model global actions navigation #}
-        {{ navigationMacros.displaySubjectGlobalActionsNavigation(_context, navigations.globalActions, globalActionsLabels) }}
+        {% if displaySubjectGlobalNavigation is not defined or displaySubjectGlobalNavigation == true  %}
+            {# subject global actions navigation #}
+            {{ navigationMacros.displaySubjectGlobalActionsNavigation(_context, navigations.globalActions, globalActionsLabels) }}
+        {% endif %}
     {% endblock %}
     {# model global actions navigation #}
     {% block subjectExtraNavigation %}
