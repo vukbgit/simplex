@@ -547,12 +547,23 @@ $(document).ready(function() {
 {% endmacro %}
 
 {# displays a checkoxes fields block
-@param hash config: hash for field properties (see setFieldAttributes macro explanation)
+@param hash config: hash for field properties (see setFieldAttributes macro explanation) plus:
+    toggle: displays a checkbox before group label to toggle all of group checkboxes at once
 @param array items: array of hashes each with value and label property
 #}
 {% macro displayInputCheckboxGroup(config, items) %}
     {% import _self as selfMacros %}
     {{ selfMacros.displayInputRadioCheckboxGroup('checkbox', config, items) }}
+    {% if config.toggle %}
+      {% set toggleId = 'toggle_%s'|format(config.name|formatIdforJs) %}
+    <script>
+    $(document).ready(function() {
+      $('#{{ toggleId }}').change(function() {
+        $('input[name="{{ config.name }}"]').prop('checked', $(this).prop('checked'));
+      });
+    });
+    </script>
+    {% endif %}
 {% endmacro %}
 
 {# displays a radio/checkbox fields block
@@ -563,6 +574,10 @@ $(document).ready(function() {
 {% macro displayInputRadioCheckboxGroup(type, config, items) %}
     {% import _self as selfMacros %}
         {{ selfMacros.displayFormGroup(config, config.name|formatIdforJs) }}
+        {% if type == 'checkbox' and config.toggle %}
+          {% set toggleId = 'toggle_%s'|format(config.name|formatIdforJs) %}
+        <input type="checkbox" id="{{ toggleId }}">
+        {% endif %}
         {{ selfMacros.displayLabel(config) }}
         {% if config.cols is defined %}
         <div class="col-12 col-sm-{{ config.cols[1] }}{% if config.inline %} d-flex align-items-center{% endif %}">
