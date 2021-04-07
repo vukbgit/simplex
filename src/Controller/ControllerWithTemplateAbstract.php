@@ -665,6 +665,11 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
     protected function loadNavigationLevel(string $navigationName, array &$loadedNavigationLevel, object &$parentVoiceProperties = null)
     {
         foreach ($loadedNavigationLevel as $voiceKey => $voiceProperties) {
+            //check explicit visibility flag (possibly set at runtime)
+            if(isset($voiceProperties->display) && $voiceProperties->display === false) {
+              unset($loadedNavigationLevel[$voiceKey]);
+              continue;
+            }
             //check voice permission (only if controller has been invoked by router and so request is defined)
             if(isset($this->request) && $this->needsAuthentication && isset($voiceProperties->permissions) && !$this->checkAtLeastOnePermission($voiceProperties->permissions)) {
                 unset($loadedNavigationLevel[$voiceKey]);
