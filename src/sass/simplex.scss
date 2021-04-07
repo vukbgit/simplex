@@ -20,6 +20,18 @@
 .custom-select {
     -webkit-appearance: none;
 }
+/********
+* ICONS *
+********/
+[class^="icon-"] {
+  &.x2 {
+    font-size: 200%;
+  }
+  &.x3 {
+    font-size: 300%;
+  }
+}
+
 /*********
 * SOCIAL *
 *********/
