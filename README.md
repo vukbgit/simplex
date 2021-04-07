@@ -467,7 +467,8 @@ Simplex uses [Fontello](http://fontello.com/) for icons and it breaks icons into
 * _public/share/simplex/Erp/Fontello_ for ERP (Backend) related icons (100 reserved unicode values, from 0165 to 01C9)
 * _public/share/brands/Fontello_ for brands related icons, i.e. social media or fiel types (20 reserved unicode values, from 01CA to 01DE)
 
-Unicode codes are assigned so that, if icons are used into css (setting CSS properties _content_ to unicode code and _font-family_ to "fontello") icons do not overlap, if other application specific icons are added they should take unicode codes from 02BC (included) onward
+Unicode codes are assigned so that, if icons are used into css (setting CSS properties _content_ to unicode code and _font-family_ to "fontello") icons do not overlap, if other application specific icons are added they should take unicode codes from 02BC (included) onward.
+Note: when using unicode codes into CSS remember to check text-transform (lowercase or uppercase) because each icon corresponds to a unicode charachter with a specific case and, if element inherits case from context, it could display the wrong gliph.
 
 ## Development to Production ##
 
