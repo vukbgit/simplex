@@ -56,7 +56,9 @@
                 type="submit"
                 class="btn btn-sm btn-outline-secondary"
                 data-route="{{ buildRouteToAction(actionProperties) }}"
+                {% if actionProperties.noConfirm is not defined or actionProperties.noConfirm == false %}
                 data-confirm="{{ getLabel('alerts', 'bulk_confirm')|format(actionLabel)|escape('html_attr') }}"
+                {% endif %}
                 >{{ actionLabel }}</button>
             {% endfor %}
         </div>
