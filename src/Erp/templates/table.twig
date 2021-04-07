@@ -102,7 +102,7 @@
     {% endfor %}
     {# ROWS LOOP #}
         {% for record in records %}
-        <tr>
+        <tr{% block rowAttributes %}{% endblock %}>
             {% if navigations.bulkActions|length %}
                 <td class="align-middle">
                     <div>
