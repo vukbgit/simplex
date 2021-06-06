@@ -56,9 +56,7 @@
                 type="submit"
                 class="btn btn-sm btn-outline-secondary"
                 data-route="{{ buildRouteToAction(actionProperties) }}"
-                {% if actionProperties.noConfirm is not defined or actionProperties.noConfirm == false %}
                 data-confirm="{{ getLabel('alerts', 'bulk_confirm')|format(actionLabel)|escape('html_attr') }}"
-                {% endif %}
                 >{{ actionLabel }}</button>
             {% endfor %}
         </div>
@@ -102,7 +100,7 @@
     {% endfor %}
     {# ROWS LOOP #}
         {% for record in records %}
-        <tr{% block rowAttributes %}{% endblock %}>
+      <tr{% block rowAttributes %}{% endblock %}>
             {% if navigations.bulkActions|length %}
                 <td class="align-middle">
                     <div>
