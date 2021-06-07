@@ -174,9 +174,9 @@ class SpreadsheetReaderWriter
         //create writer
         $method = sprintf('create%sWriter', strtoupper($this->type));
         $this->writer = WriterEntityFactory::$method();
-        //delmiter
+        //delimiter
         if($delimiter) {
-          $this->writer->setFieldDelimiter($delimiter);
+          $this->writer->setFieldDelimiter($delimiterz);
         }
         //output
         switch ($output) {
