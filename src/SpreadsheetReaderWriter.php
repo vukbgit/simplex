@@ -146,8 +146,9 @@ class SpreadsheetReaderWriter
     * @param string $FileName: in case of output = file must be complete path
     * @param array $rows: an array of objects (like a recordset)
     * @param array $headersRow
+    * @param string $delimiter delimiter for csv
     */
-    public function write(string $type, string $output, string $fileName, array $rows, array $headersRow = [])
+    public function write(string $type, string $output, string $fileName, array $rows, array $headersRow = [], string $delimiter = '')
     {
         //normalize parameters short values
         switch ($type) {
@@ -173,6 +174,10 @@ class SpreadsheetReaderWriter
         //create writer
         $method = sprintf('create%sWriter', strtoupper($this->type));
         $this->writer = WriterEntityFactory::$method();
+        //delmiter
+        if($delimiter) {
+          $this->writer->setFieldDelimiter($delimiter);
+        }
         //output
         switch ($output) {
             case 'file':
