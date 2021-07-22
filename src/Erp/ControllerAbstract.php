@@ -350,6 +350,8 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
     */
     protected function setCommonTemplateParameters()
     {
+        $this->setTemplateParameter('_GET', $_GET);
+        $this->setTemplateParameter('_POST', $_POST);
         $this->setTemplateParameter('userData', $this->getAuthenticatedUserData());
         $this->setTemplateParameter('subject', $this->subject);
         $this->setTemplateParameter('model', $this->model);
@@ -885,7 +887,15 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
             //post save processing
             $saveProcessing = $this->doAfterRecordSave($primaryKeyValue, $fieldsData);
             //redirect
-            if(is_object($saveProcessing) && isset($saveProcessing->redirectRoute)) {
+            if(isset($_POST['callingFormRoute'])) {
+              $primaryKeyField = $this->model->getConfig()->primaryKey;
+              $redirectRoute = sprintf(
+                '%s?%s=%s',
+                $_POST['callingFormRoute'],
+                $primaryKeyField,
+                $primaryKeyValue
+              );
+            } elseif(is_object($saveProcessing) && isset($saveProcessing->redirectRoute)) {
                 $redirectRoute = $saveProcessing->redirectRoute;
             } else {
                 $redirectRoute = $this->buildRouteToActionFromRoot('list');

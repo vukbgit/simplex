@@ -11,6 +11,10 @@
     >
     {# primary key field(s) #}
     {{ crudlFormMacros.displayPrimaryKeyInput(_context, model) }}
+    {# calling form route (in case form has been called from another form such as when a foreign key record is to be created on the fly) #}
+    {% if _POST.callingFormRoute is defined %}
+      <input type="hidden" name="callingFormRoute" value="{{ _POST.callingFormRoute }}">
+    {% endif %}
     {# model input fields #}
     {% block modelInputs %}
     {% endblock %}

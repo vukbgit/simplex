@@ -410,7 +410,8 @@ WARNING: uses Bootstrap custom select, so BS custom-forms component must be incl
         search terms will be passed into GET 'term' parameter
         search action must return json
     remoteDataRouteExtraParameters: object with extra parameters to be passed into route
-    valueLabel: 
+    valueLabel:
+    options: hash container for any extra specific select2 option (see https://select2.org/configuration/options-api)
 @param array items: array of hashes each with value and label property, alternative to remoteDataRoute; if minimumInputLength is passed they are not shown but searched
 #}
 {% macro displayRichSelect(config, items) %}
@@ -463,6 +464,10 @@ $(document).ready(function() {
             }
         }
     {% endif %}
+    {# select2 specific options #}
+    {% for option,value in config.options %}
+        '{{ option }}': {{ value|varToJs }},
+    {% endfor %}
     });
     $('{{ '#%s'|format(id) }}').on('select2:select', function (e) {
         //var data = e.params.data;
@@ -1279,6 +1284,30 @@ NOTE: javascript validation function creates automatically if needed, this macro
         {% if config.countryCode is defined %}
 <span class="{{ 'flag-icon flag-icon-%s'|format(config.countryCode) }}"></span>
         {% endif %}
+        {% if config.insertRecord is defined %}
+          {% set insertRecordId = 'insert-foreign-key-record_%s'|format(config.name) %}
+<button type="button"
+class="btn insert-foreign-key-record icon-erp-plus-circle" id="{{ insertRecordId }}"
+title="{{ 'Insert new record'|trans }}"
+></button>
+<script>
+$(document).ready(function() {
+  $('#{{ insertRecordId }}').click(function() {
+    // create form on the fly
+    var insertForeignKeyRecordForm = $('<form>', {
+        'action': '{{ config.insertRecord.insertUrl }}',
+        'method': 'POST'
+    }).append(jQuery('<input>', {
+        'name': 'callingFormRoute',
+        'value': window.location.pathname,
+        'type': 'hidden'
+    }));
+    // send form
+    insertForeignKeyRecordForm.appendTo('body').submit();
+  });
+});
+</script>
+        {% endif %}
 </label>
     {% endif %}
 {% endmacro %}
@@ -1760,6 +1789,13 @@ $(document).ready(function(){
 <link href="{{ 'select2-bootstrap4-theme/dist/select2-bootstrap4.min.css'|pathToNpmAsset }}" rel="stylesheet" />
 <script src="{{ 'select2/dist/js/select2.min.js'|pathToNpmAsset }}"></script>
 <script src="{{ 'select2/dist/js/i18n/%s.js'|format(getLanguage('ISO-639-1'))|pathToNpmAsset }}"></script>
+<script>
+window.jQuery(document).on('select2:open', e => {
+  const id = e.target.id;
+  const target = document.querySelector(`[aria-controls=select2-${id}-results]`);
+  target.focus();
+});
+</script>
 {% endmacro %}
 
 {# color picker assets

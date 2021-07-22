@@ -127,6 +127,15 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
     }
 
     /**
+    * gets a parameter from the template angine
+    * @param string $parameterName
+    */
+    protected function getTemplateParameter(string $parameterName)
+    {
+        return $this->templateParameters[$parameterName] ?? null;
+    }
+
+    /**
     * Turns a local path from root into an URL prepending current scheme and domain
     * @param string $path
     */
