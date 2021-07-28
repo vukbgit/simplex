@@ -580,8 +580,8 @@ abstract class ModelAbstract
                         ->insert($uploadRecord);
                 }
             }
-            return $clonedRrecordsPrimaryKeyValues;
         }
+        return $clonedRrecordsPrimaryKeyValues;
     }
     
     /**********
