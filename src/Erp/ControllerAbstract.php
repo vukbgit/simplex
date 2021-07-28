@@ -85,7 +85,7 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
         //store ancestors
         $this->storeAncestors();
         //get cookie stored user options
-        $this->getSubjectCookie();
+        $this->subjectCookie = $this->getSubjectCookie();
         //load navigation
         if($this->isAuthenticated()) {
             $this->loadSubjectNavigation();
@@ -215,23 +215,26 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
     **********/
     
     /**
-     * Gets user options stored into cookie
+     * Gets user options for a subject stored into cookie
+     * @param string $subject: defaults to current
      */
-    protected function getSubjectCookie(): object
+    protected function getSubjectCookie($subject = null): object
     {
-        $this->subjectCookie = $this->getAreaCookie()->{$this->subject} ?? new \stdClass;
-        return $this->subjectCookie;
+        $subjectCookie = $this->getAreaCookie()->{($subject ?? $this->subject)} ?? new \stdClass;
+        return $subjectCookie;
     }
 
     /**
      * Sets an subject information to be stored into cookie
      * @param string $key
      * @param mixed $value
+     * @param string $subject: defaults to current
      */
-    protected function setSubjectCookie(string $key, $value)
+    protected function setSubjectCookie(string $key, $value, $subject = null)
     {
-        $this->subjectCookie->$key = $value;
-        $this->setAreaCookie($this->subject, $this->subjectCookie);
+        $subjectCookie = $subject ? $this->getSubjectCookie($subject) : $this->subjectCookie;
+        $subjectCookie->$key = $value;
+        $this->setAreaCookie(($subject ?? $this->subject), $subjectCookie);
     }
 
     /**
@@ -241,11 +244,12 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
      *   ->code: alphanumeric message code to be searched for into template alerts texts container
      *   ->rawMessage: a message (alternative to code)
      *   ->data: an array with any specific error code relevant data (such as involved field names), inserted into message by means of template format filter
+     * @param string $subject: defaults to current
      */
-    protected function setSubjectAlert(string $severity, object $alert)
+    protected function setSubjectAlert(string $severity, object $alert, $subject = null)
     {
         //init messages
-        if(!isset($this->subjectCookie->alerts)) {
+        /*if(!isset($this->subjectCookie->alerts)) {
             $this->subjectCookie->alerts = [];
         } else {
             //json_decode turn associative array into objects
@@ -257,8 +261,20 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
         }
         //set message
         $this->subjectCookie->alerts[$severity][] = $alert;
+        */
+        //get subject cookie
+        $subjectCookie = $subject ? $this->getSubjectCookie($subject) : $this->subjectCookie;
+        //get alerts
+        $alerts = $subjectCookie->alerts ? (array) $subjectCookie->alerts : [];
+        //init context messages
+        if(!isset($alerts[$severity])) {
+            $alerts[$severity] = [];
+        }
+        //set message
+        $alerts[$severity][] = $alert;
         //store into subject cookie
-        $this->setSubjectCookie('alerts', $this->subjectCookie->alerts);
+        //$this->setSubjectCookie('alerts', $this->subjectCookie->alerts);
+        $this->setSubjectCookie('alerts', $alerts, ($subject ?? $this->subject));
     }
 
     /**
