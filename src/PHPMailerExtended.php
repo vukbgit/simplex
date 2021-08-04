@@ -91,8 +91,9 @@ class PHPMailerExtended extends PHPMailer
             }
         }
         //invia
-        $this->send();
+        $result = $this->send();
         //clear addresses in case of bulk sending
         $this->clearAddresses();
+        return $result;
     }
 }
