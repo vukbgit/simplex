@@ -470,6 +470,10 @@ abstract class ModelAbstract
     */
     public function delete($primaryKeyValue = null, $where = [])
     {
+      //check that a where condition is set
+      if($primaryKeyValue == null && empty($where)) {
+        throw new \PDOException(sprintf('Trying to delete from table %s without any where condition!', $this->table()), 1);
+      }
         //set where conditions
         if($primaryKeyValue) {
             $where = array_merge(
