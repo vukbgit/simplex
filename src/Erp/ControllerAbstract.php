@@ -551,6 +551,10 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
             if(isset($subjectCookie->filter) && $subjectCookie->filter) {
                 $filterString = $subjectCookie->filter;
             }
+            //forget filter
+            if((defined('FORGET_ALL_FILTERS') && !isset($CRUDLConfig->forgetFilter) && FORGET_ALL_FILTERS) || (isset($CRUDLConfig->forgetFilter) && $CRUDLConfig->forgetFilter === true )) {
+              $this->replaceListFilter('');
+            }
         }
         if($filterString) {
             // //clean multiple white spaces

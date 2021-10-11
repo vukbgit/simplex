@@ -49,4 +49,6 @@ return (object) [
     'clone' => [
         'FIELD-NAME',
     ]*/
+    /*//whether to forget table filter
+    'forgetFilter' => false*/
 ];

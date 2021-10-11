@@ -69,6 +69,11 @@ define('LOCAL_TEMPLATES_DIR', PRIVATE_LOCAL_DIR);
 define('TEMPLATES_EXTENSION', 'twig');
 //twig folder to search for default action template, path from the controller folder
 define('TEMPLATES_DEFAULT_FOLDER', 'templates');
+/******
+* ERP *
+******/
+//whether not to store tables filters values into subjects cookies 
+define('FORGET_ALL_FILTERS', false);
 /***************
 * TRANSLATIONS *
 ***************/
