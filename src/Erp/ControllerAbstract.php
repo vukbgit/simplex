@@ -604,6 +604,10 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
             $where[] = [$parentPrimaryKey->field, $parentPrimaryKey->value];
         }
         $this->buildListWhereCustomConditions($where);
+        //forget filter
+        if((defined('FORGET_ALL_FILTERS') && !isset($CRUDLConfig->forgetFilter) && FORGET_ALL_FILTERS) || (isset($CRUDLConfig->forgetFilter) && $CRUDLConfig->forgetFilter === true )) {
+          $this->replaceListCustomConditions('');
+        }
         return $where;
     }
     
