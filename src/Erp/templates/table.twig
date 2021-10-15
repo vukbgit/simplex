@@ -15,8 +15,9 @@
     {% endblock %}
     {% block tableNavBar %}
 <nav class="navbar navbar-light bg-light justify-content-start" id="list-navbar">
-        {% block tableFilter %}
+      {% block tableFilter %}
         {% set fieldsFilter = attribute(attribute(areaCookie, subject), 'filter') ?? null %}
+  <div>
     <form method="post" action="" class="form-inline" id="default-filter-form">
         <input type="hidden" name="modifier" value="filter">
         <div class="input-group">
@@ -28,6 +29,9 @@
             </div>
         </div>
     </form>
+        {% block tableFilterCaption %}
+    
+        {% endblock tableFilterCaption %}
     <script type="text/javascript">
         $(document).ready(function(){
             $('#default-filter-form button[type="reset"]').click(function(){
@@ -36,7 +40,8 @@
             });
         });
     </script>
-        {% endblock tableFilter %}
+  </div>
+      {% endblock tableFilter %}
 </nav>
     {% endblock tableNavBar %}
     {% if records|length %}
