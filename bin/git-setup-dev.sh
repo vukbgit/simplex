@@ -1,18 +1,24 @@
 #!/bin/bash
+
 echo "Have you checked and customized .gitignore file?"
 select yn in "Yes" "No"; do
     case $yn in
     Yes ) 
-        rm -rf .git
-        git init
         read -p "Repository URL:" repositoryUrl
-        git remote add origin $repositoryUrl
-        git fetch
         read -p "git user.email:" userEmail
-        git config user.email "$userEmail"
         read -p "git user.name:" userName
+        read -p "git remote branch name [main]:" branch
+        branch=${branch:-main}
+        rm -rf .git
+        git init -b $branch
+        git config user.email "$userEmail"
         git config user.name "$userName"
         git config push.default simple
+        git config pull.rebase false
+        git remote add origin $repositoryUrl
+        git fetch
+        git checkout --track origin/$branch
+        git pull 
         git add private/
         git add public/
         git add .gitignore
@@ -20,7 +26,7 @@ select yn in "Yes" "No"; do
         git add index.php
         git add composer.json
         git commit -m "first complete commit"
-        git push --set-upstream origin master
+        git push
         break;;
     No ) exit;;
     esac

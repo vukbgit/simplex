@@ -2,6 +2,8 @@
 #first argument is repository URL, for script automation
 repositoryUrl=$1
 
+read -p "git remote branch name [main]:" branch
+branch=${branch:-main}
 if [ -z "$repositoryUrl" ]
         then
                 echo "Have you created repository and made first commit?"
@@ -13,8 +15,8 @@ if [ -z "$repositoryUrl" ]
                                         read -p "Repository URL:" repositoryUrl
                                         git remote add origin $repositoryUrl
                                         git fetch --all
-                                        git reset --hard origin/master
-                                        git branch --set-upstream-to=origin/master
+                                        git reset --hard origin/$branch
+                                        git branch --set-upstream-to=origin/$branch
                                         break;;
                                 No ) exit;;
                                 esac
@@ -23,7 +25,6 @@ else
         git init
         git remote add origin $repositoryUrl
         git fetch --all
-        git reset --hard origin/master
-        git branch --set-upstream-to=origin/master
+        git reset --hard origin/$branch
+        git branch --set-upstream-to=origin/$branch
 fi
-
