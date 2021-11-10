@@ -11,7 +11,7 @@ if [ -z "$repositoryUrl" ]
                                 case $yn in
                                 Yes ) 
                                         rm -rf .git
-                                        git init
+                                        git init -b $branch
                                         read -p "Repository URL:" repositoryUrl
                                         git remote add origin $repositoryUrl
                                         git fetch --all
