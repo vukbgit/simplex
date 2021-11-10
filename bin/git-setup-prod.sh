@@ -12,6 +12,7 @@ if [ -z "$repositoryUrl" ]
                                 Yes ) 
                                         rm -rf .git
                                         git init -b $branch
+                                        git config pull.rebase false
                                         read -p "Repository URL:" repositoryUrl
                                         git remote add origin $repositoryUrl
                                         git fetch --all
