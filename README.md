@@ -79,7 +79,7 @@ Conventions:
 
 ## Installation ##
 
-Create a Composer.json in the root folder:
+Create a composer.json in the root folder:
 
     {
         "type": "project",
