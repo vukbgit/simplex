@@ -6,5 +6,15 @@ if [ -f ./composer.sh ]; then
 else
     composer update
 fi
-./yarn.sh install
-./yarn.sh upgrade
+#check public package manager
+FOLDER=public/share
+if [[ -f "${FOLDER}/package-lock.json" ]]; then
+    echo "updating npm"
+    ./npm.sh update
+elif [[ -f "${FOLDER}/yarn.lock" ]]; then
+    echo "updating yarn"
+    ./yarn.sh install
+    ./yarn.sh upgrade
+else
+    echo "no public package managerinitiated, please use ./npm.sh or ./yarn.sh to install packages"
+fi

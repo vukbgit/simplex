@@ -49,6 +49,7 @@
         ]
     },
     "bin": [
+        "bin/npm.sh",
         "bin/yarn.sh",
         "bin/sass.sh",
         "bin/git-setup-dev.sh",
