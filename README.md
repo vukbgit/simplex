@@ -138,7 +138,7 @@ For details see _Folders and Files Structure_ below
         * _value_ can be either _development_ or _production_ and Simplex expects to have at least one domain mapped to _production_
     * set default redirections, i.e _/backend_ to _/backend/sign-in-form_; in any case either you're going to define a route for the plain domain request or you redirect domain request to a default route (i.e. `RewriteRule ^/?$ /my-default-route [R,L]`); for routes definitiosn see below
 * local __composer__ bash script: if your system has multiple PHP versions installed it can be useful to have a shortcut to use composer with a version different from the system default one; file _private\local\simplex\bin\composer.sh_ is an example containing PHP and Composer path to custom binaries and it can be softlinked into root folder, i.e. `ln -s private/local/simplex/bin/composer.sh composer.sh`
-* install __yarn__ packages:
+* install __public__ packages:
     * the _public\share\package.json_ file contains some NPM packages for:
         * the whole application:
             * [bootstrap 4](https://getbootstrap.com)
@@ -156,10 +156,9 @@ For details see _Folders and Files Structure_ below
             * [jquery.safemail](https://github.com/leftclickcomau/jquery.safemail): for obfuscating email
             * [flag-icon-css](https://github.com/lipis/flag-icon-css): SVG country flags
     * edit the file if needed to include/exclude packages
-    * install packages: you can use the _yarn.sh_ symlink from the root folder:
-        
-            ./yarn.sh install
-        
+    * install packages: you can use the both npm and yarn by menas of the scripts _yarn.sh_ symlinked into root folder:
+        * `./npm.sh install`
+        * or `./yarn.sh install`
     * packages are installed under _\public\share\node_modules_
 * local __configuration__: file _private\local\simplex\config\constants.php_ defines some PHP constants, most of them regard paths and it should not be necessary to modify them unless you plan to change the filesystem structure Simplex relies on; informations to be set for the local application (tech email, brand name...) are grouped into the _LOCAL_ block at the top of the script
 * __database__ configuration: in case application connects to a database edit file _private\local\simplex\config\db.php_; database accounts are organized by _ENVIRONMENT_ constant values (see __.htacces__ above), so you can have different accounts for development and production
@@ -483,7 +482,7 @@ If you keep separate development and production environment and manage pubblicat
     * run _update-all.sh_ which:
         * cleans DI container and templates cache, beware of tmp folder path, (see _[Post-Installation Jobs](#Post-Installation-Jobs) > bash scripts settings_
         * updates Composer packages
-        * updates NPM packages through Yarn
+        * updates NPM packages through NPM or Yarn (automatically detects into _public/share_ package-lock.json or yarn.lock to decide which package manager to use)
 
 ## Simplex Logic overview ##
 
