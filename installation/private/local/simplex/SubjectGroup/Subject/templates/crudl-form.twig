@@ -8,7 +8,7 @@
         _context,
         {
             'locales': false,
-            'assets': ['richTextEditor', 'fileUpload', 'captcha', 'dateTimePicker']
+            'assets': ['richTextEditor', 'fileUpload', 'captcha', 'dateTimePicker', 'richSelect']
         }) }}
 {% endblock %}
 
@@ -128,5 +128,34 @@
                 'maxFileCount': 1
             }
         }
+    ) }}
+    {# rich select #}
+    {{ formMacros.displayRichSelectGroup(
+        {
+            'name': 'FIELD-NAME',
+            'value': record.FIELD-NAME,
+            'label': getLabel(subject, 'fields', 'FIELD-NAME'),
+            'help': null,
+            'autofocus': false,
+            'disabled': action == 'delete-form',
+            'maxlength': false,
+            'autocomplete': '',
+            'class': '',
+            'validation': {
+                'required': false,
+                'pattern': ''
+            },
+            'minimumInputLength': 0,
+            {# no ajax call for autocomplete #}
+            'remoteDataRoute': false,
+            {# ajax call for autocomplete #}
+            'remoteDataRoute': '/backend/FOREIGN-KEY-SUBJECT/autocomplete',
+            'valueLabel': '%s (%s)'|format(
+                record.LABEL-FIELD-1,
+                record.LABEL-FIELD-2
+            ),
+        },
+        {# preloaded choices #}
+        CHOICHES-ARRAY
     ) }}
 {% endblock %}
