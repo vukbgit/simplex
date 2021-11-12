@@ -84,6 +84,24 @@
         }
     }
     ) }}
+    {# rich text editor #}
+    {{ formMacros.displayRichTextEditor(
+        _context,
+        {
+            'name': 'FIELD-NAME',
+            'value': record.FIELD-NAME,
+            'label': getLabel(subject, 'fields', 'FIELD-NAME'),
+            'help': getLabel(subject, 'fields', 'FIELD-NAME_help'),
+            'autofocus': false,
+            'disabled': action == 'delete-form',
+            'maxlength': null,
+            'autocomplete': '',
+            'class': '',
+            'validation': {
+                'required': false
+            },
+        }
+    ) }}
     {# upload input #}
     {{ formMacros.displayFileUpload(
         _context,
