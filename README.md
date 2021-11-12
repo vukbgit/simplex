@@ -156,7 +156,7 @@ For details see _Folders and Files Structure_ below
             * [jquery.safemail](https://github.com/leftclickcomau/jquery.safemail): for obfuscating email
             * [flag-icon-css](https://github.com/lipis/flag-icon-css): SVG country flags
     * edit the file if needed to include/exclude packages
-    * install packages: you can use the both npm and yarn by menas of the scripts _yarn.sh_ symlinked into root folder:
+    * install packages: you can use the both npm and yarn by means of the scripts _yarn.sh_ symlinked into root folder:
         * `./npm.sh install`
         * or `./yarn.sh install`
     * packages are installed under _\public\share\node_modules_
