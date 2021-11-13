@@ -101,6 +101,8 @@
 /* subject record menu */
 .subject-record-menu {
     .title {
+        display:inline-block;
+        margin-right:1rem;
         text-transform: uppercase;
         font-weight: bold;
     }
