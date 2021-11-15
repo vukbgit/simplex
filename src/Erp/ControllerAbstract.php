@@ -422,6 +422,7 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
             $sorting,
             $this->queryLimit
         );
+        //xx($this->model->sql());
         if($this->model->hasPositionField) {
             $numRecords = count($records);
             for ($i=0; $i < $numRecords; $i++) {
@@ -443,7 +444,7 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
         $this->setListQueryModifiers();
         //get model list
         $records = $this->getList();
-        //x($this->model->sql());
+        //xx($this->model->sql());
         $this->setTemplateParameter('records', $records);
         //render
         $this->renderTemplate(sprintf(
@@ -640,28 +641,10 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
                 continue;
             }
             //create a grouped where for the filter
-            $filterWhere = [
-                'grouped' => true,
-                'logical' => 'AND'
-            ];
+            $filterWhere = [];
             //loop config fields
             foreach ((array) $CRUDLConfig->fields as $fieldName => $fieldConfig) {
                 if(!isset($fieldConfig->table->filter) || $fieldConfig->table->filter) {
-                    //filter fields conditions are joined by the logical OR operator
-                    //$filterWhere[] = [$fieldName, 'LIKE', sprintf('%%%s%%', $filterString), 'logical' => 'OR'];
-                    /*$filterWhere[] = [
-                        //$fieldName
-                        $this->model->rawField(
-                            sprintf(
-                                'CAST("%s" AS %s)',
-                                $fieldName,
-                                $this->model->getQuery()->getDriverOption('likeOperatorTextCastDataType')
-                            )
-                        ),
-                        $this->model->getQuery()->getDriverOption('caseInsensitiveLikeOperator'),
-                        sprintf('%%%s%%', $filterToken),
-                        'logical' => 'OR'
-                    ];*/
                     $filterWhere[] = [
                         //$fieldName
                         $this->model->rawField(
@@ -673,13 +656,25 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
                                 $this->model->getQuery()->getDriverOption('caseInsensitiveLikeOperator'),
                                 $filterToken
                             )
-                        ),
-                        'logical' => 'OR'
+                        )
                     ];
                 }
             }
-            $where[] = $filterWhere;
+            //filter string has a value but there is no filter field 
+            //query must fail
+            if($filterString != '' && empty($filterWhere)) {
+              $where[] = [$this->model->rawField('0'), null];
+            } else {
+              $where[] = array_merge(
+                [
+                  'grouped' => true,
+                  'logical' => 'OR',
+                ],
+                $filterWhere
+              );
+            }
         }
+        //xx($where);
         return $where;
     }
     
