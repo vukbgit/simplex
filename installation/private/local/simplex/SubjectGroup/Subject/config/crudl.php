@@ -40,8 +40,14 @@ return (object) [
             ],
         ],
     ],
-    /*//to build a label when subject is ancestor, fields names or raw strings
-    'labelTokens' => [
+    /*to build a label when subject is ancestor each element can be:
+    * - a field name to extract value from ancestor record
+    * - a string to be displayed as-is
+    * - an array where:
+    *   - first element is a subject name to be found into current page ancestors to use token
+    *   - second element is a field name or a string
+    */
+    /*'labelTokens' => [
         'FIELD-NAME',
         'STRING-TOKEN'
     ]*/

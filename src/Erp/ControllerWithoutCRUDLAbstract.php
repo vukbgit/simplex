@@ -216,7 +216,15 @@ abstract class ControllerWithoutCRUDLAbstract extends ControllerWithTemplateAbst
                 if(isset($CRUDLConfig->labelTokens)) {
                     $labelTokens = [];
                     foreach ((array) $CRUDLConfig->labelTokens as $token) {
-                        $labelTokens[] = isset($ancestor->record->$token) ? (is_array($ancestor->record->$token) ? $ancestor->record->$token[$this->language->{'ISO-639-1'}] : $ancestor->record->$token) : $token;
+                      //conditional token, first element is another ancestor
+                      if(is_array($token)) {
+                        if(!isset($this->ancestors[$token[0]])) {
+                          continue;
+                        } else {
+                          $token = $token[1];
+                        }
+                      }
+                      $labelTokens[] = isset($ancestor->record->$token) ? (is_array($ancestor->record->$token) ? $ancestor->record->$token[$this->language->{'ISO-639-1'}] : $ancestor->record->$token) : $token;
                     }
                     $label = implode('', $labelTokens);
                 }
