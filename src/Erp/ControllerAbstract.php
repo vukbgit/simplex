@@ -235,6 +235,9 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
         $subjectCookie = $subject ? $this->getSubjectCookie($subject) : $this->subjectCookie;
         $subjectCookie->$key = $value;
         $this->setAreaCookie(($subject ?? $this->subject), $subjectCookie);
+        if($subject == null || $subject == $this->subject) {
+          $this->subjectCookie = $subjectCookie;
+        }
     }
 
     /**
