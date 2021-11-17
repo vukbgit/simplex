@@ -181,7 +181,7 @@ class PixieExtended extends QueryBuilderHandler
                                 $whereMethod = 'where';
                             }
                             //check operator
-                            if(strtoupper($fieldCondition[1]) == 'ISNULL') {
+                            if(isset($fieldCondition[1]) && strtoupper($fieldCondition[1]) == 'ISNULL') {
                               $whereMethod .= 'Null';
                             }
                             unset($fieldCondition['logical']);
