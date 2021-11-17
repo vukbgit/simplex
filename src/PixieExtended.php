@@ -148,12 +148,13 @@ class PixieExtended extends QueryBuilderHandler
     
     /**
     * Builds where conditions
-    * @param array $where: array of arrays, each with 2 number indexed elements (field name and value, comparison operator defaults to '=') or 3 number indexed elements (field name, comparison operator, value)
+    * @param array $where: array of arrays, each with 2 number indexed elements (field name and value, comparison operator defaults to '=') or 3 number indexed elements (field name, comparison operator, value); comparison operator can be NULL to test 'IS NULL'
     *   + an optional key 'logical' (string) whose value triggers the logical operators 'AND' (default) and 'OR' 
     *   + an optional key 'grouped' (boolean) to create a grouped where condition, in this case there must be an array for each field composed as above (except for the 'grouped' key, only one nested level is allowed at this time)
     **/
     public function buildWhere(array $where)
     {
+      
         if(!empty($where)) {
             foreach ($where as $fieldConditions) {
                 //not a grouped wwhere
@@ -179,7 +180,12 @@ class PixieExtended extends QueryBuilderHandler
                             } else {
                                 $whereMethod = 'where';
                             }
+                            //check operator
+                            if(strtoupper($fieldCondition[1]) == 'ISNULL') {
+                              $whereMethod .= 'Null';
+                            }
                             unset($fieldCondition['logical']);
+                            //x($fieldCondition);
                             call_user_func_array([$q, $whereMethod], $fieldCondition);
                         }
                     });
