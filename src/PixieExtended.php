@@ -35,6 +35,11 @@ class PixieExtended extends QueryBuilderHandler
          ],
      ];
      
+     /**
+      * query object being built
+      */
+      private $buildingQuery;
+     
     /**
     * Checks whether connection is alive
     * @return bool
@@ -121,77 +126,129 @@ class PixieExtended extends QueryBuilderHandler
         return !is_null($this->query(sprintf("SHOW TABLES LIKE '%s'", $table))->first());
     }
     
-    /**
-    * Builds a where condition with the possibility to pass also the logical operator 
-    * @param array $whereCondition and array with 
-    **/
-    public function whereLogical(array $whereCondition)
-    {
-        //extract logical operator if any
-        if(isset($whereCondition['logical'])) {
-            $joiner = $whereCondition['logical'];
-            unset($whereCondition['logical']);
-        } else {
-            $joiner = 'AND';
+    private function buildFieldWhere($fieldConditions, $query) {
+      if(isset($fieldConditions['grouped'])) {
+        unset($fieldConditions['grouped']);
+        $whereMethod = 'where';
+        //logical: AND|OR|NOT|AND NOT|OR NOT
+        if(isset($fieldConditions['logical'])) {
+          $logical = strtoupper($fieldConditions['logical']);
+          switch($logical) {
+            case 'OR':
+              $whereMethod = 'orWhere';
+            break;
+            case 'NOT':
+            case 'AND NOT':
+              $whereMethod = 'whereNot';
+            break;
+            case 'OR NOT':
+              $whereMethod = 'orWhereNot';
+            break;
+            //AND = where
+            default:
+              $whereMethod = 'where';
+            break;
+          }
+          unset($fieldConditions['logical']);
         }
-        $key = $whereCondition[0];
-        // If two params are given then assume operator is =
-        if (count($whereCondition) == 2) {
-            $value = $whereCondition[1];
-            $operator = '=';
-        } else {
-            $operator = $whereCondition[1];
-            $value = $whereCondition[2];
+        $query->$whereMethod(function($q) use ($fieldConditions) {
+          foreach ($fieldConditions as $fieldCondition) {
+            $this->buildFieldWhere($fieldCondition, $q);
+          }
+        });
+      } else {
+        //defaults
+        $key = $fieldConditions[0];
+        $joiner = 'AND';
+        //logical: AND|OR|NOT|AND NOT|OR NOT
+        if(isset($fieldConditions['logical'])) {
+          $joiner = strtoupper($fieldConditions['logical']);
+          //correct NOT alone
+          if($joiner === 'NOT') {
+            $joiner = 'AND NOT';
+          }
+          unset($fieldConditions['logical']);
         }
-        $this->whereHandler($key, $operator, $value, $joiner);
+        //operator
+        //NOTE: for NULL operator to work a 3rd element MUST be passed with any (ignored) value
+        if (count($fieldConditions) == 1 && $fieldConditions[0] instanceof \Pixie\QueryBuilder\Raw) {
+          $key = $fieldConditions[0];
+          $operator = null;
+          $value = null;
+        } elseif (count($fieldConditions) == 2) {
+          $value = $fieldConditions[1];
+          $operator = '=';
+        } else {
+          $value = $fieldConditions[2];
+          $operator = strtoupper($fieldConditions[1]);
+        }
+        //build condition
+        switch($operator) {
+          case 'NULL':
+          case 'ISNULL':
+            $joiner = trim(str_replace('NOT', '', $joiner, $countNegation));
+            //AND joiner => ''
+            if($joiner == 'AND') {
+              $joiner = '';
+            }
+            $negation = $countNegation ? 'NOT' : '';
+            $query->whereNullHandler($key, $negation, $joiner);
+          break;
+          default:
+            $query->whereHandler($key, $operator, $value, $joiner);
+          break;
+        }
+      }
     }
     
     /**
     * Builds where conditions
     * @param array $where: array of arrays, each with 2 number indexed elements (field name and value, comparison operator defaults to '=') or 3 number indexed elements (field name, comparison operator, value); comparison operator can be NULL to test 'IS NULL'
     *   + an optional key 'logical' (string) whose value triggers the logical operators 'AND' (default) and 'OR' 
-    *   + an optional key 'grouped' (boolean) to create a grouped where condition, in this case there must be an array for each field composed as above (except for the 'grouped' key, only one nested level is allowed at this time)
+    *   + an optional key 'grouped' (boolean) to create a grouped where condition, in this case there must be an array for each field composed as above
+    [
+      // default operator =, logical AND
+      [
+        field-name,
+        field-value
+      ]
+      // custom operator, logical AND
+      [
+        field-name,
+        operator,
+        field-value
+      ]
+      // default operator =, logical OR
+      [
+        field-name,
+        field-value,
+        'logical' => 'OR'
+      ]
+      // custom operator, logical OR
+      [
+        field-name,
+        operator,
+        field-value,
+        'logical' => 'OR'
+      ]
+      //group
+      [
+        'grouped' => true
+        'logical' => 'AND|OR'
+        [ field 1 definition as above ],
+        [ field 2 definition as above ],
+        ...
+      ]
+    ]
     **/
     public function buildWhere(array $where)
     {
-      
-        if(!empty($where)) {
-            foreach ($where as $fieldConditions) {
-                //not a grouped wwhere
-                if(!isset($fieldConditions['grouped']) || $fieldConditions['grouped'] === false) {
-                    call_user_func([$this, 'whereLogical'], $fieldConditions);
-                } else {
-                //grouped where
-                    //check logical operator
-                    if(!isset($fieldConditions['logical']) || strtoupper($fieldConditions['logical']) == 'AND') {
-                        $whereMethod = 'where';
-                    } else {
-                        $whereMethod = 'orWhere';
-                    }
-                    //clean up
-                    unset($fieldConditions['grouped']);
-                    unset($fieldConditions['logical']);
-                    //build grouped where
-                    $this->$whereMethod(function($q) use ($fieldConditions) {
-                        foreach ($fieldConditions as $fieldCondition) {
-                            //check logical operator
-                            if(!isset($fieldCondition['logical']) || strtoupper($fieldCondition['logical']) == 'OR') {
-                                $whereMethod = 'orWhere';
-                            } else {
-                                $whereMethod = 'where';
-                            }
-                            //check operator
-                            if(isset($fieldCondition[1]) && strtoupper($fieldCondition[1]) == 'ISNULL') {
-                              $whereMethod .= 'Null';
-                            }
-                            unset($fieldCondition['logical']);
-                            //x($fieldCondition);
-                            call_user_func_array([$q, $whereMethod], $fieldCondition);
-                        }
-                    });
-                }
-            }
-        }
+      $this->buildingQuery = $this;
+      if(!empty($where)) {
+        foreach ($where as $fieldConditions) {
+          $this->buildFieldWhere($fieldConditions, $this);
+        }      
+      }
     }
     
     /**

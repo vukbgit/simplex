@@ -565,43 +565,9 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
             if((defined('FORGET_ALL_FILTERS') && !isset($CRUDLConfig->forgetFilter) && FORGET_ALL_FILTERS) || (isset($CRUDLConfig->forgetFilter) && $CRUDLConfig->forgetFilter === true )) {
               $this->replaceListFilter('');
             }
-        }
+        }    
         if($filterString) {
-            // //clean multiple white spaces
-            // $filterString = preg_replace('/\h{2,}/iu', ' ', $filterString);    
-            // //search for "" quotes
-            // $quotedTokensNumber = preg_match_all('/"[\w\h?]+"/iu', $filterString, $quotedTokens);
-            // if($quotedTokensNumber > 0) {
-            //     $filterString = preg_replace('/"[\w\h?]+"/iu', '', $filterString);    
-            // }
-            // preg_match_all('/\w+/i', $filterString, $notQuotedTokens);
-            // $filterTokens = array_merge($quotedTokens[0], $notQuotedTokens[0]);
-            // foreach ($filterTokens as $filterToken) {
-            //     $filterToken = trim($filterToken);
-            //     if(!$filterToken) {
-            //         continue;
-            //     }
-            //     //create a grouped where for the filter
-            //     $filterWhere = [
-            //         'grouped' => true,
-            //         'logical' => 'AND'
-            //     ];
-            //     //loop config fields
-            //     foreach ((array) $CRUDLConfig->fields as $fieldName => $fieldConfig) {
-            //         if(!isset($fieldConfig->table->filter) || $fieldConfig->table->filter) {
-            //             //filter fields conditions are joined by the logical OR operator
-            //             //$filterWhere[] = [$fieldName, 'LIKE', sprintf('%%%s%%', $filterString), 'logical' => 'OR'];
-            //             $filterWhere[] = [
-            //                 $fieldName,
-            //                 $this->model->getQuery()->getDriverOption('caseInsensitiveLikeOperator'),
-            //                 sprintf('%%%s%%', $filterToken),
-            //                 'logical' => 'OR'
-            //             ];
-            //         }
-            //     }
-            //     $where[] = $filterWhere;
-            // }
-            $where = array_merge($where, $this->buildFilterWhere($CRUDLConfig, $filterString));
+            $where[] = $this->buildFilterWhere($CRUDLConfig, $filterString);
         }
         //parent primary key
         if(!empty($this->ancestors)) {
@@ -629,53 +595,60 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
     protected function buildFilterWhere($CRUDLConfig, $filterString): array
     {
         $where = [];
+        $filterString = html_entity_decode($filterString);
         //clean multiple white spaces
         $filterString = preg_replace('/\h{2,}/iu', ' ', $filterString);    
         //search for "" quotes
-        $quotedTokensNumber = preg_match_all('/"[\w\h?]+"/iu', $filterString, $quotedTokens);
+        $quotedTokensNumber = preg_match_all('/"([\w\.\h?]+)"/iu', $filterString, $quotedTokens);
         if($quotedTokensNumber > 0) {
-            $filterString = preg_replace('/"[\w\h?]+"/iu', '', $filterString);    
+            $filterString = preg_replace('/"[\w\.\h?]+"/iu', '', $filterString);    
         }
-        preg_match_all('/\w+/i', $filterString, $notQuotedTokens);
-        $filterTokens = array_merge($quotedTokens[0], $notQuotedTokens[0]);
+        preg_match_all('/[\w\.]+/i', $filterString, $notQuotedTokens);
+        $filterTokens = array_merge($quotedTokens[1], $notQuotedTokens[0]);
+        //create a grouped where for the filter
+        $filterWhere = [];
         foreach ($filterTokens as $filterToken) {
             $filterToken = trim($filterToken);
             if(!$filterToken) {
                 continue;
             }
-            //create a grouped where for the filter
-            $filterWhere = [];
             //loop config fields
+            $tokenFields = [
+              'grouped' => true
+            ];
             foreach ((array) $CRUDLConfig->fields as $fieldName => $fieldConfig) {
                 if(!isset($fieldConfig->table->filter) || $fieldConfig->table->filter) {
-                    $filterWhere[] = [
-                        //$fieldName
-                        $this->model->rawField(
-                            sprintf(
-                                'CAST(%1$s%2$s%1$s AS %3$s) %4$s \'%%%5$s%%\'',
-                                $this->model->getQuery()->getDriverOption('labelDelimiter'),
-                                $fieldName,
-                                $this->model->getQuery()->getDriverOption('likeOperatorTextCastDataType'),
-                                $this->model->getQuery()->getDriverOption('caseInsensitiveLikeOperator'),
-                                $filterToken
-                            )
+                    $tokenFields[] = [
+                      'logical' => 'OR',
+                      $this->model->rawField(
+                        sprintf(
+                            'CAST(%1$s%2$s%1$s AS %3$s) %4$s \'%%%5$s%%\'',
+                            $this->model->getQuery()->getDriverOption('labelDelimiter'),
+                            $fieldName,
+                            $this->model->getQuery()->getDriverOption('likeOperatorTextCastDataType'),
+                            $this->model->getQuery()->getDriverOption('caseInsensitiveLikeOperator'),
+                            $filterToken
                         )
+                      )
                     ];
                 }
             }
-            //filter string has a value but there is no filter field 
-            //query must fail
-            if($filterString != '' && empty($filterWhere)) {
-              $where[] = [$this->model->rawField('0'), null];
-            } else {
-              $where[] = array_merge(
-                [
-                  'grouped' => true,
-                  'logical' => 'OR',
-                ],
-                $filterWhere
-              );
-            }
+            $filterWhere[] = $tokenFields;
+        }
+        //filter string has a value
+        if(count($filterTokens) > 0) {
+          //no filter fields defined => query must fail
+          if(empty($filterWhere)) {
+            $where = [[$this->model->rawField('0'), null]];
+          } else {
+            $where = array_merge(
+              [
+                'grouped' => true,
+                'logical' => 'AND',
+              ],
+              $filterWhere
+            );
+          }
         }
         //xx($where);
         return $where;
