@@ -27,11 +27,11 @@ use function Simplex\requireFromFiles;
 /********
 * PATHS *
 ********/
-$absPathToRoot = str_replace('/private/share/vukbgit/simplex/bin', '', __DIR__);
+$absPathToRoot = str_replace('/private/share/packagist/vukbgit/simplex/bin', '', __DIR__);
 /***********
 * COMPOSER *
 ***********/
-require_once sprintf('%s/private/share/autoload.php', $absPathToRoot);
+require_once sprintf('%s/private/share/packagist/autoload.php', $absPathToRoot);
 /**************
 * ENVIRONMENT *
 **************/
