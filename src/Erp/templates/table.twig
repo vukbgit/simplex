@@ -3,14 +3,22 @@
 {% import '@share/Erp/templates/macros/navigation.twig' as navigationMacros %}
 {% import '@share/Erp/templates/macros/table.twig' as tableMacros %}
 
+{% set searchFields = [] %}
+{% for fieldName, fieldConfig in CRUDLConfig.fields %}
+  {% if fieldConfig.table.filter %}
+    {% set searchFields = searchFields|merge([fieldName]) %}
+  {% endif %}
+{% endfor %}
+
 {% block head %}
-    {{ include(getInstanceTemplate(null, 'labels.twig'), {'labels': labels}, with_context = true) }}
     {{ parent() }}
     <!-- ERP table style -->
     <link rel="stylesheet" href="{{ 'simplex/Erp/css/table.min.css'|pathToShareAsset }}">
+    {% if searchFields|length %}
+      {{ include(getInstanceTemplate(null, 'labels.twig'), {'labels': labels}, with_context = true) }}
     <script type="text/javascript">
       $(document).ready(function() {
-        {% set searchFields = [] %}
+        {#% set searchFields = [] %}
         {% for fieldName, fieldConfig in CRUDLConfig.fields %}
           {% if fieldConfig.table.filter %}
             {% set fieldLabel = getLabel(subject, 'fields', fieldName) %}
@@ -19,7 +27,17 @@
             {% endif %}
             {% set searchFields = searchFields|merge([getLabel(subject, 'fields', fieldName)]) %}
           {% endif %}
+        {% endfor %#}
+        {% set fieldsLabels = [] %}
+        {% for fieldName in searchFields %}
+          {% set fieldLabel = getLabel(subject, 'fields', fieldName) %}
+          {% if fieldLabel is null %}
+          alert('{{ 'no label for filter field %s'|format(fieldName)|escape('js') }}')
+          {% else %}
+          {% set fieldsLabels = fieldsLabels|merge([getLabel(subject, 'fields', fieldName)]) %}
+          {% endif %}
         {% endfor %}
+        
         $('#default-filter-form-help').popover({
           'trigger': 'focus',
           'title': '{{ 'filter help'|trans|escape('js') }}',
@@ -30,10 +48,11 @@
             enclose sentences with double quotes (")
             results will be searched into the following fields: %s 
             results will contain all of the search terms
-          '|trans|format(searchFields|join(', '))|nl2br|escape('js') }}'
+          '|trans|format(fieldsLabels|join(', '))|nl2br|escape('js') }}'
         })
       })
     </script>
+    {% endif %}
 {% endblock %}
 
 {% block pageContent %}
@@ -45,6 +64,7 @@
       {% block tableFilter %}
         {% set fieldsFilter = attribute(attribute(areaCookie, subject), 'filter') ?? null %}
   <div>
+    {% if searchFields|length %}
     <form method="post" action="" class="form-inline" id="default-filter-form">
         <a tabindex="0" class="icon-erp-help mr-1 text-secondary" id="default-filter-form-help" role="button" data-toggle="popover"></a>
         <input type="hidden" name="modifier" value="filter">
@@ -57,6 +77,7 @@
             </div>
         </div>
     </form>
+    {% endif %}
         {% block tableFilterCaption %}
     
         {% endblock tableFilterCaption %}
