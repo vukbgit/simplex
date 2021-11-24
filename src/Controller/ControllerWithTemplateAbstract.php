@@ -218,8 +218,8 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
             return \ByteUnits\parse(sprintf('%s%s', $value, $fromUnit))->format($toUnit, ' ');
         });
         //ucwords wrapper
-        $this->addTemplateFilter('ucwords', function(string $string): string{
-            return ucwords($string);
+        $this->addTemplateFilter('ucwords', function(string $string, string $separators = " \t\r\n\f\v"): string{
+            return ucwords($string, $separators);
         });
         //gets an instance from container 
         $this->addTemplateFunction('getInstanceFromDIContainer', function(string $key) {
