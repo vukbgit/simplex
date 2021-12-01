@@ -175,7 +175,7 @@ class SpreadsheetReaderWriter
         $method = sprintf('create%sWriter', strtoupper($this->type));
         $this->writer = WriterEntityFactory::$method();
         //delimiter
-        if($delimiter) {
+        if($delimiter && $type == 'csv') {
           $this->writer->setFieldDelimiter($delimiter);
         }
         //output
