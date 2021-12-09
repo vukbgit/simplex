@@ -42,5 +42,18 @@ return [
             'routeFromSubject' => sprintf('delete-form/{%s}', $modelConfig->primaryKey),
             'permissions' => [sprintf('manage-%s', $subject)],
         ]
-    ]
+    ],
+    /*'recordHiddenActions' => [
+      'update-form' => (object) [
+        'routeFromSubject' => sprintf('update-form/{%s}', $modelConfig->primaryKey),
+        'permissions' => [sprintf('manage-%s', $subject)],
+      ],
+      'delete-form' => (object) [
+        'routeFromSubject' => sprintf('delete-form/{%s}', $modelConfig->primaryKey),
+        'permissions' => [sprintf('manage-%s', $subject)],
+      ]
+    ],
+    'recordMenuActions' => [
+        'update-form'
+    ]*/
 ];
