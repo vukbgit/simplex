@@ -17,9 +17,11 @@
             </li>
         {% endfor %}
             <li class="breadcrumb-item">
+              <h2>
                 <a href="{{ buildRouteToActionFromRoot('list') }}">
                 {{- getLabel(subject, 'subject') }}
                 </a>
+              </h2>
             </li>
             <li class="breadcrumb-item active text-capitalize" aria-current="page">
         {%- block actionLabel %}{{ getLabel('actions', action) }}{% endblock %}
