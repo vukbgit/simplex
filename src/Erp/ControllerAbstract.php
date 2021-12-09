@@ -911,7 +911,7 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
                 $this->setSubjectAlert('success', (object) ['code' => $messageCode]);
             }
         } catch(\PDOException $exception) {
-            //if something went wrong and record has been inserted, delete it, because maybe something weint wrong with locales or uploads
+            //if something went wrong and record has been inserted, delete it, because maybe something went wrong with locales or uploads
             if($primaryKeyValue) {
               $this->model->delete($primaryKeyValue);
             }
