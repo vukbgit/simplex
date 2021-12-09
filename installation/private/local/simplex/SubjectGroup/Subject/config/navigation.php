@@ -43,7 +43,8 @@ return [
             'permissions' => [sprintf('manage-%s', $subject)],
         ]
     ],
-    /*'recordHiddenActions' => [
+    /*
+    'recordHiddenActions' => [
       'update-form' => (object) [
         'routeFromSubject' => sprintf('update-form/{%s}', $modelConfig->primaryKey),
         'permissions' => [sprintf('manage-%s', $subject)],
@@ -55,5 +56,13 @@ return [
     ],
     'recordMenuActions' => [
         'update-form'
-    ]*/
+    ],
+    'bulkActions' => [
+      'bulk-action' => (object) [
+        'routeFromSubject' => 'bulk-action',
+        'permissions' => [sprintf('manage-%s', $subject)],
+        'noConfirm' => true
+      ]
+    ]
+    */
 ];
