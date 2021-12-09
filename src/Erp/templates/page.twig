@@ -7,7 +7,7 @@
     <nav aria-label="breadcrumb" class="subject-breadcrumb my-3">
         <ol class="breadcrumb">
         {% for ancestorKey, ancestor in ancestors %}
-            <li class="breadcrumb-item">
+            <li class="breadcrumb-item breadcrumb-level">
                 <a href="{{ ancestor.routeBack }}">
                 {{- getLabel(ancestorKey, 'subject') }}
                 </a>
@@ -16,7 +16,7 @@
                 {{- buildAncestorRecordLabel(ancestorKey) }}
             </li>
         {% endfor %}
-            <li class="breadcrumb-item">
+            <li class="breadcrumb-item breadcrumb-level">
               <h2>
                 <a href="{{ buildRouteToActionFromRoot('list') }}">
                 {{- getLabel(subject, 'subject') }}

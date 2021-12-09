@@ -94,6 +94,9 @@
 }*/
 /* subject breadcrumb */
 .subject-breadcrumb {
+    .breadcrumb-level {
+      text-transform: capitalize;
+    }
     .breadcrumb-label {
         font-weight:bold;
     }
