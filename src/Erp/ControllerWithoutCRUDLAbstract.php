@@ -214,19 +214,20 @@ abstract class ControllerWithoutCRUDLAbstract extends ControllerWithTemplateAbst
                 $CRUDLConfig = $ancestor->controller->getCRUDLConfig();
                 $label = '';
                 if(isset($CRUDLConfig->labelTokens)) {
-                    $labelTokens = [];
-                    foreach ((array) $CRUDLConfig->labelTokens as $token) {
-                      //conditional token, first element is another ancestor
-                      if(is_array($token)) {
-                        if(!isset($this->ancestors[$token[0]])) {
-                          continue;
-                        } else {
-                          $token = $token[1];
-                        }
-                      }
-                      $labelTokens[] = isset($ancestor->record->$token) ? (is_array($ancestor->record->$token) ? $ancestor->record->$token[$this->language->{'ISO-639-1'}] : $ancestor->record->$token) : $token;
-                    }
-                    $label = implode('', $labelTokens);
+                    $label = $this->buildRecordTokensLabel($CRUDLConfig->labelTokens, $ancestor->record);
+                }
+                return $label;
+            }
+        );
+        //builds a record token label
+        $this->addTemplateFunction(
+            'buildRecordTokenLabel',
+            function(string $subjectKey, object $record): string{
+                $controller = $this->DIContainer->get(sprintf('%s-controller', $subjectKey));
+                $CRUDLConfig = $controller->getCRUDLConfig();
+                $label = '';
+                if(isset($CRUDLConfig->labelTokens)) {
+                    $label = $this->buildRecordTokensLabel($CRUDLConfig->labelTokens, $record);
                 }
                 return $label;
             }

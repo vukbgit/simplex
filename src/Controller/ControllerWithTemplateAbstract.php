@@ -806,33 +806,9 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         $extraFields = []
     ): array
     {
-        //check labelfields and turn into an array if it's a string
-        if(is_string($labelTokens)) {
-            $labelTokens = [$labelTokens];
-        }
-        //check language code
-        if(!$languageCode) {
-            $languageCode = $this->language->{'ISO-639-1'};
-        }
         $items = [];
         foreach ((array) $recordset as $record) {
-            $label = '';
-            foreach ($labelTokens as $labelToken) {
-                //dealing with a record field
-                if(property_exists($record, $labelToken)) {
-                    //localized field
-                    if(is_array($record->$labelToken)) {
-                        $tokenLabel = $record->$labelToken[$languageCode];
-                    } else {
-                    //not a localized field
-                        $tokenLabel = $record->$labelToken;
-                    }
-                } else {
-                //it's a text token, take it as it is
-                    $tokenLabel = $labelToken;
-                }
-                $label .= $tokenLabel;
-            }
+            $label = $this->buildRecordTokensLabel($labelTokens, $record, $languageCode);
             $item = (object) [
                 $valueProperty => $record->$valueField,
                 $labelProperty => $label
@@ -845,5 +821,46 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
             $items[] = $item;
         }
         return $items;
+    }
+    
+    /**
+    * Builds label for a record using tokens
+    * @return string
+    */
+    protected function buildRecordTokensLabel($labelTokens, object $record, string $languageCode = null): string {
+      //check labelfields and turn into an array if it's a string
+      if(is_string($labelTokens)) {
+          $labelTokens = [$labelTokens];
+      }
+      //check language code
+      if(!$languageCode) {
+          $languageCode = $this->language->{'ISO-639-1'};
+      }
+      $label = '';
+      foreach ($labelTokens as $labelToken) {
+        //conditional token, first element is an ancestor subject
+        if(is_array($labelToken)) {
+          if(!isset($this->ancestors[$labelToken[0]])) {
+            continue;
+          } else {
+            $labelToken = $labelToken[1];
+          }
+        }
+        //dealing with a record field
+        if(property_exists($record, $labelToken)) {
+          //localized field
+          if(is_array($record->$labelToken)) {
+            $tokenLabel = $record->$labelToken[$languageCode];
+          } else {
+          //not a localized field
+            $tokenLabel = $record->$labelToken;
+          }
+        } else {
+        //it's a text token, take it as it is
+          $tokenLabel = $labelToken;
+        }
+        $label .= $tokenLabel;
+      }
+      return $label;
     }
 }

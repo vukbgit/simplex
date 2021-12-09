@@ -1,11 +1,9 @@
 {# included without context passing labels global variable  #}
 {% set labels = setLabels('SUBJECT-KEY', {
     'subject': 'SUBJECT-LABEL'|trans,
+    'subject-record-menu-title': 'menu %s:'|trans,
     'fields': {
         'FIELD-NAME': 'FIELD-LABEL'|trans,
-    },
-    'actions': {
-        'ACTION-KEY': 'ACTION-LABEL'|trans
     }
 }) %}
 {# for record actions defined into navigation.php placeholders enclosed by curly brackets {} will be substituded by field values found into record #}

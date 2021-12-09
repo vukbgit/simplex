@@ -12,6 +12,18 @@
         }) }}
 {% endblock %}
 
+{% block subjectExtraNavigation %}
+    {{ include(getInstanceTemplate(null, 'labels.twig'), {'labels': labels}, with_context = true) }}
+    {{ navigationMacros.displaySubjectRecordMenu(
+        _context,
+        '%s-controller'|format(subject),
+        _context.model.config.primaryKey,
+        record,
+        null,
+        getLabel(subject, 'subject-record-menu-title')|format(buildRecordTokenLabel(subject, record))
+    ) }}
+{% endblock %}
+
 {% block modelInputs %}
     {# text input #}
     {{ formMacros.displayInputGroup(
