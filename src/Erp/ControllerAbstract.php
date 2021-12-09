@@ -1020,10 +1020,15 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
     protected function deleteBulk()
     {
         //loop bulk_action_records_ids (automatically exploded into $_POST)
-        foreach ($_POST['bulk_action_records_ids'] as $primaryKeyValue) {
-            $this->model->delete($primaryKeyValue);
+        try {
+          foreach ($_POST['bulk_action_records_ids'] as $primaryKeyValue) {
+              $this->model->delete($primaryKeyValue);
+          }
+          $this->setSubjectAlert('success', (object) ['code' => 'delete_bulk_success']);
+        } catch(\PDOException $exception) {
+            $error = $this->model->handleException($exception);
+            $this->setSubjectAlert('danger', $error);
         }
-        $this->setSubjectAlert('success', (object) ['code' => 'delete_bulk_success']);
         $redirectRoute = $this->buildRouteToActionFromRoot('list');
         $this->redirect($redirectRoute);
     }
