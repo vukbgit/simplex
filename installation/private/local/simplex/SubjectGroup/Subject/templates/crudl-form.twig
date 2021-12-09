@@ -119,8 +119,8 @@
                 'required': false,
                 'pattern': ''
             },
-            {# not an image #}
-            'previewTemplate': '<a href="@OUTPUT-KEY" target="_blank"><span class="ICON-CLASS"></span></a>',
+            {# not an image, display the name of the file #}
+            'previewTemplate': '<a href="@OUTPUT-KEY" target="_blank">@name</span></a>',
             {# an image #}
             'previewTemplate': '<a href="@OUTPUT-KEY" target="_blank"><img src="@OUTPUT-KEY"></a>',
             'options': {

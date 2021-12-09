@@ -790,7 +790,9 @@ WARNING: uses Bootstrap custom range input, so BS custom-forms component must be
     allowedFileTypes: ['image', 'html', 'text', 'video', 'audio', 'flash', 'object']
     allowedFileExtensions: ['ext1', 'ext2', ...]
     maxFileCount: maximum number of files allowed for each multiple upload. If set to 0, it means number of files allowed is unlimited
-- previewTemplate: HTML chunk (see http://plugins.krajee.com/file-input/plugin-options#initialPreview) with placeholders for the outputs files paths in the form @output-name
+- previewTemplate: HTML chunk (see http://plugins.krajee.com/file-input/plugin-options#initialPreview) with placeholders for the outputs files paths in the form:
+  @name: will be substituted by the name of the file
+  @output-key: use an output key to have the path to the associated file
     
 #}
 {% macro displayFileUpload(context, uploadRoute, config) %}
