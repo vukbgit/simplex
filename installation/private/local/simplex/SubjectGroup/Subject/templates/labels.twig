@@ -1,7 +1,8 @@
 {# included without context passing labels global variable  #}
+{% set singular = 'SUBJECT-SINGULAR'|trans %}
 {% set labels = setLabels('SUBJECT-KEY', {
     'subject': 'SUBJECT-LABEL'|trans,
-    'subject-record-menu-title': 'menu %s:'|trans,
+    'subject-record-menu-title': '%s "%%s":'|format(singular),
     'fields': {
         'FIELD-NAME': 'FIELD-LABEL'|trans,
     }
