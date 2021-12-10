@@ -1,6 +1,13 @@
 {% extends '@share/Erp/templates/table.twig' %}
 
 {% import '@share/Erp/templates/macros/table.twig' as tableMacros %}
+{# if subject has ancestors and they define record menus #}
+{# % import '@share/Erp/templates/macros/navigation.twig' as navigationMacros %#}
+
+{# if subject has ancestors and they define record menus #}
+{# % block subjectExtraNavigation %}
+  {{ navigationMacros.displayAncestorsSubjectRecordMenus(_context, ancestors) }}
+{% endblock %#}
 
 {% block tableHeaders %}
     {# unsortable header #}

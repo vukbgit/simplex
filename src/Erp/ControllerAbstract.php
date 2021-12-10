@@ -128,7 +128,7 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
         foreach ($this->routeParameters as $parameter => $subjectKey) {
             if(substr($parameter, 0, 8) == 'ancestor') {
                 //get the route fragment to this ancestor
-                preg_match(sprintf('~^[0-9a-zA-Z-_/]*/%s/~', $subjectKey), $this->currentSubjectRoot, $matches);
+                preg_match(sprintf('~^[0-9a-zA-Z-_/]*/%s~', $subjectKey), $this->currentSubjectRoot, $matches);
                 //controller
                 $controller = $this->DIContainer->get(sprintf('%s-controller', $subjectKey));
                 //model
@@ -144,11 +144,12 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
                 }
                 $record = $model->first($where);
                 //suppose the main action to ancestor is list as it should
-                $routeBack = sprintf('%slist', $matches[0]);
+                $routeBack = sprintf('%s/list', $matches[0]);
                 $this->ancestors[$subjectKey] = (object) [
                     'controller' => $controller,
                     'model' => $model,
                     'record' => $record,
+                    'baseRoute' => $matches[0],
                     'routeBack' => $routeBack
                 ];
             }

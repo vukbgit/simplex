@@ -157,3 +157,18 @@
     </a>
     {% endif %}
 {% endmacro %}
+
+{% macro displayAncestorsSubjectRecordMenus(context, ancestors) %}
+  {% import _self as selfMacros %}
+  {% for ancestorSubject, ancestor in ancestors %}
+    {{ include(getInstanceTemplate(attribute(ancestor, 'controller'), 'labels.twig'), {'labels': labels}, with_context = true) }}
+    {{ selfMacros.displaySubjectRecordMenu(
+        context,
+        '%s-controller'|format(ancestorSubject),
+        ancestor.model.config.primaryKey,
+        ancestor.record,
+        ancestor.baseRoute,
+        getLabel(ancestorSubject, 'subject-record-menu-title')|format(buildRecordTokenLabel(ancestorSubject, ancestor.record))
+    ) }}
+  {% endfor %}
+{% endmacro %}
