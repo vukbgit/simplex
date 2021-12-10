@@ -1,6 +1,8 @@
 {% extends '@share/Erp/templates/crudl-form.twig' %}
 
 {% import '@share/templates/form/macros.twig' as formMacros %}
+{# for ancestors record menus and subject record menu #}
+{% import '@share/Erp/templates/macros/navigation.twig' as navigationMacros %}
 
 {% block head %}
     {{ parent() }}
@@ -12,6 +14,13 @@
         }) }}
 {% endblock %}
 
+{# ancestors record menus #}
+{# % block subjectGlobalNavigation %}
+  {{ navigationMacros.displayAncestorsSubjectRecordMenus(_context, ancestors) }}
+  {{ parent() }}
+{% endblock %#}
+
+{# subject record menu #}
 {% block subjectExtraNavigation %}
     {{ include(getInstanceTemplate(null, 'labels.twig'), {'labels': labels}, with_context = true) }}
     {{ navigationMacros.displaySubjectRecordMenu(
