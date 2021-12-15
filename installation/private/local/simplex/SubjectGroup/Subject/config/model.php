@@ -12,9 +12,7 @@ return (object) [
         'UPLOAD-KEY' => [
             'OUTPUT-WITHOUT-HANDLER-KEY' => (object) [],
             'OUTPUT-WITH-HANDLER-KEY' => (object) [
-                //instance method, use special first element 'this' 
-                'handler' => ['this','NON-STATIC-METHOD-NAME'],
-                //static method
+                //method must be static
                 'handler' => [sprintf('\%s\Controller', $subjectNamespace),'STATIC-METHOD-NAME'],
                 'parameters' => [PARAMETER1,...]
             ]
