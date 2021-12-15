@@ -177,6 +177,12 @@
                 record.LABEL-FIELD-1,
                 record.LABEL-FIELD-2
             ),
+            'insertRecord': {
+              'insertUrl': '/%s[/PARENT-0-SUBJECT/%d/OTHER-PARENTS...]/FOREIGN-KEY-SUBJECT/insert-form'|format(
+                area,
+                PARENT-0-PRIMARY-KEY
+              )
+            },
         },
         {# preloaded choices #}
         CHOICHES-ARRAY
