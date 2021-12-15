@@ -1166,7 +1166,11 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
                 if(isset($output->handler)) {
                     $parameters = array_merge([$outputFilePath], $output->parameters ?? []);
                     try {
+                      if($output->handler[0] == 'this') {
+                        call_user_func_array([$this, $output->handler[1]], $parameters);
+                      } else {
                         call_user_func_array($output->handler, $parameters);
+                      }
                     } catch(\Exception $exception) {
                         $errors[] = $exception->getMessage();
                     }
