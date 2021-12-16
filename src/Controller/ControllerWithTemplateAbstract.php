@@ -148,6 +148,18 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
             $path
         );
     }
+    
+    /**
+    * Turns a local path from root into an URL prepending current scheme and domain
+    * @param string $path
+    */
+    protected function relativePathToRoot(): string
+    {
+        return str_repeat(
+            '../',
+            count(explode('/', $_SERVER['REQUEST_URI'])) - 1
+        );
+    }
 
     /**
     * Builds common template helpers
@@ -292,6 +304,10 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         //returns path to yarn packages asset
         $this->addTemplateFilter('pathToNpmAsset', function(string $path){
             return sprintf('/%s/node_modules/%s', PUBLIC_SHARE_DIR, $path);
+        });
+        //returns relative path to site root according to current route
+        $this->addTemplateFunction('relativePathToRoot', function(){
+            return $this->relativePathToRoot();
         });
         //checks whether a given path is the requested URI path
         $this->addTemplateFilter('isNavigationRouteCurrentRoute', function($path){
