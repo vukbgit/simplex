@@ -452,7 +452,7 @@ $(document).ready(function() {
             data: function (params) {
         {% if config.remoteDataRouteExtraParameters %}
             {% for parameter, value in config.remoteDataRouteExtraParameters %}
-                {{ 'params.%s = %s;'|format(parameter, value|varToJs) }}
+                {{ 'params.%s = %s;'|format(parameter, value|escape('js')) }}
             {% endfor %}
         {% endif %}
                 return params;
