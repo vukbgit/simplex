@@ -20,10 +20,13 @@ return (object) [
             ]
         ]
     ],
+    //in case there is a TABLE-NAME_locales table
     'locales' => [
         'LOCALE-FIELD-1',
         'LOCALE-FIELD-2',
     ],
+    //force using a locales view, to be used in case in case there is NOT a TABLE-NAME_locales table but some foreign keys tables are localized and therefore there is a localized view
+    //'useLocalizedView' => true,
     //whether model has a poistion field
     'position' => (object) [
         'field' => false,
