@@ -110,7 +110,7 @@ abstract class ModelAbstract
     */
     public function view(): string
     {
-        return $this->config->view ? (($this->hasLocales() || $this->config->useLocalizedView) ? sprintf('%s_locales', $this->config->view) : $this->config->view) : $this->config->table;
+        return $this->config->view ? (($this->hasLocales() || (isset($this->config->useLocalizedView) && $this->config->useLocalizedView)) ? sprintf('%s_locales', $this->config->view) : $this->config->view) : $this->config->table;
     }
     
     /**
