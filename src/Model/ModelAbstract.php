@@ -126,7 +126,7 @@ abstract class ModelAbstract
     */
     public function hasUploads(): bool
     {
-        return isset($this->config->uploads);
+        return isset($this->config->uploads) && !empty($this->config->uploads);
     }
 
     /**
