@@ -16,7 +16,6 @@
 */
 //handlers namespaces
 use Simplex\Authentication;
-use Simplex\Local\Partners;
 use function Simplex\slugToPSR1Name;
 //import area variables
 require 'variables.php';
