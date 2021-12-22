@@ -506,9 +506,23 @@ $(document).ready(function() {
 @param hash config: hash for field properties (see setFieldAttributes macro explanation) plus specific properties:
     bool inline
 @param array items: array of hashes each with value and label property
+NOTE: for checkbox group config.mandatory means that at least one input must be checked (and not all of them)
 #}
 {% macro displayInputRadioCheckbox(type, config, items) %}
     {% import _self as selfMacros %}
+    {# checkbox validation #}
+    {% if type == 'checkbox' and config.validation.required %}
+      {% set validation = config.validation %}
+      {% set validation = updateProperty(validation, 'required', false) %}
+      {% set config = updateProperty(config, 'validation', validation) %}
+<script>
+simplexValidation.extraValidationFields.push({
+  name:'{{ config.name|escape('js') }}',
+  type: 'checkbox',
+  validation: 'at-least-one'
+})
+</script>
+    {% endif %}
     {#<div>#}
     {% for item in items %}
          {% set itemConfig = config %}
@@ -555,6 +569,7 @@ $(document).ready(function() {
 @param hash config: hash for field properties (see setFieldAttributes macro explanation) plus:
     toggle: displays a checkbox before group label to toggle all of group checkboxes at once
 @param array items: array of hashes each with value and label property
+NOTE: config.mandatory means that at least one input must be checked (and not all of them)
 #}
 {% macro displayInputCheckboxGroup(config, items) %}
     {% import _self as selfMacros %}
@@ -575,6 +590,7 @@ $(document).ready(function() {
 @param string type: radio | checkbox
 @param hash config: hash for field properties (see setFieldAttributes macro explanation)
 @param array items: array of hashes each with value and label property
+NOTE: for checkbox group config.mandatory means that at least one input must be checked (and not all of them)
 #}
 {% macro displayInputRadioCheckboxGroup(type, config, items) %}
     {% import _self as selfMacros %}
@@ -1478,6 +1494,9 @@ var simplexValidation = {
                         {{ onFieldError }}(hasErrors);
     {% endif %}
                     }
+                    if(simplexValidation.extraValidation() == false) {
+                      event.preventDefault();
+                    }
                     {% if customValidation %}
                     if(!{{ customValidation }}) {
                         event.preventDefault();
@@ -1491,6 +1510,8 @@ var simplexValidation = {
         },
         false);
     },
+    extraValidationFields: [
+    ],
     /**
     * Gets custom error message from the attribute named after data-validity-state-[validity-state]-message
     * where [validity-state] is a name of a state as found to https://www.w3.org/TR/html5/sec-forms.html#validitystate
@@ -1505,6 +1526,51 @@ var simplexValidation = {
             simplexValidation.removeError(field);
             return true;
         }
+    },
+    /**
+    * Performs extra validation set up by specific situations (as a required checkoxes group which means at least one checkbox checked into group)
+    * field macros should set and object into js simplexValidation.extraValidationFields object with these properties:
+    * {
+    *   name: value of input "name" attribute
+    *   type: input type (so far just 'checkbox')
+    *   validation: validation type, (so far just 'at-least-one')
+    * }
+     **/
+    extraValidation: function () {
+      if(!simplexValidation.extraValidationFields.length) {
+        return true
+      } else {
+        //assume validation is false
+        extraValidationResult = false
+        //loop fields to be validated
+        for(let extraFieldI = 0; extraFieldI < simplexValidation.extraValidationFields.length; extraFieldI++) {
+          let fieldDefinition = simplexValidation.extraValidationFields[extraFieldI]
+          let field = $('[name="' + fieldDefinition.name.replace(/\[/g, '\\[').replace(/\]/g, '\\]') + '"]')
+          //check validation type
+          switch(fieldDefinition.validation) {
+            //at least one filled field
+            case 'at-least-one':
+              //check field type
+              switch (fieldDefinition.type) {
+                //checkboxe(s)
+                case 'checkbox':
+                  //loop inputs
+                  for (let i = 0; i < field.length; i++){
+                    if($(field[i]).prop('checked')) {
+                      extraValidationResult = true
+                      break
+                    }
+                  }
+                  if(!extraValidationResult) {
+                    simplexValidation.showError(field[0], simplexValidation.getFieldError(field[0], 'value-missing'))
+                  }
+                break;
+              }
+            break;
+          }
+        }
+        return extraValidationResult
+      }
     },
     /**
     * Gets custom error message from the attribute named after data-validity-state-[validity-state]-message
@@ -1546,7 +1612,7 @@ var simplexValidation = {
             break;
         }
         var dataAttribute = 'data-validity-state-' + validityState + '-message';
-        return field.attributes[dataAttribute] ? field.attributes[dataAttribute].value : defaultErrorMessage;
+        return (field.attributes && field.attributes[dataAttribute]) ? field.attributes[dataAttribute].value : defaultErrorMessage;
     },
     
     // Checks if a field is candidate to validation
