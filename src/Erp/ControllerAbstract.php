@@ -269,7 +269,7 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
         //get subject cookie
         $subjectCookie = $subject ? $this->getSubjectCookie($subject) : $this->subjectCookie;
         //get alerts
-        $alerts = $subjectCookie->alerts ? (array) $subjectCookie->alerts : [];
+        $alerts = isset($subjectCookie->alerts) ? (array) $subjectCookie->alerts : [];
         //init context messages
         if(!isset($alerts[$severity])) {
             $alerts[$severity] = [];
