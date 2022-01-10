@@ -1187,7 +1187,7 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
     }
     
     /**
-     * Resizes an image proprtionally to fit into a box of given width and height, stretching if necessary
+     * Resizes an image proprtionally to fit into a box of given width and height, keeping original ratio but stretching if necessary
      * @param string $path
      * @param int $width
      * @param int $height
@@ -1201,11 +1201,11 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
     }
     
     /**
-     * Resizes an image proprtionally to fit into a box of given width and height without stretching far original sizes
+     * Resizes an image to fit into a box of given width and height, stretching and changing of the original ratio depend on $cropMethodConstantName (default no crop nor distortion)
      * @param string $path
      * @param int $width
      * @param int $height
-     * @param int $cropMethodConstantName: name of constant of the Spatie\Image\Manipulations class: FIT_CONTAIN, FIT_MAX, FIT_FILL, FIT_STRETCH, FIT_CROP (see https://docs.spatie.be/image/v1/image-manipulations/resizing-images/#fit)
+     * @param int $cropMethodConstantName: name of constant of the Spatie\Image\Manipulations class: FIT_CONTAIN, FIT_MAX, FIT_FILL, FIT_STRETCH, FIT_CROP (see https://spatie.be/docs/image/v1/image-manipulations/resizing-images#fit)
      */
     protected static function fitImage($path, $width, $height, $cropMethodConstantName = 'FIT_MAX')
     {
