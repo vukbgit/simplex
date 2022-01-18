@@ -913,7 +913,7 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
             }
         } catch(\PDOException $exception) {
             //if something went wrong and record has been inserted, delete it, because maybe something went wrong with locales or uploads
-            if($primaryKeyValue) {
+            if(isset($primaryKeyValue)) {
               $this->model->delete($primaryKeyValue);
             }
             $error = $this->model->handleException($exception);
