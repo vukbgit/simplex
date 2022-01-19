@@ -450,7 +450,7 @@ $(document).ready(function() {
             url: '{{ config.remoteDataRoute }}',
             dataType: 'json',
             data: function (params) {
-        {% if config.remoteDataRouteExtraParameters %}
+        {% if config.remoteDataRouteExtraParameters and (config.remoteDataRouteExtraParameters|length > 1 or config.remoteDataRouteExtraParameters|first) %}
             {% for parameter, value in config.remoteDataRouteExtraParameters %}
                 {{ 'params.%s = %s;'|format(parameter, value|escape('js')) }}
             {% endfor %}
