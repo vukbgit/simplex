@@ -30,20 +30,23 @@
         {% endif %}
     {% endblock %}
     </div>
-    {% if hideUser == false %}
-    <div class="flex-grow-1 text-right">
-        <span>{{ userData.username }}</span>
-        <i class="icon-erp-user"></i>
-    </div>
-    <ul class="navbar-nav ml-auto px-3">
-        <li class="nav-item text-nowrap">
-            <a class="nav-link" href="{{ routeParameters.authentication.urls.signOut }}">
-                {{ 'Sign out'|trans }}
-                <i class="icon-erp-sign-out"></i>
-            </a>
-        </li>
-    </ul>
+    <div class="d-flex flex-grow-1 justify-content-end align-items-center">
+    {% if constant('ENVIRONMENT') == 'development' %}
+      <div class="mr-3 icon-erp-development text-warning"></div>
     {% endif %}
+    {% if hideUser == false %}
+      <div>{{ userData.username }}</div>
+      <i class="icon-erp-user"></i>
+      <ul class="navbar-nav px-3">
+          <li class="nav-item text-nowrap">
+              <a class="nav-link" href="{{ routeParameters.authentication.urls.signOut }}">
+                  {{ 'Sign out'|trans }}
+                  <i class="icon-erp-sign-out"></i>
+              </a>
+          </li>
+      </ul>
+    {% endif %}
+    </div>
 </nav>
 
 <div class="container-fluid">
