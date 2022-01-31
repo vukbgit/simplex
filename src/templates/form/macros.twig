@@ -409,7 +409,7 @@ WARNING: uses Bootstrap custom select, so BS custom-forms component must be incl
     remoteDataRoute route to remote data search action
         search terms will be passed into GET 'term' parameter
         search action must return json
-    remoteDataRouteExtraParameters: object with extra parameters to be passed into route
+    remoteDataRouteExtraParameters: object with extra parameters to be passed into route, each parameter *must* be already in a correct form to be turned into a javascript variable value, for example strings must be already enclosed by quotes
     valueLabel:
     options: hash container for any extra specific select2 option (see https://select2.org/configuration/options-api)
 @param array items: array of hashes each with value and label property, alternative to remoteDataRoute; if minimumInputLength is passed they are not shown but searched
@@ -452,7 +452,7 @@ $(document).ready(function() {
             data: function (params) {
         {% if config.remoteDataRouteExtraParameters and (config.remoteDataRouteExtraParameters|length > 1 or config.remoteDataRouteExtraParameters|first) %}
             {% for parameter, value in config.remoteDataRouteExtraParameters %}
-                {{ 'params.%s = %s;'|format(parameter, value|escape('js')) }}
+                {{ 'params.%s = %s;'|format(parameter, value)|raw }}
             {% endfor %}
         {% endif %}
                 return params;
