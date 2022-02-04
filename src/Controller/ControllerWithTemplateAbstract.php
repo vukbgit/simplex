@@ -843,25 +843,56 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
     * Builds label for a record using tokens
     * @return string
     */
-    protected function buildRecordTokensLabel($labelTokens, object $record, string $languageCode = null): string {
+    protected function buildRecordTokensLabel($labelTokensDefinitions, object $record, string $languageCode = null): string {
       //check labelfields and turn into an array if it's a string
-      if(is_string($labelTokens)) {
-          $labelTokens = [$labelTokens];
+      if(is_string($labelTokensDefinitions)) {
+          $labelTokensDefinitions = [$labelTokensDefinitions];
       }
       //check language code
       if(!$languageCode) {
           $languageCode = $this->language->{'ISO-639-1'};
       }
       $label = '';
-      foreach ($labelTokens as $labelToken) {
-        //conditional token, first element is an ancestor subject
+      $labelTokens = [];
+      foreach ($labelTokensDefinitions as $labelToken) {
+        //conditional token
+        //simple numeric indexed array, first element is an ancestor subject
         if(is_array($labelToken)) {
           if(!isset($this->ancestors[$labelToken[0]])) {
             continue;
           } else {
-            $labelToken = $labelToken[1];
+            $labelTokens[] = $labelToken[1];
           }
+        //object
+        } elseif(is_object($labelToken)) {
+          //check conditions, all of them must be satisfied
+          if(isset($labelToken->conditions)) {
+            foreach ($labelToken->conditions as $conditionType => $condition) {
+              switch($conditionType) {
+                case 'fieldNotNull':
+                  if(!isset($record->$condition) || !$record->$condition) {
+                    continue 3;
+                  }
+                break;
+              }
+            }
+            //if we've come so far, grab tokens under conditions
+            if(isset($labelToken->tokenValues)) {
+              if(is_string($labelToken->tokenValues)) {
+                $labelToken->tokenValues = [$labelToken->tokenValues];
+              }
+              if(is_array($labelToken->tokenValues) && !empty($labelToken->tokenValues)) {
+                $labelTokens = array_merge($labelTokens, $labelToken->tokenValues);
+              }
+            }
+          }
+        //string
+        } else {
+          $labelTokens[] = $labelToken;
         }
+      }
+      foreach ($labelTokens as $labelToken) {
+        // code...
         //dealing with a record field
         if(property_exists($record, $labelToken)) {
           //localized field
@@ -879,4 +910,5 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
       }
       return $label;
     }
+      
 }
