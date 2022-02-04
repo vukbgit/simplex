@@ -25,7 +25,7 @@ function x($var, $expand = false, $force = false) {
 * @param mixed $var
 * @param bool $expand whether to expand objects by default
 **/
-function xx($var, $expand = false) {
-    x($var, $expand);
+function xx($var, $expand = false, $force = false) {
+    x($var, $expand, $force);
     exit;
 }
