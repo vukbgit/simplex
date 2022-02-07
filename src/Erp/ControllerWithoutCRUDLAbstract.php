@@ -119,17 +119,20 @@ abstract class ControllerWithoutCRUDLAbstract extends ControllerWithTemplateAbst
      */
     private function checkActionPermission()
     {
-        //check action level permissions
-        if(isset($this->subjectConfig->actions[$this->action]->permissions)) {
-            if(!$this->checkAtLeastOnePermission($this->subjectConfig->actions[$this->action]->permissions)) {
-                throw new \Exception("Specific permissions have been set for current subject action but current user has none of them", 1);
-            }
-        //check subject level permissions
-        } elseif(isset($this->subjectConfig->subjectPermissions)) {
-            if(!$this->checkAtLeastOnePermission($this->subjectConfig->subjectPermissions)) {
-                throw new \Exception("Global permissions have been set for current subject but current user has none of them", 1);
-            }
-        }
+      //check free action
+      if(isset($this->subjectConfig->actions[$this->action]->free) && $this->subjectConfig->actions[$this->action]->free) {
+        return;
+      //check action level permissions
+      } elseif(isset($this->subjectConfig->actions[$this->action]->permissions)) {
+          if(!$this->checkAtLeastOnePermission($this->subjectConfig->actions[$this->action]->permissions)) {
+              throw new \Exception("Specific permissions have been set for current subject action but current user has none of them", 1);
+          }
+      //check subject level permissions
+      } elseif(isset($this->subjectConfig->subjectPermissions)) {
+          if(!$this->checkAtLeastOnePermission($this->subjectConfig->subjectPermissions)) {
+              throw new \Exception("Global permissions have been set for current subject but current user has none of them", 1);
+          }
+      }
     }
     
     /**
