@@ -622,7 +622,7 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
     * Checks whether a given navigation route corresponds to the current route
     * @param string $path
     */
-    protected function isNavigationRouteCurrentRoute(string $route)
+    protected function isNavigationRouteCurrentRoute(string $route, ServerRequestInterface $request = null)
     {
         if(!$route) {
             return false;
@@ -637,19 +637,22 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         ];
         $routePattern = sprintf('~%s~', preg_replace($patterns , $replacements , $route));
         //match the route stripped of placeholders against current one
-        $matches = preg_match($routePattern, $this->request->getUri()->getPath());
+        $request = $this->request ?? $request;
+        $matches = preg_match($routePattern, $request->getUri()->getPath());
         return $matches;
     }
     
     /**
      * Loads area navigation from a file
      * @param string $path: pat to file which return an array of navigations
+     * @param ServerRequestInterface $request: needed to check navigation permissions if subject is not handling current route action
      */
-    protected function loadNavigation(string $path)
+    protected function loadNavigation(string $path, ServerRequestInterface $request = null)
     {
         $navigations = require $path;
         foreach ($navigations as $navigationName => &$navigation) {
-            $this->loadNavigationLevel($navigationName, $navigation);
+            $parentVoiceProperties = null;
+            $this->loadNavigationLevel($navigationName, $navigation, $parentVoiceProperties, $request);
         }
         $this->navigations = array_merge($this->navigations, $navigations);
         $this->setTemplateParameter('navigations', $this->navigations);
@@ -686,8 +689,9 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
      * @param string $navigationName
      * @param array $navigationLevel
      * @param object $parentVoiceProperties: object with properties of curent level's parent
+     * @param ServerRequestInterface $request: needed to check navigation permissions if subject is not handling current route action
      */
-    protected function loadNavigationLevel(string $navigationName, array &$loadedNavigationLevel, object &$parentVoiceProperties = null)
+    protected function loadNavigationLevel(string $navigationName, array &$loadedNavigationLevel, object &$parentVoiceProperties = null, ServerRequestInterface $request = null)
     {
         foreach ($loadedNavigationLevel as $voiceKey => $voiceProperties) {
             //check explicit visibility flag (possibly set at runtime)
@@ -695,8 +699,15 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
               unset($loadedNavigationLevel[$voiceKey]);
               continue;
             }
+            $request = $this->request ?? $request;
             //check voice permission (only if controller has been invoked by router and so request is defined)
-            if(isset($this->request) && $this->needsAuthentication && isset($voiceProperties->permissions) && !$this->checkAtLeastOnePermission($voiceProperties->permissions)) {
+            if(
+              (
+                ($request && $this->needsAuthentication($request))
+              )
+              && isset($voiceProperties->permissions)
+              && !$this->checkAtLeastOnePermission($voiceProperties->permissions, $request)
+            ) {
                 unset($loadedNavigationLevel[$voiceKey]);
                 continue;
             }
@@ -705,7 +716,7 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
             }
             //check if its current route (only if controller has been invoked by router and so request is defined)
             $route = isset($voiceProperties->route) ? $voiceProperties->route : (isset($voiceProperties->routeFromSubject) ? $this->buildRouteToActionFromRoot($voiceProperties->routeFromSubject) : null);
-            if(isset($this->request) && isset($route) && $this->isNavigationRouteCurrentRoute($route)) {
+            if($request && isset($route) && $this->isNavigationRouteCurrentRoute($route, $request)) {
                 $voiceProperties->isActive = true;
                 $this->currentNavigationVoice[$navigationName] = $voiceKey;
                 if($parentVoiceProperties) {
@@ -714,7 +725,7 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
             }
             //check sub level
             if(isset($voiceProperties->navigation) && !empty($voiceProperties->navigation)) {
-                $this->loadNavigationLevel($navigationName, $voiceProperties->navigation, $voiceProperties);
+                $this->loadNavigationLevel($navigationName, $voiceProperties->navigation, $voiceProperties, $request);
             }
         }
     }

@@ -176,7 +176,7 @@ abstract class ControllerWithoutCRUDLAbstract extends ControllerWithTemplateAbst
         *************/
         //gets a local controller navigations object
         $this->addTemplateFunction('getNavigations', function(ControllerWithTemplateAbstract $controller){
-            $controller->loadSubjectNavigation();
+            $controller->loadSubjectNavigation($this->request);
             return $controller->getNavigations();
         });
         //parses a record action route pattern replacing placeholders with record values

@@ -143,6 +143,7 @@ abstract class ControllerAbstract
             }
         };
     }
+    
     /**
     * Stores request and related informations
     * @param ServerRequestInterface $request
@@ -152,7 +153,16 @@ abstract class ControllerAbstract
         //store request and its parameters
         $this->request = $request;
         $this->routeParameters = $request->getAttributes()['parameters'];
-        $this->needsAuthentication = isset($this->routeParameters->authentication);
+        $this->needsAuthentication = $this->needsAuthentication($request);
+    }
+
+    /**
+    * Checks whether subject needs authentication based on request
+    * @param ServerRequestInterface $request
+    */
+    protected function needsAuthentication(ServerRequestInterface $request)
+    {
+        return isset($request->getAttributes()['parameters']->authentication);
     }
 
     /**
@@ -224,22 +234,27 @@ abstract class ControllerAbstract
     
     /**
     * Checks if authenticaion is needed and is valid
+    * @param ServerRequestInterface $request: needed to check authentication if subject is not handling current route action
     * @return bool
     */
-    protected function verifyAuthentication(): bool
+    protected function verifyAuthentication(ServerRequestInterface $request = null): bool
     {
-        $requestAttributes = $this->request->getAttributes();
-        return $requestAttributes['authenticationResult']->{$this->area}->authenticated;
+      $request = $this->request ?? $request;
+        $requestAttributes = $request->getAttributes();
+        $area = $this->area ?? $requestAttributes['parameters']->area;
+        return $requestAttributes['authenticationResult']->$area->authenticated;
     }
     
     /**
     * Return authenticated user data (if any)
+    * @param ServerRequestInterface $request: needed to check authentication if subject is not handling current route action
     * @return mixed object with user data | null
     */
-    protected function getAuthenticatedUserData()
+    protected function getAuthenticatedUserData(ServerRequestInterface $request = null)
     {
-        if($this->needsAuthentication && $this->verifyAuthentication()) {
-            return $this->request->getAttributes()['userData'];
+      $request = $this->request ?? $request;
+        if($this->needsAuthentication($request) && $this->verifyAuthentication($request)) {
+            return $request->getAttributes()['userData'];
         } else {
             return null;
         }
@@ -248,22 +263,26 @@ abstract class ControllerAbstract
     /**
     * Checks whether current user has a certain permission
     * @param string $permission
+    * @param ServerRequestInterface $request: needed to check permission if subject is not handling current route action
     * @return bool
     */
-    protected function checkPermission(string $permission): bool
+    protected function checkPermission(string $permission, ServerRequestInterface $request = null): bool
     {
-        return in_array($permission, $this->getAuthenticatedUserData()->permissions);
+      $request = $this->request ?? $request;
+        return in_array($permission, $this->getAuthenticatedUserData($request)->permissions);
     }
     
     /**
     * Checks whether current user has at least one permission among one set
     * @param array $permissions
+    * @param ServerRequestInterface $request: needed to check permissions if subject is not handling current route action
     * @return bool
     */
-    protected function checkAtLeastOnePermission(array $permissions): bool
+    protected function checkAtLeastOnePermission(array $permissions, ServerRequestInterface $request = null): bool
     {
+      $request = $this->request ?? $request;
         foreach ((array) $permissions as $permission) {
-            if($this->checkPermission($permission)) {
+            if($this->checkPermission($permission, $request)) {
                 return true;
             }
         }

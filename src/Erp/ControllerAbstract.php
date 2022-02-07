@@ -303,8 +303,9 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
     *************/
     /**
      * Loads subject navigation which is *always* needed for ERP 
+     * @param ServerRequestInterface $request: needed to check navigation permissions if subject is not handling current route action
      */
-    public function loadSubjectNavigation()
+    public function loadSubjectNavigation(ServerRequestInterface $request = null)
     {
         //config file must be into class-folder/config/navigation.php
         $configPath = sprintf('%s/config/navigation.php', getInstancePath($this));
@@ -313,7 +314,7 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
             throw new \Exception(sprintf('configuration file \'%s\' for subject %s navigation is not a valid path', $configPath, getInstanceNamespace($this)));
         }
         //load navigation
-        $this->loadNavigation($configPath);
+        $this->loadNavigation($configPath, $request);
     }
     
     /**
