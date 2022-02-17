@@ -24,6 +24,7 @@ class ZendCaptchaImageExtended extends Image
     
     /**
     * Generate image and return url
+    * WARNING: NEVER CALL INTO A PAGE THAT IS VALIDATING CAPTCHA, OTHERWISE CODE WILL BE REGENERATED E VALIDATION NEVER WILL BE SUCCESSFUL!!!
     **/
     public function generateCaptchaImage()
     {
