@@ -16,6 +16,24 @@ trait Dates {
     }
     
     /**
+     * Turns a seconds value into a time duration
+     * @param int $seconds
+     */
+    protected function secondsToTime(int $seconds, bool $displaySeconds = false): string
+    {
+      $zero    = new \DateTime("@0");
+      $offset  = new \DateTime("@$seconds");
+      $diff    = $zero->diff($offset);
+      $format = '%02d:%02d';
+      $timeSeconds = null;
+      if($displaySeconds) {
+        $format .= ':%02d';
+        $timeSeconds = $diff->s;
+      }
+      return sprintf($format, $diff->days * 24 + $diff->h, $diff->i, $timeSeconds);
+    }
+    
+    /**
      * Checks whether two date intervals overlaps and returns the number of overlapping days if any
      * @param string $interval1StartDate YYYY-MM-DD
      * @param string $interval1StopDate YYYY-MM-DD
