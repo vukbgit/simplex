@@ -265,7 +265,7 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         $this->addTemplateFunction(
             'secondsToTime',
             function ($seconds, $displaySeconds = false) {
-                //secondsToTime method is declared into \Traits\Dates which is not alwais available 
+                //secondsToTime method is declared into \Traits\Dates which is not always available 
                 //return $this->secondsToTime((int) $seconds, $displaySeconds);
                 $zero    = new \DateTime("@0");
                 $offset  = new \DateTime("@$seconds");
