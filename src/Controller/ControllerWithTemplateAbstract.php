@@ -262,6 +262,23 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
                 return strftime($format, $timestamp);
             }
         });
+        $this->addTemplateFunction(
+            'secondsToTime',
+            function ($seconds, $displaySeconds = false) {
+                //secondsToTime method is declared into \Traits\Dates which is not alwais available 
+                //return $this->secondsToTime((int) $seconds, $displaySeconds);
+                $zero    = new \DateTime("@0");
+                $offset  = new \DateTime("@$seconds");
+                $diff    = $zero->diff($offset);
+                $format = '%02d:%02d';
+                $timeSeconds = null;
+                if($displaySeconds) {
+                  $format .= ':%02d';
+                  $timeSeconds = $diff->s;
+                }
+                return sprintf($format, $diff->days * 24 + $diff->h, $diff->i, $timeSeconds);
+            }
+        );
         /********
         * PATHS *
         ********/
