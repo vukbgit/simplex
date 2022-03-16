@@ -47,7 +47,25 @@
             &:hover {
                 color: $white;
             }
-            &[aria-expanded="false"]::after {
+            &::after {
+              font-family: fontello;
+              display: inline;
+              padding-left: 5px;
+              text-align: right;
+              text-transform: none;
+            }
+            &[aria-expanded="false"] {
+              &::after {
+                content: "\0169";
+              }
+            }
+            &[aria-expanded="true"] {
+              background-color: $darker;
+              &::after {
+                content: "\016A";
+              }
+            }
+            /*&[aria-expanded="false"]::after {
                 content: "\0169";
                 font-family: fontello;
                 display: inline;
@@ -63,7 +81,7 @@
                 display: inline;
                 text-align: right;
                 padding-left: 5px;
-            }
+            }*/
         }
     }
     & > div.sidebar-sticky > nav#navigation-top > div.nav-item .nav-item {
