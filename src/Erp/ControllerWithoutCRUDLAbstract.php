@@ -77,7 +77,9 @@ abstract class ControllerWithoutCRUDLAbstract extends ControllerWithTemplateAbst
     protected function storeCurrentSubjectRoot()
     {
         $currentRoute = $this->request->getUri()->getPath();
-        $pattern = sprintf('~^[0-9a-zA-Z-_/]*/%s/?~', $this->subject);
+        //$pattern = sprintf('~^[0-9a-zA-Z-_/]*/%s/?~', $this->subject);
+        //slash after subject name should always be present (followed by action), if it's considered optional as above actions containing subject name will false result
+        $pattern = sprintf('~^[0-9a-zA-Z-_/]*/%s/~', $this->subject);
         preg_match($pattern , $currentRoute, $matches);
         //remove ending slash
         if(isset($matches[0])) {
