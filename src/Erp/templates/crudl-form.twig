@@ -4,8 +4,9 @@
 
 {% block pageContent %}
     {{ parent() }}
-    {% set nextAction = action|replace({'-form': null})  %}
+    {% set nextAction = nextAction ?? action|replace({'-form': null})  %}
     {% set nextActionRoute = buildRouteToActionFromRoot(nextAction) %}
+    {{nextAction}}
     <form method="post" action="{{ nextActionRoute }}"
     id="save-form" class="needs-validation form-with-validation crudl-form"
     >
