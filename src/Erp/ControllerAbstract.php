@@ -496,12 +496,16 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
                 break;
                 //custom conditions
                 case 'custom_conditions':
+                  if($input->custom_conditions !== null) {
                     $custom_conditions = array_filter(
                       $input->custom_conditions,
                       function($item) {
                         return $item !== null && $item !== '';
                       }
                     );
+                  } else {
+                    $custom_conditions = null;
+                  }
                     $this->replaceListCustomConditions($custom_conditions);
                 break;
             }
