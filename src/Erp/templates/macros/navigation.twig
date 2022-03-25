@@ -121,7 +121,8 @@
                     {% endif %}
                     {% set voiceProperties = updateProperty(voiceProperties, 'linkClass', class) %}
                 <li class="nav-item">
-                    {{ selfMacros.displayRecordActionLink(voiceProperties, getLabel('actions', voiceKey), record, baseRoute) }}
+                    {% set actionLabel = parseRecordActionRoute(getLabel('actions', voiceKey), record) %}
+                    {{ selfMacros.displayRecordActionLink(voiceProperties, actionLabel, record, baseRoute) }}
                 </li>
                 {% endfor %}
             </ul>
