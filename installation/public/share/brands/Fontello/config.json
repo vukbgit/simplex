@@ -1,6 +1,6 @@
 {
   "name": "",
-  "css_prefix_text": "icon-",
+  "css_prefix_text": "icon-brands-",
   "css_use_suffix": false,
   "hinting": true,
   "units_per_em": 1000,
@@ -8,38 +8,50 @@
   "glyphs": [
     {
       "uid": "c99e966e3d22ec0b9d8678fd524e5512",
-      "css": "brands-facebook",
+      "css": "facebook",
       "code": 458,
       "src": "elusive"
     },
     {
       "uid": "a58fe946fe31826f0b19cb4dfaaf13d2",
-      "css": "brands-googleplus",
+      "css": "googleplus",
       "code": 459,
       "src": "elusive"
     },
     {
       "uid": "09cad6e46ec29b279626434802012bba",
-      "css": "brands-linkedin",
+      "css": "linkedin",
       "code": 460,
       "src": "elusive"
     },
     {
       "uid": "26969cfbd811730075e4c657cc9fda2a",
-      "css": "brands-twitter",
+      "css": "twitter",
       "code": 461,
       "src": "elusive"
     },
     {
       "uid": "9d3e9faf68fd4e12def853f0d4e1173b",
-      "css": "brands-whatsapp",
+      "css": "whatsapp",
       "code": 462,
       "src": "fontawesome"
     },
     {
       "uid": "9daa1fdf0838118518a7e22715e83abc",
-      "css": "brands-pdf",
+      "css": "pdf",
       "code": 463,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "cc20f2a7fa05a475130c406740bbbd26",
+      "css": "instagram-filled",
+      "code": 464,
+      "src": "brandico"
+    },
+    {
+      "uid": "47a1f80457068fbeab69fdb83d7d0817",
+      "css": "youtube-play",
+      "code": 465,
       "src": "fontawesome"
     }
   ]
