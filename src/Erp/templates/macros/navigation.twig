@@ -162,7 +162,7 @@
 {% macro displayAncestorsSubjectRecordMenus(context, ancestors) %}
   {% import _self as selfMacros %}
   {% for ancestorSubject, ancestor in ancestors %}
-    {{ include(getInstanceTemplate(attribute(ancestor, 'controller'), 'labels.twig'), {'labels': labels}, with_context = true) }}
+    {{ include(getInstanceTemplate(attribute(ancestor, 'controller'), 'labels.twig'), {'labels': labels, 'actionsNeeded': true}, with_context = true) }}
     {{ selfMacros.displaySubjectRecordMenu(
         context,
         '%s-controller'|format(ancestorSubject),
