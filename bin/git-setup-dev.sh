@@ -4,7 +4,7 @@ echo "Have you checked and customized .gitignore file?"
 select yn in "Yes" "No"; do
     case $yn in
     Yes ) 
-        read -p "Repository URL:" repositoryUrl
+        read -p "Repository URL (complete with app password/key):" repositoryUrl
         read -p "git user.email:" userEmail
         read -p "git user.name:" userName
         read -p "git remote branch name [main]:" branch

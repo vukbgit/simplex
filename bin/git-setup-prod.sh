@@ -1,5 +1,5 @@
 #!/bin/bash
-#first argument is repository URL, for script automation
+#first argument is repository URL (complete with app password/key), for script automation
 repositoryUrl=$1
 
 read -p "git remote branch name [main]:" branch
@@ -13,7 +13,7 @@ if [ -z "$repositoryUrl" ]
                                         rm -rf .git
                                         git init -b $branch
                                         git config pull.rebase false
-                                        read -p "Repository URL:" repositoryUrl
+                                        read -p "Repository URL (complete with app password/key):" repositoryUrl
                                         git remote add origin $repositoryUrl
                                         git fetch --all
                                         git reset --hard origin/$branch
