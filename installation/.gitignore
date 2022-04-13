@@ -3,3 +3,4 @@ composer.lock
 private/share/
 node_modules/
 yarn.lock
+package-lock.json
