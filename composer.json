@@ -23,7 +23,7 @@
         "twig/intl-extra": "v2.12.1",
         "usmanhalalit/pixie": "2.*@dev",
         "nette/finder": "^2.5",
-        "aura/auth": "^2.0",
+        "aura/auth": "^4.0",
         "slowprog/composer-copy-file": "~0.3",
         "aptoma/twig-markdown": "~2.0",
         "michelf/php-markdown": "~1.3",
