@@ -916,7 +916,7 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
             if($messageCode) {
                 $this->setSubjectAlert('success', (object) ['code' => $messageCode]);
             }
-        } catch(\PDOException $exception) {
+        } catch(\Exception $exception) {
             //if something went wrong and record has been inserted, delete it, because maybe something went wrong with locales or uploads
             if(isset($primaryKeyValue)) {
               $this->model->delete($primaryKeyValue);
@@ -969,8 +969,9 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
             if($messageCode) {
                 $this->setSubjectAlert('success', (object) ['code' => $messageCode]);
             }
-        } catch(\PDOException $exception) {
+        } catch(\Exception $exception) {
             $error = $this->model->handleException($exception);
+            //xx($error);
             $this->setSubjectAlert('danger', $error);
             $redirectRoute = $this->buildRouteToActionFromRoot(sprintf('update-form/%s', $fieldsData->primaryKeyValue));
         }

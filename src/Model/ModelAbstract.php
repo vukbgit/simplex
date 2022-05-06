@@ -168,12 +168,12 @@ abstract class ModelAbstract
 
     /**
     * Handles an exception using error codes (see https://docstore.mik.ua/orelly/java-ent/jenut/ch08_06.htm)
-    * @param PDOException $exception
+    * @param Exception $exception
     * @return object to be used for alert display with the following properties:
     *   ->code: alphanumeric message code
     *   ->data: an array with any specific error code relevant data (such as involved field names)
     */
-    public function handleException(\PDOException $exception): object
+    public function handleException(\Exception $exception): object
     {
         //get error code and message
         $errorCode = (string) $exception->getCode();
@@ -191,6 +191,15 @@ abstract class ModelAbstract
         $rawMessage = null;
         $data = null;
         switch($class) {
+            //Data exception
+            case '22':
+              //standard subclass stop at 027, so we define custom error from 50 onward
+              if((int) $subclass >= 50) {
+                $code = sprintf('SQLSTATE_%s', $errorCode);
+                //data can only be passed through message
+                $data = explode('|', $errorMessage);
+              }
+            break;
             //Integrity constraint violation
             case '23':
                 //duplicate entry
