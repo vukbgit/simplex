@@ -95,7 +95,7 @@
     {% endblock tableNavBar %}
     {% if records|length %}
     {# bulk actions form #}
-        {% if navigations.bulkActions|length %}
+        {#% if navigations.bulkActions|length %}
             {% set bulkActionsLabel = 'selected records bulk actions'|trans %}
 <form method="post" id="bulk-actions-form" action="" class="form-inline">
     <input type="hidden" name="bulk_action_records_ids" id="bulk_action_records_ids">
@@ -114,6 +114,48 @@
                 data-confirm="{{ getLabel('alerts', 'bulk_confirm')|format(actionLabel)|escape('html_attr') }}"
                 {% endif %}
                 >{{ actionLabel }}</button>
+            {% endfor %}
+        </div>
+    </nav>
+    <div class="w-100 collapse" id="bulk-warning">
+        <div class="alert alert-warning" role="alert">
+        {{ 'you need to select at least one record'|trans }}
+        <button type="button" class="close" data-toggle="collapse" href="#bulk-warning" aria-label="Close" aria-expanded="false" aria-controls="bulk-warning">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+    </div>
+</form>
+        {% endif %#}
+        {% if navigations.bulkActions|length %}
+            {% set bulkActionsLabel = 'selected records bulk actions'|trans %}
+<form method="post" id="bulk-actions-form" action="" class="form-inline">
+    <input type="hidden" name="bulk_action_records_ids" id="bulk_action_records_ids">
+    <nav class="navbar navbar-light bg-light justify-content-start w-100">
+        <span class="mr-3">
+            {{ bulkActionsLabel }}:
+        </span>
+        <div class="btn-group" role="group" aria-label="{{ bulkActionsLabel }}">
+            {% for actionKey, actionProperties in navigations.bulkActions %}
+                {% set actionLabel = getLabel('actions', actionKey) %}
+            <button
+                type="submit"
+                id="button-{{ actionKey }}"
+                class="btn btn-sm btn-outline-secondary"
+                data-route="{{ buildRouteToAction(actionProperties) }}"
+                {% if actionProperties.noConfirm is not defined or actionProperties.noConfirm is same as false %}
+                data-confirm="{{ getLabel('alerts', 'bulk_confirm')|format(actionLabel)|escape('html_attr') }}"
+                {% endif %}
+                >{{ actionLabel }}</button>
+                {% if actionProperties.blank %}
+                <script type="text/javascript">
+                  $(document).ready(function() {
+                    $('#button-{{ actionKey }}').click(function() {
+                      $('#bulk-actions-form').attr('target', '_blank')
+                    })
+                  })
+                </script>
+                {% endif %}
             {% endfor %}
         </div>
     </nav>

@@ -53,6 +53,8 @@ return [
         'routeFromSubject' => 'delete-bulk',
         'permissions' => [sprintf('manage-%s', $subject)],
         'noConfirm' => false
+        //to change form target to _blank
+        'blank' => false
       ]
     ],
 ];
