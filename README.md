@@ -436,14 +436,14 @@ The following steps show how to set up an ERP subject, that is a subject which i
         * after installation, into _TRANSLATIONS_DIR_ English and Italian translations for Simplex core messages are stored
         * translations extraction from relies on Twig templates cache; if your local templates use any user defined Twig filter or function templates cache building will be broken, so you need to:
             * put the Twig filters/functions definitions into a public method of some of your local classes
-            * create one or more files under _private/local/simplex_ named _templates-helpers.php_: if this file exists it sill be automatically included by the translation script
-            * into the _templates-helpers.php_ fiels call all of the template helpers builder methods
+            * create one or more files under _private/local/simplex_ named _templates-helpers.php_: if this file exists it sill be automatically included by the translation script (there is a draft file _private/local/simplex/bin/templates-helpers.draft.php_)
+            * into the _templates-helpers.php_ file call all of the template helpers builder methods
         * when local translations are added run script to update local messages, .po and .mo files are saved into _TRANSLATIONS_DIR_ for every language defined into _private/local/simplex/config/languages.json_:
 
                 php private/share/packagist/vukbgit/simplex/bin/translations.php update local
             
         * download .po files, translate with [Poedit](https://poedit.net/) or other similar software
-        * upload resulting .po and .mo fiels back to _TRANSLATIONS_DIR_
+        * upload resulting .po and .mo files back to _TRANSLATIONS_DIR_
     * in case site uses a PHP version different from system one if must be specified the complete path to PHP binary, i.e.
 
             /opt/php-7.3.5/bin/php private/share/packagist/vukbgit/simplex/bin/translations.php update local
@@ -464,7 +464,7 @@ The following steps show how to set up an ERP subject, that is a subject which i
 Simplex uses [Fontello](http://fontello.com/) for icons and it breaks icons into logical groups, each with its Fontello folder, so far:
 * _public/share/simplex/form/Fontello_ for form related icons (100 reserved unicode values, from 0100 to 0164)
 * _public/share/simplex/Erp/Fontello_ for ERP (Backend) related icons (100 reserved unicode values, from 0165 to 01C9)
-* _public/share/brands/Fontello_ for brands related icons, i.e. social media or fiel types (20 reserved unicode values, from 01CA to 01DE)
+* _public/share/brands/Fontello_ for brands related icons, i.e. social media or file types (20 reserved unicode values, from 01CA to 01DE)
 
 Unicode codes are assigned so that, if icons are used into css (setting CSS properties _content_ to unicode code and _font-family_ to "fontello") icons do not overlap, if other application specific icons are added they should take unicode codes from 02BC (included) onward.
 Note: when using unicode codes into CSS remember to check text-transform (lowercase or uppercase) because each icon corresponds to a unicode charachter with a specific case and, if element inherits case from context, it could display the wrong gliph.
@@ -474,7 +474,7 @@ Note: when using unicode codes into CSS remember to check text-transform (lowerc
 If you keep separate development and production environment and manage pubblication through a git repository you can use some bash scripts soft linked into web root at installation time:
 * development environment:
     * _git-setup-dev.sh_: interactive script that asks for repository URL, git user email and git user name, sets up the repository, makes first significative commit and pushes it to repository
-    * _git-push-all.sh_: push all changes made since last commit, it adds all content of root folder and subfolders, so any folder/fiel to be excluded from commits must be added to _.gitignore_; if you need to push only some changes you must add, commit and push manually
+    * _git-push-all.sh_: push all changes made since last commit, it adds all content of root folder and subfolders, so any folder/file to be excluded from commits must be added to _.gitignore_; if you need to push only some changes you must add, commit and push manually
 * production environment:
     * copy _composer.json_ file from development environment
     * run `composer create-project`
@@ -509,7 +509,7 @@ If you keep separate development and production environment and manage pubblicat
         * there MUST be a class defined into subject namespace that:
             * is named 'Model'
             * must extend Simplex\Model\ModelAbstract
-            * must have a configuration file under _subject-namespace\config\model.php_
+            * must have git a configuration file under _subject-namespace\config\model.php_
         * stores the model under _$this->model_
     * loads CRUDL config which is mandatory for ERP and contains informations for the CRUDL interface to be exposed (such as the input filters to be used with each model field) and must be saved into a _subject-namespace\config\crudl.php_
     * gets users options for the subject from cookies (options are set into cookie from the UI) and stores them into _$this->userOptions_
