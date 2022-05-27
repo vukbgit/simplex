@@ -1,0 +1,91 @@
+{% extends '@share/Erp/templates/erp.twig' %}
+
+{% import '@share/templates/form/macros.twig' as formMacros %}
+
+{% block head %}
+    {{ parent() }}
+    {{ formMacros.setUpForm(_context) }}
+    <!-- sign in assets -->
+    <link rel="stylesheet" href="{{ 'simplex/Authentication/css/sign-in.min.css'|pathToShareAsset }}">
+{% endblock %}
+
+{# variables used into signInForm block that must/can be set in the calling scope
+- logoPath
+- signIntitle
+- usernameFieldType: text (default) | email
+- passwordConfig : {pattern: regular-expression, message: 'the-message'|trans}
+#}
+{% block body %}
+<div class="container-fluid d-flex align-items-center py-5 text-center">
+    <form class="mx-auto needs-validation" id="form-sign-in" method="post" action="{{ routeParameters.signInUrl }}">
+    {% block loginLogo %}
+        {% if logoPath %}
+        <img class="mb-4 img-fluid logo" src="{{ logoPath }}" alt="">
+        {% endif %}
+    {% endblock %}
+    {% if signIntitle is not defined  %}
+        {% set signIntitle = "Please sign in"|trans %}
+    {% endif %}
+        <h1 class="h3 mb-3 font-weight-normal">{{ signIntitle }}</h1>
+        <div class="form-row">
+            <div class="col-12">
+                <label for="username" class="sr-only">{% trans "Username" %}</label>
+    {{ formMacros.displayInputbyTipe(
+            usernameFieldType|default('text'),
+            {
+                'name': 'username',
+                'placeholder': 'Username'|trans,
+                'autofocus': true,
+                'autocomplete': 'username',
+                'validation': {
+                    'required': true,
+                    'validityStates': {
+                        'value-missing': {
+                            'message': "Please insert username"|trans
+                        },
+                        'bad-input': {
+                            'invalid': areaCookie.authenticationReturnCode == 2,
+                            'message': "Wrong username"|trans
+                        }
+                    }
+                }
+            }
+    ) }}
+            </div>
+            <div class="col-12">
+                <label for="password" class="sr-only">{% trans "Password" %}</label>
+    {{ formMacros.displayInputPassword(
+            {
+                'name': 'password',
+                'placeholder': 'Password'|trans,
+                'autocomplete': 'current-password',
+                'validation': {
+                    'required': true,
+                    'pattern': passwordConfig.pattern|default(false),
+                    'validityStates': {
+                        'value-missing': {
+                            'message': "Please insert password"|trans
+                        },
+                        'pattern-mismatch': {
+                            'message': passwordConfig.message|default('')
+                        },
+                        'bad-input': {
+                            'invalid': areaCookie.authenticationReturnCode == 3,
+                            'message': "Wrong password"|trans
+                        }
+                    }
+                }
+            }
+    ) }}
+            </div>
+        </div>
+        {#<div class="checkbox mb-3">
+            <label>
+                <input type="checkbox" value="remember-me"> Remember me
+            </label>
+        </div>#}
+        <button class="btn btn-lg btn-primary btn-block mt-4" type="submit">{% trans "Sign in" %}</button>
+        {#<p class="mt-5 mb-3 text-muted">© 2017-2019</p>#}
+    </form>
+</div>
+{% endblock %}

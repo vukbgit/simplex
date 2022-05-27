@@ -1,0 +1,13 @@
+/* customize navigation hamburger background image in dimensions, color and stroke
+assign it to une of the BS theme variables $navbar-light-toggler-icon-bg amnd $navbar-dark-toggler-icon-bg
+$navbar-light-toggler-icon-bg: hamburger-image($hamburgerWidth, $hamburgerHeight, $bluScuro, 7, round)
+*/
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1560px
+) !default;
+$tooltip-opacity:.6;

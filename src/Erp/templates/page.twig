@@ -1,0 +1,55 @@
+{% extends '@share/Erp/templates/frame.twig' %}
+
+{% import '@share/Erp/templates/macros/navigation.twig' as navigationMacros %}
+
+{% block subjectHeader %}
+    {% if displayBreadcrumb is not defined or displayBreadcrumb == true  %}
+    <nav aria-label="breadcrumb" class="subject-breadcrumb my-3">
+        <ol class="breadcrumb">
+        {% for ancestorKey, ancestor in ancestors %}
+            <li class="breadcrumb-item breadcrumb-level">
+                <a href="{{ ancestor.routeBack }}">
+                {{- getLabel(ancestorKey, 'subject') }}
+                </a>
+            </li>
+            <li class="breadcrumb-item breadcrumb-label">
+                {{- buildAncestorRecordLabel(ancestorKey) }}
+            </li>
+        {% endfor %}
+            <li class="breadcrumb-item breadcrumb-level">
+              <h2>
+                <a href="{{ buildRouteToActionFromRoot('list') }}">
+                {{- getLabel(subject, 'subject') }}
+                </a>
+              </h2>
+            </li>
+            <li class="breadcrumb-item active text-capitalize" aria-current="page">
+        {%- block actionLabel %}{{ getLabel('actions', action) }}{% endblock %}
+            </li>
+        </ol>
+    </nav>
+    {% endif %}
+    {% block subjectGlobalNavigation %}
+        {% if displaySubjectGlobalNavigation is not defined or displaySubjectGlobalNavigation == true  %}
+            {# subject global actions navigation #}
+            {{ navigationMacros.displaySubjectGlobalActionsNavigation(_context, navigations.globalActions, globalActionsLabels) }}
+        {% endif %}
+    {% endblock %}
+    {# model global actions navigation #}
+    {% block subjectExtraNavigation %}
+    {% endblock %}
+    {# subject alerts #}
+    {% for severity, alerts in attribute(attribute(areaCookie, subject), 'alerts')|objectToArray %}
+        <div class="alert {{ 'alert-%s'|format(severity) }} alert-dismissible fade show" role="alert">
+        {% set severityAlerts = [] %}
+        {% for alert in alerts %}
+            {% set severityAlerts = severityAlerts|merge([(alert.rawMessage ?? getLabel('alerts', alert.code))|formatArray(alert.data)]) %}
+        {% endfor %}
+        {{ severityAlerts|join('<br>')|raw }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="{{ 'Close'|trans }}">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+    {% endfor %}
+    {{ resetSubjectAlerts() }}
+{% endblock %}

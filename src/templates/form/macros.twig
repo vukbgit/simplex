@@ -1,0 +1,1885 @@
+{###################
+# TEXT-LIKE INPUTS #
+###################}
+
+{# displays an input field given the type, useful when type is condition dependant
+@param string type: text | email
+@param hash config: hash for field properties (see setFieldAttributes macro explanation)
+#}
+{% macro displayInput(type, config) %}
+    {% import _self as selfMacros %}
+    {% set config = parseFieldConfig(config) %}
+    
+    {% if config.prepend or config.append %}
+        <div class="input-group">
+        {% if config.prepend %}
+            <div class="input-group-prepend">
+                <span class="input-group-text">{{ config.prepend|raw }}</span>
+            </div>
+        {% endif %}
+    {% endif %}
+    <input 
+    type="{{ type }}"
+    {{ selfMacros.setFieldAttributes(config) }}
+    >
+    {% if config.prepend or config.append %}
+        {% if config.append %}
+            <div class="input-group-append">
+                <span class="input-group-text">{{ config.append|raw }}</span>
+            </div>
+        {% endif %}
+        </div>
+    {% endif %}
+{% endmacro %}
+
+{# displays a text-like input field given the type, useful when type is condition dependant
+@param string type: text | email | password | textarea
+@param hash config: hash for field properties (see setFieldAttributes macro explanation)
+#}
+{% macro displayInputByTipe(type, config) %}
+    {% import _self as selfMacros %}
+    {% if type == 'text' %}
+        {{ selfMacros.displayInputText(config) }}
+    {% elseif type == 'number' %}
+        {{ selfMacros.displayInputNumber(config) }}
+    {% elseif type == 'email' %}
+        {{ selfMacros.displayInputEmail(config) }}
+    {% elseif type == 'url' %}
+        {{ selfMacros.displayInputUrl(config) }}
+    {% elseif type == 'password' %}
+        {{ selfMacros.displayInputPassword(config) }}
+    {% elseif type == 'textarea' %}
+        {{ selfMacros.displayTextarea(config) }}
+    {% endif %}
+{% endmacro %}
+
+{# displays an input hidden field
+@param hash config: hash for field properties (see setFieldAttributes macro explanation)
+#}
+{% macro displayInputHidden(config) %}
+    {% import _self as selfMacros %}
+    {{ selfMacros.displayInput('hidden', config) }}
+{% endmacro %}
+
+{# displays an input text field
+@param hash config: hash for field properties (see setFieldAttributes macro explanation)
+#}
+{% macro displayInputText(config) %}
+    {% import _self as selfMacros %}
+    {# add input class #}
+    {% set classes = config.classes ?? [] %}
+    {% set classes = ['form-control']|merge(classes) %}
+    {% set config = updateProperty(config, 'classes', classes) %}
+    {{ selfMacros.displayInput('text', config) }}
+{% endmacro %}
+
+{# displays an input number field, see see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/number for specifi type infos
+@param hash config: hash for field properties (see setFieldAttributes macro explanation) plus specific properties:
+    numberType: integer (default) | decimal
+    formatAttributes: object with properties to be passed to value formatting filter format_number (see https://twig.symfony.com/doc/2.x/filters/format_number.html)
+    step: the step attribute
+    min: for integer numbers, minimum value
+    max: for integer numbers, maximum value
+    precision: for decimal numbers, defaults to locale frac_digits
+    integerPrecision: for decimal numbers, number of digits for the integer part
+    isCurrency: treats as currency
+    isPercent: treats as percent
+#}
+{% macro displayInputNumber(config) %}
+    {% import _self as selfMacros %}
+    {# check type of number #}
+    {% set numberType = config.numberType ?? 'integer' %}
+    {# format value according to locale #}
+    {% set formatAttributes = config.formatAttributes ?? {} %}
+    {% set value = config.value ? config.value|format_number(formatAttributes) : null %}
+    {% set config = updateProperty(config, 'value', value) %}
+    {# integer #}
+    {% if numberType == 'integer' %}
+        {% set inputType = 'number' %}
+        {% set inputMode = 'numeric' %}
+        {% set step = config.step ?? '1' %}
+        {% if config.min %}
+            {% set config = updateProperty(config, 'min', config.min) %}
+        {% endif %}
+        {% if config.max %}
+            {% set config = updateProperty(config, 'max', config.max) %}
+        {% endif %}
+    {% elseif numberType == 'decimal' %}
+        {% set localeconv = getLanguage().localeconv %}
+        {% set inputType = 'text' %}
+        {% set inputMode = 'decimal' %}
+        {% set precision = config.precision ?? localeconv.frac_digits %}
+        {% set validation = config.validation ?? {} %}
+        {% set integerPrecision = config.integerPrecision ? '{1,%d}'|format(config.integerPrecision) : '+' %}
+        {% set validation = updateProperty(validation, 'pattern', '^[0-9%s]%s(%s{1}[0-9]{1,%d}){0,1}$'|format(
+          localeconv.thousands_sep,
+          integerPrecision,
+          localeconv.decimal_point,
+          precision
+        )) %}
+        {% set config = updateProperty(config, 'validation', validation) %}
+    {% endif %}
+    {# set inputmode #}
+    {% set config = updateProperty(config, 'inputmode', inputMode) %}
+    {# set step #}
+    {% set config = updateProperty(config, 'step', step) %}
+    {# add input class #}
+    {% set classes = config.classes ?? [] %}
+    {% set classes = ['form-control']|merge(classes) %}
+    {% set config = updateProperty(config, 'classes', classes) %}
+    {% if config.isPercent is defined and config.isPercent %}
+        {% set config = updateProperty(config, 'append', '%') %}
+    {% endif %}
+    {% if config.isCurrency is defined and config.isCurrency %}
+        {% set config = updateProperty(config, 'append', getLanguage().localeconv.currency_symbol) %}
+    {% endif %}
+    {{ selfMacros.displayInput(inputType, config) }}
+{% endmacro %}
+
+{# displays an input email field
+@param hash config: hash for field properties (see setFieldAttributes macro explanation)
+NOTE: to perform validation Simplex does not use browser built in (see https://www.w3.org/TR/html5/sec-forms.html#constraints-definitions) but a pattern that matches real world emails; and to avoid conflicts does not use both email type AND pattern validation
+^(([^<>()\\.,;:\s@"]+(\.[^<>()\\.,;:\s@"]+)*)|(".+"))@(([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$
+
+#}
+{% macro displayInputEmail(config) %}
+    {% import _self as selfMacros %}
+    {# set inputmode #}
+    {% set config = updateProperty(config, 'inputmode', 'email') %}
+    {# set default validation pattern #}
+    {% if config.validation.pattern is not defined or config.validation.pattern == '' %}
+        {% set validation = config.validation ?? {} %}
+        {% set validation = updateProperty(validation, 'pattern', '^(([^<>()\\.,;:\\s@"]+(\.[^<>()\\.,;:\\s@"]+)*)|(".+"))@(([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$') %}
+        {% set config = updateProperty(config, 'validation', validation) %}
+    {% endif %}
+    {# add input class #}
+    {% set classes = config.classes ?? [] %}
+    {% set classes = ['form-control']|merge(classes) %}
+    {% set config = updateProperty(config, 'classes', classes) %}
+    {{ selfMacros.displayInput('text', config) }}
+{% endmacro %}
+
+{# displays an input URL field
+@param hash config: hash for field properties (see setFieldAttributes macro explanation)
+NOTE: to perform validation Simplex does not use browser built in but a pattern that matches real world URLs; and to avoid conflicts does not use both URL type AND pattern validation
+#}
+{% macro displayInputUrl(config) %}
+    {% import _self as selfMacros %}
+    {# set default validation pattern #}
+    {% if config.validation.pattern is not defined or config.validation.pattern == '' %}
+        {% set validation = config.validation ?? {} %}
+        {#               protocol/2nd up domain / dot/1st domain   url levels         file with extension                         get data                                            #}
+        {% set regex = "^https?://[a-zA-Z0-9-\\.]+\\.[a-zA-Z]{2,}(/([0-9a-zA-Z-_]+/?)*(/[0-9a-zA-Z_\\-\\.]+(\\.[0-9a-zA-Z]{2,4}))?(\\?([0-9a-zA-Z-_\\[\\]]+=[0-9-a-zA-Z]+&?)+)?)?$" %}
+        {% set validation = updateProperty(validation, 'pattern', regex) %}
+        {% set config = updateProperty(config, 'validation', validation) %}
+    {% endif %}
+    {# add input class #}
+    {% set classes = config.classes ?? [] %}
+    {% set classes = ['form-control']|merge(classes) %}
+    {% set config = updateProperty(config, 'classes', classes) %}
+    {{ selfMacros.displayInput('text', config) }}
+{% endmacro %}
+
+{# displays an input password field
+@param hash config: hash for field properties (see setFieldAttributes macro explanation) plus specific properties:
+    generator: boolean whether to append a button to generate password; in this case input type will not be passwoird but text, to let generated alue be copied
+#}
+{% macro displayInputPassword(config) %}
+    {% import _self as selfMacros %}
+    {# add input class #}
+    {% set classes = config.classes ?? [] %}
+    {% set classes = ['form-control']|merge(classes) %}
+    {% set config = updateProperty(config, 'classes', classes) %}
+    {% if config.generator is defined and config.generator %}
+        {% set config = updateProperty(config, 'append', '<button class="border-0 generate-password icon-erp-password" type="button"></button>') %}
+        {% set type = 'text' %}
+    {% else %}
+        {% set type = 'password' %}
+    {% endif %}
+    {{ selfMacros.displayInput(type, config) }}
+{% endmacro %}
+
+{# displays a file input field
+@param hash config: hash for field properties (see setFieldAttributes macro explanation)
+#}
+{% macro displayInputFile(config) %}
+    {% import _self as selfMacros %}
+    {{ selfMacros.displayInput('file', config) }}
+{% endmacro %}
+
+{# displays a text-like input field block
+@param string type: text | number | email | password | url | textarea
+@param hash config: hash for field properties (see setFieldAttributes macro explanation) plus:
+    prepended: content to be prepended to input
+    append: content to be appended to input
+#}
+{% macro displayInputGroup(type, config) %}
+    {% import _self as selfMacros %}
+    {% set inputId = (config.id ?? config.name)|formatIdforJs %}
+    {% if config.locales is not defined %}
+        {% set inputsConfigs = [config] %}
+    {% else %}
+        {% set inputsConfigs = [] %}
+        {% for languageCode, language in config.locales|objectToArray %}
+            {% set languageInputConfig = config %}
+            {% set languageInputConfig = updateProperty(languageInputConfig, 'name', '%s[%s]'|format(config.name, languageCode)) %}
+            {% set languageInputConfig = updateProperty(languageInputConfig, 'value', attribute(config.value, languageCode)) %}
+            {% set languageInputConfig = updateProperty(languageInputConfig, 'countryCode', attribute(language, 'ISO-3166-1-2')|lower) %}
+            {% set inputsConfigs = inputsConfigs|merge([languageInputConfig]) %}
+        {% endfor %}
+    {% endif %}
+    {% for inputConfig in inputsConfigs %}
+        {{ selfMacros.displayFormGroup(config, inputId) }}
+        {{ selfMacros.displayLabel(inputConfig) }}
+        {% if config.cols is defined %}
+        <div class="col-12 col-sm-{{ config.cols[1] }}">
+        {% endif %}
+        
+        {{ selfMacros.displayInputByTipe(type, inputConfig) }}
+        {{ selfMacros.displayHelp(config) }}
+        
+        {% if config.cols is defined %}
+        </div>
+        {% endif %}
+    
+    </div>
+    {% endfor %}
+{% endmacro %}
+
+{###########
+# TEXTAREA #
+###########}
+
+{# displays a textarea field
+@param hash config: hash for field properties (see setFieldAttributes macro explanation)
+#}
+{% macro displayTextarea(config) %}
+    {% import _self as selfMacros %}
+    {% set config = parseFieldConfig(config) %}
+    {% set value = config.value %}
+    {% set config = deleteProperty(config, 'value') %}
+    {% set classes = config.classes ?? [] %}
+    {% set classes = ['form-control']|merge(classes) %}
+    {% set config = updateProperty(config, 'classes', classes) %}
+    <textarea
+    {{ selfMacros.setFieldAttributes(config) }}
+    >{{ value }}</textarea>
+{% endmacro %}
+
+{# rich text field
+language packages must be downloaded from https://www.tiny.cloud/get-tiny/language-packages/ and saved into /public/share/rich-text-editor/locales/
+@param hash context: the calling template context object
+@param hash config: hash for field properties (see setFieldAttributes macro explanation) except for specific rich text options which can be set as a config.options hash
+#}
+{% macro displayRichTextEditor(context, config) %}
+    {% import _self as selfMacros %}
+    {# check locale file path #}
+    {% set languageCode = attribute(context.language, 'ISO-639-1') %}
+    {% set localePath = 'rich-text-editor/locales/%s.js'|format(languageCode)|pathToShareAsset %}
+    {% if isFile(localePath) == false %}
+        {% set config = updateProperty(config, 'validation', updateProperty(config.validation, 'invalidMessage', 'TinyMCE local file missing in %s'|format(localePath))) %}
+        {% set loadLocale = false %}
+    {% else %}
+        {% set loadLocale = true %}
+    {% endif %}
+    {% set classes = config.classes ?? [] %}
+    {% set classes = ['rich-text-editor']|merge(classes) %}
+    {% set config = updateProperty(config, 'classes', classes) %}
+    {% if config.locales is not defined %}
+        {% set config = updateProperty(config, 'id', (config.id ?? config.name)|formatIdforJs) %}
+        {% set inputsConfigs = [config] %}
+    {% else %}
+        {% set inputsConfigs = [] %}
+        {% for languageCode, language in config.locales|objectToArray %}
+            {% set languageInputConfig = config %}
+            {% set languageInputConfig = updateProperty(languageInputConfig, 'name', '%s[%s]'|format(config.name, languageCode)) %}
+            {% set languageInputConfig = updateProperty(languageInputConfig, 'id', languageInputConfig.name|formatIdforJs) %}
+            {% set languageInputConfig = updateProperty(languageInputConfig, 'value', attribute(config.value, languageCode)) %}
+            {% set languageInputConfig = updateProperty(languageInputConfig, 'countryCode', attribute(language, 'ISO-3166-1-2')|lower) %}
+            {% set inputsConfigs = inputsConfigs|merge([languageInputConfig]) %}
+        {% endfor %}
+    {% endif %}
+
+    {% for inputConfig in inputsConfigs %}
+        {{ selfMacros.displayFormGroup(config, inputConfig.id) }}
+        {{ selfMacros.displayLabel(inputConfig) }}
+        
+        {% if config.cols is defined %}
+        <div class="col-12 col-sm-{{ config.cols[1] }}">
+        {% endif %}
+        
+        {{ selfMacros.displayTextarea(inputConfig) }}
+        {{ selfMacros.displayHelp(config) }}
+        
+        {% if config.cols is defined %}
+        </div>
+        {% endif %}
+        
+        <script type="text/javascript">
+            var options = {
+                selector: '#{{ inputConfig.id }}',
+        {% if loadLocale %}
+                language: '{{ languageCode }}',
+                language_url: '{{ localePath }}',
+        {% endif %}
+        {% if config.disabled or config.readonly %}
+                readonly: true,
+        {% endif %}
+        {# rich text editor specific options #}
+        {% for option,value in config.options %}
+            '{{ option }}': {{ value|varToJs }},
+        {% endfor %}
+            }
+            tinymce.init(options);
+        </script>
+    </div>
+    {% endfor %}
+{% endmacro %}
+
+{#########
+# SELECT #
+#########}
+
+{# displays a select
+WARNING: uses Bootstrap custom select, so BS custom-forms component must be included
+@param hash config: hash for field properties (see setFieldAttributes macro explanation) plus specific properties:
+    noOption0 (bool) whether not to display the first zero-value option
+    option0Label (string) label to be used for the first option instead of the default one
+@param array items: array of hashes each with value and label property
+#}
+{% macro displaySelect(config, items) %}
+    {% import _self as selfMacros %}
+    {% set value = config.value %}
+    {% set config = deleteProperty(config, 'value') %}
+    {% set classes = config.classes ?? [] %}
+    {% set classes = ['custom-select']|merge(classes) %}
+    {% set config = updateProperty(config, 'classes', classes) %}
+<select {{ selfMacros.setFieldAttributes(config) }}>
+    {% if config.noOption0 is not defined or config.noOption0 == false %}
+    <option value="">{{ config.option0Label ?? 'please select an item '|trans }}</option>
+    {% endif %}
+    {% for item in items %}
+        {% set selected = item.value == value %}
+    <option value="{{ item.value }}"{% if selected %} selected="selected"{% endif %}>{{ item.label }}</option>
+    {% endfor %}
+</select>
+{% endmacro %}
+
+{# displays a select field block
+@param hash config: hash for field properties (see setFieldAttributes macro explanation) plus specific properties (see displaySelect)
+@param array items: array of hashes each with value and label property
+#}
+{% macro displaySelectGroup(config, items) %}
+    {% import _self as selfMacros %}
+    {% set id = (config.id ?? config.name)|formatIdforJs %}
+        {{ selfMacros.displayFormGroup(config, id) }}
+        {{ selfMacros.displayLabel(config) }}
+        {% if config.cols is defined %}
+        <div class="col-12 col-sm-{{ config.cols[1] }}">
+        {% endif %}
+        {{ selfMacros.displaySelect(config, items) }}
+        {{ selfMacros.displayHelp(config) }}
+        {% if config.cols is defined %}
+        </div>
+        {% endif %}
+    </div>
+{% endmacro %}
+
+{##############
+# RICH SELECT #
+##############}
+{# displays a riche select field block
+@param hash config: hash for field properties (see setFieldAttributes macro explanation) plus specific properties (see displaySelect)
+@param array items: array of hashes each with value and label property
+#}
+{% macro displayRichSelectGroup(config, items) %}
+    {% import _self as selfMacros %}
+    {% set id = (config.id ?? config.name)|formatIdforJs %}
+        {{ selfMacros.displayFormGroup(config, id) }}
+        {{ selfMacros.displayLabel(config) }}
+        {% if config.cols is defined %}
+        <div class="col-12 col-sm-{{ config.cols[1] }}">
+        {% endif %}
+        {{ selfMacros.displayRichSelect(config, items) }}
+        {{ selfMacros.displayHelp(config) }}
+        {% if config.cols is defined %}
+        </div>
+        {% endif %}
+    </div>
+{% endmacro %}
+
+{# displays a rich select using select2 (https://select2.org/), a select with enhanced features like remote data sources and autocomplete
+@param hash config: hash for field properties (see setFieldAttributes macro explanation) plus specific properties:
+    minimumInputLength minimum number of characters to type to trigger search; if it is set items (when present) are not showed by default
+    remoteDataRoute route to remote data search action
+        search terms will be passed into GET 'term' parameter
+        search action must return json
+    remoteDataRouteExtraParameters: object with extra parameters to be passed into route, each parameter *must* be already in a correct form to be turned into a javascript variable value, for example strings must be already enclosed by quotes
+    valueLabel:
+    options: hash container for any extra specific select2 option (see https://select2.org/configuration/options-api)
+@param array items: array of hashes each with value and label property, alternative to remoteDataRoute; if minimumInputLength is passed they are not shown but searched
+#}
+{% macro displayRichSelect(config, items) %}
+    {% import _self as selfMacros %}
+    {% set value = config.value %}
+    {% set config = deleteProperty(config, 'value') %}
+    {% set classes = config.classes ?? [] %}
+    {#% set classes = ['js-example-responsive']|merge(classes) %#}
+    {% set config = updateProperty(config, 'classes', classes) %}
+    {% set id = config.id ?? config.name|formatIdforJs %}
+    {% set option0Label = config.option0Label ?? 'please select an item '|trans %}
+    
+<select {{ selfMacros.setFieldAttributes(config) }}>
+    {% if config.noOption0 is not defined or config.noOption0 == false %}
+    <option value="">{{ option0Label }}</option>
+    {% endif %}
+    {% for item in items %}
+        {% set selected = item.value == value %}
+    <option value="{{ item.value }}"{% if selected %} selected="selected"{% endif %}>{{ item.label }}</option>
+    {% endfor %}
+    {% if config.remoteDataRoute is defined and config.remoteDataRoute and value is defined and value and config.valueLabel is defined and config.valueLabel %}
+    <option value="{{ value }}" selected="selected">{{ config.valueLabel }}</option>
+    {% endif %}
+</select>
+<script type="text/javascript">
+$(document).ready(function() {
+    $('{{ '#%s'|format(id) }}').select2({
+        minimumInputLength: {{ config.minimumInputLength ?? 0 }},
+        theme: 'bootstrap4',
+        allowClear: true,
+        width: '100%',
+        placeholder: true,
+        language: '{{ getLanguage('ISO-639-1') }}',
+    {% if config.remoteDataRoute %}
+        ajax: {
+            url: '{{ config.remoteDataRoute }}',
+            dataType: 'json',
+            data: function (params) {
+        {% if config.remoteDataRouteExtraParameters and (config.remoteDataRouteExtraParameters|length > 1 or config.remoteDataRouteExtraParameters|first) %}
+            {% for parameter, value in config.remoteDataRouteExtraParameters %}
+                {{ 'params.%s = %s;'|format(parameter, value)|raw }}
+            {% endfor %}
+        {% endif %}
+                return params;
+            },
+            processResults: function (data) {
+                return {
+                    results: data
+                };
+            }
+        }
+    {% endif %}
+    {# select2 specific options #}
+    {% for option,value in config.options %}
+        '{{ option }}': {{ value|varToJs }},
+    {% endfor %}
+    });
+    $('{{ '#%s'|format(id) }}').on('select2:select', function (e) {
+        //var data = e.params.data;
+        simplexValidation.validateField(e.target);
+    });
+});
+</script>
+{% endmacro %}
+
+{#################
+# RADIO/CHECKBOX #
+#################}
+
+{# displays one or more radio input field
+@param hash config: hash for field properties (see setFieldAttributes macro explanation) plus specific properties:
+    bool inline
+@param array items: array of hashes each with value and label property
+#}
+{% macro displayInputRadio(config, items) %}
+    {% import _self as selfMacros %}
+    {{ selfMacros.displayInputRadioCheckbox('radio', config, items) }}
+{% endmacro %}
+
+{# displays one or more checkbox input field
+@param hash config: hash for field properties (see setFieldAttributes macro explanation) plus specific properties:
+    bool inline
+@param array items: array of hashes each with value and label property
+#}
+{% macro displayInputRadio(config, items) %}
+    {% import _self as selfMacros %}
+    {{ selfMacros.displayInputRadioCheckbox('checkbox', config, items) }}
+{% endmacro %}
+
+{# displays one or more radio/checkbox input field
+@param string type: radio | checkbox
+@param hash config: hash for field properties (see setFieldAttributes macro explanation) plus specific properties:
+    bool inline
+@param array items: array of hashes each with value and label property
+NOTE: for checkbox group config.mandatory means that at least one input must be checked (and not all of them)
+#}
+{% macro displayInputRadioCheckbox(type, config, items) %}
+    {% import _self as selfMacros %}
+    {# checkbox validation #}
+    {% if type == 'checkbox' and config.validation.required %}
+      {% set validation = config.validation %}
+      {% set validation = updateProperty(validation, 'required', false) %}
+      {% set config = updateProperty(config, 'validation', validation) %}
+<script>
+simplexValidation.extraValidationFields.push({
+  name:'{{ config.name|escape('js') }}',
+  type: 'checkbox',
+  validation: 'at-least-one'
+})
+</script>
+    {% endif %}
+    {#<div>#}
+    {% for item in items %}
+         {% set itemConfig = config %}
+<div class="form-check{% if config.inline %} form-check-inline{% endif %}">
+        {# id #}
+        {% set itemId = '%s_%s'|format(config.name, item.value) %}
+        {% set itemConfig = updateProperty(itemConfig, 'id', itemId) %}
+        {# checked #}
+        {# checkbox multiple selected values #}
+        {% if config.value is iterable %}
+            {% set itemConfig = updateProperty(itemConfig, 'checked', item.value in config.value) %}
+        {% else %}
+            {% set itemConfig = updateProperty(itemConfig, 'checked', item.value is same as (config.value)) %}
+        {% endif %}
+        {# value #}
+        {% set itemConfig = updateProperty(itemConfig, 'value', item.value) %}
+        {# class #}
+        {% set classes = config.classes ?? [] %}
+        {% set classes = ['form-check-input']|merge(classes) %}
+        {% set itemConfig = updateProperty(itemConfig, 'classes', classes) %}
+        {{ selfMacros.displayInput(type, itemConfig) }}
+        <small>
+        {{ selfMacros.displayLabel({
+            'id': itemId,
+            'label': item.label
+        },
+        'form-check-label') }}
+        </small>
+    </div>
+    {% endfor %}
+    {#</div>#}
+{% endmacro %}
+
+{# displays a radios fields block
+@param hash config: hash for field properties (see setFieldAttributes macro explanation)
+@param array items: array of hashes each with value and label property
+#}
+{% macro displayInputRadioGroup(config, items) %}
+    {% import _self as selfMacros %}
+    {{ selfMacros.displayInputRadioCheckboxGroup('radio', config, items) }}
+{% endmacro %}
+
+{# displays a checkoxes fields block
+@param hash config: hash for field properties (see setFieldAttributes macro explanation) plus:
+    toggle: displays a checkbox before group label to toggle all of group checkboxes at once
+@param array items: array of hashes each with value and label property
+NOTE: config.mandatory means that at least one input must be checked (and not all of them)
+#}
+{% macro displayInputCheckboxGroup(config, items) %}
+    {% import _self as selfMacros %}
+    {{ selfMacros.displayInputRadioCheckboxGroup('checkbox', config, items) }}
+    {% if config.toggle %}
+      {% set toggleId = 'toggle_%s'|format(config.name|formatIdforJs) %}
+    <script>
+    $(document).ready(function() {
+      $('#{{ toggleId }}').change(function() {
+        $('input[name="{{ config.name }}"]').prop('checked', $(this).prop('checked'));
+      });
+    });
+    </script>
+    {% endif %}
+{% endmacro %}
+
+{# displays a radio/checkbox fields block
+@param string type: radio | checkbox
+@param hash config: hash for field properties (see setFieldAttributes macro explanation)
+@param array items: array of hashes each with value and label property
+NOTE: for checkbox group config.mandatory means that at least one input must be checked (and not all of them)
+#}
+{% macro displayInputRadioCheckboxGroup(type, config, items) %}
+    {% import _self as selfMacros %}
+        {{ selfMacros.displayFormGroup(config, config.name|formatIdforJs) }}
+        {% if type == 'checkbox' and config.toggle %}
+          {% set toggleId = 'toggle_%s'|format(config.name|formatIdforJs) %}
+        <input type="checkbox" id="{{ toggleId }}">
+        {% endif %}
+        {{ selfMacros.displayLabel(config) }}
+        {% if config.cols is defined %}
+        <div class="col-12 col-sm-{{ config.cols[1] }}{% if config.inline %} d-flex align-items-center{% endif %}">
+        {% endif %}
+        {% if config.inline %}
+        <div class="d-flex align-items-center flex-wrap">
+        {% endif %}
+        {{ selfMacros.displayInputRadioCheckbox(type, config, items) }}
+        {% if config.inline %}
+        </div>
+        {% endif %}
+        {{ selfMacros.displayHelp(config) }}
+        {% if config.cols is defined %}
+        </div>
+        {% endif %}
+    </div>
+{% endmacro %}
+
+{# displays a radios fields block
+@param hash config: hash for field properties (see setFieldAttributes macro explanation)
+@param array items: array of hashes each with value and label property
+#}
+{% macro displayInputRadioGroup(config, items) %}
+    {% import _self as selfMacros %}
+    {{ selfMacros.displayInputRadioCheckboxGroup('radio', config, items) }}
+{% endmacro %}
+
+{# displays a radios fields block with a boolean choice
+@param hash config: hash for field properties (see setFieldAttributes macro explanation)
+#}
+{% macro displayInputRadioBooleanGroup(config) %}
+    {% import _self as selfMacros %}
+    {% set config = updateProperty(config, 'inline', true) %}
+    {% set config = updateProperty(config, 'value', int(config.value)) %}
+    {% set items = [
+        {
+            'value': 0,
+            'label': 'No'|trans
+        },
+        {
+            'value': 1,
+            'label': 'Yes'|trans
+        }
+    ] %}
+    {{ selfMacros.displayInputRadioCheckboxGroup('radio', config, items) }}
+{% endmacro %}
+
+{# displays a block with a checkbox formatted as a switch
+@param hash config: hash for field properties (see setFieldAttributes macro explanation)
+#}
+{% macro displaySwitch(config) %}
+    {% import _self as selfMacros %}
+    <div class="custom-control custom-switch">
+    {% set config = updateProperty(config, 'checked', config.value == 1) %}
+    {% set config = updateProperty(config, 'value', 1) %}
+    {% set classes = config.classes ?? [] %}
+    {% set classes = ['custom-control-input']|merge(classes) %}
+    {% set config = updateProperty(config, 'classes', classes) %}
+    {{ selfMacros.displayInput('checkbox', config) }}
+    {% set classes = 'custom-control-label' %}
+    {{ selfMacros.displayLabel(config, classes) }}
+    </div>
+{% endmacro %}
+
+{########
+# RANGE #
+########}
+
+{# displays a range input field block
+WARNING: uses Bootstrap custom range input, so BS custom-forms component must be included
+@param hash config: hash for field properties (see setFieldAttributes macro explanation) plus:
+    prepended: content to be prepended to input
+    append: content to be appended to input
+#}
+{% macro displayInputRange(config) %}
+    {% import _self as selfMacros %}
+    {% set inputId = (config.id ?? config.name)|formatIdforJs %}
+        {{ selfMacros.displayFormGroup(config, inputId, 'range-group') }}
+        {{ selfMacros.displayLabel(config) }}
+        {% set classes = config.classes ?? [] %}
+        {% set classes = ['custom-range']|merge(classes) %}
+        {% set config = updateProperty(config, 'classes', classes) %}
+        {% if config.cols is defined %}
+        <div class="col-12 col-sm-{{ config.cols[1] }}">
+        {% endif %}
+        {{ selfMacros.displayInput('range', config) }}
+        {{ selfMacros.displayHelp(config) }}
+        {% if config.cols is defined %}
+        </div>
+        {% endif %}
+    </div>
+{% endmacro %}
+
+
+{###################
+# DATE TIME PICKER #
+###################}
+
+{# displays a date time picker
+@param hash config: hash for field properties (see setFieldAttributes macro explanation) plus
+- format (string, i.e. 'DD-MM-YYYY'), default to the one returnd by getdateFormat function
+- time (bool): whether the the time part is also present
+- before (string): another dateTimePicker input name whose minimum date value will be syncronized with selected date
+- after (string): another dateTimePicker input name whose maximum date value will be syncronized with selected date
+- options (hash): specific datetime options (see)
+@param bool time: whether the the time part is also present
+#}
+{% macro displayDateTimePicker(config) %}
+    {% import _self as selfMacros %}
+    {% set id = (config.id ?? config.name)|formatIdforJs %}
+    {% set containerId = '%s_container'|format(id) %}
+    {% if config.value and config.format != 'HH:mm' %}
+        {% set config = updateProperty(config, 'value', config.value|date(attribute(getLanguage(config.time ? 'dateTimeFormat' : 'dateFormat'), 'PHP'))) %}
+    {% endif %}
+    
+    {% set config = updateProperty(config, 'autocomplete', 'off') %}
+    {% set classes = config.classes ?? [] %}
+    {% set classes = ['form-control', 'datetimepicker-input']|merge(classes) %}
+    {% set config = updateProperty(config, 'classes', classes) %}
+    {#% set config = updateProperty(config, 'data', {'target': '#%s'|format(containerId)}) %#}
+    {% set config = updateProperty(config, 'custom', {'data-target': '#%s'|format(containerId)}) %}
+    <div class="input-group date" id="{{ containerId }}" data-target-input="nearest">
+        {{ selfMacros.displayInputText(config) }}
+        <div class="input-group-append" data-target="#{{ containerId }}" data-toggle="datetimepicker">
+            <div class="input-group-text"><i class="icon-form-calendar"></i></div>
+        </div>
+    </div>
+    <script type="text/javascript">
+      $(function () {
+            $('#{{ containerId }}').datetimepicker({
+                format: '{{ config.format|default(attribute(getLanguage(config.time ? 'dateTimeFormat' : 'dateFormat'), 'calendar')) }}',
+                locale: '{{ getLanguage('ISO-639-1') }}',
+                allowInputToggle: true,
+                {% if config.options.icons is not defined %}
+                icons: {
+                    time: 'icon-form-clock',
+                    date: 'icon-form-calendar',
+                    up: 'icon-form-angle-up',
+                    down: 'icon-form-angle-down',
+                    previous: 'icon-form-angle-left',
+                    next: 'icon-form-angle-right',
+                    today: 'icon-form-calendar-today',
+                    clear: 'icon-form-trash',
+                    close: 'icon-form-close'
+                },
+                {% endif %}
+                {% if config.options.buttons is not defined %}
+                buttons: {
+                    showToday: true,
+                    showClear: true,
+                    showClose: true
+                },
+                {% endif %}
+           {% for option,value in config.options %}
+               {{ option }}: {{ value|varToJs }},
+           {% endfor %}
+           });
+    {% if config.before %}
+            $("#{{ containerId }}").on("hide.datetimepicker", function (e) {
+                $('#{{ config.before }}_container').datetimepicker('minDate', e.date);
+            });
+    {% endif %}
+    {% if config.after %}
+            $("#{{ containerId }}").on("hide.datetimepicker", function (e) {
+                $('#{{ config.after }}_container').datetimepicker('maxDate', e.date);
+            });
+    {% endif %}
+       });
+   </script>
+{% endmacro %}
+
+{# displays a date time picker block
+@param hash config: hash for field properties (see setFieldAttributes macro explanation) plus specific properties (see displayDateTimePicker)
+#}
+{% macro displayDateTimePickerGroup(config) %}
+    {% import _self as selfMacros %}
+    {% set format = config.format|default(attribute(getLanguage(config.time ? 'dateTimeFormat' : 'dateFormat'), 'calendar')) %}
+    {% set config = updateProperty(config, 'format', format) %}
+    {% set id = (config.id ?? config.name)|formatIdforJs %}
+    {% set help = [config.help] ?? null %}
+    {% set help = ['Format: %s'|format(format)]|merge(help) %}
+    {% set config = updateProperty(config, 'help', help) %}
+        {{ selfMacros.displayFormGroup(config, id) }}
+        {{ selfMacros.displayLabel(config) }}
+        {% if config.cols is defined %}
+        <div class="col-12 col-sm-{{ config.cols[1] }}">
+        {% endif %}
+        {{ selfMacros.displayDateTimePicker(config) }}
+        {{ selfMacros.displayHelp(config) }}
+        {% if config.cols is defined %}
+        </div>
+        {% endif %}
+    </div>
+{% endmacro %}
+
+{#########
+# UPLOAD #
+#########}
+
+{# file(s) upload field
+@param hash context: the calling template context object
+@param string uploadRoute: route to address uploads to
+@param hash config: hash for field properties (see setFieldAttributes macro explanation) specific properties:
+- options (hash); specific js class options passed as is (see http://plugins.krajee.com/file-input/plugin-options), common options:
+    allowedFileTypes: ['image', 'html', 'text', 'video', 'audio', 'flash', 'object']
+    allowedFileExtensions: ['ext1', 'ext2', ...]
+    maxFileCount: maximum number of files allowed for each multiple upload. If set to 0, it means number of files allowed is unlimited
+- previewTemplate: HTML chunk (see http://plugins.krajee.com/file-input/plugin-options#initialPreview) with placeholders for the outputs files paths in the form:
+  @name: will be substituted by the name of the file
+  @output-key: use an output key to have the path to the associated file
+    
+#}
+{% macro displayFileUpload(context, uploadRoute, config) %}
+    {% import _self as selfMacros %}
+    {# build uplaod route #}
+    {% set inputId = (config.id ?? config.name)|formatIdforJs %}
+    {{ selfMacros.displayFormGroup(config, inputId) }}
+    {{ selfMacros.displayLabel(config) }}
+    {% set uploadKey = config.name %}
+    {{ selfMacros.displayInputHidden(config) }}
+    {% if config.cols is defined %}
+        <div class="col-12 col-sm-{{ config.cols[1] }}">
+    {% endif %}
+    {# format upload input id to be used by javascript #}
+    {% set uploadId = '%s-upload'|format(inputId) %}
+    {% set config = updateProperty(config, 'name', uploadId) %}
+    {% set config = updateProperty(config, 'id', uploadId) %}
+    {{ selfMacros.displayInputFile(config) }}
+    {# set help infos #}
+    {% set help = config.help ? [config.help] : [] %}
+    {# maximum file size #}
+    {% set help = help|merge(['maximum allowed upload size: %s MB'|trans|format(context.uploadMaxFilesizeMB)]) %}
+    {# number of files #}
+    {% set help = help|merge(['maximum number of files: %s'|trans|format(config.options.maxFileCount ? config.options.maxFileCount : 'no limit'|trans)]) %}
+    {% set config = updateProperty(config, 'help', help) %}
+    {{ selfMacros.displayHelp(config) }}
+    {% if config.cols is defined %}
+        </div>
+    {% endif %}
+    </div>
+    
+    <script type="text/javascript">
+    {% set jsOptions = 'js_options_%s'|format(inputId) %}
+    var {{ jsOptions }} = {{ selfMacros.buildFileUploadJsOptions(context, uploadKey, uploadRoute, config) }};
+    {% set jsUploadObject = 'js_upload_%s'|format(inputId) %}
+    $("#{{ uploadId }}").fileinput({{ jsOptions }})
+    //auto upload on file selection
+    .on("fileselect", function(event, numFiles, label) {
+        //upload only if there are files to upload so that triggered errors can be shown
+        if($('#{{ uploadId }}').fileinput('getFilesCount')) {
+            //uplaod method trigger delayed by 500ms because otherwise from bootstrap-file-input version 5.0.5 onward method is not triggered
+            setTimeout(
+                function() {
+                    $("#{{ uploadId }}").fileinput('upload');
+                },
+                500
+            );
+        }
+    })
+    //after upload append file to input value
+    .on('fileuploaded', function(event, data, previewId, index) {
+        //get file name
+        //var fileName = data.files[0].name;
+        var fileName = data.response.fileName;
+        {{ jsUploadObject }}.appendFile('{{ inputId }}', {name: fileName});
+    })
+    //preview of just uploaded file has been deleted
+    .on('filesuccessremove', function(event, id, index) {
+        //remove file form input value
+        {{ jsUploadObject }}.removeFileFromInput('{{ inputId }}', index);
+    })
+    .on('filesorted', function(event, params) {
+        {{ jsUploadObject }}.saveSorting('{{ inputId }}', params.oldIndex, params.newIndex);
+    })
+    .on('filebeforedelete', function(event, key, data) {
+        var fileIndex = {{ jsUploadObject }}.getPreviewIndexByKey(key);
+        if(fileIndex !== false) {
+            {{ jsUploadObject }}.removeFileFromPreviews(fileIndex);
+            {{ jsUploadObject }}.removeFileFromInput('{{ inputId }}', fileIndex);
+        }
+        //do not make ajax delete call
+        return true;
+    })
+    ;
+    var {{ jsUploadObject }} = {
+        /**
+        * gets files list from hidden input json
+        * @param string inputId: id attribute of the hidden input that stores files rapresentation
+        **/
+        getInputFiles: function(inputId) {
+            var stringValue = $('#' + inputId).val();
+            return stringValue ? stringValue.split('|') : [];
+        },
+        /**
+        * gets list of previews form the initial set plus any successfully uploaded file, excluding failed uploads
+        **/
+        getPreviewsList: function() {
+            var list = [];
+            var initialList = $('#{{ uploadId }}').fileinput('getFrames', '.file-preview-initial');
+            for (var i = 0; i < initialList.length; i++) {
+                list.push(initialList[i]);
+            }
+            var uploadedList = $('#{{ uploadId }}').fileinput('getFrames', '.file-preview-success');
+            for (var i = 0; i < uploadedList.length; i++) {
+                list.push(uploadedList[i]);
+            }
+            return list;
+        },
+        /**
+        * gets the index of a preview given the key
+        **/
+        getPreviewIndexByKey: function(key) {
+            var list = this.getPreviewsList();
+            for (var i = 0; i < list.length; i++) {
+                $(list[i]).find('src');
+                //for images
+                match = $(list[i]).find('[src*="/' + key + '"]');
+                if(match.length) {
+                    return i;
+                }
+                //for other files
+                match = $(list[i]).find('[href*="/' + key + '"]');
+                if(match.length) {
+                    return i;
+                }
+            }
+            return false;
+        },
+        /**
+        * sets files list into hidden input json
+        * @param string inputId: id attribute of the hidden input that stores files rapresentation
+        * @param array filesList: list of files objects
+        **/
+        setFiles: function(inputId, filesList) {
+            $('#' + inputId).val(filesList.join('|'));
+        },
+        /**
+        * appends an uploaded file to files list into the hidden input
+        * @param string inputId: id attribute of the hidden input that stores files rapresentation
+        * @param object fileObject: the object representing the uploaded file {name:name-of-the-file}
+        **/
+        appendFile: function(inputId, fileObject) {
+            //make room if necessary
+            this.makeRoom(inputId);
+            //append file
+            var filesList = this.getInputFiles(inputId);
+            filesList.push(fileObject.name);
+            this.setFiles(inputId, filesList);
+        },
+        /**
+        * sets files list into hidden input json according to current preview order
+        * @param string inputId: id attribute of the hidden input that stores files rapresentation
+        * @param int oldIndex
+        * @param int newIndex
+        **/
+        saveSorting: function(inputId, oldIndex, newIndex) {
+            var list = this.getInputFiles(inputId);
+            //get file name
+            var fileName = list[oldIndex];
+            //remove from old index
+            list.splice(oldIndex, 1);
+            //insert at new index
+            list.splice(newIndex, 0, fileName);
+            this.setFiles(inputId, list);
+        },
+        /**
+        * makes room for a new file
+        * @param string inputId: id attribute of the hidden input that stores files rapresentation
+        **/
+        makeRoom: function(inputId) {
+            //get current files list
+            var filesList = this.getInputFiles(inputId);
+            //check maxFileCount
+            var maxFileCount = {{ jsOptions }}.maxFileCount ? {{ jsOptions }}.maxFileCount : 0;
+            if(maxFileCount == filesList.length) {
+                //remove first file in the list to make room
+                this.removeFileFromInput(inputId, 0);
+                this.removeFileFromPreviews(0);
+            }
+        },
+        /**
+        * removes a file from the input value
+        * @param string inputId: id attribute of the hidden input that stores files rapresentation
+        * @param int fileIndex: 0 based index of file both in the input files list and the files previews of uploaded files
+        **/
+        removeFileFromInput: function(inputId, fileIndex) {
+            //get current files list
+            var filesList = this.getInputFiles(inputId);
+            filesList.splice(fileIndex,1);
+            this.setFiles(inputId, filesList);
+        },
+        /**
+        * removes a file from previews
+        * @param int fileIndex: 0 based index of file both in the input files list and the files previews of uploaded files
+        **/
+        removeFileFromPreviews: function(fileIndex) {
+            //remove file from preview
+            //get previews of successfully upload files
+            var previewsList = this.getPreviewsList();
+            var preview = previewsList[fileIndex];
+            $(preview).remove();
+        },
+        
+    }
+    </script>
+{% endmacro %}
+
+{% macro buildFileUploadJsOptions(context, uploadKey, uploadRoute, config) %}
+{
+    language: '{{ attribute(context.language, 'ISO-639-1') }}',
+    theme: 'simplex',
+    showUpload: false,
+    showRemove: false,
+    initialPreviewShowDelete: true,
+    deleteUrl: 'fake-delete-url',
+    showUploadStats: false,
+    showDrag: true,
+    showCaption: false,
+    browseOnZoneClick: false,
+    overwriteInitial: false,
+    maxFileSize: {{ context.uploadMaxFilesizeKB }},
+    uploadAsync: true,
+    uploadUrl: '{{ uploadRoute }}',
+{# config tweaks #}
+{% if config.options.maxFileCount and config.options.maxFileCount == 1 and config.options.autoReplace is not defined %}
+    {% set config = updateProperty(config, 'options', updateProperty(config.options, 'autoReplace', true)) %}
+{% endif %}
+{# preview #}
+{#% if config.value and config.previewTemplate is defined %#}
+{% if config.value %}
+    initialPreview: [
+    {% for fileName in config.value|split('|') %}
+        '{{ formatUploadPreviewTemplate(uploadKey, fileName, config.previewTemplate) }}',
+    {% endfor %}
+    ],
+    initialPreviewConfig: [
+    {% for fileName in config.value|split('|') %}
+        {caption: '{{ fileName }}', key: '{{ fileName }}'},
+    {% endfor %}
+    ],
+{% endif %}
+{% for option,value in config.options %}
+    {{ option }}: {{ value|varToJs }},
+{% endfor %}
+}
+{% endmacro %}
+
+{##########
+# CAPTCHA #
+##########}
+
+{# captcha
+NOTE: controller class must inject a Simplex\ZendCaptchaImageExtended instance
+@param object captchaImage: as generated by Simplex\ZendCaptchaImageExtended::generateCaptchaImage()
+#}
+{% macro displayCaptcha(captchaImage) %}
+    {% import _self as selfMacros %}
+<div class="form-row form-group" id="captcha-container">
+    <div class="col-12">
+        <label for="captcha">{% trans 'Control Code' %}</label>
+        {#<i class="icon-form-reload" id="captcha-icon-reload"></i>#}
+    </div>
+    <div class="col-6">
+        <img src="{{ captchaImage.imageUrl }}" id="captcha-image">
+        <input type="hidden" name="captcha_id" id="captcha_id" value="{{ captchaImage.id }}">
+    </div>
+    <div class="col-6">
+        <div class="input-group">
+        {{ selfMacros.displayInputText({
+            'name': 'captcha',
+            'validation': {
+                'required': true
+            }
+        }) }}
+            <div class="input-group-append">
+                <button type="button" class="icon-form-reload border-0" id="captcha-icon-reload"></button>
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
+        <small class="form-text text-muted">
+            {% trans "Type code displayed into image, if you are not able to read the code click on the reload icon to generate a new image" %}
+        </small>
+    </div>
+</div>
+{% endmacro %}
+
+{###############
+# COLOR PICKER #
+###############}
+
+{# displays a color picker
+@param hash config: hash for field properties (see setFieldAttributes macro explanation) plus
+- options (hash): specific color picker options options (see https://itsjavi.com/bootstrap-colorpicker/module-options.html)
+#}
+{% macro displayColorPicker(config) %}
+    {% import _self as selfMacros %}
+    {% set id = config.id ?? config.name %}
+    {% set containerId = '%s_container'|format(id) %}
+    {% set config = updateProperty(config, 'autocomplete', 'off') %}
+    {% set classes = config.classes ?? [] %}
+    {% set classes = ['form-control']|merge(classes) %}
+    {% set config = updateProperty(config, 'classes', classes) %}
+    <div class="input-group" id="{{ containerId }}">
+        {{ selfMacros.displayInputText(config) }}
+        <div class="input-group-append">
+            <span class="input-group-text colorpicker-input-addon"><i></i></span>
+        </div>
+    </div>
+    <script type="text/javascript">
+      $(function () {
+            $('#{{ containerId }}').colorpicker(
+                {
+                    container: '#{{ id }}',
+                    popover: {
+                        placement: 'auto'
+                    }
+           {#% for option,value in config.options %}
+               {{ option }}: {{ value|varToJs }},
+           {% endfor %#}
+                }
+            );
+       });
+   </script>
+{% endmacro %}
+
+{# displays a color picker block
+@param hash config: hash for field properties (see setFieldAttributes macro explanation) plus specific properties (see displayDateTimePicker)
+#}
+{% macro displayColorPickerGroup(config) %}
+    {% import _self as selfMacros %}
+    {% set id = (config.id ?? config.name)|formatIdforJs %}
+    {% set help = [config.help] ?? null %}
+    {% set config = updateProperty(config, 'help', help) %}
+        {{ selfMacros.displayFormGroup(config, id) }}
+        {{ selfMacros.displayLabel(config) }}
+        {% if config.cols is defined %}
+        <div class="col-12 col-sm-{{ config.cols[1] }}">
+        {% endif %}
+        {{ selfMacros.displayColorPicker(config) }}
+        {{ selfMacros.displayHelp(config) }}
+        {% if config.cols is defined %}
+        </div>
+        {% endif %}
+    </div>
+{% endmacro %}
+
+{#################
+# FIELD BUILDING #
+#################}
+{# sets field attributes based on config
+for autocomplete see https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete
+@param hash config: hash with following properties
+{
+    'name': '',
+    'id': '',
+    'value': '',
+    'label': fieldsLabels.,
+    'placeholder': by defult placeholder is filled by label, in case label is not to be displayed it can be set explicitily
+    'help': fieldsLabels.,
+    'autofocus': true,
+    'maxlength': '',
+    'autocomplete': '',
+    'inputmode': none | text | tel | url | email | numeric | decimal | search
+    'step': integer or float
+    'min': for integer nmumbers inputs
+    'max': for integer nmumbers inputs
+    'classes': '',
+    'validation': {
+        'required': true,
+        'pattern': ''
+    }
+    'data': {attr1: attr-1-value} //any data-x attribute, will be escaped
+    'custom': {attr1: attr-1-value} // any extra attribute, will not be escaped
+}
+#}
+{% macro setFieldAttributes(config) %}
+    {% set validation = config.validation ?? {} %}
+    {# common #}
+    name="{{ config.name }}"
+    id="{{ (config.id ?? config.name)|formatIdforJs }}"
+    value="{{ config.value|escape('html_attr') }}"
+    {% if config.placeholder is defined %}
+    placeholder="{{ config.placeholder }}"
+    {% elseif config.label %}
+    placeholder="{{ config.label }}"
+    {% endif %}
+    {% if config.autofocus %}
+    autofocus="" 
+    {% endif %}
+    {% if config.disabled %}
+    disabled="" 
+    {% endif %}
+    {% if config.checked %}
+    checked="" 
+    {% endif %}
+    {% if config.readonly %}
+    readonly="" 
+    {% endif %}
+    {% if config.maxlength %}
+    maxlength="{{ config.maxlength }}" 
+    {% endif %}
+    {% if config.autocomplete %}
+    autocomplete="{{ config.autocomplete }}" 
+    {% endif %}
+    {% if config.inputmode %}
+    inputmode="{{ config.inputmode }}" 
+    {% endif %}
+    {% if config.step %}
+    step="{{ config.step }}" 
+    {% endif %}
+    {% if config.min %}
+    min="{{ config.min }}" 
+    {% endif %}
+    {% if config.max %}
+    max="{{ config.max }}" 
+    {% endif %}
+    {# merge classes #}
+    class="{{ config.classes|join(' ') }}"
+    {# help text #}
+    {% if config.help %}
+    aria-describedby="{{ '%s-help'|format(config.id ?? config.name ) }}"
+    {% endif %}
+    {# data #}
+    {% if config.data %}
+        {% for name, value in config.data %}
+            {{ 'data-%s=%s'|format(name, value|escape('html_attr')) }}
+        {% endfor %}
+    {% endif %}
+    {# custom #}
+    {% if config.custom %}
+        {% for name, value in config.custom %}
+            {{ '%s=%s'|format(name, value) }}
+        {% endfor %}
+    {% endif %}
+    {# validation #}
+    {% if validation %}
+        {% if validation.required %}
+        required="" 
+        {% endif %}
+        {% if validation.pattern %}
+        pattern="{{ validation.pattern|escape('html_attr') }}" 
+        {% endif %}
+        {% if validation.validityStates %}
+            {% for validityState, validityStateProperties in validation.validityStates %}
+                {% if validityStateProperties.invalid %}
+                    {{ 'data-validity-state-%s-invalid="true"'|format(validityState) }}
+                {% endif %}
+                {% if validityStateProperties.message %}
+                    {{ 'data-validity-state-%s-message=%s'|format(validityState, validityStateProperties.message|escape('html_attr')) }}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% endif %}
+{% endmacro %}
+
+{# displays a field validation message
+NOTE: javascript validation function creates automatically if needed, this macro can be used to initialized message at page load time
+@param string fieldId
+@param string invalidMessage
+#}
+{% macro displayFieldValidationMessage(fieldId, invalidMessage) %}
+<div class="invalid-tooltip" id="error-for-{{ fieldId }}">
+  {{ invalidMessage }}
+</div>
+{% endmacro %}
+
+{# displays form group container
+@param hash config: hash for field properties (see setFieldAttributes macro explanation)
+@param string inputId
+@param string customClasses: optional label css classes
+#}
+{% macro displayFormGroup(config, inputId, customClasses) %}
+    {% set classes = ['form-group'] %}
+    {% if config.cols is defined %}
+        {% set classes = classes|merge(['row']) %}
+    {% endif %}
+    {% if customClasses %}
+        {% set classes = classes|merge([customClasses]) %}
+    {% endif %}
+    <div class="{{ classes|join(' ') }}" id="{{ '%s-container'|format(inputId) }}">
+{% endmacro %}
+
+{# displays label
+@param hash config: hash for field properties (see setFieldAttributes macro explanation)
+@param string customClasses: optional label css classes
+#}
+{% macro displayLabel(config, customClasses) %}
+    {% if config.label != false %}
+        {% set classes = [] %}
+        {% if config.cols is defined %}
+            {% set classes = classes|merge(['col-form-label col-12 col-sm-%d text-sm-right'|format(config.cols[0])]) %}
+        {% endif %}
+        {% if customClasses %}
+            {% set classes = classes|merge([customClasses]) %}
+        {% endif %}
+<label for="{{ (config.id ?? config.name)|formatIdforJs }}" class="{{ classes|join(' ') }}">
+{{ config.label|raw }}
+        {% if config.validation.required and (config.hideMandatories is not defined or config.hideMandatories == false) %}
+<span title="{{ 'This field is mandatory'|trans }}" aria-label="required">
+    {{ config.requiredLabel ?? '*' }}
+</span>
+        {% endif %}
+        {% if config.countryCode is defined %}
+<span class="{{ 'flag-icon flag-icon-%s'|format(config.countryCode) }}"></span>
+        {% endif %}
+        {% if config.insertRecord is defined %}
+          {% set insertRecordId = 'insert-foreign-key-record_%s'|format(config.name) %}
+<button type="button"
+class="btn insert-foreign-key-record icon-erp-plus-circle" id="{{ insertRecordId }}"
+title="{{ 'Insert new record'|trans }}"
+></button>
+<script>
+$(document).ready(function() {
+  $('#{{ insertRecordId }}').click(function() {
+    // create form on the fly
+    var insertForeignKeyRecordForm = $('<form>', {
+        'action': '{{ config.insertRecord.insertUrl }}',
+        'method': 'POST'
+    }).append(jQuery('<input>', {
+        'name': 'callingFormRoute',
+        'value': window.location.pathname,
+        'type': 'hidden'
+    }));
+    // send form
+    insertForeignKeyRecordForm.appendTo('body').submit();
+  });
+});
+</script>
+        {% endif %}
+</label>
+    {% endif %}
+{% endmacro %}
+
+{# displays help
+@param hash config: hash for field properties (see setFieldAttributes macro explanation)
+#}
+{% macro displayHelp(config) %}
+    {% if config.hideHelp is not defined or config.hideHelp == false %}
+        {% set help = config.help ? (config.help is iterable ? config.help : [config.help]) : [] %}
+        {% if config.maxlength %}
+            {% set help = help|merge(['maximum length %s characters'|trans|format(config.maxlength)]) %}
+        {% endif %}
+        {% if help is not empty %}
+    <small id="{{ '%s-help'|format(config.id ?? config.name )|formatIdforJs }}" class="form-text text-muted">{{ help|join('; ')|raw }}</small>
+        {% endif %}
+    {% endif %}
+{% endmacro %}
+
+{##################
+# ASSETS & SET-UP #
+##################}
+
+{# sets up form and include assets, to be called inside head tag
+@param hash config: hash for form properties
+    noValidation (bool): whether NOT to load JavaScript validation API
+    customValidation (function): function to be executed at the end of form submit
+    onFieldError (function name): function to be executed on field object whe an error occours
+    locales (bool): whether there is at least one localized field
+    assets (list): ['richTextEditor', 'fileUpload', 'captcha', 'dateTimePicker', 'passwordGenerator', 'richSelect', 'colorPicker'] list of the field types included into form that need some asset to be included
+    captcha (object): captcha config object, properties:
+        reloadRoute (string): route for image reloading, it must be mapped and must return Simplex\ZendCaptchaImageExtended::reloadCaptcha
+    passwordGenerator (object): password generator config object, properties:
+        generateRoute (string): route for generating password, it must be mapped and must return the string with the generated password
+#}
+{% macro setUpForm(context, config) %}
+    {% import _self as selfMacros %}
+    <!-- Fontello form icons -->
+    <link rel="stylesheet" href="{{ 'simplex/form/Fontello/css/fontello.css'|pathToShareAsset }}">
+    {# validation #}
+    {% if (config.noValidation is not defined) or config.noValidation == false %}
+        {{ selfMacros.formValidation(config.customValidation, config.onFieldError) }}
+    {% endif %}
+    {# locales #}
+    {% if config.locales %}
+        {{ selfMacros.localesAssets(context) }}
+    {% endif %}
+    {# assets #}
+    {% if 'dateTimePicker' in config.assets %}
+        {{ selfMacros.dateTimePickerAssets(context) }}
+    {% endif %}
+    {% if 'richTextEditor' in config.assets %}
+        {{ selfMacros.richTextEditorAssets(context) }}
+    {% endif %}
+    {% if 'fileUpload' in config.assets %}
+        {{ selfMacros.fileUploadAssets(context) }}
+    {% endif %}
+    {% if 'captcha' in config.assets %}
+        {{ selfMacros.captchaAssets(context, config.captcha) }}
+    {% endif %}
+    {% if 'passwordGenerator' in config.assets %}
+        {{ selfMacros.passwordGeneratorAssets(context, config.passwordGenerator) }}
+    {% endif %}
+    {% if 'richSelect' in config.assets %}
+        {{ selfMacros.richSelectAssets(context) }}
+    {% endif %}
+    {% if 'colorPicker' in config.assets %}
+        {{ selfMacros.colorPickerAssets(context) }}
+    {% endif %}
+{% endmacro %}
+
+{#
+builds validation javascript API
+#}
+{% macro formValidation(customValidation, onFieldError) %}
+<script>
+/*************
+* VALIDATION *
+*************/
+// bootstrap starter JavaScript for disabling form submissions if there are invalid fields
+//mixed with validation tutorial from https://css-tricks.com/form-validation-part-2-constraint-validation-api-javascript/
+var simplexValidation = {
+    //'use strict';
+    init: function() {
+        window.addEventListener('load', function() {
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+            for (var i = 0; i < forms.length; i++) {
+                //add novalidate to skip browser native validation, do it by javascript so that in case of javascript error native validation still works
+                forms[i].setAttribute('novalidate', true);
+                // Get all of the form elements
+                var fields = forms[i].elements;
+                var field, attributeName, attributeCheck, validityState;
+                //var regex = /'data-validity-state-([a-z\-]+)-invalid'/g;
+                var regex = /data-validity-state-([a-z\-]+)-invalid/g;
+                for (var i = 0; i < fields.length; i++) {
+                    field = fields[i];
+                    //if(simplexValidation.fieldIsToValidate(field)) {
+                        //search for a validity state already triggered at compile time
+                        //var dataAttribute = 'data-validity-state-' + validityState + '-message';
+                        //return field.attributes[dataAttribute] ? field.attributes[dataAttribute].value : defaultErrorMessage;
+                        
+                        for (var j = 0; j < field.attributes.length; j++) {
+                            attributeName = field.attributes[j].name;
+                            //attributeCheck = attributeName.match(regex);
+                            attributeCheck = regex.exec(attributeName);
+                            if(attributeCheck) {
+                                validityState = attributeCheck[1];
+                                simplexValidation.showError(field, simplexValidation.getFieldError(field, validityState));
+                            }
+                        }
+                    //}
+                }
+            }
+            // Listen to all blur events
+            document.addEventListener(
+                'blur',
+                function (event) {
+                    // Only run if the element is a form field (and not a dropzone for example) and the form needs to be validated
+                    if (typeof event.target.form == 'undefined' || event.target.form == null || (!event.target.form.classList.contains('needs-validation') || event.target.form.classList.contains('do-not-validate-on-blur'))) return;
+                    // Validate the field
+                    /*var error = simplexValidation.hasError(event.target);
+                    if(error) {
+                        simplexValidation.showError(event.target, error);
+                    } else {
+                        // Otherwise, remove any existing error message
+                        simplexValidation.removeError(event.target);
+                    }*/
+                    simplexValidation.validateField(event.target);
+                },
+                true
+            );
+            // Check all fields on submit
+            document.addEventListener(
+                'submit',
+                function (event) {
+                    // Only run on forms flagged for validation
+                    if (!event.target.classList.contains('needs-validation')) return;
+                    // Get all of the form elements
+                    var fields = event.target.elements;
+                    // Validate each field
+                    // Store the first field with an error to a variable so we can bring it into focus later
+                    var error, hasErrors;
+                    for (var i = 0; i < fields.length; i++) {
+                        /*error = simplexValidation.hasError(fields[i]);
+                        if (error) {
+                            simplexValidation.showError(fields[i], error);
+                            if (!hasErrors) {
+                                hasErrors = fields[i];
+                            }
+                        } else {
+                            simplexValidation.removeError(fields[i]);
+                        }*/
+                        if(simplexValidation.validateField(fields[i]) == false && !hasErrors) {
+                            hasErrors = fields[i];
+                        }
+                    }
+                    // If there are errors, don't submit form and focus on first element with error
+                    if (hasErrors) {
+                        event.preventDefault();
+                        hasErrors.focus();
+    {% if onFieldError %}
+                        {{ onFieldError }}(hasErrors);
+    {% endif %}
+                    }
+                    if(simplexValidation.extraValidation() == false) {
+                      event.preventDefault();
+                    }
+                    {% if customValidation %}
+                    if(!{{ customValidation }}) {
+                        event.preventDefault();
+                    }
+                    {% endif %}
+                    // Otherwise, let the form submit normally
+                    // You could also bolt in an Ajax form submit process here
+                },
+                false
+            );
+        },
+        false);
+    },
+    extraValidationFields: [
+    ],
+    /**
+    * Gets custom error message from the attribute named after data-validity-state-[validity-state]-message
+    * where [validity-state] is a name of a state as found to https://www.w3.org/TR/html5/sec-forms.html#validitystate
+    * with the uppercase letters substituted by hypen + correspondent lowercase letter
+     **/
+    validateField: function (field) {
+        var error = simplexValidation.hasError(field);
+        if(error) {
+            simplexValidation.showError(field, error);
+            return false;
+        } else {
+            simplexValidation.removeError(field);
+            return true;
+        }
+    },
+    /**
+    * Performs extra validation set up by specific situations (as a required checkoxes group which means at least one checkbox checked into group)
+    * field macros should set and object into js simplexValidation.extraValidationFields object with these properties:
+    * {
+    *   name: value of input "name" attribute
+    *   type: input type (so far just 'checkbox')
+    *   validation: validation type, (so far just 'at-least-one')
+    * }
+     **/
+    extraValidation: function () {
+      if(!simplexValidation.extraValidationFields.length) {
+        return true
+      } else {
+        //assume validation is false
+        extraValidationResult = false
+        //loop fields to be validated
+        for(let extraFieldI = 0; extraFieldI < simplexValidation.extraValidationFields.length; extraFieldI++) {
+          let fieldDefinition = simplexValidation.extraValidationFields[extraFieldI]
+          let field = $('[name="' + fieldDefinition.name.replace(/\[/g, '\\[').replace(/\]/g, '\\]') + '"]')
+          //check validation type
+          switch(fieldDefinition.validation) {
+            //at least one filled field
+            case 'at-least-one':
+              //check field type
+              switch (fieldDefinition.type) {
+                //checkboxe(s)
+                case 'checkbox':
+                  //loop inputs
+                  for (let i = 0; i < field.length; i++){
+                    if($(field[i]).prop('checked')) {
+                      extraValidationResult = true
+                      break
+                    }
+                  }
+                  if(!extraValidationResult) {
+                    simplexValidation.showError(field[0], simplexValidation.getFieldError(field[0], 'value-missing'))
+                  }
+                break;
+              }
+            break;
+          }
+        }
+        return extraValidationResult
+      }
+    },
+    /**
+    * Gets custom error message from the attribute named after data-validity-state-[validity-state]-message
+    * where [validity-state] is a name of a state as found to https://www.w3.org/TR/html5/sec-forms.html#validitystate
+    * with the uppercase letters substituted by hypen + correspondent lowercase letter
+     **/
+    getFieldError: function (field, validityState) {
+        var defaultErrorMessage;
+        switch(validityState) {
+            case 'value-missing':
+                defaultErrorMessage = '{{ 'Please fill out this field'|trans|escape('js') }}';
+            break;
+            case 'email':
+                defaultErrorMessage = '{{'Please enter an email address'|trans|escape('js') }}.';
+            break;
+            case 'url':
+                defaultErrorMessage = '{{ 'Please enter a URL'|trans|escape('js') }}';
+            break;
+            case 'too-short':
+                defaultErrorMessage = '{{ 'Please lengthen this text to %s characters or more. You are currently using %s characters'|trans|format("' + field.getAttribute('minLength') + '", "' + field.value.length + '")|raw }}';
+            break;
+            case 'too-long':
+                defaultErrorMessage = '{{ 'Please short this text to no more than %s characters. You are currently using %s characters'|trans|format("' + field.getAttribute('maxLength') + '", "' + field.value.length + '")|raw }}';
+            break;
+            case 'bad-input':
+                defaultErrorMessage = '{{ 'Please enter a number'|trans|escape('js') }}';
+            break;
+            case 'step-mismatch':
+                defaultErrorMessage = '{{ 'Please select a valid value'|trans|escape('js') }}';
+            break;
+            case 'range-overflow':
+                defaultErrorMessage = '{{ 'Please select a value that is no more than %s'|trans|format("' + field.getAttribute('max')")|raw }};
+            break;
+            case 'range-underflow':
+                defaultErrorMessage = '{{ 'Please select a value that is no less than %s'|trans|format("' + field.getAttribute('min')")|raw }};
+            break;
+            case 'pattern-mismatch':
+                defaultErrorMessage = '{{ 'Please match the requested format'|trans|raw }}';
+            break;
+        }
+        var dataAttribute = 'data-validity-state-' + validityState + '-message';
+        return (field.attributes && field.attributes[dataAttribute]) ? field.attributes[dataAttribute].value : defaultErrorMessage;
+    },
+    
+    // Checks if a field is candidate to validation
+    fieldIsToValidate: function (field) {
+        // Don't validate submits, buttons, file and reset inputs, and disabled fields
+        return !(field.disabled || field.type === 'file' || field.type === 'reset' || field.type === 'submit' || field.type === 'button');
+    },
+    
+    // Validates the field
+    hasError: function (field) {
+        // Check if field needs validation
+        if (!simplexValidation.fieldIsToValidate(field)) return;
+        // Get validity
+        var validity = field.validity;
+        // If valid, return null
+        if (validity.valid) return;
+        // If field is required and empty
+        if (validity.valueMissing) return simplexValidation.getFieldError(field, 'value-missing');
+        // If not the right type
+        if (validity.typeMismatch) {
+            // Email
+            if (field.type === 'email') return simplexValidation.getFieldError(field, 'type-mismatch-email');
+            // URL
+            if (field.type === 'url') return simplexValidation.getFieldError(field, 'type-mismatch-url');
+        }
+        // If too short
+        if (validity.tooShort) return simplexValidation.getFieldError(field, 'too-short');
+        // If too long
+        if (validity.tooLong) return simplexValidation.getFieldError(field, 'too-short');
+        // If number input isn't a number
+        if (validity.badInput) return simplexValidation.getFieldError(field, 'bad-input');
+        // If a number value doesn't match the step interval
+        if (validity.stepMismatch) return simplexValidation.getFieldError(field, 'step-mismatch');
+        // If a number field is over the max
+        if (validity.rangeOverflow) return simplexValidation.getFieldError(field, 'range-overflow');
+        // If a number field is below the min
+        if (validity.rangeUnderflow) return simplexValidation.getFieldError(field, 'range-underflow');
+        // If pattern doesn't match
+        if (validity.patternMismatch) return simplexValidation.getFieldError(field, 'pattern-mismatch');
+        // If all else fails, return a generic catchall error
+        return '{{ 'The value you entered for this field is invalid.'|trans|escape('js')  }}';
+    },
+    
+    /*
+    Shows error
+    */
+    showError: function (field, error) {
+        // Toggle error classes to field
+        field.classList.remove('is-valid');
+        field.classList.add('is-invalid');
+        //get field type
+        var fieldType = $(field).attr('type');
+        // Get field id or name
+        var id, messageContainer, manuallyShowMessage;
+        switch(fieldType) {
+            case 'radio':
+            case 'checkbox':
+                //radio or checkbox input id contains also value, check on name (and therefore on group container)
+                id = simplexValidation.formatId(field.name);
+                manuallyShowMessage = true;
+            break;
+            default:
+                id = field.id || field.name;
+                manuallyShowMessage = false;
+            break;
+        }
+        if (!id) return;
+        messageContainer = $('#' + id + '-container');
+        //radio and checkboxes
+        if(fieldType == 'radio' || fieldType == 'checkbox') {
+            messageContainer = $(field).parent().parent();
+        //input groups or BS horizontal form
+        } else if(!messageContainer.length || $(field).parent().hasClass('input-group') || messageContainer.hasClass('row')) {
+            messageContainer = $(field).parent();
+        }
+        // Check if error message field already exists
+        // If not, create one
+        var message = field.form.querySelector('.invalid-tooltip#error-for-' + id );
+        if (!message) {
+            message = document.createElement('div');
+            message.className = 'invalid-tooltip';
+            message.id = 'error-for-' + id;
+            messageContainer.append(message);
+        } else {
+            manuallyShowMessage = true;
+        }
+        // Update error message in any case to overwrite eventual previous errors
+        message.innerHTML = error;
+        // Add ARIA role to the field
+        field.setAttribute('aria-describedby', 'error-for-' + id);
+        //show manually if necessary
+        if(manuallyShowMessage) {
+            $('#' + message.id).css('display', 'block');
+        }
+    },
+    
+    /*
+    Remove error
+    */
+    removeError: function (field) {
+        // Toggle error classes to field
+        field.classList.remove('is-invalid');
+        if($(field).attr('required')) {
+            field.classList.add('is-valid');
+        }
+        //get field type
+        var fieldType = $(field).attr('type');
+        var messageId, manuallyHideMessage
+        switch(fieldType) {
+            case 'radio':
+            case 'checkbox':
+                messageId = 'error-for-' + simplexValidation.formatId(field.name);
+                manuallyHideMessage = true;
+            break;
+            default:
+                messageId = 'error-for-' + simplexValidation.formatId(field.name);
+                manuallyHideMessage = true;
+            break;
+        }
+        //hide manually if necessary
+        if(manuallyHideMessage) {
+            $('#' + messageId).css('display', 'none');
+        }
+        // Remove ARIA role from the field
+        field.removeAttribute('aria-describedby');
+        // Get field id or name
+        var id = field.id || field.name;
+        if (!id) return;
+        // Check if an error message is in the DOM
+        var message = field.form.querySelector('.invalid-tooltip#error-for-' + simplexValidation.formatId(id) + '');
+        if (!message) return;
+    },
+    /*
+    Builds id from name
+    */
+    formatId: function (fieldName) {
+        return fieldName.replace(/\[/g, '_').replace(/\]/g, '_');
+    }
+};
+simplexValidation.init();
+</script>
+
+{% endmacro %}
+
+{# localized fields
+@param object context
+#}
+{% macro localesAssets(context) %}
+<!-- Flag icon css -->
+<link href="{{ 'flag-icon-css/css/flag-icon.min.css'|pathToNpmAsset }}" media="all" rel="stylesheet" type="text/css" />
+{% endmacro %}
+
+{# rich text editor
+language packages must be downloaded from https://www.tiny.cloud/get-tiny/language-packages/ and saved into /public/share/rich-text-editor/locales/
+@param object context
+#}
+{% macro dateTimePickerAssets(context) %}
+<!-- date picker -->
+<script src="{{ 'moment/min/moment-with-locales.min.js'|pathToNpmAsset }}"></script>
+<script src="{{ 'tempusdominus-bootstrap-4/build/js/tempusdominus-bootstrap-4.min.js'|pathToNpmAsset }}"></script>
+<link rel="stylesheet" href="{{ 'tempusdominus-bootstrap-4/build/css/tempusdominus-bootstrap-4.min.css'|pathToNpmAsset }}">
+{% endmacro %}
+
+{# date time picker
+language packages must be downloaded from https://www.tiny.cloud/get-tiny/language-packages/ and saved into /public/share/rich-text-editor/locales/
+@param object context
+#}
+{% macro richTextEditorAssets(context) %}
+<!-- rich text textarea -->
+<script src="{{ 'tinymce/tinymce.min.js'|pathToNpmAsset }}"></script>
+<style type="text/css">
+/*tinyMCE fullscreen*/
+div.mce-fullscreen {
+    z-index:10000;
+}
+</style>
+{% endmacro %}
+
+{# file upload 
+@param object context
+#}
+{% macro fileUploadAssets(context) %}
+<!-- Kartik Bootstrap file input -->
+<link href="{{ 'bootstrap-fileinput/css/fileinput.min.css'|pathToNpmAsset }}" media="all" rel="stylesheet" type="text/css" />
+<script src="{{ 'bootstrap-fileinput/js/plugins/piexif.min.js'|pathToNpmAsset }}" type="text/javascript"></script>
+<script src="{{ 'bootstrap-fileinput/js/plugins/sortable.min.js'|pathToNpmAsset }}" type="text/javascript"></script>
+<script src="{{ 'bootstrap-fileinput/js/fileinput.min.js'|pathToNpmAsset }}" type="text/javascript"></script>
+<script src="{{ 'simplex/form/js/upload-file-theme.js'|pathToShareAsset }}" type="text/javascript"></script>
+<script src="{{ 'bootstrap-fileinput/js/locales/%s.js'|format(attribute(context.language, 'ISO-639-1'))|pathToNpmAsset }}" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        //fix bug
+        $('.file-drop-zone').addClass('clearfix');
+    });
+</script>
+{% endmacro %}
+
+{# captcha 
+@param object context
+@param object config: captcha config object, properties:
+    reloadRoute (string): route for image reloading
+#}
+{% macro captchaAssets(context, config) %}
+<script type="text/javascript">
+$(document).ready(function(){
+    {% if config.reloadRoute is not defined %}
+    alert('captcha field needs reloadRoute configuration property');
+    {% endif %}
+    $('#captcha-icon-reload').click(function(){
+        $.getJSON('{{ config.reloadRoute }}', function(captchaImage) {
+            $('#captcha-image').attr('src', captchaImage.imageUrl);
+            $('#captcha_id').val(captchaImage.id);
+        });
+    });
+});
+</script>
+{% endmacro %}
+
+{# password generator assets 
+@param object context
+@param object config: password generator config object, properties:
+    generateRoute (string): route for generating password
+#}
+{% macro passwordGeneratorAssets(context, config) %}
+<script type="text/javascript">
+$(document).ready(function(){
+    $('.generate-password').click(function() {
+        var input = $($(this).parents('.input-group').children('input')[0]);
+        $.get('{{ config.generateRoute }}', function(response) {
+            input.val(response).select();
+        });
+    });
+});
+</script>
+{% endmacro %}
+
+{# rich select assets 
+@param object context
+#}
+{% macro richSelectAssets(context) %}
+<!-- select2 -->
+<link href="{{ 'select2/dist/css/select2.min.css'|pathToNpmAsset }}" rel="stylesheet" />
+{# @ttskch does not display clear icon #}
+{#<link href="{{ '@ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.min.css'|pathToNpmAsset }}" rel="stylesheet" />#}
+<link href="{{ 'select2-bootstrap4-theme/dist/select2-bootstrap4.min.css'|pathToNpmAsset }}" rel="stylesheet" />
+<script src="{{ 'select2/dist/js/select2.min.js'|pathToNpmAsset }}"></script>
+<script src="{{ 'select2/dist/js/i18n/%s.js'|format(getLanguage('ISO-639-1'))|pathToNpmAsset }}"></script>
+<script>
+window.jQuery(document).on('select2:open', e => {
+  const id = e.target.id;
+  const target = document.querySelector(`[aria-controls=select2-${id}-results]`);
+  target.focus();
+});
+</script>
+{% endmacro %}
+
+{# color picker assets
+    uses https://itsjavi.com/bootstrap-colorpicker
+@param object context
+#}
+{% macro colorPickerAssets(context) %}
+<!-- select2 -->
+<link href="{{ 'bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css'|pathToNpmAsset }}" rel="stylesheet" />
+<script src="{{ 'bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js'|pathToNpmAsset }}"></script>
+{% endmacro %}

@@ -1,0 +1,20 @@
+{% extends '@local/templates/application.twig' %}
+
+{% set logoPath = '/PATH/TO/MASTHEAD/LOGO/IMAGES' %}
+
+{% block headerLogo %}
+{% endblock %}
+
+{% block headerTitle %}
+{% endblock %}
+
+{% set areaNavigationLabels = {
+    'NAVIGATION-KEY': 'NAVIGATINO-KEY-LABEL'|trans
+} %}
+
+{% block head %}
+    {{ parent() }}
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="/public/local/simplex/Backend/css/bootstrap.min.css">
+    <script src="{{ 'bootstrap/dist/js/bootstrap.bundle.min.js'|pathToNpmAsset }}"></script>
+{% endblock %}

@@ -1,0 +1,118 @@
+{###########
+# FACEBOOK #
+###########}
+
+{# includes FB SDK Javascript
+@param object context
+@param string appId
+@param string title
+@param string description
+@param string imageUrl: url from root to image
+#}
+    
+{% macro facebookSDKAssets(context, appId) %}
+    {% set src = 'https://connect.facebook.net/%s_%s/sdk.js#xfbml=1&version=v5.0&appId=%s'|format(
+        attribute(context.language, 'ISO-639-1'),
+        attribute(context.language, 'ISO-3166-1-2'),
+        appId
+    ) %}
+<script async defer crossorigin="anonymous" src="{{ src }}"></script>
+{% endmacro %}
+{# builds head meta tag needed to share current page on FB (see https://developers.facebook.com/docs/sharing/webmasters#markup)
+@param object context
+@param string type: (see https://ogp.me/#types)
+@param string title
+@param string description
+@param string imageUrl: url from root to image
+#}
+{% macro facebookShareMeta(context, type, title, description, imageUrl) %}
+    
+<meta property="og:url"                content="{{ context.server.SCRIPT_URI }}" />
+<meta property="og:type"               content="{{ type }}" />
+<meta property="og:title"              content="{{ title|escape('html_attr') }}" />
+    {% if description %}
+<meta property="og:description"        content="{{ description|escape('html_attr') }}" />
+    {% endif %}
+    {% if imageUrl %}
+<meta property="og:image"              content="{{ turnPathToUrl(imageUrl) }}" />
+    {% endif %}
+{% endmacro %}
+
+{# builds button to share a page (defaults to current one) on FB (see https://developers.facebook.com/docs/plugins/share-button/)
+@param object context
+@param string layout: button (default) | box_count | button_count
+@param string size: small (default) | large
+@param string pageUrl: defaults to current one
+#}
+    
+{% macro facebookShareButton(context, appId, layout, size, pageUrl, label) %}
+    {% import _self as selfMacros %}
+<div id="fb-root"></div>
+    {#{ selfMacros.facebookSDKAssets(context, appId) }}#}
+    {% set url = pageUrl|default(context.server.SCRIPT_URI) %}
+    {% set href = 'https://www.facebook.com/sharer/sharer.php?u=%s&amp;src=sdkpreparse'|format(
+        url|url_encode
+    ) %}
+    <div
+        class="fb-share-button"
+        data-href="{{ url }}"
+        data-layout="{{ layout|default('button') }}"
+        data-size="{{ size|default('small')}}">
+        <a target="_blank" href="{{ href }}" class="fb-xfbml-parse-ignore">{{ label|default('share'|trans) }}</a>
+    </div>
+{% endmacro %}
+
+{##########
+# TWITTER #
+##########}
+
+{# builds button to share current page on Twitter (see https://publish.twitter.com/?buttonType=TweetButton&widget=Button)
+#}
+    
+{% macro twitterShareButton() %}
+<a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-show-count="false">Tweet</a>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+{% endmacro %}
+
+{###########
+# LINKEDIN #
+###########}
+
+{# builds button to share current page on Linkedin (see https://docs.microsoft.com/en-us/linkedin/consumer/integrations/self-serve/plugins/share-plugin)
+@param object context
+#}
+    
+{% macro linkedinShareButton(context) %}
+<script src="https://platform.linkedin.com/in.js" type="text/javascript">lang: {{ '%s_%s'|format(attribute(context.language, 'ISO-639-1'),
+attribute(context.language, 'ISO-3166-1-2')) }}</script>
+<script type="IN/Share" data-url="{{ context.server.SCRIPT_URI }}"></script>
+{% endmacro %}
+
+{###########
+# WHATSAPP #
+###########}
+
+{# builds button to share current page on Whatsapp targeting whatsapp mobile app or whatsapp web according to device detection
+assets needed:
+    some mean to detect device, like https://github.com/serbanghita/Mobile-Detect
+    Fontello social icons: <link rel="stylesheet" href="/public/share/simplex/social/Fontello/css/fontello.css">
+@param object context
+@param boolean isMobile
+@param string title
+#}
+    
+{% macro whatsappShareButton(context, isMobile, title) %}
+    {% set messageText = '%s %s'|format(title|escape('html_attr'), context.server.SCRIPT_URI) %}
+<a
+    {% if isMobile %}
+    href="whatsapp://send?text={{ messageText|raw }}"
+    {% else %}
+    target="_blank"
+    href="https://web.whatsapp.com/send?text={{ messageText|raw }}"
+    {% endif %}
+    class="whatsapp-share-button icon-social-whatsapp"
+    >
+    whatsapp
+</a>
+
+{% endmacro %}

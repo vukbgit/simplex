@@ -1,0 +1,190 @@
+{% extends '@share/Erp/templates/crudl-form.twig' %}
+
+{% import '@share/templates/form/macros.twig' as formMacros %}
+{# for ancestors record menus and subject record menu #}
+{% import '@share/Erp/templates/macros/navigation.twig' as navigationMacros %}
+
+{% block head %}
+    {{ parent() }}
+    {{ formMacros.setUpForm(
+        _context,
+        {
+            'locales': false,
+            'assets': ['richTextEditor', 'fileUpload', 'captcha', 'dateTimePicker', 'richSelect']
+        }) }}
+{% endblock %}
+
+{# ancestors record menus #}
+{# % block subjectGlobalNavigation %}
+  {{ navigationMacros.displayAncestorsSubjectRecordMenus(_context, ancestors) }}
+  {{ parent() }}
+{% endblock %#}
+
+{# subject record menu #}
+{% block subjectExtraNavigation %}
+  {% if action != 'insert-form' %}
+    {{ include(getInstanceTemplate(null, 'labels.twig'), {'labels': labels}, with_context = true) }}
+    {{ navigationMacros.displaySubjectRecordMenu(
+        _context,
+        '%s-controller'|format(subject),
+        _context.model.config.primaryKey,
+        record,
+        null,
+        getLabel(subject, 'subject-record-menu-title')|format(buildRecordTokenLabel(subject, record))
+    ) }}
+  {% endif %}
+{% endblock %}
+
+{% block modelInputs %}
+    {# text input #}
+    {{ formMacros.displayInputGroup(
+        'text | email | password | url | textarea',
+        {
+            'name': 'FIELD-NAME',
+            'value': record.FIELD-NAME,
+            'label': getLabel(subject, 'fields', 'FIELD-NAME'),
+            'help': fieldsLabels.FIELD-NAMEHelp,
+            'autofocus': true,
+            'disabled': action == 'delete-form',
+            'maxlength': FIELD-MAX-LENGTH,
+            'autocomplete': '',
+            'class': '',
+            'validation': {
+                'required': true,
+                'pattern': ''
+            },
+            {# for localized fields
+            'locales' : languages#}
+        }
+    ) }}
+    {# radio group #}
+    {{ formMacros.displayInputRadioGroup(
+        {
+            'name': 'FIELD-NAME',
+            'value': record.FIELD-NAME,
+            'label': getLabel(subject, 'fields', 'FIELD-NAME'),
+            'autofocus': false,
+            'inline': true,
+            'disabled': action == 'delete-form',
+            'class': '',
+            'validation': {
+                'required': false,
+                'pattern': ''
+            }
+        },
+        ITEMS
+    ) }}
+    {# radio boolean group #}
+    {{ formMacros.displayInputRadioBooleanGroup(
+        {
+            'name': 'FIELD-NAME',
+            'value': record.FIELD-NAME,
+            'label': getLabel(subject, 'fields', 'FIELD-NAME'),
+            'autofocus': false,
+            'inline': true,
+            'disabled': action == 'delete-form',
+            'class': '',
+            'validation': {
+                'required': false,
+                'pattern': ''
+            }
+        }
+    ) }}
+    {# date #}
+    {{ formMacros.displayDateTimePickerGroup(
+    {
+        'name': 'FIELD-NAME',
+        'value': record.FIELD-NAME,
+        'label': getLabel(subject, 'fields', 'FIELD-NAME'),
+        'help': null,
+        'autofocus': false,
+        'disabled': action == 'delete-form',
+        'autocomplete': '',
+        'class': '',
+        'validation': {
+            'required': false,
+            'pattern': ''
+        }
+    }
+    ) }}
+    {# rich text editor #}
+    {{ formMacros.displayRichTextEditor(
+        _context,
+        {
+            'name': 'FIELD-NAME',
+            'value': record.FIELD-NAME,
+            'label': getLabel(subject, 'fields', 'FIELD-NAME'),
+            'help': getLabel(subject, 'fields', 'FIELD-NAME_help'),
+            'autofocus': false,
+            'disabled': action == 'delete-form',
+            'maxlength': null,
+            'autocomplete': '',
+            'class': '',
+            'validation': {
+                'required': false
+            },
+        }
+    ) }}
+    {# upload input #}
+    {{ formMacros.displayFileUpload(
+        _context,
+        buildRouteToActionFromRoot('upload'),
+        {
+            'name': 'UPLOAD-KEY',
+            'value': record.UPLOAD-KEY,
+            'label': getLabel(subject, 'fields', 'UPLOAD-KEY'),
+            'help': getLabel(subject, 'fields', 'UPLOAD-KEY_help'),
+            'autofocus': false,
+            'disabled': action == 'delete-form',
+            'autocomplete': '',
+            'class': '',
+            'validation': {
+                'required': false,
+                'pattern': ''
+            },
+            {# not an image, display the name of the file #}
+            'previewTemplate': '<a href="@OUTPUT-KEY" target="_blank">@name</span></a>',
+            {# an image #}
+            'previewTemplate': '<a href="@OUTPUT-KEY" target="_blank"><img src="@OUTPUT-KEY"></a>',
+            'options': {
+                'allowedFileExtensions': ['EXTENSION-1'],
+                'maxFileCount': 1
+            }
+        }
+    ) }}
+    {# rich select #}
+    {{ formMacros.displayRichSelectGroup(
+        {
+            'name': 'FIELD-NAME',
+            'value': record.FIELD-NAME,
+            'label': getLabel(subject, 'fields', 'FIELD-NAME'),
+            'help': null,
+            'autofocus': false,
+            'disabled': action == 'delete-form',
+            'maxlength': false,
+            'autocomplete': '',
+            'class': '',
+            'validation': {
+                'required': false,
+                'pattern': ''
+            },
+            'minimumInputLength': 0,
+            {# no ajax call for autocomplete #}
+            'remoteDataRoute': false,
+            {# ajax call for autocomplete #}
+            'remoteDataRoute': '/backend/FOREIGN-KEY-SUBJECT/autocomplete',
+            'valueLabel': '%s (%s)'|format(
+                record.LABEL-FIELD-1,
+                record.LABEL-FIELD-2
+            ),
+            'insertRecord': {
+              'insertUrl': '/%s[/PARENT-0-SUBJECT/%d/OTHER-PARENTS...]/FOREIGN-KEY-SUBJECT/insert-form'|format(
+                area,
+                PARENT-0-PRIMARY-KEY
+              )
+            },
+        },
+        {# preloaded choices #}
+        CHOICHES-ARRAY
+    ) }}
+{% endblock %}

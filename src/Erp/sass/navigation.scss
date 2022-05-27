@@ -1,0 +1,188 @@
+//top navbar
+#navbar-top {
+    height:$navBarHeight;
+    #sidebar-hat {
+        width:auto;
+        height:$navBarHeight;
+        background-color: $darker;
+        @include media-breakpoint-up(md) {
+            width:$sideBarWidth;
+        }
+    }
+    .navbar-brand {
+        height:$navBarHeight;
+        padding-top:0;
+        padding-bottom:0;
+        padding-left:1rem;
+        line-height:$navBarHeight;
+        h1 {
+            display:none;
+            color:$navbar-dark-active-color;
+            @include media-breakpoint-up(md) {
+                display:inline-block;
+            }
+        }
+        img {
+            $logoMargin: 5px;
+            height:$navBarHeight - ($logoMargin * 2);
+            margin:$logoMargin 0 $logoMargin ($logoMargin * 2);
+            vertical-align: top;
+        }
+    }
+}
+//sidebar
+#sidebar {
+    width:$sideBarWidth;
+    transition: width $sideBarTransitionDuration;
+    &.closed {
+        width:0;
+    }
+    .nav-item {
+        .nav-link {
+            border-bottom:1px solid $navbar-light-color;
+            color:rgba($white, .5);
+            &.active {
+                font-weight: bold;
+            }
+            &:hover {
+                color: $white;
+            }
+            &::after {
+              font-family: fontello;
+              display: inline;
+              padding-left: 5px;
+              text-align: right;
+              text-transform: none;
+            }
+            &[aria-expanded="false"] {
+              &::after {
+                content: "\0169";
+              }
+            }
+            &[aria-expanded="true"] {
+              background-color: $darker;
+              &::after {
+                content: "\016A";
+              }
+            }
+            /*&[aria-expanded="false"]::after {
+                content: "\0169";
+                font-family: fontello;
+                display: inline;
+                text-align: right;
+                padding-left: 5px;
+            }
+            &[aria-expanded="true"] {
+                background-color: $darker;
+            }
+            &[aria-expanded="true"]::after {
+                content: "\016A";
+                font-family: fontello;
+                display: inline;
+                text-align: right;
+                padding-left: 5px;
+            }*/
+        }
+    }
+    & > div.sidebar-sticky > nav#navigation-top > div.nav-item .nav-item {
+        
+    }
+}
+.sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100; /* Behind the navbar */
+    padding: $navBarHeight 0 0; /* Height of navbar */
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+}
+.sidebar-sticky {
+    position: relative;
+    top: 0;
+    height: calc(100vh - #{$navBarHeight});
+    overflow-x: hidden;
+    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+}
+/*@supports ((position: -webkit-sticky) or (position: sticky)) {
+    .sidebar-sticky {
+        position: -webkit-sticky;
+        position: sticky;
+    }
+}*/
+/* subject breadcrumb */
+.subject-breadcrumb {
+    .breadcrumb-level {
+      text-transform: capitalize;
+    }
+    .breadcrumb-label {
+        font-weight:bold;
+    }
+    h2 {
+      display: inline-block;
+      line-height: 1rem;
+    }
+}
+/* subject record menu */
+.subject-record-menu {
+    .title {
+        display:inline-block;
+        margin-right:1rem;
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+}
+/* hamburgers override*/
+$hamburger-layer-height        : 4px !default;
+$hamburger-layer-spacing       : 6px !default;
+//correct hamburger vertical alignment error (due to bottom spacing)
+#sidebar-hat {
+    .hamburger {
+        margin-top:$hamburger-layer-spacing / 2;
+    }
+}
+$hamburger-height: $hamburger-layer-height * 3 + $hamburger-layer-spacing * 3;
+$hamburger-padding-y: ($navBarHeight - $hamburger-height) / 2;
+$hamburger-layer-color         : #fff !default;
+$hamburger-types: (
+  //3dx,
+  //3dx-r,
+  //3dy,
+  //3dy-r,
+  //3dxy,
+  //3dxy-r,
+  //arrow,
+  //arrow-r,
+  //arrowalt,
+  //arrowalt-r,
+  //arrowturn,
+  //arrowturn-r,
+  //boring,
+  collapse,
+  //collapse-r,
+  //elastic,
+  //elastic-r,
+  //emphatic,
+  //emphatic-r,
+  //minus,
+  //slider,
+  //slider-r,
+  //spin,
+  //spin-r,
+  //spring,
+  //spring-r,
+  //stand,
+  //stand-r,
+  //squeeze,
+  //vortex,
+  //vortex-r
+) !default;
+.hamburger {
+    &:focus {
+        outline:0;
+    }
+}
+@import "../../../../../../../../public/share/node_modules/hamburgers/_sass/hamburgers/hamburgers.scss";
+.pf-c-page__sidebar--closed {
+    width:0;
+}

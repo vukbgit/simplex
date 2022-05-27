@@ -1,0 +1,44 @@
+{% block jsFrameworkAssets %}
+<!-- jQuery -->
+<script src="{{ 'jquery/dist/jquery.min.js'|pathToNpmAsset }}"></script>
+<!-- global jQuery document ready block -->
+<script>
+$(document).ready(function(){
+    {% block documentReady %}
+    {% endblock %}
+});
+</script>
+{% endblock %}
+
+{% block simplexAssets %}
+<!-- Simplex -->
+<script src="{{ 'simplex/js/simplex.js'|pathToShareAsset }}"></script>
+{% endblock %}
+
+{% block cookiesAssets %}
+<!-- js-cookie -->
+<script src="{{ 'js-cookie/src/js.cookie.js'|pathToNpmAsset }}"></script>
+<script type="text/javascript">
+    //cookie default duration in minutes
+    var cookieDurationMinutes = {{ cookieDuration }};
+    var cookieDurationDays = cookieDurationMinutes / 1440;
+</script>
+{% endblock %}
+{# sanitizes an email by the substitutions of @ and dots by replacements that must be defined (for example by using two different configured random function calls) into calling scope #}
+{% block sanitizeMailAssets %}
+{#% set mailDotReplacement = random(5000, 9999) %#}
+<!-- mail sanitize -->
+<script src="{{ 'jquery.safemail/dist/jquery.safemail.js'|pathToNpmAsset }}"></script>
+<script type="text/javascript">
+    {% if mailAtReplacement is not defined or mailDotReplacement is not defined %}
+    alert('for mail sanitize to be used, mailAtReplacement and mailDotReplacement template variables must be defined')
+    {% else %}
+$(document).ready(function(){
+    $('.sanitized-email').safemail({
+        atRegex: /\s+{{ mailAtReplacement }}\s+/g,
+        dotRegex: /\s+{{ mailDotReplacement }}\s+/g,
+    });
+});
+    {% endif %}
+</script>
+{% endblock %}

@@ -1,0 +1,261 @@
+{% extends '@share/Erp/templates/page.twig' %}
+
+{% import '@share/Erp/templates/macros/navigation.twig' as navigationMacros %}
+{% import '@share/Erp/templates/macros/table.twig' as tableMacros %}
+
+{% set searchFields = [] %}
+{% for fieldName, fieldConfig in CRUDLConfig.fields %}
+  {% if fieldConfig.table.filter %}
+    {% set searchFields = searchFields|merge([fieldName]) %}
+  {% endif %}
+{% endfor %}
+
+{% block head %}
+    {{ parent() }}
+    <!-- ERP table style -->
+    <link rel="stylesheet" href="{{ 'simplex/Erp/css/table.min.css'|pathToShareAsset }}">
+    {% if searchFields|length %}
+      {{ include(getInstanceTemplate(null, 'labels.twig'), {'labels': labels}, with_context = true) }}
+    <script type="text/javascript">
+      $(document).ready(function() {
+        {#% set searchFields = [] %}
+        {% for fieldName, fieldConfig in CRUDLConfig.fields %}
+          {% if fieldConfig.table.filter %}
+            {% set fieldLabel = getLabel(subject, 'fields', fieldName) %}
+            {% if fieldLabel is null %}
+            alert('{{ 'no label for filter field %s'|format(fieldName)|escape('js') }}')
+            {% endif %}
+            {% set searchFields = searchFields|merge([getLabel(subject, 'fields', fieldName)]) %}
+          {% endif %}
+        {% endfor %#}
+        {% set fieldsLabels = [] %}
+        {% for fieldName in searchFields %}
+          {% set fieldLabel = getLabel(subject, 'fields', fieldName) %}
+          {% if fieldLabel is null %}
+          alert('{{ 'no label for filter field %s'|format(fieldName)|escape('js') }}')
+          {% else %}
+          {% set fieldsLabels = fieldsLabels|merge([getLabel(subject, 'fields', fieldName)]) %}
+          {% endif %}
+        {% endfor %}
+        
+        $('#default-filter-form-help').popover({
+          'trigger': 'focus',
+          'title': '{{ 'filter help'|trans|escape('js') }}',
+          'html': true,
+          'customClass': 'default-filter-form-help',
+          'content': '{{
+            'separate multiple search terms by spaces
+            enclose sentences with double quotes (")
+            results will be searched into the following fields: %s 
+            results will contain all of the search terms
+          '|trans|format(fieldsLabels|join(', '))|nl2br|escape('js') }}'
+        })
+      })
+    </script>
+    {% endif %}
+{% endblock %}
+
+{% block pageContent %}
+    {{ parent() }}
+    {% block tableIntro %}
+    {% endblock %}
+    {% block tableNavBar %}
+<nav class="navbar navbar-light bg-light justify-content-start" id="list-navbar">
+      {% block tableFilter %}
+        {% set fieldsFilter = attribute(attribute(areaCookie, subject), 'filter') ?? null %}
+  <div>
+    {% if searchFields|length %}
+    <form method="post" action="" class="form-inline" id="default-filter-form">
+        <a tabindex="0" class="icon-erp-help mr-1 text-secondary" id="default-filter-form-help" role="button" data-toggle="popover"></a>
+        <input type="hidden" name="modifier" value="filter">
+        <div class="input-group">
+            <input name="filter" value="{{ fieldsFilter }}" type="search"
+        class="form-control form-control-sm" placeholder="{{ 'Filter'|trans }}" aria-label="{{ 'Filter'|trans }}">
+            <div class="input-group-append">
+                <button class="btn btn-sm btn-outline-warning" type="reset">{{ 'Reset'|trans }}</button>
+                <button class="btn btn-sm btn-outline-success" type="submit">{{ 'Filter'|trans }}</button>
+            </div>
+        </div>
+    </form>
+    {% endif %}
+        {% block tableFilterCaption %}
+    
+        {% endblock tableFilterCaption %}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#default-filter-form button[type="reset"]').click(function(){
+                $($('#default-filter-form input[type="search"]')[0]).attr('value','');
+                $('#default-filter-form').submit();
+            });
+        });
+    </script>
+  </div>
+      {% endblock tableFilter %}
+</nav>
+    {% endblock tableNavBar %}
+    {% if records|length %}
+    {# bulk actions form #}
+        {#% if navigations.bulkActions|length %}
+            {% set bulkActionsLabel = 'selected records bulk actions'|trans %}
+<form method="post" id="bulk-actions-form" action="" class="form-inline">
+    <input type="hidden" name="bulk_action_records_ids" id="bulk_action_records_ids">
+    <nav class="navbar navbar-light bg-light justify-content-start w-100">
+        <span class="mr-3">
+            {{ bulkActionsLabel }}:
+        </span>
+        <div class="btn-group" role="group" aria-label="{{ bulkActionsLabel }}">
+            {% for actionKey, actionProperties in navigations.bulkActions %}
+                {% set actionLabel = getLabel('actions', actionKey) %}
+            <button
+                type="submit"
+                class="btn btn-sm btn-outline-secondary"
+                data-route="{{ buildRouteToAction(actionProperties) }}"
+                {% if actionProperties.noConfirm is not defined or actionProperties.noConfirm is same as false %}
+                data-confirm="{{ getLabel('alerts', 'bulk_confirm')|format(actionLabel)|escape('html_attr') }}"
+                {% endif %}
+                >{{ actionLabel }}</button>
+            {% endfor %}
+        </div>
+    </nav>
+    <div class="w-100 collapse" id="bulk-warning">
+        <div class="alert alert-warning" role="alert">
+        {{ 'you need to select at least one record'|trans }}
+        <button type="button" class="close" data-toggle="collapse" href="#bulk-warning" aria-label="Close" aria-expanded="false" aria-controls="bulk-warning">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+    </div>
+</form>
+        {% endif %#}
+        {% if navigations.bulkActions|length %}
+            {% set bulkActionsLabel = 'selected records bulk actions'|trans %}
+<form method="post" id="bulk-actions-form" action="" class="form-inline">
+    <input type="hidden" name="bulk_action_records_ids" id="bulk_action_records_ids">
+    <nav class="navbar navbar-light bg-light justify-content-start w-100">
+        <span class="mr-3">
+            {{ bulkActionsLabel }}:
+        </span>
+        <div class="btn-group" role="group" aria-label="{{ bulkActionsLabel }}">
+            {% for actionKey, actionProperties in navigations.bulkActions %}
+                {% set actionLabel = getLabel('actions', actionKey) %}
+            <button
+                type="submit"
+                id="button-{{ actionKey }}"
+                class="btn btn-sm btn-outline-secondary"
+                data-route="{{ buildRouteToAction(actionProperties) }}"
+                {% if actionProperties.noConfirm is not defined or actionProperties.noConfirm is same as false %}
+                data-confirm="{{ getLabel('alerts', 'bulk_confirm')|format(actionLabel)|escape('html_attr') }}"
+                {% endif %}
+                >{{ actionLabel }}</button>
+                {% if actionProperties.blank %}
+                <script type="text/javascript">
+                  $(document).ready(function() {
+                    $('#button-{{ actionKey }}').click(function() {
+                      $('#bulk-actions-form').attr('target', '_blank')
+                    })
+                  })
+                </script>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </nav>
+    <div class="w-100 collapse" id="bulk-warning">
+        <div class="alert alert-warning" role="alert">
+        {{ 'you need to select at least one record'|trans }}
+        <button type="button" class="close" data-toggle="collapse" href="#bulk-warning" aria-label="Close" aria-expanded="false" aria-controls="bulk-warning">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+    </div>
+</form>
+        {% endif %}
+<table class="{% block tableClass %}table table-sm table-hover table-responsive-sm erp-table{% endblock %}">
+    <caption>{{- getLabel('table', 'caption')|format(records|length) -}}</caption>
+    <thead class="thead-light">
+        <tr>
+        {% if navigations.bulkActions|length %}
+            <th class="align-middle">
+                <div>
+                    <input type="checkbox" id="toggle-records-ids">
+                </div>
+            </th>
+        {% endif %}
+        {% block tableHeaders %}
+        {% endblock %}
+    {# record visible actions header #}
+        {% if navigations.recordVisibleActions|length or navigations.recordHiddenActions|length %}
+        <th colspan="{{ navigations.recordVisibleActions|length + (navigations.recordHiddenActions|length ? 1 : 0) }}"></th>
+        {% endif %}
+        </tr>
+    </thead>
+    <tbody>
+    {# init totals #}
+    {% set tableTotals = tableTotals ?? {} %}
+    {% for fieldName, field in CRUDLConfig.fields %}
+        {% if field.table.total %}
+            {% set tableTotals = updateProperty(tableTotals, fieldName, 0) %}
+        {% endif %}
+    {% endfor %}
+    {# ROWS LOOP #}
+        {% for record in records %}
+      <tr{% block rowAttributes %}{% endblock %}>
+            {% if navigations.bulkActions|length %}
+                <td class="align-middle">
+                    <div>
+                        <input type="checkbox" name="bulk_action_records_ids[]" value="{{ attribute(record, model.getConfig().primaryKey) }}">
+                    </div>
+                </td>
+            {% endif %}
+            {% block rowFields %}
+            {% endblock %}
+            {# record visible actions #}
+            {% for actionKey, actionProperties in navigations.recordVisibleActions %}
+                {% set actionLabel = parseRecordActionRoute(getLabel('actions', actionKey), record) %}
+            <td class="record-action text-right">
+                {{ navigationMacros.displayRecordActionLink(actionProperties, actionLabel, record)}}
+            </td>
+            {% endfor %}
+            {# record hidden actions #}
+            {% if navigations.recordHiddenActions|length %}
+                {% set dropdownId = 'hidden-actions-%d'|format(loop.index0) %}
+            <td class="record-action">
+                <div class="dropdown">
+                    <a class="icon-erp-ellipsis-vert" href="#" role="button" id="{{ dropdownId }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="{{ dropdownId }}">
+                {% for actionKey, actionProperties in navigations.recordHiddenActions %}
+                    {% set actionLabel = parseRecordActionRoute(getLabel('actions', actionKey), record) %}
+                    {% set actionProperties = updateProperty(actionProperties, 'linkClass', 'dropdown-item') %}
+                    {{ navigationMacros.displayRecordActionLink(actionProperties, actionLabel, record)}}
+                {% endfor %}
+                    </div>
+                </div>
+            </td>
+            {% endif %}
+        </tr>
+            {# totals #}
+            {% for fieldName, total in tableTotals %}
+                {% set total = attribute(tableTotals, fieldName) + attribute(record, fieldName) %}
+                {% set tableTotals = updateProperty(tableTotals, fieldName, total) %}
+            {% endfor %}
+        {% endfor %}
+    </tbody>
+    {% if tableTotals is not empty %}
+    <tfoot class="thead-light">
+        <tr>
+        {% block tableFooter %}
+        {% endblock %}
+    {# record visible actions header #}
+        {% if navigations.recordVisibleActions|length %}
+        <th colspan="{{ navigations.recordVisibleActions|length + (navigations.recordHiddenActions|length ? 1 : 0) }}"></th>
+        {% endif %}
+        </tr>
+    </tfoot>
+    {% endif %}
+</table>
+    {% else %}
+<div class="alert alert-info" role="alert">
+{% trans 'No records saved' %}
+</div>
+    {% endif %}
+{% endblock pageContent %}
