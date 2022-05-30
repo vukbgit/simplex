@@ -69,7 +69,12 @@ class SpreadsheetReaderWriter
                 if($firstRowIsHEaders && $rowsToObjects) {
                     $rowObject = new \stdClass;
                     foreach($headersRow as $j => $header) {
+                      //in case of empty cells at the and of the header row
+                      if(!isset($cellsArray[$j])) {
+                        continue(2);
+                      } else {
                         $rowObject->$header = $cellsArray[$j];
+                      }
                     }
                     $rows[] = $rowObject;
                 } else {
@@ -80,6 +85,7 @@ class SpreadsheetReaderWriter
             $sheets[] = $rows;
         }
         $this->reader->close();
+        exit;
         return $sheets;
     }
     
