@@ -85,7 +85,6 @@ class SpreadsheetReaderWriter
             $sheets[] = $rows;
         }
         $this->reader->close();
-        exit;
         return $sheets;
     }
     
