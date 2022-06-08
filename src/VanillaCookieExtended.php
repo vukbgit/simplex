@@ -8,6 +8,7 @@ use function Simplex\slugToPSR1Name;
 
 /*
 * Subclass of Vanilla Cookie (https://github.com/codezero-be/cookie) to add some functionalities
+* NOTE: on 06/2022 area user data sotrin has shifted from all data into cookie (bad idea) to just a key into cookie combined with a json file on disk; this class has been invested by function not cookie related but it was the only way to handle the transition smoothly
 *
 */
 class VanillaCookieExtended extends VanillaCookie
@@ -37,11 +38,50 @@ class VanillaCookieExtended extends VanillaCookie
     }*/
     
     /**
+    * Gets an area cookie as an object
+    * @param string $area: area name
+    * @param string $propertyName: optional property yo be returned
+    * @return object the whole area cookie
+    */
+    /*public function getAreaCookie(string $area, string $propertyName = null)
+    {
+        $areaCookieJson = $this->get($area);
+        $areaCookie = $areaCookieJson ? json_decode($areaCookieJson) : new \stdClass;
+        if($propertyName) {
+            return $areaCookie->$propertyName ?? null;
+        }
+        return $areaCookie;
+    }*/
+    
+    /**
     * Generates a new area user data key
     */
     private function generateAreaUserDataKey()
     {
       return uniqid();
+    }
+    
+    /**
+    * Builds area user data file path
+    * @param string $area: area name
+    * @param string $areaUserDataKey
+    */
+    private function buildAreaUserDataPath(string $area, string $areaUserDataKey)
+    {
+      $path = sprintf(
+        '%s/%s/userdata',
+        PRIVATE_LOCAL_DIR,
+        slugToPSR1Name($area, 'class')
+      );
+      //check and create
+      if(!is_dir($path)) {
+        mkdir($path);
+      }
+      return sprintf(
+        '%s/%s.json',
+        $path,
+        slugToPSR1Name($areaUserDataKey, 'class')
+      );
     }
     
     /**
@@ -87,20 +127,19 @@ class VanillaCookieExtended extends VanillaCookie
     }
     
     /**
-    * Gets an area cookie as an object
+    * Stores an area user data as a file
     * @param string $area: area name
-    * @param string $propertyName: optional property yo be returned
-    * @return object the whole area cookie
+    * @param string $areaUserDataKey
+    * @param object $areaUserData the whole area object
     */
-    /*public function getAreaCookie(string $area, string $propertyName = null)
+    private function storeAreaUserData(string $area, string $areaUserDataKey, object $areaUserData)
     {
-        $areaCookieJson = $this->get($area);
-        $areaCookie = $areaCookieJson ? json_decode($areaCookieJson) : new \stdClass;
-        if($propertyName) {
-            return $areaCookie->$propertyName ?? null;
-        }
-        return $areaCookie;
-    }*/
+      $areaUserDataPath = $this->buildAreaUserDataPath($area, $areaUserDataKey);
+      file_put_contents(
+        $areaUserDataPath,
+        json_encode($areaUserData)
+      );
+    }
     
     /**
     * Gets an area cookie as an object
@@ -132,50 +171,6 @@ class VanillaCookieExtended extends VanillaCookie
         } else {
           return $areaUserData;
         }
-    }
-    
-    /**
-    * Builds area user data file path
-    * @param string $area: area name
-    * @param string $areaUserDataKey
-    */
-    private function buildAreaUserDataPath(string $area, string $areaUserDataKey)
-    {
-      /*return sprintf(
-        '%s/%s/userdata/%s.json',
-        PRIVATE_LOCAL_DIR,
-        slugToPSR1Name($area, 'class'),
-        $areaUserDataKey
-      );*/
-      $path = sprintf(
-        '%s/%s/userdata',
-        PRIVATE_LOCAL_DIR,
-        slugToPSR1Name($area, 'class')
-      );
-      //check and create
-      if(!is_dir($path)) {
-        mkdir($path);
-      }
-      return sprintf(
-        '%s/%s.json',
-        $path,
-        slugToPSR1Name($areaUserDataKey, 'class')
-      );
-    }
-    
-    /**
-    * Stores an area user data as a file
-    * @param string $area: area name
-    * @param string $areaUserDataKey
-    * @param object $areaUserData the whole area object
-    */
-    private function storeAreaUserData(string $area, string $areaUserDataKey, object $areaUserData)
-    {
-      $areaUserDataPath = $this->buildAreaUserDataPath($area, $areaUserDataKey);
-      file_put_contents(
-        $areaUserDataPath,
-        json_encode($areaUserData)
-      );
     }
     
     /**
