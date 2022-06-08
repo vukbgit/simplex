@@ -609,7 +609,7 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
         if($quotedTokensNumber > 0) {
             $filterString = preg_replace('/"[\w\.\h?]+"/iu', '', $filterString);    
         }
-        preg_match_all('/[\w\.]+/i', $filterString, $notQuotedTokens);
+        preg_match_all('/[\w\-\.]+/i', $filterString, $notQuotedTokens);
         $filterTokens = array_merge($quotedTokens[1], $notQuotedTokens[0]);
         //create a grouped where for the filter
         $filterWhere = [];
