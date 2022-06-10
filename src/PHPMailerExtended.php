@@ -19,8 +19,14 @@ class PHPMailerExtended extends PHPMailer
      *  - username
      *  - password
      *  - security: tls|ssl
-     **/
-    public function setSMTP($config)
+     * @param int $debugLevel: one of \PHPMailer\PHPMailer\SMTP debug constants:
+     *  - SMTP::DEBUG_OFF: No output
+     *  - SMTP::DEBUG_CLIENT: Client messages
+     *  - SMTP::DEBUG_SERVER: Client and server messages
+     *  - SMTP::DEBUG_CONNECTION: As SERVER plus connection status
+     *  - SMTP::DEBUG_LOWLEVEL: Noisy, low-level data output, rarely needed
+      **/
+    public function setSMTP($config, int $debugLevel = 0)
     {
         $this->CharSet = PHPMailer::CHARSET_UTF8;
         $this->IsSMTP();
@@ -34,6 +40,9 @@ class PHPMailerExtended extends PHPMailer
                 $this->SMTPSecure = $config->security;
             }
             $this->Port = $config->port;
+        }
+        if($debugLevel) {
+          $this->SMTPDebug = $debugLevel;
         }
     }
     
@@ -56,7 +65,6 @@ class PHPMailerExtended extends PHPMailer
      **/
     public function sendEmail(string $from, string $to, string $subject, string $body, string $fromName = null, string $toName = null, array $cc = [], array $bcc = [], string $replyTo = null, string $replyToName = null, $attachments = null)
     {
-        //$this->debugEmail();
         //sender
         $this->setFrom($from, $fromName);
         $this->addReplyTo($replyTo ?? $from, $replyToName ?? $fromName);
