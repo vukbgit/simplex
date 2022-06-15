@@ -16,6 +16,8 @@ function x($var, $expand = false, $force = false) {
     if(ENVIRONMENT == 'development' || $force == true) {
         if($expand) {
             Kint::$expanded = true;
+        } else {
+            Kint::$expanded = false;
         }
         !Kint::dump($var);
     }
