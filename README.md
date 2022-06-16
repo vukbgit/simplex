@@ -152,6 +152,7 @@ For details see _Folders and Files Structure_ below
             * [tinymce](https://github.com/tinymce/tinymce-dist): for richtext input
             * [select2](https://select2.org): for richselect input with autocomplete, with [@ttskch/select2-bootstrap4-theme](https://github.com/ttskch/select2-bootstrap4-theme) for skinning
             * [hamburgers](https://github.com/jonsuh/hamburgers): CSS hamburger animated icons
+            * [fullcalendar](https://github.com/fullcalendar/fullcalendar): full-sized event calendar
         * frontend
             * [jquery.safemail](https://github.com/leftclickcomau/jquery.safemail): for obfuscating email
             * [flag-icon-css](https://github.com/lipis/flag-icon-css): SVG country flags

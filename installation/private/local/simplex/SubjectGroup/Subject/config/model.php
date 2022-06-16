@@ -32,5 +32,10 @@ return (object) [
         'field' => false,
         //fields to narrow by next position look up
         'contextFields' => []
+    ],
+    //map from table fields to fullcalendar event object properties (https://fullcalendar.io/docs/event-object)
+    'calendarFieldsMap' => (object) [
+      'FULLCALENDAR-EVENT-PROPERTY' => 'DB-FIELD',
+      'FULLCALENDAR-EVENT-PROPERTY' => ['DB-FIELD-1', 'ANY-STRING', 'DB-FIELD-2'],
     ]
 ];

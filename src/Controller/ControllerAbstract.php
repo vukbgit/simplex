@@ -44,6 +44,12 @@ abstract class ControllerAbstract
     * values extracted from route parsing
     */
     protected $routeParameters;
+    
+    /**
+    * @var object
+    * values extracted from route query string
+    */
+    protected $queryParameters;
 
     /**
     * @var string
@@ -153,6 +159,7 @@ abstract class ControllerAbstract
         //store request and its parameters
         $this->request = $request;
         $this->routeParameters = $request->getAttributes()['parameters'];
+        $this->queryParameters = (object) $request->getQueryParams();
         $this->needsAuthentication = $this->needsAuthentication($request);
     }
 

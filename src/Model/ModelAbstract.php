@@ -932,4 +932,49 @@ EOT;
             ->where($this->config->primaryKey, $sibling->{$this->config->primaryKey})
             ->update([$positionField => $record->$positionField]);
     }
+    
+    /***********
+    * CALENDAR *
+    ***********/
+    
+    /**
+    * Maps records to calendar events using a map defined into $this->config->calendarFieldsMap in the form of an object structured this way:
+    * field-to-property: fullcalendar-event-objecty-property->db-field
+    * fields-to-property: fullcalendar-event-objecty-property->[db-field-1|string...]
+    * @return array of objects with properties as described into https://fullcalendar.io/docs/event-object
+    */
+    public function mapRecordsToCalendarEvents($records): array
+    {
+      //check fields map
+      if(!isset($this->getConfig()->calendarFieldsMap)) {
+        throw new \Exception(sprintf('current class "%s" must implement a model config "calendarFieldsMap" property', static::class));
+      }
+      $events = [];
+      //loop records
+      foreach ((array) $records as $record) {
+        $event = new \stdClass;
+        //loop fields map
+        foreach ($this->getConfig()->calendarFieldsMap as $calendarProperty => $tokens) {
+          //single field
+          if(!is_array($tokens)) {
+            $event->$calendarProperty = $record->$tokens;
+          } else {
+          //multiple fields
+            $value = '';
+            foreach ($tokens as $token) {
+              //field
+              if(property_exists($record, $token)) {
+                $value .= $record->$token;
+              } else {
+              //string
+                $value .= $token;
+              }
+              $event->$calendarProperty = $value;
+            }
+          }
+        }
+        $events[] = $event;
+      }
+      return $events;
+    }
 }

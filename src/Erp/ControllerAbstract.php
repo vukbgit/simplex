@@ -1266,4 +1266,38 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
         $this->model->changeRecordPosition($this->routeParameters->{$this->model->getConfig()->primaryKey}, $direction);
         $this->redirect($this->buildRouteToActionFromRoot('list'));
     }
+    
+    /***********
+    * CALENDAR *
+    ***********/
+    
+    /**
+     * Gets calendar events for feed; it relies on $this->queryParameters:
+     * 'start': first day of time span  and 'end'
+     * 'end': last day of time span + 1 day
+     * NOTE: MUST be overridden by child class
+     * @param \DateTime $start
+     * @param \DateTime $end
+     * @return array of objects with properties as described into https://fullcalendar.io/docs/event-object
+     */
+    protected function getCalendarEvents(\DateTime $start, \DateTime $end): array
+    {
+      throw new \Exception(sprintf('current class "%s" must implement method "%s" to get Calendar Events Feed', static::class, 'getCalendarEvents'));
+    }
+    
+    /**
+     * Gets events for calendar
+     * called by a get-calendar-events-feed route action
+     * NOTE: final class must provide a protected getCalendarEvents
+     */
+    protected function getCalendarEventsFeed()
+    {
+        //build start and end objects
+        $start = \DateTime::createFromFormat('Y-m-d\TG:i:sT', $this->queryParameters->start);
+        $end = \DateTime::createFromFormat('Y-m-d\TG:i:sT', $this->queryParameters->end);
+        //get events
+        $events = $this->getCalendarEvents($start, $end);
+        //output
+        $this->output('text/json', json_encode($events));
+    }
 }

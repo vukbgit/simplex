@@ -17,6 +17,7 @@
         "tinymce": "^5.0.7",
         "select2": "^4.0.13",
         "select2-bootstrap4-theme": "^1.0.0",
-        "bootstrap-colorpicker": "^3.2.0"
+        "bootstrap-colorpicker": "^3.2.0",
+        "fullcalendar": "^5.11.0"
     }
 }
