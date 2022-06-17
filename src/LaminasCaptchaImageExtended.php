@@ -3,13 +3,13 @@ declare(strict_types=1);
 
 namespace Simplex;
 
-use Zend\Captcha\Image;
+use Laminas\Captcha\Image;
 
 /*
-* Subclass of Zend\Captcha\Image (https://docs.zendframework.com/zend-captcha/adapters/#zend92captcha92image) to handle captcha UI and operations
+* Subclass of Laminas\Captcha\Image (https://docs.zendframework.com/zend-captcha/adapters/#zend92captcha92image) to handle captcha UI and operations
 *
 */
-class ZendCaptchaImageExtended extends Image
+class LaminasCaptchaImageExtended extends Image
 {
     /**
     * Checks whether image folder config and creates it if not
