@@ -6,7 +6,8 @@ use function DI\get;
 //MINIMAL FUNCTIONALITIES
 use Psr\Container\ContainerInterface;
 use Simplex\FastRouteMiddleware;
-use Zend\Diactoros\Response;
+//Zuse Zend\Diactoros\Response;
+use Laminas\Diactoros\Response;
 use Middlewares\RequestHandler;
 use Middleland\Dispatcher;
 use Narrowspark\HttpEmitter\SapiEmitter;
