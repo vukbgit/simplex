@@ -20,11 +20,6 @@ use Middlewares\Utils\Traits\HasResponseFactory;
  */
 class FastRouteMiddleware implements MiddlewareInterface
 {
-    /*
-    * needed to create responses
-    */
-    use HasResponseFactory;
-
     /**
      * @var Dispatcher FastRoute dispatcher
      */
