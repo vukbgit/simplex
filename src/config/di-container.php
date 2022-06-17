@@ -23,7 +23,7 @@ use \Simplex\PixieExtended;
 //authentication
 use \Simplex\Authentication;
 //captcha
-use Simplex\ZendCaptchaImageExtended;
+use Simplex\LaminasCaptchaImageExtended;
 //translations
 use Simplex\TranslationsExtractor;
 //spreadsheets read/write
@@ -107,7 +107,7 @@ return array_merge(
         'simplexAuthenticationMiddleware' => create(Authentication\Middleware::class)
             ->constructor(get('DIContainer'), get('cookieManager')),
         //captcha
-        'captcha' => create(ZendCaptchaImageExtended::class)
+        'captcha' => create(LaminasCaptchaImageExtended::class)
             ->constructor(require CAPTCHA_CONFIG_PATH),
         //spreadsheet reader/write
         'spreadsheet' => create(SpreadsheetReaderWriter::class),
