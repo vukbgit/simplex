@@ -20,7 +20,7 @@
         "oscarotero/middleland": "^1.0",
         "twig/twig": "^2.0",
         "twig/extensions": "^1.5",
-        "twig/intl-extra": "v2.12.1",
+        "twig/intl-extra": "v3.4",
         "usmanhalalit/pixie": "2.*@dev",
         "nette/finder": "^2.5",
         "aura/auth": "^4.0",
