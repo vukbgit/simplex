@@ -32,9 +32,9 @@
         "spatie/image": "~1.7.2",
         "pschultz/php-bytes": "^1.0",
         "gabrielelana/byte-units": "^0.5.0",
-        "zendframework/zend-captcha": "^2.8",
-        "zendframework/zend-validator": "^2.12",
-        "zendframework/zend-session": "^2.8",
+        "laminas/laminas-captcha": "^2.8",
+        "laminas/laminas-validator": "^2.12",
+        "laminas/laminas-session": "^2.8",
         "box/spout": "^3.0",
         "phpmailer/phpmailer": "^6.0",
         "hackzilla/password-generator": "^1.4"
