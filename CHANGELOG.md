@@ -1,3 +1,7 @@
+## 2.0.4 (June 18, 2022)
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.3 –> 2.0.4
+- bump to 2.0.4
+
 ## 2.0.3 (June 18, 2022)
 - Updated package.json, Updated CHANGELOG.md, Bumped 2.0.2 –> 2.0.3
 - bump to 2.0.3
