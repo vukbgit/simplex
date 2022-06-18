@@ -1,3 +1,7 @@
+## 2.0.17 (June 18, 2022)
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.16 –> 2.0.17
+- mackages to PHP 8
+
 ## 2.0.16 (June 18, 2022)
 - Updated package.json, Updated CHANGELOG.md, Bumped 2.0.15 –> 2.0.16
 - packages to PHP 8
