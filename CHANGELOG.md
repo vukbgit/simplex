@@ -1,3 +1,7 @@
+## 2.0.2 (June 18, 2022)
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.1 –> 2.0.2
+- Merge branch 'release-2.0.1' into local-dev
+
 ## 2.0.1 (June 18, 2022)
 - Updated package.json, Created CHANGELOG.md, Bumped 2.0.0 –> 2.0.1
 - bump to 2.0.1
