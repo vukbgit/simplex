@@ -1,3 +1,7 @@
+## 2.0.7 (June 18, 2022)
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.6 –> 2.0.7
+- bump to 2.0.7!
+
 ## 2.0.6 (June 18, 2022)
 - Updated package.json, Updated CHANGELOG.md, Bumped 2.0.5 –> 2.0.6
 - moved from zend to laminas in index.php
