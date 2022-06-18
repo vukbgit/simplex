@@ -5,7 +5,8 @@ namespace Simplex;
 
 use Twig\Environment;
 use Twig\Loader\LoaderInterface;
-use Twig\Extra\Intl\IntlExtension;
+//use Twig\Extra\Intl\IntlExtension;
+use jblond\TwigTrans\Translation;
 use Aptoma\Twig\Extension\MarkdownExtension;
 use Aptoma\Twig\Extension\MarkdownEngine;
 
@@ -24,7 +25,8 @@ class TwigExtended extends Environment
     {
         parent::__construct($loader, $options);
         //internationalization
-        $this->addExtension(new \Twig_Extensions_Extension_I18n());
+        //$this->addExtension(new \Twig_Extensions_Extension_I18n());
+        $this->addExtension(new Translation());
         //Twig IntlExtension
         $this->addExtension(new IntlExtension());
         //markdown support
