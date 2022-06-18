@@ -4,7 +4,7 @@ declare(strict_types=1);
 * IMPORTED NAMESPACES *
 **********************/
 use DI\ContainerBuilder;
-use Zend\Diactoros\ServerRequestFactory;
+use Laminas\Diactoros\ServerRequestFactory;
 use function Simplex\requireFromFiles;
 /***********
 * COMPOSER *
