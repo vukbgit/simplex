@@ -18,7 +18,7 @@
         "kint-php/kint": "^3.2",
         "narrowspark/http-emitter": ">=1.0",
         "oscarotero/middleland": "^1.0",
-        "twig/twig": "^2.0",
+        "twig/twig": ">=3.4",
         "twig/extensions": "^1.5",
         "twig/intl-extra": "v3.4",
         "usmanhalalit/pixie": "2.*@dev",
