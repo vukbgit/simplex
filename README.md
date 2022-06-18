@@ -1,6 +1,6 @@
 # Simplex #
 
-A tool for web developers v 2.0.9
+A tool for web developers
 
 ### Table of Contents ###
 
@@ -87,7 +87,7 @@ Create a composer.json in the root folder:
         "description": "Simplex app",
         "license": "MIT",
         "require": {
-            "vukbgit/simplex": "^1.1.2"
+            "vukbgit/simplex": "^2.0"
         },
         "config": {
             "vendor-dir": "private/share/packagist",
