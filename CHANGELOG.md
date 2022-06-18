@@ -1,3 +1,7 @@
+## 2.0.13 (June 18, 2022)
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.12 –> 2.0.13
+- packages back to PHP 7
+
 ## 2.0.12 (June 18, 2022)
 - Updated package.json, Updated CHANGELOG.md, Bumped 2.0.11 –> 2.0.12
 - packages to PHP 8
