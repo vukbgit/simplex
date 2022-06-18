@@ -1,6 +1,6 @@
 # Simplex #
 
-A tool for web developers
+A tool for web developers v 2.0.1
 
 ### Table of Contents ###
 
