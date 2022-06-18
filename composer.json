@@ -16,7 +16,7 @@
         "middlewares/request-handler": "^2.0",
         "filp/whoops": "^2.3",
         "kint-php/kint": "^3.2",
-        "narrowspark/http-emitter": "^1.0",
+        "narrowspark/http-emitter": ">=2.0",
         "oscarotero/middleland": "^1.0",
         "twig/twig": "^2.0",
         "twig/extensions": "^1.5",
