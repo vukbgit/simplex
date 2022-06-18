@@ -1,3 +1,8 @@
+## 2.0.10 (June 18, 2022)
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.9 –> 2.0.10
+- narrowspark/http-emitter ver 2.0
+- bumped to 2.0.9!
+
 ## 2.0.9 (June 18, 2022)
 - Updated package.json, Updated CHANGELOG.md, Bumped 2.0.8 –> 2.0.9
 
