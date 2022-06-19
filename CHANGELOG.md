@@ -1,3 +1,7 @@
+## 2.0.23 (June 19, 2022)
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.22 –> 2.0.23
+- simplex development setup script
+
 ## 2.0.22 (June 19, 2022)
 - Updated package.json, Updated CHANGELOG.md, Bumped 2.0.21 –> 2.0.22
 - bump version shell
