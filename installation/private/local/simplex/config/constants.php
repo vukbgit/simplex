@@ -79,9 +79,3 @@ define('FORGET_ALL_FILTERS', false);
 ***************/
 //folder for translations po and mo files
 define('TRANSLATIONS_DIR', sprintf('%s/locales', PRIVATE_LOCAL_DIR));
-/**********
-* CAPTCHA *
-**********/
-//it supposed to be only one captcha configuration for the whole site (do we ever need more?!)
-//path to captcha config file
-define('CAPTCHA_CONFIG_PATH', sprintf('%s/private/local/simplex/config/captcha.php', ABS_PATH_TO_ROOT));
