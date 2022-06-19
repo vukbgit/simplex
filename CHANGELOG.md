@@ -1,3 +1,7 @@
+## 2.0.19 (June 19, 2022)
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.18 –> 2.0.19
+- kint to 4.1
+
 ## 2.0.18 (June 18, 2022)
 - Updated package.json, Updated CHANGELOG.md, Bumped 2.0.17 –> 2.0.18
 - twig to PHP 8
