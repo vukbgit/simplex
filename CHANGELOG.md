@@ -1,3 +1,10 @@
+## 2.0.29 (June 19, 2022)
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.28 –> 2.0.29
+- author email
+- Merge branch 'development' of https://github.com/vukbgit/simplex into development
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.27 –> 2.0.28
+- packages upgrade
+
 ## 2.0.28 (June 19, 2022)
 - Updated package.json, Updated CHANGELOG.md, Bumped 2.0.27 –> 2.0.28
 - packages upgrade
