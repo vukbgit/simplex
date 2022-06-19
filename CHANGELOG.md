@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ## 2.0.25 (June 19, 2022)
 - Updated package.json, Updated CHANGELOG.md, Bumped 2.0.24 –> 2.0.25
 - php-di/php-di >= 6
@@ -11,7 +12,15 @@
 - simplex development setup script
 =======
 - simplex dev setup script
+<<<<<<< HEAD
 >>>>>>> 44e78ff (Updated package.json, Updated CHANGELOG.md, Bumped 2.0.22 –> 2.0.23)
+=======
+=======
+## 2.0.23 (June 19, 2022)
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.22 –> 2.0.23
+- simplex development setup script
+>>>>>>> 5990ede7a8a10a35ed6e868440682794364ac7e1
+>>>>>>> 37b2966 (please fix....)
 
 ## 2.0.22 (June 19, 2022)
 - Updated package.json, Updated CHANGELOG.md, Bumped 2.0.21 –> 2.0.22
