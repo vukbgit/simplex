@@ -126,11 +126,9 @@
         </div>
     </nav>
     <div class="w-100 collapse" id="bulk-warning">
-        <div class="alert alert-warning" role="alert">
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
         {{ 'you need to select at least one record'|trans }}
-        <button type="button" class="close" data-toggle="collapse" href="#bulk-warning" aria-label="Close" aria-expanded="false" aria-controls="bulk-warning">
-            <span aria-hidden="true">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     </div>
 </form>

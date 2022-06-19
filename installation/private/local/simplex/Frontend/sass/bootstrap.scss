@@ -1,58 +1,46 @@
-@import "../../../../../public/share/node_modules/bootstrap/scss/functions";
-/**********
-* SIMPLEX *
-**********/
-@import "../../sass/functions.scss";
-@import "../../sass/variables.scss";
-@import "../../sass/bootstrap-variables.scss";
-/*******
-* CORE * 
-*******/
-@import "../../../../../public/share/node_modules/bootstrap/scss/variables";
-@import "../../../../../public/share/node_modules/bootstrap/scss/mixins";
-@import "../../../../../public/share/node_modules/bootstrap/scss/root";
-@import "../../../../../public/share/node_modules/bootstrap/scss/reboot";
-@import "../../../../../public/share/node_modules/bootstrap/scss/type";
-@import "../../../../../public/share/node_modules/bootstrap/scss/images";
-@import "../../../../../public/share/node_modules/bootstrap/scss/grid";
+// SASS load path for absolute imports is set into private/share/packagist/vukbgit/simplex/bin/sass.sh to public/share/node_modules
+// Configuration
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
+@import "bootstrap/scss/utilities";
 
-/******
-* ERP *
-******/
-//@import "../../../../../public/share/node_modules/bootstrap/scss/buttons";
-//@import "../../../../../public/share/node_modules/bootstrap/scss/forms";
-//@import "../../../../../public/share/node_modules/bootstrap/scss/tables";
+// Layout & components
+@import "bootstrap/scss/root";
+@import "bootstrap/scss/reboot";
+@import "bootstrap/scss/type";
+@import "bootstrap/scss/images";
+@import "bootstrap/scss/containers";
+@import "bootstrap/scss/grid";
+//@import "bootstrap/scss/tables";
+//@import "bootstrap/scss/forms";
+//@import "bootstrap/scss/buttons";
+//@import "bootstrap/scss/transitions";
+//@import "bootstrap/scss/dropdown";
+//@import "bootstrap/scss/button-group";
+@import "bootstrap/scss/nav";
+@import "bootstrap/scss/navbar";
+//@import "bootstrap/scss/card";
+//@import "bootstrap/scss/accordion";
+//@import "bootstrap/scss/breadcrumb";
+//@import "bootstrap/scss/pagination";
+//@import "bootstrap/scss/badge";
+//@import "bootstrap/scss/alert";
+//@import "bootstrap/scss/progress";
+//@import "bootstrap/scss/list-group";
+//@import "bootstrap/scss/close";
+//@import "bootstrap/scss/toasts";
+//@import "bootstrap/scss/modal";
+//@import "bootstrap/scss/tooltip";
+//@import "bootstrap/scss/popover";
+//@import "bootstrap/scss/carousel";
+//@import "bootstrap/scss/spinners";
+//@import "bootstrap/scss/offcanvas";
+//@import "bootstrap/scss/placeholders";
 
-/*************
-* COMPONENTS *
-*************/
-//@import "../../../../../public/share/node_modules/bootstrap/scss/alert";
-//@import "../../../../../public/share/node_modules/bootstrap/scss/badge";
-//@import "../../../../../public/share/node_modules/bootstrap/scss/breadcrumb";
-//@import "../../../../../public/share/node_modules/bootstrap/scss/button-group";
-//@import "../../../../../public/share/node_modules/bootstrap/scss/card";
-//@import "../../../../../public/share/node_modules/bootstrap/scss/carousel";
-//@import "../../../../../public/share/node_modules/bootstrap/scss/code";
-@import "../../../../../public/share/node_modules/bootstrap/scss/dropdown";
-//@import "../../../../../public/share/node_modules/bootstrap/scss/custom-forms";
-//@import "../../../../../public/share/node_modules/bootstrap/scss/input-group";
-//@import "../../../../../public/share/node_modules/bootstrap/scss/jumbotron";
-//@import "../../../../../public/share/node_modules/bootstrap/scss/list-group";
-//@import "../../../../../public/share/node_modules/bootstrap/scss/media";
-//@import "../../../../../public/share/node_modules/bootstrap/scss/modal";
-@import "../../../../../public/share/node_modules/bootstrap/scss/nav";
-@import "../../../../../public/share/node_modules/bootstrap/scss/navbar";
-//@import "../../../../../public/share/node_modules/bootstrap/scss/pagination";
-//@import "../../../../../public/share/node_modules/bootstrap/scss/popover";
-//@import "../../../../../public/share/node_modules/bootstrap/scss/progress";
-//@import "../../../../../public/share/node_modules/bootstrap/scss/spinners";
-//@import "../../../../../public/share/node_modules/bootstrap/scss/toasts";
-//@import "../../../../../public/share/node_modules/bootstrap/scss/tooltip";
+// Helpers
+@import "bootstrap/scss/helpers";
 
-/************
-* UTILITIES *
-************/
-//@import "../../../../../public/share/node_modules/bootstrap/scss/close";
-@import "../../../../../public/share/node_modules/bootstrap/scss/utilities";
-@import "../../../../../public/share/node_modules/bootstrap/scss/transitions";
-@import "../../../../../public/share/node_modules/bootstrap/scss/print";
+// Utilities
+@import "bootstrap/scss/utilities/api";
+// scss-docs-end import-stack

@@ -44,7 +44,7 @@ for row in "${scssFiles[@]}"; do
             else
                 #compile the file
                 echo "compiling $target..."
-                sass "${scssFileDefinition[1]}" "$target" --style=compressed;
+                sass --load-path=public/share/node_modules --load-path=private "${scssFileDefinition[1]}" "$target" --style=compressed;
             fi
         done
     fi
