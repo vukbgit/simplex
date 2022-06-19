@@ -1,3 +1,7 @@
+## 2.0.30 (June 19, 2022)
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.29 –> 2.0.30
+- bump version script
+
 ## 2.0.29 (June 19, 2022)
 - Updated package.json, Updated CHANGELOG.md, Bumped 2.0.28 –> 2.0.29
 - author email
