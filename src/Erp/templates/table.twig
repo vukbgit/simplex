@@ -79,7 +79,6 @@
     </form>
     {% endif %}
         {% block tableFilterCaption %}
-    
         {% endblock tableFilterCaption %}
     <script type="text/javascript">
         $(document).ready(function(){
@@ -156,16 +155,29 @@
         </tr>
     </thead>
     <tbody>
-      {% block rows %}
-        {% for record in records %}
-      <tr>
-        <td>{{loop.index}}</td>
-            {% block rowFields %}
-            {% endblock %}
-      </tr>
-        {% endfor %}
-      {% endblock %}
+    {# init totals #}
+    {% set tableTotals = tableTotals ?? {} %}
+    {% for fieldName, field in CRUDLConfig.fields %}
+        {% if field.table.total %}
+            {% set tableTotals = updateProperty(tableTotals, fieldName, 0) %}
+        {% endif %}
+    {% endfor %}
+    {# ROWS LOOP #}
+    {% block rows %}
+    {% endblock %}
     </tbody>
+    {% if tableTotals is not empty %}
+    <tfoot class="thead-light">
+        <tr>
+        {% block tableFooter %}
+        {% endblock %}
+    {# record visible actions header #}
+        {% if navigations.recordVisibleActions|length %}
+        <th colspan="{{ navigations.recordVisibleActions|length + (navigations.recordHiddenActions|length ? 1 : 0) }}"></th>
+        {% endif %}
+        </tr>
+    </tfoot>
+    {% endif %}
 </table>
     {% else %}
 <div class="alert alert-info" role="alert">
