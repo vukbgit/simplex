@@ -1,16 +1,9 @@
 #!/bin/bash
-<<<<<<< HEAD
-=======
 # TO BE CALLED FROM simplex FOLDER
->>>>>>> 888f48a (simplex dev setup script)
 #input
 read -p "app password/key:" repositoryKey
 read -p "git user.email:" userEmail
 read -p "git user.name:" userName
-<<<<<<< HEAD
-cd simplex
-=======
->>>>>>> 888f48a (simplex dev setup script)
 #set git origin
 git remote remove origin
 git remote add origin https://$repositoryKey@github.com/vukbgit/simplex.git
