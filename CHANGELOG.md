@@ -1,3 +1,7 @@
+## 2.0.32 (June 19, 2022)
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.31 –> 2.0.32
+- bootstrap 5
+
 ## 2.0.31 (June 19, 2022)
 - Updated package.json, Updated CHANGELOG.md, Bumped 2.0.30 –> 2.0.31
 - fix: middlewares/utils version constraint
