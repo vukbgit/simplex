@@ -209,7 +209,7 @@ abstract class ControllerAbstract
         //load configured languages
         $this->loadLanguages();
         //set current language
-        $this->language = $this->languages->$languageCode ?? current($this->languages);
+        $this->language = $this->languages->$languageCode ?? current(get_object_vars($this->languages));
         $languageIETF = sprintf('%s_%s', $this->language->{'ISO-639-1'}, $this->language->{'ISO-3166-1-2'});
         // Set language
         putenv(sprintf('LC_ALL=%s', $languageIETF));

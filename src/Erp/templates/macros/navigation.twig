@@ -54,7 +54,8 @@
     {% if navigation|length %}
     <nav class="mb-3">
         <ul class="nav nav-tabs">
-            {% for voiceKey, voiceProperties in navigation if voiceProperties is not null %}
+            {% for voiceKey, voiceProperties in navigation %}
+              {% if voiceProperties is not null %}
             <li class="nav-item">
                 <a
                     href="{{ buildRouteToAction(voiceProperties) }}"
@@ -64,6 +65,7 @@
                 {{- getLabel('actions', voiceKey) -}}
                 </a>
             </li>
+          {% endif %}
             {% endfor %}
         </ul>
     </nav>

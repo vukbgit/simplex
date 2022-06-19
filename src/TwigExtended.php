@@ -4,8 +4,9 @@ declare(strict_types=1);
 namespace Simplex;
 
 use Twig\Environment;
+use Twig\TwigFilter;
 use Twig\Loader\LoaderInterface;
-//use Twig\Extra\Intl\IntlExtension;
+use Twig\Extra\Intl\IntlExtension;
 use jblond\TwigTrans\Translation;
 use Aptoma\Twig\Extension\MarkdownExtension;
 use Aptoma\Twig\Extension\MarkdownEngine;
@@ -27,6 +28,14 @@ class TwigExtended extends Environment
         //internationalization
         //$this->addExtension(new \Twig_Extensions_Extension_I18n());
         $this->addExtension(new Translation());
+        $filter = new TwigFilter(
+            'trans', 
+            function ($context, $string) {
+                return Translation::transGetText($string, $context);
+            }, 
+            ['needs_context' => true]
+        );
+        $this->addFilter($filter);
         //Twig IntlExtension
         $this->addExtension(new IntlExtension());
         //markdown support

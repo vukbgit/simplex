@@ -467,15 +467,15 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
     {
         //get input
         $fieldsDefinitions = [
-            'modifier' => FILTER_SANITIZE_STRING,
-            'field' => FILTER_SANITIZE_STRING,
+            'modifier' => FILTER_SANITIZE_SPECIAL_CHARS,
+            'field' => FILTER_SANITIZE_SPECIAL_CHARS,
             //sorting
             'direction' => [
                 'filter' => FILTER_VALIDATE_REGEXP,
                 'options' => array('regexp'=>'/asc|ASC|des|DESC/')
             ],
             //filter
-            'filter' => FILTER_SANITIZE_STRING,
+            'filter' => FILTER_SANITIZE_SPECIAL_CHARS,
             //custom conditions
             'custom_conditions' => [
                 'filter' => FILTER_UNSAFE_RAW,
@@ -856,7 +856,7 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
             $uploadsFilters = [];
             foreach ($this->model->getUploadKeys() as $uploadKey) {
                 $uploadsFilters[$uploadKey] = [
-                    'filter' => FILTER_SANITIZE_STRING,
+                    'filter' => FILTER_SANITIZE_SPECIAL_CHARS,
                     //'filter' => FILTER_VALIDATE_REGEXP,
                     //'options' => ['regexp'=>'/^([0-9a-zA-z_\-\.\s\p{L}]+\.[1-9a-zA-Z]{3,4}\|?)+$/u']
                 ];
@@ -1068,7 +1068,7 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
     protected function cloneBulk()
     {
         $fieldsDefinition = [
-            'parent_primary_key_field' => FILTER_SANITIZE_STRING,
+            'parent_primary_key_field' => FILTER_SANITIZE_SPECIAL_CHARS,
             'parent_id' => FILTER_VALIDATE_INT
             
         ];
