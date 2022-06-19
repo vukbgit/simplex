@@ -1,3 +1,6 @@
+## 2.0.24 (June 19, 2022)
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.23 –> 2.0.24
+
 ## 2.0.23 (June 19, 2022)
 - Updated package.json, Updated CHANGELOG.md, Bumped 2.0.22 –> 2.0.23
 <<<<<<< HEAD
