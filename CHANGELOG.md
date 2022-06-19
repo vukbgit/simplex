@@ -1,3 +1,7 @@
+## 2.0.21 (June 19, 2022)
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.20 –> 2.0.21
+- ERP table for twig 3
+
 ## 2.0.20 (June 19, 2022)
 - Updated package.json, Updated CHANGELOG.md, Bumped 2.0.19 –> 2.0.20
 - tweaks for PHP 8
