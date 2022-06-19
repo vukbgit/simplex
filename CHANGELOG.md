@@ -1,3 +1,7 @@
+## 2.0.28 (June 19, 2022)
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.27 –> 2.0.28
+- packages upgrade
+
 ## 2.0.27 (June 19, 2022)
 - Updated package.json, Updated CHANGELOG.md, Bumped 2.0.26 –> 2.0.27
 - bump version script
