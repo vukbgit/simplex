@@ -5,7 +5,8 @@
     "license": "MIT",
     "authors": [
        {
-            "name": "vuk"
+            "name": "vuk",
+            "email": "info@vuk.bg.it"
        }
     ],
     "require": {
