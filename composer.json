@@ -9,7 +9,7 @@
        }
     ],
     "require": {
-        "php-di/php-di": "^6.0",
+        "php-di/php-di": ">=6.0",
         "laminas/laminas-diactoros": "^2.11",
         "nikic/fast-route": "^1.0",
         "middlewares/utils": "^3.3",
