@@ -22,8 +22,6 @@ use \Simplex\PixieConnectionExtended;
 use \Simplex\PixieExtended;
 //authentication
 use \Simplex\Authentication;
-//captcha
-use Simplex\LaminasCaptchaImageExtended;
 //translations
 use Simplex\TranslationsExtractor;
 //spreadsheets read/write
@@ -106,9 +104,6 @@ return array_merge(
         //authentication
         'simplexAuthenticationMiddleware' => create(Authentication\Middleware::class)
             ->constructor(get('DIContainer'), get('cookieManager')),
-        //captcha
-        'captcha' => create(LaminasCaptchaImageExtended::class)
-            ->constructor(require CAPTCHA_CONFIG_PATH),
         //spreadsheet reader/write
         'spreadsheet' => create(SpreadsheetReaderWriter::class),
         //mailer
