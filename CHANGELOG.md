@@ -1,3 +1,716 @@
+## 2.1.0 (June 20, 2022)
+- Updated package.json, Updated CHANGELOG.md, Bumped to 2.1.0
+- bump script with explicit version
+- bump script with explicit version
+- bump script with explicit version
+- richeselect and autocomplete
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.37 –> 2.0.38
+- readme
+- fix: composer.json typo
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.36 –> 2.0.37
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.35 –> 2.0.36
+- readme
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.34 –> 2.0.35
+- bum version script
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.33 –> 2.0.34
+- bump version script
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.32 –> 2.0.33
+- bootstrap 5
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.31 –> 2.0.32
+- bootstrap 5
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.30 –> 2.0.31
+- fix: middlewares/utils version constraint
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.29 –> 2.0.30
+- bump version script
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.28 –> 2.0.29
+- author email
+- Merge branch 'development' of https://github.com/vukbgit/simplex into development
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.27 –> 2.0.28
+- packages upgrade
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.27 –> 2.0.28
+- packages upgrade
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.26 –> 2.0.27
+- bump version script
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.25 –> 2.0.26
+- simplex setup dev script
+- please fix....
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.24 –> 2.0.25
+- php-di/php-di >= 6
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.23 –> 2.0.24
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.22 –> 2.0.23
+- simplex dev setup script
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.22 –> 2.0.23
+- simplex development setup script
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.21 –> 2.0.22
+- bump version shell
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.20 –> 2.0.21
+- ERP table for twig 3
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.19 –> 2.0.20
+- tweaks for PHP 8
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.18 –> 2.0.19
+- kint to 4.1
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.17 –> 2.0.18
+- twig to PHP 8
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.16 –> 2.0.17
+- mackages to PHP 8
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.15 –> 2.0.16
+- packages to PHP 8
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.14 –> 2.0.15
+- packages to PHP 8
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.13 –> 2.0.14
+- packages back to PHP 7
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.12 –> 2.0.13
+- packages back to PHP 7
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.11 –> 2.0.12
+- packages to PHP 8
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.10 –> 2.0.11
+- readme
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.9 –> 2.0.10
+- narrowspark/http-emitter ver 2.0
+- bumped to 2.0.9!
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.8 –> 2.0.9
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.7 –> 2.0.8
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.6 –> 2.0.7
+- bump to 2.0.7!
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.5 –> 2.0.6
+- moved from zend to laminas in index.php
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.4 –> 2.0.5
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.3 –> 2.0.4
+- bump to 2.0.4
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.2 –> 2.0.3
+- bump to 2.0.3
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.1 –> 2.0.2
+- Merge branch 'release-2.0.1' into local-dev
+- Updated package.json, Created CHANGELOG.md, Bumped 2.0.0 –> 2.0.1
+- bump to 2.0.1
+- narrowspark/http-emitter 1.0
+- twig/intl-extra 3.4
+- narrowspark/http-emitter 2.0
+- FastRouteMiddleware
+- middlewares/request-handler 2.0
+- middlewares/utils 3.3
+- captcha extended
+- moved from zend to laminas
+- moved from zend to laminas
+- moved from Zend\Diactoros to Laminas\Diactoros
+- erp navigation scss
+- clean cache bin
+- calendar widget
+- kint expansion tweak
+- mailer debug levels
+- filter where
+- area user data from cookie to json file
+- area user data from cookie to json file
+- spreasdsheet writer
+- spreasdsheet writer
+- translations template helpers draft
+- readme
+- translations templates helpers draft file
+- feat: runtime conditional global action
+- feat: bulk actions form target
+- model exceptions handling
+- aura/auth version for PHP 7.4
+- git script
+- added npm to gitignore
+- docs: git repository app password/key
+- brands icons
+- back to twig 2
+- switch to twig 3
+- switch to twig 3
+- fix: subject ancestor record menu actions labels
+- brands icons
+- feat: record fields values substitution into record menu actions labels
+- fix: table custom filter null conditions
+- feat: custom crudl-form action
+- feat: custom crudl-form action
+- fix current subject route extraction
+- fix: input number decimal regular expression
+- fix: do not apply text-transform to side navigation icons
+- secondsToTime template helper
+- feat: global template function secondsToTime
+- feat: date trait secondsToTime method
+- docs: captcha generation
+- feat: free subject actions
+- fix: permissions on subjectrecord menu
+- debug output
+- feat: conditional ancestors label improved
+- fix: richselect additional parameters
+- feat: ERP deveopment environment icon
+- fix: richselect form macro
+- insert catch
+- fix: ERP parent base/back route extraction
+- docs: ERP image method docs
+- subject cookie
+- bootstrap tooltip opacity variable
+- feat: ERP form extra validation
+- sass config draft
+- fix: garbage in backend routes
+- fix: model has uploads logic
+- richselect extra parameters escaping
+- model use localized view option
+- model use localized view option
+- feat: function and template function to get relative path to root
+- ERP upload instance process method
+- merge
+- Merge branch '1.1.2' of https://github.com/vukbgit/simplex into 1.1.2
+- feat: ERP upload instance process method
+- foreign key insert record button in save form draft
+- noconfirm option for bulk action button
+- subject save form draft subject menu
+- feat: ancestors record menus into subject draft
+- feat: ancestors record menus into subject draft
+- docs: subject draft labels
+- record token label template function
+- fix: catch error on bulk delete
+- fix: delete record on insert failure
+- fix: delete record on insert failure
+- bulk action into subject navigation draft
+- bulk action into subject navigation draft
+- subject breadcrumb level formatting
+- docs: hidden and record menu actions int subject navigation template
+- docs: @name in uploaded file template
+- feat: heading into subject breadcrumb
+- docs: readme typo
+- docs: readme typo
+- fix: spreadsheet delimiter
+- feat: added separator argument to ucwords template filter
+- ERP fontello icons
+- feat: ERP table default filter visibility
+- feat: model where contruction and ERP table filter logic
+- fix: packagist path into tranlations scripts
+- feat: added field macro readonly attribute
+- fix: model where condition if null
+- feat: support for null operator in model where conditions
+- feat: conditional ancestor label tokens
+- fix: subject cookie
+- table filter
+- fix: subject record menu title right margin rule
+- richselect field draft
+- richtext field draft
+- docs: readme typo fix
+- docs: npm script
+- feat: npm script
+- fix: bootstrap version fixed to ^4
+- doc: readme typo
+- feat: git setup scripts
+- feat: git setup scripts
+- feat: git setup scripts
+- fix(ERP): smart custom filter cookie
+- feat(ERP): table form filter caption template block
+- fix(ERP): forget custom filter
+- feat: global constant and subject configuration option to forget table filter
+- check on model delete without where condition
+- email SMTP return
+- bug fix on record cloning
+- manage subject cookie for other subjects
+- logic to create foreign key record from crudl-form
+- spreadsheet delimiter
+- spreadsheet delimiter
+- Merge branch '1.1.2' of https://github.com/vukbgit/simplex into 1.1.2
+- field delimiter for spreadsheet csv export
+- ERP table record row attributes block
+- ERP table row attributes block
+- bulk action noconfirm parameter to bypass confirm
+- checkbox group macro option to toggle values
+- icons size classes
+- collapse-trigger CSS class
+- collapse-trigger CSS class
+- display property over navigation voice
+- displaySubjectGlobalNavigation template var
+- nullable alert code for ERP update action
+- moved upload field configuration js object logic to separate macro
+- ERP css tweaks
+- CRUDL list force order parameter
+- added db driver specific label delimiter
+- added text casting to ERP query filter
+- installation subject label
+- installation files tweak
+- authentication custom method return
+- custom cancel action for CRUDL save form buttons
+- datetime field default buttons
+- extra css classes for tabel sortable header
+- ERP query limit
+- method to manually reste
+- scss fix for sidebar height
+- exeption in case of ERP record not found into route
+- authentication redirect
+- added to trait Dates method intervalsOverlap
+- docs
+- docs
+- docs
+- docs
+- docs
+- docs
+- docs
+- docs
+- docs
+- API docs in README
+- Set theme jekyll-theme-slate
+- docs
+- clean/phpdoc-md removed
+- added clean/phpdoc-md requirement
+- ERP post save return
+- ERP table class block
+- ERP save actions custom redirect
+- richselect bootstrap theme
+- richselect bootstrap theme
+- ERP action redirect route configuration
+- authentication loca lprocessing
+- validation for rich select
+- sortable headers macro non only for tables
+- ERP currentSubjectRoot smart storing
+- added support for reading xslx
+- crudlFormButtons block
+- added userData tyemplate parameters to Erp\ControllerWithoutCreud
+- added userData tyemplate parameters to Erp\ControllerWithoutCreud
+- redundant code deleted on model uploaded files save mothod
+- colorpicker input macro
+- bug fix on sidebar active voice
+- checkAtLeastOnePermission template helper
+- changed Erp\controllerAbstract CRUDLConfig property scope from private to protected
+- ERP fontello icons
+- input validation with complex filters for primary keys in delete action
+- exception throwed when updating ERP record without primary key value
+- sql folder
+- subjecte routes draft
+- http error 404 on/public/share/package.json
+- readme private/share path
+- update-all.sh packagist pack
+- setAreaCookieArray method and template helper
+- null return instead of message for label not found
+- fixed useless argument passed to richSelectAssets macro
+- radio input vertica align
+- form macros: inline radio labels horizontal alignment
+- form macros: null placeholder atribute and inline radio labels vertical alignment
+- added subject config file
+- added target on global action link
+- moved ERP controller model loadinginto __construct
+- fixed radio input macro columns + inline
+- removed array check from Traits\Numbers::formatFloatFromLocaleToEn
+- Traits\Numbers::formatFloatFromLocaleToEn now return always a string ande never an array
+- wrap for radio/checkbox inline inputs
+- added ERP action level permissions
+- added ERP subject level permission to execute actions
+- tempate variables to show side bar and user data
+- custom authentication method
+- globa function getInstanceNamespace improved
+- removed local template helpers container as useless
+- htaccess
+- local template helpers add and build methods
+- used traits magic init method
+- application installation tmeplate
+- ERP table totals
+- added to ERP page template subjectGlobalNavigation block
+- ERP ancestors and subject template labels include order
+- datetime picker time value format
+- subject record menu improved
+- fix on form validation
+- datepicker before/after event
+- crudl redirect action
+- dump template function force parameter
+- added template function wrapping pathinfo
+- typo in number input doc
+- inline radios vertical alignment
+- dateTimePicker before and after potions
+- isolated ERP where filter building
+- token test
+- token test
+- Model constructor doc
+- Model constructior doc
+- ControllerWithTemplateAbstract constructor parameters
+- added remoteDataRouteExtraParameters to displayRichSelect macro
+- added ControllerAbstract::output
+- handling of PGSql 55000 error
+- fix scope for propriety
+- toUnit parameter optional for template helper convertByteUnit
+- moved subjerct and model properties / methods to Erp::ControllerWithoutCRUDLAbstract
+- Erp\ControllerWithoutCRUDLAbstract creation
+- added extraField parameter to ControllerWithTemplate:processRecordsetForInput
+- negate condition for tabel subject record action
+- typo in model poistion handling
+- subject actions menu
+- ERP tab css
+- model exception handling
+- for validation custom field on error function
+- ERP headerTitle block
+- side navigation
+- radio and checkbox validation error position
+- ERP controller getAncestorPrimaryKeyFromRoute method imrpovement
+- added cleanRegexp template filter
+- handle duplicate unique key for pgsql
+- ERP header logo and title
+- sidebar menu voice selction
+- richselect assets
+- richselect and autocomplete
+- alert on labe lnot fouund by template
+- erp table filter formatting
+- PixieExtended::optionsByDriver, ModelAbstract::getQuery(), ilike operator for ERP table filter query
+- reset button for erp table default filter
+- changed ERP subjectcookie scope from private to protected
+- ERP table orered header alignment
+- horizontal padding to ERP table action cell
+- handle PDO exception with custom code into model
+- currency and fraction formatting into number field form macro
+- primaryKeyAlias property in subject model configuration draft
+- handlign of different cases for extracting ancestor primary key from ERP route
+- group field in db authentication
+- password generator for password field macro
+- model build rawe field method
+- record hidden actions
+- erp save form cancel button formatting
+- class to erp top navbar logo
+- area into subject routes drat
+- readme
+- installation area variables import
+- output fiel path
+- catch aoutput that fisturbs emitter
+- form macro share assets paths
+- form macro share assets paths
+- erp table css path
+- path to public uploads
+- constant SESSION_COOKIE_SECURE detection in case of cli sapi
+- apth to form fontello css
+- template filter for public share and local assets paths
+- simplex.js src
+- fix for paths when application is inside a root subfolder
+- share include path into application.scss
+- readme
+- raltive paths in scss files
+- fixed share css paths into sass config file
+- readme
+- parameter to set gettext language at runtime
+- form field label with value false do not displays label code
+- placeholder explicit config parameter for form field macros
+- fixed typo in linkedin share button macro
+- added SESSION_COOKIE_SECURE constant
+- fixed attachment tupe bug in PHPMailer wrapper
+- moved private share packagist folder into private/share/packagist
+- readme typo fix
+- captcha field reload button
+- unobfuscate email function
+- cast to int template function and casting radio boolean value to int
+- added yarn update to u8pdate-all script
+- added slugToPSR1Name template helper
+- fixed yarn update comand in update-all script
+- input filter for uploaded files names
+- regex for uploaded files names
+- backend header title block
+- ERP controller typo
+- Erp controller clean-up
+- extra fields in authenticated user data
+- date field into CRUDL form template
+- date field into CRUDL config template
+- authenticated user role for db authentication
+- casted radio boolean form values to integer
+- fixed js show form validation error function
+- added datetimeLocale template function
+- bug fix on form validation error message from second one onward
+- bug fix on form validation error message from second one onward
+- secure session cookie
+- email obfuscation improvement
+- debug clean-up
+- fast router middleware modified to cache only from PHP 7.3.0 onward
+- ControllerWithTemplateAbstract::buildCommonTemplateHelpers visibility brought back to private
+- Merge branch '1.1.2' of https://github.com/vukbgit/simplex into 1.1.2
+- querybuilder reconnection after time out
+- email obfuscation
+- Merge branch '1.1.2' of https://github.com/vukbgit/simplex into 1.1.2
+- email obfuscation
+- sanitize mail macro
+- added extra css classes parameter to macro sanitizeEmail
+- change ControllerWithTemplateAbstract::buildCommonTemplateHelpers visibility from private to proteced
+- update-all.sh handles both local composer scripts ad defaults to system composer command
+- connection check made optional
+- pixie connection extended to handle reconnection
+- fixed support for postgrgesql connection
+- readme typo
+- session cookie path
+- session cookie path with BRAND
+- radio boolean into crudl form template draft
+- handle sql save error exceptions
+- template header log block into backend template draft
+- repository URL as script argument for git-setup-prod.sh
+- repository URL as script argument for git-setup-prod.sh
+- apllication body tag id
+- target for ERP list record visible actions link
+- uploaded files regular expression improvement
+- subject di-container draft formatting
+- breadcrumb ancestor label formatting
+- bug fix for ERP controller get CRUDL config
+- non erp controller into ERP context
+- custom backend login logo element
+- translations shortcut script
+- translations shortcut script
+- removed bin/translations.sh from softlinked scripts
+- added bin/translations.sh to softlinked scripts
+- readme
+- local template helpers for translations extraction
+- translations update
+- moved ERP controller loadCRUDLConfig method call from __construct() to doBeforeActionExecution()
+- moved method to set upload file size from ERP to template
+- deleted duplicated macro in form macros
+- js obfuscate email function
+- alias for getLocaleRecordValue template filter
+- improvement model move record
+- uploaded file auto renaming wit timestamp to avoid files overwriting
+- uploaded files renaming predisposition
+- improved regexp for uploaded files names
+- array single argument for template function getLabel()
+- clean-cache shell message
+- clean-cache does not delete session files anymore
+- added UTF-8 support to uploaded files names regular expression filter
+- bulk cloning
+- fixed typos
+- installation bootstrap for frontend
+- installation bootstrap for frontend
+- installation bootstrap for frontend
+- readme update
+- upload files ERP controller method abstracted
+- Merge branch '1.1.2' of https://github.com/vukbgit/simplex into 1.1.2
+- processRecordsetForInput bug fix
+- bog fix over uploaded files deletion
+- bog fix over uploaded files deletion
+- correct values for radio boolean form macro
+- bug fix over uploaded file unlink
+- radio/checbox checked distinguish null from zero
+- include subject varibles into crudl configuration file
+- css for ERP form fieldsets
+- model reset auto increment method
+- ERP table caption
+- ERP table headers vertical alignment
+- record cloning
+- model clone method
+- added to spreadsheet class read method
+- max upload filesize template parameters isolated into method
+- added labe lparameter to ERP table macro displaySortableHeader
+- added support for ERP table bulk actions
+- parameters for displayInputGroup form macro
+- readme update
+- moved fontello social icons to brand
+- allowed html into form field help
+- model has locales logic
+- model insert return
+- checkbox and radio correct id into form javascrip layer
+- model and crud handling of record position
+- handle exceptions thrown by uploaded files processing
+- added radio input to crudf form draft
+- subject route template for children
+- subject navigation template children action
+- list and crud form installation templates
+- file upload input theme
+- bootstrap-fileinput frozen to version 5.0.4
+- CRUD form template
+- erp navigation icons
+- BACKEND_NAVIGATION_PATH constant
+- subject list template
+- readme update
+- readme update
+- SCCS files to compile at installation time
+- readme update
+- readme update
+- readme update
+- yarn packages start list
+- renamed composer script soft link
+- Merge branch '1.1.2' of https://github.com/vukbgit/simplex into 1.1.2
+- getPublicOutputFilePath null file
+- reset
+- Merge branch '1.1.2' of https://github.com/vukbgit/simplex into 1.1.2
+- null fiel path passed to template function getPublicOutputFilePath
+- fixed custom conditions for table filter form
+- added to ERP controller method buildListWhere parameter to pass custom CRUDL config object
+- ERP controller method getCRUDLConfig made public
+- prepend and append text input logic moved to inner form macro
+- custom form field error message
+- added social media icons and macros for share buttons
+- small fixes
+- added twig function to get current URI
+- datetime input macro fixes
+- fixed model dateformat method
+- default ERP list order by primary key
+- added fitImage method
+- added datetimeformat into languages definition
+- small fixes
+- back to twig 2
+- switch to twig 3
+- added navigation scaffold for forntend navigation
+- fixed authentication logic for area that do not need authentication
+- moved loadAreaNavigation method to ControllerWithTemplateAbstract class
+- frontend installation
+- uploads table no more automatically created
+- url field validation regular expressions
+- ancestors record label
+- tmeplate function for uploaded file path
+- bug fix in image resize method
+- readme update
+- ERP upload
+- subject database architectur readme explanation and upload table file_name length raised to 256
+- raedme update and bootstrap-fileinput bug fix
+- readme update
+- readme update
+- readme update
+- readme update
+- update readme translations section and added locales to installation
+- form blur event tweak
+- locales field example cinfiguration in installation
+- readme update
+- readme update
+- readme update
+- readme update
+- no wrap for ERP table record actions cells
+- placeholders into record action label
+- crud property to build automatically localized DRUD list query
+- readme update
+- readme update and ControllerWithTemplateAbstract.php clean up
+- git script to setup production environment
+- git script to setup production environment
+- git setup script for production
+- improved git init scripts
+- gitignore file for installation
+- erp username into masthead
+- added fontello user icon to erp
+- readme update
+- readme update
+- readme update
+- readme update
+- readme update
+- various tweaks
+- max and min number input attributes and link to ancestor into breadcrumb
+- added .htacces rule to get rid of facebook id fbclid into URLs
+- route parameters for ancestors and form custom validation
+- removed debug log
+- varius fixes
+- fontello tweak, navigation bug fix, number inputs macro
+- readme update
+- readme update
+- readme update
+- readme update
+- readme update
+- readme update
+- readme update
+- added SQL error handling for null values on mandatory column and for group macro for textarea
+- readme update
+- various tweaks for backend subject set-up
+- readme update
+- readme update
+- readme update
+- readme updated
+- readme update
+- renamed drafts files
+- readme update
+- renamed draft for subject di-container
+- readme update
+- readme update
+- readme update
+- readme update
+- readme update
+- readme test
+- README
+- README
+- readme
+- readme and installation constants
+- email input regular expression
+- typo fixed in composer.json
+- ERP post save record method
+- password generator library
+- general commit
+- renamed git-pull.sh to update-all.sh
+- git pull script
+- authentiction controller
+- git pull script
+- various changes
+- default page id based on current action
+- for field config parameter to hide help messges
+- various
+- absolute path for email messages
+- mailer class
+- spreadsheet reader/writer and required phpmailer
+- required box/spout for csv handling
+- draft di-container definitions
+- removed installation .gitignore
+- installation .gitignore file
+- translations management
+- captcha form field
+- form helpers & captcha
+- form template helpers
+- added gabrielelana/byte-units to requirements
+- ERP file upload
+- ERP file upload
+- htaccess
+- readme
+- readme
+- db configuration
+- backend scaffolding
+- major changes
+- readme
+- moved dump library to kint
+- readme
+- major update
+- global functions
+- mixed
+- added cookie library
+- default namespace for rendered templates
+- namespaced Twig templates
+- readme
+- readme
+- readme and some configuration tweaks
+- readme
+- readme
+- readme
+- Merge branch '0.1.0' of https://github.com/vukbgit/simplex into 0.1.0
+- readme
+- README
+- package.json
+- package.json
+- Merge branch '0.1.0' of https://github.com/vukbgit/simplex into 0.1.0
+- committed installation/public/share
+- config.json
+- added aapche to requirements into README.md
+- fixed clean cache script path in git-pull.sh
+- sass.sh without arguments compile all of scss files
+- bin scripts in composer.json and git-pull script
+- bin scripts and installation
+- Readme
+- Merge branch '0.1.0' of https://github.com/vukbgit/simplex into 0.1.0
+- require twig markdown, pixie extended class
+- drafts renamed to installation
+- twig extension requirement
+- major commit
+- readme and some file movinig around
+- readme
+- readme
+- readme
+- readme
+- readme and small fixes
+- readme
+- readme
+- drafts and bins
+- binaries
+- bin scripts
+- drafts
+- project json definition
+- drafts structure andf copying
+- readme
+- readme
+- added composer-copy
+- removed post-install-cmb from composer.json
+- Merge branch '0.1.0' of https://github.com/vukbgit/simplex into 0.1.0
+- no installer
+- installer
+- installer
+- drafts
+- major commit
+- model abstract class
+- added usmanhalalit/pixie dependency
+- controlle abstract classes and function
+- added twig to requirements;
+- moved all route loguic from function to claas, functions removed
+- fast route and errors
+- composer.json and functions
+- composer.jsone and readme files
+- Merge branch 'master' of https://github.com/vukbgit/simplex
+- first commit
+- Initial commit
+
 ## 2.0.38 (June 20, 2022)
 - Updated package.json, Updated CHANGELOG.md, Bumped 2.0.37 –> 2.0.38
 - readme
