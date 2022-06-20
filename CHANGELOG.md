@@ -1,3 +1,8 @@
+## 2.0.38 (June 20, 2022)
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.37 –> 2.0.38
+- readme
+- fix: composer.json typo
+
 ## 2.0.37 (June 20, 2022)
 - Updated package.json, Updated CHANGELOG.md, Bumped 2.0.36 –> 2.0.37
 
