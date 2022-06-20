@@ -36,7 +36,7 @@
     {%- endif -%}
             </a>
     {% if voiceProperties.navigation %}
-<nav class="nav flex-column flex-nowrap collapse{% if isActive %} show{% endif %}" id="{{ subLevelId }}"
+<nav class="sublevel nav flex-column flex-nowrap collapse{% if isActive %} show{% endif %}" id="{{ subLevelId }}"
              aria-labelledby="{{ voiceLabelId }}" data-parent="#{{ parentId }}">
         {% for voiceKey, voiceProperties in voiceProperties.navigation %}
             {{ selfMacros.displaySidebarVoice(routeParameters, voiceKey, voiceProperties, navigationLabels, subLevelId, level + 1) }}

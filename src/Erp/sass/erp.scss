@@ -1,14 +1,19 @@
+/* SASS load paths for absolute imports is set into private/share/packagist/vukbgit/simplex/bin/sass.sh to:
+- public/share/node_modules
+- private
+*/
 //include local variables
-@import "../../../../../../../local/simplex/sass/variables.scss";
-@import "../../../../../../../local/simplex/sass/bootstrap-variables.scss";
+@import "local/simplex/sass/bootstrap-variables.scss";
 //include bootstrap functions, mixins and variables
-@import "../../../../../../../../public/share/node_modules/bootstrap/scss/mixins";
-@import "../../../../../../../../public/share/node_modules/bootstrap/scss/functions";
-@import "../../../../../../../../public/share/node_modules/bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
 
 $darker: rgba(0, 0, 0, .25);
 //navigation
-@import './navigation.scss';
+@import 'share/packagist/vukbgit/simplex/src/Erp/sass/navigation.scss';
+//tables
+@import 'share/packagist/vukbgit/simplex/src/Erp/sass/table.scss';
 //navbar
 .navbar {
     &.navbar-dark {
