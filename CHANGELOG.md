@@ -1,3 +1,7 @@
+## 2.1.2 (June 20, 2022)
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.1.1 –> 2.1.2
+- ERP and backend style
+
 ## 2.1.1 (June 20, 2022)
 - Updated package.json, Updated CHANGELOG.md, Bumped 2.1.0 –> 2.1.1
 - ERP menu collapse
