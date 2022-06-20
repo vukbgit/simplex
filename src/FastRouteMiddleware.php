@@ -77,10 +77,10 @@ class FastRouteMiddleware implements MiddlewareInterface
         $route = $this->router->dispatch($request->getMethod(), rawurldecode($request->getUri()->getPath()));
         //handle errors
         if ($route[0] === Dispatcher::NOT_FOUND) {
-            return $this->createResponse(404);
+            return $this->responseFactory->createResponse(404);
         }
         if ($route[0] === Dispatcher::METHOD_NOT_ALLOWED) {
-            return $this->createResponse(405)->withHeader('Allow', implode(', ', $route[1]));
+            return $this->responseFactory->createResponse(405)->withHeader('Allow', implode(', ', $route[1]));
         }
         //store parameters
         $parameters = [];
