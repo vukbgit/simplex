@@ -445,7 +445,7 @@ WARNING: uses Bootstrap custom select, so BS custom-forms component must be incl
 $(document).ready(function() {
     $('{{ '#%s'|format(id) }}').select2({
         minimumInputLength: {{ config.minimumInputLength ?? 0 }},
-        theme: 'bootstrap4',
+        theme: 'bootstrap',
         allowClear: true,
         width: '100%',
         placeholder: true,
@@ -1794,9 +1794,7 @@ $(document).ready(function(){
 {% macro richSelectAssets(context) %}
 <!-- select2 -->
 <link href="{{ 'select2/dist/css/select2.min.css'|pathToNpmAsset }}" rel="stylesheet" />
-{# @ttskch does not display clear icon #}
-{#<link href="{{ '@ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.min.css'|pathToNpmAsset }}" rel="stylesheet" />#}
-<link href="{{ 'select2-bootstrap4-theme/dist/select2-bootstrap4.min.css'|pathToNpmAsset }}" rel="stylesheet" />
+<link href="{{ 'select2-theme-bootstrap5/dist/select2-bootstrap.min.css'|pathToNpmAsset }}" rel="stylesheet" />
 <script src="{{ 'select2/dist/js/select2.min.js'|pathToNpmAsset }}"></script>
 <script src="{{ 'select2/dist/js/i18n/%s.js'|format(getLanguage('ISO-639-1'))|pathToNpmAsset }}"></script>
 <script>

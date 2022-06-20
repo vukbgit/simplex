@@ -20,6 +20,9 @@ return (object) [
         ],
         'delete-form' => (object) [
             'permissions' => [sprintf('manage-%s', $subject)],
-        ]
+        ],
+        'autocomplete' => (object) [
+            'permissions' => [sprintf('manage-%s', $subject), sprintf('view-%s', $subject)],
+        ],
     ]
 ];

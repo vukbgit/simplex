@@ -1267,6 +1267,36 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
         $this->redirect($this->buildRouteToActionFromRoot('list'));
     }
     
+    /***************
+    * AUTOCOMPLETE *
+    ***************/
+    
+    /**
+     * Gets and outputs the recordset for autocomplete
+     * @param array $orderBy: indexed array, each element is an array like request by Simplex\PixieExtended sortBy; if not provided is searched into $this->CRUDLConfig->autocomplete->orderBy
+     * @param array $labelFields: the name of one field or an array of fields names and strings to be joined to form label; if not provided is searched into $this->CRUDLConfig->autocomplete->labelFields
+     * @param array $extraWhere: extyra where fields
+     */
+    protected function autocomplete(array $orderBy = null, array $labelFields = null, array $extraWhere = [])
+    {
+      $where = $this->buildListWhere(null, $_GET['term'] ?? '');
+      $where = array_merge($where, $extraWhere);
+      $records = $this->model->get(
+          $where,
+          $orderBy ?? $this->CRUDLConfig->autocomplete->orderBy ?? []
+      );
+      //xx($this->model->sql());
+      $records = $this->processRecordsetForInput(
+        $this->model->getconfig()->primaryKey,
+        $labelFields ?? $this->CRUDLConfig->autocomplete->labelFields ?? [],
+        $records,
+        null,
+        'id',
+        'text'
+      );
+      $this->output('text/json', json_encode($records));
+    }
+    
     /***********
     * CALENDAR *
     ***********/

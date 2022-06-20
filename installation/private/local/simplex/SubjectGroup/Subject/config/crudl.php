@@ -34,9 +34,9 @@ return (object) [
             'inputFilter' => [
                 'filter' => FILTER_VALIDATE_REGEXP,
                 //anglo-saxon date format
-                'options' => array('regexp'=>'/^[0-9]{4}-[0-9]{2}-[0-9]{4}$/')
+                'options' => ['regexp'=>'/^[0-9]{4}-[0-9]{2}-[0-9]{4}$/']
                 //italian format
-                'options' => array('regexp'=>'/^[0-9]{2}-[0-9]{2}-[0-9]{4}$/')
+                'options' => ['regexp'=>'/^[0-9]{2}-[0-9]{2}-[0-9]{4}$/']
             ],
         ],
     ],
@@ -50,11 +50,21 @@ return (object) [
     /*'labelTokens' => [
         'FIELD-NAME',
         'STRING-TOKEN'
-    ]*/
+    ],*/
     /*//fields to be marked during cloning
     'clone' => [
         'FIELD-NAME',
-    ]*/
+    ],*/
     /*//whether to forget table filter
-    'forgetFilter' => false*/
+    'forgetFilter' => false,*/
+    /*//autocomplete configuration
+    'autocomplete' => (object) [
+      'orderBy' => [
+        ['FIELD-TO-ORDER-BY']
+      ],
+      'labelFields' => [
+        'FIELD-NAME',
+        'STRING'
+      ]
+    ],*/
 ];

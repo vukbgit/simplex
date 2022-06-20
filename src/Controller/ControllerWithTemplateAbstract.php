@@ -835,7 +835,7 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
     /**
     * Processes a recordset to be used in a radio, checkbox or select mapping fields to value and label
     * @param string $valueField
-    * @param mixed $labelTokens: the neme of one field or an array of fields names and strings to be joined to form label
+    * @param mixed $labelTokens: the name of one field or an array of fields names and strings to be joined to form label
     * @param array $recordset
     * @param string $languageCode: optional language code to use for localized fields
     * @return array of records

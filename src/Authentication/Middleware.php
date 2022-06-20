@@ -168,8 +168,8 @@ class Middleware implements MiddlewareInterface
         if($authenticationParameters)
         //get input
         $args = array(
-            'username' => FILTER_SANITIZE_STRING,
-            'password' => FILTER_SANITIZE_STRING
+            'username' => FILTER_SANITIZE_SPECIAL_CHARS,
+            'password' => FILTER_SANITIZE_SPECIAL_CHARS
         );
         $input = filter_input_array(INPUT_POST, $args);
         $username = trim($input['username'] ?? '');

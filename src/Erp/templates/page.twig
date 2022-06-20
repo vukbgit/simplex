@@ -46,8 +46,7 @@
             {% set severityAlerts = severityAlerts|merge([(alert.rawMessage ?? getLabel('alerts', alert.code))|formatArray(alert.data)]) %}
         {% endfor %}
         {{ severityAlerts|join('<br>')|raw }}
-        <button type="button" class="close" data-dismiss="alert" aria-label="{{ 'Close'|trans }}">
-            <span aria-hidden="true">&times;</span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ 'Close'|trans }}">
         </button>
         </div>
     {% endfor %}
