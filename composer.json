@@ -10,6 +10,8 @@
        }
     ],
     "require": {
+        "php": ">=8.0",
+        "ext-gettext": "*"
         "php-di/php-di": ">=6.0",
         "laminas/laminas-diactoros": ">=2.11",
         "nikic/fast-route": ">=1.0",

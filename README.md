@@ -51,7 +51,7 @@ _NOTE ON THIS DOCUMENT_: I will try to be clear and write down all the details t
 ## Requirements ##
 
 * [Apache 2.4+ webserver](http://httpd.apache.org/): althoungh not strictly necessary for the core engine, .htaccess files are used for basic routing and domain based environment detection
-* [PHP 7.1+](https://www.php.net/downloads.php) with the PHP [gettext](http://www.php.net/gettext) extension enabled (beacuse every piece of text is considered as a translation even in a mono language application)
+* [PHP 8.0+](https://www.php.net/downloads.php) with the PHP [gettext](http://www.php.net/gettext) extension enabled (beacuse every piece of text is considered as a translation even in a mono language application)
 * ssh access to web space: on a shared hosting it's hard to use Composer (and Yarn and Sass), you have to develop locally and commit, but I really suggest to find a provider who can give you ssh access; once I tried the power & comfort of the ssh shell I rented my own virtual machine and never turned back to shared hosting again...
 * even if not strictly required I strongly suggest to have also:
     * [Yarn](https://yarnpkg.com): to install javascript and css libraries
@@ -110,7 +110,7 @@ Create a composer.json in the root folder:
        }
     }
 
-Note: for version constraint (^1.1.2) check last tag on github repository or non-develop version number on packagist.
+Note: for version constraint (^2.0) check last tag on github repository or non-develop version number on packagist.
 
 Create the Composer project running on command line in the root folder:
 
@@ -141,16 +141,13 @@ For details see _Folders and Files Structure_ below
 * install __public__ packages:
     * the _public\share\package.json_ file contains some NPM packages for:
         * the whole application:
-            * [bootstrap 4](https://getbootstrap.com)
-            * [jquery](http://jquery.com/)
+            * [bootstrap 5](https://getbootstrap.com)
+            * [jquery latest](http://jquery.com/)
             * [js-cookie](https://github.com/js-cookie/js-cookie): javascript library to handle cookies
         * backends or enterprise web applications (ERP) mostly (even if they can be useful also in frontend development):
-            * [parsleyjs](http://parsleyjs.org/): form validation
-            * [moment](https://momentjs.com/): for dates and time manipulation
             * [bootstrap-fileinput](https://plugins.krajee.com/file-input): for asyncronous file upload. NOTE: as for 2019-11-12 version is frozen to 5.0.4 due to a bug in auto upload
-            * [tempusdominus-bootstrap-4](https://github.com/tempusdominus/bootstrap-4): for date/time input
             * [tinymce](https://github.com/tinymce/tinymce-dist): for richtext input
-            * [select2](https://select2.org): for richselect input with autocomplete, with [@ttskch/select2-bootstrap4-theme](https://github.com/ttskch/select2-bootstrap4-theme) for skinning
+            * [select2](https://select2.org): for richselect input with autocomplete, with [select2-theme-bootstrap5](https://github.com/angel-vladov/select2-theme-bootstrap5) for skinning
             * [hamburgers](https://github.com/jonsuh/hamburgers): CSS hamburger animated icons
             * [fullcalendar](https://github.com/fullcalendar/fullcalendar): full-sized event calendar
         * frontend
