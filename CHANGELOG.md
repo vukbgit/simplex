@@ -1,3 +1,7 @@
+## 2.0.36 (June 20, 2022)
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.35 –> 2.0.36
+- readme
+
 ## 2.0.35 (June 20, 2022)
 - Updated package.json, Updated CHANGELOG.md, Bumped 2.0.34 –> 2.0.35
 - bum version script
