@@ -2,7 +2,7 @@
 #first argument is explicit version
 VERSION=$1
 HIGHLIGHT_COLOR='\033[0;33m'
-if [ -n "$VERSION" ]
+if [ -n "$VERSION" ] then
   ver-bump -v $VERSION -p origin
 else
   ver-bump -p origin
