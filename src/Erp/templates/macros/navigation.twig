@@ -23,7 +23,7 @@
     {%- if isActive %} active text-white{% endif -%}
             "
             {%- if voiceProperties.navigation -%}
-            data-toggle="collapse" aria-expanded="{{ isActive ? 'true' : 'false' }}" data-target="#{{ subLevelId }}" aria-controls="{{ subLevelId }}"
+            data-bs-toggle="collapse" aria-expanded="{{ isActive ? 'true' : 'false' }}" data-bs-target="#{{ subLevelId }}" aria-controls="{{ subLevelId }}"
             {%- endif -%}
             >
     {%- if voiceProperties.icon -%}

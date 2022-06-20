@@ -21,7 +21,25 @@ return (object) [
                 'total' => false
             ],
             //input filter see https://www.php.net/manual/en/filter.filters.php
-            'inputFilter' => ['filter' => FILTER_SANITIZE_STRING, 'flags' => FILTER_FLAG_NO_ENCODE_QUOTES],
+            'inputFilter' => [
+              'filter' => FILTER_SANITIZE_STRING,
+              'flags' => FILTER_FLAG_NO_ENCODE_QUOTES //do not encode single ' and double " quotes
+            ],
+            'flags' => FILTER_NULL_ON_FAILURE
+        ],
+        'VARCHAR-FIELD-WITH-REGEXP' => (object) [
+            'table' => (object)[
+                //boolean defaults to true
+                'filter' => true,
+                //boolean defaults to false
+                'total' => false
+            ],
+            //input filter see https://www.php.net/manual/en/filter.filters.php
+            'inputFilter' => [
+              'filter' => FILTER_VALIDATE_REGEXP,
+              'options' => ['regexp'=>sprintf('/%s/', REGEXP-CONSTANT)],
+              'flags' => FILTER_NULL_ON_FAILURE //for nullable fields set to null otherwise woll be saved as 0
+            ]
         ],
         'DATE-FIELD' => (object) [
             'table' => (object)[
