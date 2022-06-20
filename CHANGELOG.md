@@ -1,3 +1,7 @@
+## 2.0.33 (June 20, 2022)
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.0.32 –> 2.0.33
+- bootstrap 5
+
 ## 2.0.32 (June 19, 2022)
 - Updated package.json, Updated CHANGELOG.md, Bumped 2.0.31 –> 2.0.32
 - bootstrap 5
