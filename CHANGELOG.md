@@ -1,3 +1,7 @@
+## 2.1.4 (June 20, 2022)
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.1.3 –> 2.1.4
+- regexp for subject primary key in route draft
+
 ## 2.1.3 (June 20, 2022)
 - Updated package.json, Updated CHANGELOG.md, Bumped 2.1.2 –> 2.1.3
 - fix: route middleware
