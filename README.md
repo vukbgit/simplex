@@ -41,9 +41,7 @@ To do so Simplex relies on:
         * takes care of installing the required libraries (for at least the minimum functionalities)
         * creates the basic starting structure for the application with some draft files almost ready to be used but that can be deleted, modified and integrated at need
     * other selected Composer packages are integrated to create the application core engine
-* [Yarn](https://yarnpkg.com) for all the [NPM](https://npmjs.com) packages:
-    * [bootstrap 4](https://getbootstrap.com)
-    * [jquery](http://jquery.com/)
+* [NPM](https://npmjs.com) for Javascript and CSS packages
 * [Fontello](http://fontello.com/) for icons
 
 _NOTE ON THIS DOCUMENT_: I will try to be clear and write down all the details to understand and use Simplex, for future-me, any possible colleague and anyone else interested benefit
