@@ -7,7 +7,6 @@
 
 @import "share/packagist/vukbgit/simplex/src/sass/functions.scss";
 @import "local/simplex/Backend/sass/variables.scss";
-@import "local/simplex/sass/bootstrap-variables.scss";
 
 @import "bootstrap/scss/variables";
 @import "bootstrap/scss/mixins";
@@ -23,7 +22,7 @@
 @import "bootstrap/scss/tables";
 @import "bootstrap/scss/forms";
 @import "bootstrap/scss/buttons";
-//@import "bootstrap/scss/transitions";
+@import "bootstrap/scss/transitions";
 //@import "bootstrap/scss/dropdown";
 @import "bootstrap/scss/button-group";
 @import "bootstrap/scss/nav";

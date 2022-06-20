@@ -29,7 +29,7 @@
         <h1 class="h3 mb-3 font-weight-normal">{{ signIntitle }}</h1>
         <div class="form-row">
             <div class="col-12">
-                <label for="username" class="sr-only">{% trans "Username" %}</label>
+                <label for="username" class="visually-hidden">{% trans "Username" %}</label>
     {{ formMacros.displayInputbyTipe(
             usernameFieldType|default('text'),
             {
@@ -53,7 +53,7 @@
     ) }}
             </div>
             <div class="col-12">
-                <label for="password" class="sr-only">{% trans "Password" %}</label>
+                <label for="password" class="visually-hidden">{% trans "Password" %}</label>
     {{ formMacros.displayInputPassword(
             {
                 'name': 'password',

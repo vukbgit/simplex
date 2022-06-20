@@ -1260,7 +1260,7 @@ NOTE: javascript validation function creates automatically if needed, this macro
         {% if customClasses %}
             {% set classes = classes|merge([customClasses]) %}
         {% endif %}
-<label for="{{ (config.id ?? config.name)|formatIdforJs }}" class="{{ classes|join(' ') }}">
+<label for="{{ (config.id ?? config.name)|formatIdforJs }}" class="form-label {{ classes|join(' ') }}">
 {{ config.label|raw }}
         {% if config.validation.required and (config.hideMandatories is not defined or config.hideMandatories == false) %}
 <span title="{{ 'This field is mandatory'|trans }}" aria-label="required">

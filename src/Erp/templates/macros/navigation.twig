@@ -32,7 +32,7 @@
     {# labels have been set in the area template #}
                 {{- attribute(navigationLabels, voiceKey) -}}
     {%- if isActive %}
-                <span class="sr-only">({% trans 'current' %})</span>
+                <span class="visually-hidden">({% trans 'current' %})</span>
     {%- endif -%}
             </a>
     {% if voiceProperties.navigation %}

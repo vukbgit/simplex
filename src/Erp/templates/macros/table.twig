@@ -65,10 +65,10 @@
   {% if context.navigations.recordHiddenActions|length %}
     {% set dropdownId = 'hidden-actions-%d'|format(loop.index0) %}
   <td class="record-action">
-    <div class="dropdown">
-      <a class="icon-erp-ellipsis-vert" href="#" role="button" id="{{ dropdownId }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <div class="dropdown dropend">
+      <a class="icon-erp-ellipsis-vert" href="#" role="button" id="{{ dropdownId }}" data-bs-toggle="dropdown" aria-expanded="false">
       </a>
-      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="{{ dropdownId }}">
+      <div class="dropdown-menu" aria-labelledby="{{ dropdownId }}">
     {% for actionKey, actionProperties in context.navigations.recordHiddenActions %}
       {% set actionLabel = parseRecordActionRoute(getLabel('actions', actionKey), record) %}
       {% set actionProperties = updateProperty(actionProperties, 'linkClass', 'dropdown-item') %}

@@ -66,16 +66,22 @@
   <div>
     {% if searchFields|length %}
     <form method="post" action="" class="form-inline" id="default-filter-form">
-        <a tabindex="0" class="icon-erp-help mr-1 text-secondary" id="default-filter-form-help" role="button" data-toggle="popover"></a>
-        <input type="hidden" name="modifier" value="filter">
-        <div class="input-group">
-            <input name="filter" value="{{ fieldsFilter }}" type="search"
-        class="form-control form-control-sm" placeholder="{{ 'Filter'|trans }}" aria-label="{{ 'Filter'|trans }}">
-            <div class="input-group-append">
-                <button class="btn btn-sm btn-outline-warning" type="reset">{{ 'Reset'|trans }}</button>
-                <button class="btn btn-sm btn-outline-success" type="submit">{{ 'Filter'|trans }}</button>
-            </div>
+      <input type="hidden" name="modifier" value="filter">
+      <div class="row">
+        <div class="col-md-auto">
+          <a tabindex="0" class="icon-erp-help mr-1 text-secondary" id="default-filter-form-help" role="button" data-toggle="popover"></a>
         </div>
+        <div class="col">
+          <div class="input-group">
+              <input name="filter" value="{{ fieldsFilter }}" type="search"
+          class="form-control form-control-sm" placeholder="{{ 'Filter'|trans }}" aria-label="{{ 'Filter'|trans }}">
+              <div class="input-group-append">
+                  <button class="btn btn-sm btn-outline-warning" type="reset">{{ 'Reset'|trans }}</button>
+                  <button class="btn btn-sm btn-outline-success" type="submit">{{ 'Filter'|trans }}</button>
+              </div>
+          </div>  
+        </div>
+      </div>
     </form>
     {% endif %}
         {% block tableFilterCaption %}
@@ -135,7 +141,7 @@
         {% endif %}
 <table class="{% block tableClass %}table table-sm table-hover table-responsive-sm erp-table{% endblock %}">
     <caption>{{- getLabel('table', 'caption')|format(records|length) -}}</caption>
-    <thead class="thead-light">
+    <thead class="table-light">
         <tr>
         {% if navigations.bulkActions|length %}
             <th class="align-middle">

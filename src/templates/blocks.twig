@@ -17,7 +17,7 @@ $(document).ready(function(){
 
 {% block cookiesAssets %}
 <!-- js-cookie -->
-<script src="{{ 'js-cookie/src/js.cookie.js'|pathToNpmAsset }}"></script>
+<script src="{{ 'js-cookie/dist/js.cookie.min.js'|pathToNpmAsset }}"></script>
 <script type="text/javascript">
     //cookie default duration in minutes
     var cookieDurationMinutes = {{ cookieDuration }};
