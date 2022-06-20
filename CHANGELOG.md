@@ -1,3 +1,7 @@
+## 2.1.3 (June 20, 2022)
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.1.2 –> 2.1.3
+- fix: route middleware
+
 ## 2.1.2 (June 20, 2022)
 - Updated package.json, Updated CHANGELOG.md, Bumped 2.1.1 –> 2.1.2
 - ERP and backend style
