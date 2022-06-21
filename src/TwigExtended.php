@@ -41,5 +41,16 @@ class TwigExtended extends Environment
         //markdown support
         $markdownEngine = new MarkdownEngine\MichelfMarkdownEngine();
         $this->addExtension(new MarkdownExtension($markdownEngine));
+        //set context variable
+        $this->addExtension(new class extends \Twig\Extension\AbstractExtension {
+          public function getFunctions() {
+            return [
+              new \Twig\TwigFunction('setContextVar', [$this, 'setContextVar'], ['needs_context' => true]),
+            ];
+          }
+          public function setContextVar(&$context, $name, $value) {
+            $context[$name] = $value;
+          }
+        });
     }
 }
