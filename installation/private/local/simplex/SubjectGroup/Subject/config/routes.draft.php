@@ -17,10 +17,6 @@
 * Both the parameters defined into route pattern and the optional parameters added to handler are stored into the ServerRequestInterface 'parameters' attribute instance which is passed to the handler class __invoke() method as first parameter and can be get by $invoke-first-parameter->getAttributes()->parameters
 * Parameters defined into route pattern overload handler parameters with the same name
 */
-//handlers namespaces
-use Simplex\Authentication;
-use Simplex\Local\Partners;
-use function Simplex\slugToPSR1Name;
 //import area variables
 require sprintf('%s/Backend/config/variables.php', PRIVATE_LOCAL_DIR);
 //import subject variables
