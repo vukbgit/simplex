@@ -437,6 +437,21 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
                 $records[$i]->moveDown = $i < ($numRecords - 1);
             }
         }
+        //totals
+        $tableTotals = [];
+        foreach ($this->getCRUDLConfig()->fields as $fieldName => $fieldDefinition) {
+          if(isset($fieldDefinition->table->total) && $fieldDefinition->table->total) {
+            $tableTotals[$fieldName] = 0;
+          }
+        }
+        if(!empty($tableTotals)) {
+          foreach ((array) $records as $record) {
+            foreach ($tableTotals as $fieldName => $value) {
+              $tableTotals[$fieldName] += $record->{$fieldName};
+            }
+          }
+          $this->stp('tableTotals', $tableTotals);
+        }
         return $records;
     }
     

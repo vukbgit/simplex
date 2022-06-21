@@ -159,17 +159,11 @@
         </tr>
     </thead>
     <tbody>
-    {# init totals #}
-    {% set tableTotals = tableTotals ?? {} %}
-    {% for fieldName, field in CRUDLConfig.fields %}
-        {% if field.table.total %}
-            {% set tableTotals = updateProperty(tableTotals, fieldName, 0) %}
-        {% endif %}
-    {% endfor %}
     {# ROWS LOOP #}
     {% block rows %}
     {% endblock %}
     </tbody>
+    {# tableTotals is filled if total has been activated for at least one field into subject CRUDL  #}
     {% if tableTotals is not empty %}
     <tfoot class="thead-light">
         <tr>
