@@ -1,3 +1,7 @@
+## 2.1.6 (June 21, 2022)
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.1.5 –> 2.1.6
+- fix: typo in routes draft
+
 ## 2.1.5 (June 20, 2022)
 - Updated package.json, Updated CHANGELOG.md, Bumped 2.1.4 –> 2.1.5
 - regexp for subject primary key in route draft
