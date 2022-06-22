@@ -1,3 +1,7 @@
+## 2.2.2 (June 22, 2022)
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.2.1 –> 2.2.2
+- code cleanup into Erp templates drafts
+
 ## 2.2.1 (June 21, 2022)
 - Updated package.json, Updated CHANGELOG.md, Bumped 2.2.0 –> 2.2.1
 - moved tabel totals computation into Erp\controllerAbstract
