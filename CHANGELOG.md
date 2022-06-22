@@ -1,3 +1,7 @@
+## 2.2.6 (June 22, 2022)
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.2.5 –> 2.2.6
+- fix: Erp CSS inclusion
+
 ## 2.2.5 (June 22, 2022)
 - Updated package.json, Updated CHANGELOG.md, Bumped 2.2.4 –> 2.2.5
 - crudl form draft
