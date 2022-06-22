@@ -1,13 +1,13 @@
 {# included without context passing labels global variable  #}
 {% set singular = 'SUBJECT-SINGULAR'|trans %}
 {% set labels = setLabels('SUBJECT-KEY', {
-    'subject': 'SUBJECT-LABEL'|trans,
-    'subject-record-menu-title': '%s "%%s":'|format(singular),
-    'fields': {
-        'FIELD-NAME': 'FIELD-LABEL'|trans,
-    }
+  'subject': 'SUBJECT-LABEL'|trans,
+  'subject-record-menu-title': '%s "%%s":'|format(singular),
+  'fields': {
+    'FIELD-NAME': 'FIELD-LABEL'|trans,
+  }
 }) %}
 {# for record actions defined into navigation.php placeholders enclosed by curly brackets {} will be substituded by field values found into record #}
 {#% set labels = setLabels('actions', {
-    'SUBJECT-KEY': 'ACTION-LABEL ({FIELD-NAME})'|trans
+  'SUBJECT-KEY': 'ACTION-LABEL ({FIELD-NAME})'|trans
 }) %#}
