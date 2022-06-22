@@ -1,3 +1,7 @@
+## 2.2.3 (June 22, 2022)
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.2.2 –> 2.2.3
+- Erp form scss
+
 ## 2.2.2 (June 22, 2022)
 - Updated package.json, Updated CHANGELOG.md, Bumped 2.2.1 –> 2.2.2
 - code cleanup into Erp templates drafts
