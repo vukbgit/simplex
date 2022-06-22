@@ -92,20 +92,20 @@
   ) }}
   {# date #}
   {{ formMacros.displayDateTimePickerGroup(
-  {
-    'name': 'FIELD-NAME',
-    'value': record.FIELD-NAME,
-    'label': getLabel(subject, 'fields', 'FIELD-NAME'),
-    'help': null,
-    'autofocus': false,
-    'disabled': action == 'delete-form',
-    'autocomplete': '',
-    'class': '',
-    'validation': {
-      'required': false,
-      'pattern': ''
+    {
+      'name': 'FIELD-NAME',
+      'value': record.FIELD-NAME,
+      'label': getLabel(subject, 'fields', 'FIELD-NAME'),
+      'help': null,
+      'autofocus': false,
+      'disabled': action == 'delete-form',
+      'autocomplete': '',
+      'class': '',
+      'validation': {
+        'required': false,
+        'pattern': ''
+      }
     }
-  }
   ) }}
   {# rich text editor #}
   {{ formMacros.displayRichTextEditor(
