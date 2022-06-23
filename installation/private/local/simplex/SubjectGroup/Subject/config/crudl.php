@@ -55,6 +55,8 @@ return (object) [
                 'options' => ['regexp'=>'/^[0-9]{4}-[0-9]{2}-[0-9]{4}$/']
                 //italian format
                 'options' => ['regexp'=>'/^[0-9]{2}-[0-9]{2}-[0-9]{4}$/']
+                //dates range italian
+                'options' => ['regexp'=>'/^[0-9]{2}-[0-9]{2}-[0-9]{4} \/ [0-9]{2}-[0-9]{2}-[0-9]{4}$/']
             ],
         ],
     ],

@@ -5,11 +5,11 @@
         "ISO-3166-1-2": "IT",
         "dateFormat": {
             "PHP": "d-m-Y",
-            "calendar": "DD-MM-YYYY"
+            "calendar": "d-m-Y"
         },
         "dateTimeFormat": {
             "PHP": "d-m-Y H:i",
-            "calendar": "DD-MM-YYYY HH:mm"
+            "calendar": "d-m-Y H:i"
         }
     },
     "en": {
@@ -18,11 +18,11 @@
         "ISO-3166-1-2": "GB",
         "dateFormat": {
             "PHP": "Y-m-d",
-            "calendar": "YYYY-MM-DD"
+            "calendar": "Y-m-d"
         },
         "dateTimeFormat": {
             "PHP": "Y-m-d H:i",
-            "calendar": "YYYY-MM-DD HH:mm"
+            "calendar": "Y-m-d HH:mm"
         }
     }
 }
