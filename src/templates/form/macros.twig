@@ -732,6 +732,9 @@ WARNING: uses Bootstrap custom range input, so BS custom-forms component must be
       flatpickr.localize(flatpickr.l10ns.{{ getLanguage('ISO-639-1') }});
       $('#{{ containerId }}').flatpickr({
         dateFormat: '{{ config.format|default(attribute(getLanguage(config.time ? 'dateTimeFormat' : 'dateFormat'), 'calendar')) }}',
+      {% if not config.value and config.validation.required %}
+        defaultDate: 'today',
+      {% endif %}
         wrap: true,
       {% if config.time %}
         enableTime: true,
