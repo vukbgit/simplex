@@ -1,3 +1,7 @@
+## 2.2.11 (June 23, 2022)
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.2.10 –> 2.2.11
+- Traits/Numbers formatFloatFromLocaleToEn
+
 ## 2.2.10 (June 23, 2022)
 - Updated package.json, Updated CHANGELOG.md, Bumped 2.2.9 –> 2.2.10
 - routes draft
