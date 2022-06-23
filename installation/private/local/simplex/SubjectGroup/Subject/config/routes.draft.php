@@ -27,9 +27,9 @@ $modelConfig = require 'model.php';
 return [
     [
         'method' => ['GET','POST'],
-        'route' => sprintf('/{area:%s}/{subject:%s}/{action}[/{%s:\d}]', $area, $subject, $modelConfig->primaryKey),
+        'route' => sprintf('/{area:%s}/{subject:%s}/{action}[/{%s:\d+}]', $area, $subject, $modelConfig->primaryKey),
         //children route
-        //'route' => sprintf('/{area:%s}/{ancestor0:ANCESTOR-SUBJECT}/{ANCESTOR-PRIMARY-KEY:\d}/{subject:%s}/{action}[/{%s:\d}]', $area, $subject, $modelConfig->primaryKey),
+        //'route' => sprintf('/{area:%s}/{ancestor0:ANCESTOR-SUBJECT}/{ANCESTOR-PRIMARY-KEY:\d+}/{subject:%s}/{action}[/{%s:\d+}]', $area, $subject, $modelConfig->primaryKey),
         'handler' => [
             sprintf('%s-controller', $subject),
             [
