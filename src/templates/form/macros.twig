@@ -78,6 +78,7 @@
     max: for integer numbers, maximum value
     precision: for decimal numbers, defaults to locale frac_digits
     integerPrecision: for decimal numbers, number of digits for the integer part
+    allowNegative: allows negative values
     isCurrency: treats as currency
     isPercent: treats as percent
 #}
@@ -107,7 +108,8 @@
         {% set precision = config.precision ?? localeconv.frac_digits %}
         {% set validation = config.validation ?? {} %}
         {% set integerPrecision = config.integerPrecision ? '{1,%d}'|format(config.integerPrecision) : '+' %}
-        {% set validation = updateProperty(validation, 'pattern', '^[0-9%s]%s(%s{1}[0-9]{1,%d}){0,1}$'|format(
+        {% set validation = updateProperty(validation, 'pattern', '^%s[0-9%s]%s(%s{1}[0-9]{1,%d}){0,1}$'|format(
+          config.allowNegative ? '-?' : '',
           localeconv.thousands_sep,
           integerPrecision,
           localeconv.decimal_point,
@@ -127,7 +129,7 @@
         {% set config = updateProperty(config, 'append', '%') %}
     {% endif %}
     {% if config.isCurrency is defined and config.isCurrency %}
-        {% set config = updateProperty(config, 'append', getLanguage().localeconv.currency_symbol) %}
+        {% set config = updateProperty(config, 'prepend', getLanguage().localeconv.currency_symbol) %}
     {% endif %}
     {{ selfMacros.displayInput(inputType, config) }}
 {% endmacro %}

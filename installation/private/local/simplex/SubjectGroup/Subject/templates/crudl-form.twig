@@ -57,6 +57,31 @@
       'locales' : languages#}
     }
   ) }}
+  {# decimal #}
+  {{ formMacros.displayInputGroup(
+      'number',
+      {
+          'name': 'FIELD-NAME',
+          'value': record.FIELD-NAME,
+          'label': getLabel(subject, 'fields', 'FIELD-NAME'),
+          'help': getLabel(subject, 'fields', 'FIELD-NAME_help'),
+          'autofocus': false,
+          'disabled': action == 'delete-form',
+          'maxlength': false,
+          'autocomplete': '',
+          'class': '',
+          'validation': {
+              'required': true,
+              'pattern': ''
+          },
+          'numberType': 'decimal',
+          'precision': 2,
+          'step':'any',
+          'formatAttributes': {
+              'fraction_digit': 2
+          }
+      }
+  ) }}
   {# radio group #}
   {{ formMacros.displayInputRadioGroup(
     {

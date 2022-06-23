@@ -27,7 +27,7 @@ return (object) [
             ],
             'flags' => FILTER_NULL_ON_FAILURE
         ],
-        'VARCHAR-FIELD-WITH-REGEXP' => (object) [
+        'DECIMAL-FIELD' => (object) [
             'table' => (object)[
                 //boolean defaults to true
                 'filter' => true,
@@ -37,9 +37,28 @@ return (object) [
             //input filter see https://www.php.net/manual/en/filter.filters.php
             'inputFilter' => [
               'filter' => FILTER_VALIDATE_REGEXP,
-              'options' => ['regexp'=>sprintf('/%s/', REGEXP-CONSTANT)],
+              'options' => [
+                //, AS THOUSAND SEPARATOR AND . AS DECIMAL SEPARATOR
+                'regexp'=>'/^(?:[0-9]{0,3},?)?[0-9]{1,3}(?:\.[0-9]{1,2})?$/',
+                //. AS THOUSAND SEPARATOR AND , AS DECIMAL SEPARATOR
+                'regexp'=>'/^(?:[0-9]{0,3}\.?)?[0-9]{1,3}(?:,[0-9]{1,2})?$/',
+              ],
               'flags' => FILTER_NULL_ON_FAILURE //for nullable fields set to null otherwise woll be saved as 0
             ]
+        ],
+        'imponibile_importo' => (object) [
+            'table' => (object)[
+                //boolean defaults to true
+                'filter' => false,
+                //boolean defaults to false
+                'total' => true
+            ],
+            //input filter see https://www.php.net/manual/en/filter.filters.php
+            'inputFilter' => [
+                'filter' => FILTER_VALIDATE_REGEXP,
+                //'options' => array('regexp'=>'/[0-9]{0,3}\.{0,1}[0-9]{1,3},{0,1}[0-9]{0,2}/')
+                'options' => array('regexp'=>sprintf('/%s/', FLOAT_REGEX))
+            ],
         ],
         'DATE-FIELD' => (object) [
             'table' => (object)[
