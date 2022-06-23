@@ -1,3 +1,7 @@
+## 2.2.9 (June 23, 2022)
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.2.8 –> 2.2.9
+- date time picker default
+
 ## 2.2.8 (June 23, 2022)
 - Updated package.json, Updated CHANGELOG.md, Bumped 2.2.7 –> 2.2.8
 - decimal inputs
