@@ -13,6 +13,6 @@ trait Numbers {
     private function formatFloatFromLocaleToEn($float)
     {
         $localeconv = localeconv();
-        return str_replace([$localeconv['thousands_sep'], $localeconv['decimal_point']], ['', '.'], $float);
+        return str_replace([$localeconv['thousands_sep'], $localeconv['decimal_point']], ['', '.'], (string) $float);
     }
 }
