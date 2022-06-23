@@ -1,3 +1,7 @@
+## 2.2.7 (June 23, 2022)
+- Updated package.json, Updated CHANGELOG.md, Bumped 2.2.6 –> 2.2.7
+- date time picker
+
 ## 2.2.6 (June 22, 2022)
 - Updated package.json, Updated CHANGELOG.md, Bumped 2.2.5 –> 2.2.6
 - fix: Erp CSS inclusion
