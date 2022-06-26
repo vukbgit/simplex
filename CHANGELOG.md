@@ -1,3 +1,7 @@
+## 2.2.13 (June 26, 2022)
+- chore: Updated package.json, updated CHANGELOG.md, bumped 2.2.12 -> 2.2.13
+- git init branch
+
 ## 2.2.12 (June 26, 2022)
 - chore: Updated package.json, updated CHANGELOG.md, bumped 2.2.11 -> 2.2.12
 - fix: readme typo
