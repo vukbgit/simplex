@@ -1,3 +1,7 @@
+## 2.2.12 (June 26, 2022)
+- chore: Updated package.json, updated CHANGELOG.md, bumped 2.2.11 -> 2.2.12
+- fix: readme typo
+
 ## 2.2.11 (June 23, 2022)
 - Updated package.json, Updated CHANGELOG.md, Bumped 2.2.10 –> 2.2.11
 - Traits/Numbers formatFloatFromLocaleToEn
