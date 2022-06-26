@@ -27,7 +27,7 @@ select yn in "Yes" "No"; do
         #git add composer.json
         #git commit -m "first complete commit"
         #git push
-        git init
+        git init -b $branch
         git config user.email "$userEmail"
         git config user.name "$userName"
         git config push.default simple
