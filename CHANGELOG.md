@@ -1,3 +1,7 @@
+## 2.2.14 (June 27, 2022)
+- chore: Updated package.json, updated CHANGELOG.md, bumped 2.2.13 -> 2.2.14
+- fix: get area cookie property
+
 ## 2.2.13 (June 26, 2022)
 - chore: Updated package.json, updated CHANGELOG.md, bumped 2.2.12 -> 2.2.13
 - git init branch
