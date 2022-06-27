@@ -110,15 +110,16 @@ class VanillaCookieExtended extends VanillaCookie
     * Stores area cookie with key
     * @param string $area: area name
     * @param string $areaUserDataKey
+    * @param string $domain
     */
-    private function storeAreaCookie(string $area, string $areaUserDataKey)
+    private function storeAreaCookie(string $area, string $areaUserDataKey, string $domain = HOST)
     {
         $this->store(
             $area,
             $areaUserDataKey,
             COOKIE_DURATION,
             '/', //path
-            null,   //domain
+            $domain,   //domain
             true,   //secure
             false   //httponly
         );
@@ -152,7 +153,11 @@ class VanillaCookieExtended extends VanillaCookie
         $areaCookie = $this->get($area);
         //no area cookie yet
         if($areaCookie === null) {
-          return new \stdClass;
+          if($propertyName === null) {
+            return new \stdClass;
+          } else {
+            return null;
+          }
         } elseif(is_object(json_decode($areaCookie))) {
           //handle transition
           $areaUserData = json_decode($areaCookie);
@@ -165,7 +170,7 @@ class VanillaCookieExtended extends VanillaCookie
         } else {
           //new area cookie with just area user data key
           $areaUserData = $this->getAreaUserData($area, $areaCookie);
-        } 
+        }
         if($propertyName) {
           return $areaUserData->$propertyName ?? null;
         } else {
