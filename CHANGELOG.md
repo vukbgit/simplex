@@ -1,3 +1,7 @@
+## 2.2.15 (July 01, 2022)
+- chore: Updated package.json, updated CHANGELOG.md, bumped 2.2.14 -> 2.2.15
+- sql error handling
+
 ## 2.2.14 (June 27, 2022)
 - chore: Updated package.json, updated CHANGELOG.md, bumped 2.2.13 -> 2.2.14
 - fix: get area cookie property
