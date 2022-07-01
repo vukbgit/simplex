@@ -1,3 +1,7 @@
+## 2.2.17 (July 01, 2022)
+- chore: Updated package.json, updated CHANGELOG.md, bumped 2.2.16 -> 2.2.17
+- removed BS custom inputs
+
 ## 2.2.16 (July 01, 2022)
 - chore: Updated package.json, updated CHANGELOG.md, bumped 2.2.15 -> 2.2.16
 - test dev setup
