@@ -1,0 +1,85 @@
+{% macro displaySortableHeader(context, fieldName, align, label, labelExtraClasses) %}
+    {% import _self as selfMacros %}
+<th>
+    {{ selfMacros.displaySortableField(context, fieldName, align, label, labelExtraClasses) }}
+</th>
+{% endmacro %}
+
+{% macro displaySortableField(context, fieldName, align, label, labelExtraClasses) %}
+    {% set fieldsSorting = attribute(attribute(context.areaCookie, context.subject), 'sorting') ?? null %}
+    {% set sorting = null %}
+    {% for fieldSorting in fieldsSorting %}
+        {% if fieldSorting[0] == fieldName %}
+            {% set sorting = fieldSorting %}
+        {% endif %}
+    {% endfor %}
+    {# field sorting is not set  #}
+    {% if sorting == null %}
+        {% set buttonClass = 'icon-erp-sort text-muted' %}
+        {% set reverseDirection = 'asc' %}
+    {% else %}
+    {# field sorting is set  #}
+        {% set direction = sorting[1]|lower %}
+        {% set buttonClass = 'icon-erp-triangle-%s'|format(direction == 'asc' ? 'down' : 'up') %}
+        {% set reverseDirection = direction == 'asc' ? 'desc' : 'asc' %}
+    {% endif %}
+    {% set buttonTitle = getLabel('table', 'sort-%s'|format(reverseDirection)) %}
+    <form action="" method="post" class="w-100{% if align %} text-{{ align }}{% endif %}">
+        <input type="hidden" name="modifier" value="sort">
+        <input type="hidden" name="field" value="{{ fieldName }}">
+        <input type="hidden" name="direction" value="{{ reverseDirection }}">
+    {% if align is not defined or align is null or align == 'left' %}
+        {% set justifyContent = 'start' %}
+    {% elseif align == 'center' %}
+        {% set justifyContent = 'center' %}
+    {% elseif align == 'right' %}
+        {% set justifyContent = 'end' %}
+    {% endif %}
+        <div class="d-flex align-items-start align-content-center justify-content-{{ justifyContent }}">
+    <label class="font-weight-bold{% if labelExtraClasses %} {{ labelExtraClasses }}{% endif %}">{{ label ?? getLabel(context.subject, 'fields', fieldName) }}</label>
+            <button type="submit" class="{{ buttonClass }}" title="{{ buttonTitle }}"></button>
+        </div>
+    </form>
+{% endmacro %}
+
+{% macro displayRowBegin(context, loop, record) %}
+  {% if context.navigations.bulkActions|length %}
+    <td class="align-middle">
+        <div>
+            <input type="checkbox" name="bulk_action_records_ids[]" value="{{ attribute(record, context.model.getConfig().primaryKey) }}">
+        </div>
+    </td>
+  {% endif %}
+{% endmacro %}
+
+{% macro displayRowEnd(context, loop, record) %}
+  {% import '@share/Erp/templates/macros/navigation.twig' as navigationMacros %}
+  {# record visible actions #}
+  {% for actionKey, actionProperties in context.navigations.recordVisibleActions %}
+    {% set actionLabel = parseRecordActionRoute(getLabel('actions', actionKey), record) %}
+  <td class="record-action text-right">
+    {{ navigationMacros.displayRecordActionLink(actionProperties, actionLabel, record)}}
+  </td>
+  {% endfor %}
+  {# record hidden actions #}
+  {% if context.navigations.recordHiddenActions|length %}
+    {% set dropdownId = 'hidden-actions-%d'|format(loop.index0) %}
+  <td class="record-action">
+    <div class="dropdown dropend">
+      <a class="icon-erp-ellipsis-vert" href="#" role="button" id="{{ dropdownId }}" data-bs-toggle="dropdown" aria-expanded="false">
+      </a>
+      <div class="dropdown-menu" aria-labelledby="{{ dropdownId }}">
+    {% for actionKey, actionProperties in context.navigations.recordHiddenActions %}
+      {% set actionLabel = parseRecordActionRoute(getLabel('actions', actionKey), record) %}
+      {% set actionProperties = updateProperty(actionProperties, 'linkClass', 'dropdown-item') %}
+      {{ navigationMacros.displayRecordActionLink(actionProperties, actionLabel, record)}}
+    {% endfor %}
+      </div>
+    </div>
+  </td>
+  {% endif %}
+{% endmacro %}
+
+{% macro displayMoveRecordCell(context) %}
+    up - down
+{% endmacro %}

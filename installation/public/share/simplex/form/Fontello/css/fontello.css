@@ -1,0 +1,82 @@
+@font-face {
+  font-family: 'fontello';
+  src: url('../font/fontello.eot?52773280');
+  src: url('../font/fontello.eot?52773280#iefix') format('embedded-opentype'),
+       url('../font/fontello.woff2?52773280') format('woff2'),
+       url('../font/fontello.woff?52773280') format('woff'),
+       url('../font/fontello.ttf?52773280') format('truetype'),
+       url('../font/fontello.svg?52773280#fontello') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+/* Chrome hack: SVG is rendered more smooth in Windozze. 100% magic, uncomment if you need it. */
+/* Note, that will break hinting! In other OS-es font will be not as sharp as it could be */
+/*
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: 'fontello';
+    src: url('../font/fontello.svg?52773280#fontello') format('svg');
+  }
+}
+*/
+ 
+ [class^="icon-"]:before, [class*=" icon-"]:before {
+  font-family: "fontello";
+  font-style: normal;
+  font-weight: normal;
+  speak: none;
+ 
+  display: inline-block;
+  text-decoration: inherit;
+  width: 1em;
+  margin-right: .2em;
+  text-align: center;
+  /* opacity: .8; */
+ 
+  /* For safety - reset parent styles, that can break glyph codes*/
+  font-variant: normal;
+  text-transform: none;
+ 
+  /* fix buttons height, for twitter bootstrap */
+  line-height: 1em;
+ 
+  /* Animation center compensation - margins should be symmetric */
+  /* remove if not needed */
+  margin-left: .2em;
+ 
+  /* you can be more comfortable with increased icons size */
+  /* font-size: 120%; */
+ 
+  /* Font smoothing. That was taken from TWBS */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+ 
+  /* Uncomment for 3D effect */
+  /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
+}
+ 
+.icon-form-trash:before { content: '\0100'; } /* 'Ā' */
+.icon-form-upload:before { content: '\0101'; } /* 'ā' */
+.icon-form-reload:before { content: '\0102'; } /* 'Ă' */
+.icon-form-download:before { content: '\0103'; } /* 'ă' */
+.icon-form-zoom-in:before { content: '\0104'; } /* 'Ą' */
+.icon-form-move:before { content: '\0105'; } /* 'ą' */
+.icon-form-plus-circled:before { content: '\0106'; } /* 'Ć' */
+.icon-form-checked-circled:before { content: '\0107'; } /* 'ć' */
+.icon-form-exclamation-circled:before { content: '\0108'; } /* 'Ĉ' */
+.icon-form-hourglass:before { content: '\0109'; } /* 'ĉ' */
+.icon-form-pause:before { content: '\010a'; } /* 'Ċ' */
+.icon-form-file:before { content: '\010b'; } /* 'ċ' */
+.icon-form-angle-left:before { content: '\010c'; } /* 'Č' */
+.icon-form-angle-right:before { content: '\010d'; } /* 'č' */
+.icon-form-resize-vertical:before { content: '\010e'; } /* 'Ď' */
+.icon-form-resize-full:before { content: '\010f'; } /* 'ď' */
+.icon-form-external-link:before { content: '\0110'; } /* 'Đ' */
+.icon-form-close:before { content: '\0111'; } /* 'đ' */
+.icon-form-folder-open:before { content: '\0112'; } /* 'Ē' */
+.icon-form-block:before { content: '\0113'; } /* 'ē' */
+.icon-form-calendar:before { content: '\0114'; } /* 'Ĕ' */
+.icon-form-clock:before { content: '\0115'; } /* 'ĕ' */
+.icon-form-angle-up:before { content: '\0116'; } /* 'Ė' */
+.icon-form-angle-down:before { content: '\0117'; } /* 'ė' */
+.icon-form-calendar-today:before { content: '\0118'; } /* 'Ę' */

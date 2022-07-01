@@ -1,0 +1,14 @@
+Options +FollowSymlinks
+RewriteEngine on
+#get rid of facebook id
+RewriteCond %{QUERY_STRING} ^(.*)&?fbclid=(.*)$ [NC]
+RewriteRule ^/?(.*)$ /$1?%1 [R=301,L]
+#environment
+SetEnvIf Host ^dev-host\.ltd$ ENVIRONMENT=development
+SetEnvIf Host ^prod-host\.ltd$ ENVIRONMENT=production
+#areas default URLs
+RewriteRule ^backend/?$ /backend/sign-in-form [R,L]
+#default entry point
+RewriteRule ^(.*)$ index.php [NC]
+RedirectMatch 404 /\.git
+RedirectMatch 404 /public/share/package.json

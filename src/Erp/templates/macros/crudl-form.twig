@@ -1,0 +1,16 @@
+{##
+# Displays record primary key values into hidden form fields
+##}
+{% macro displayPrimaryKeyInput(context, model) %}
+    <input type="hidden" name="{{ model.getConfig().primaryKey }}" value="{{ attribute(context.routeParameters, model.getConfig().primaryKey) }}">
+{% endmacro %}
+
+{##
+# Displays form buttons for cancel and submit
+##}
+{% macro displayDefaultButtons(context, backAction) %}
+<div class="form-group" role="group">
+    <a href="{{ context._POST.callingFormRoute ?? buildRouteToActionFromRoot(backAction ?? 'list') }}" class="btn btn-light text-capitalize">{{ getLabel('actions', 'cancel') }}</a>
+    <button type="submit" class="btn btn-success text-capitalize">{{ getLabel('actions', context.action) }}</button>
+</div>
+{% endmacro %}

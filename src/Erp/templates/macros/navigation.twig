@@ -1,0 +1,177 @@
+{##
+# Displays a voice into sidebar navigation
+# @param object routeParameters: current route parameters
+# @param string voiceKey: slugged voice key, as loaded from PHP navigation definition file
+# @param object voiceProperties: object With voice properties, as loaded from PHP navigation definition file
+# @param object navigationLabels: object With voices labels, indexed by voiceKey
+# @param string parentId: html id of parent nav tag
+# @param int level: navigation level (starting from 1)
+##}
+{% macro displaySidebarVoice(routeParameters, voiceKey, voiceProperties, navigationLabels, parentId, level) %}
+    {% import _self as selfMacros %}
+    {% set voiceId = 'voice-%s-%d'|format(voiceKey, level) %}
+    {% set voiceLabelId = '%s-label'|format(voiceId) %}
+    {% set isActive = voiceProperties.isActive or (attribute(routeParameters, 'subject') == voiceKey) or (attribute(routeParameters, 'ancestor%d'|format(level - 1)) == voiceKey) %}
+    {% if voiceProperties.navigation %}
+        {% set subLevelId = '%s-sublevel'|format(voiceId) %}
+    {% endif %}
+        <div class="nav-item d-block" id="{{ voiceId }}">
+            <a
+            href="{{ voiceProperties.route|default('#') }}"
+            id="{{ voiceLabelId }}"
+            class="nav-link {{ 'pl-%d'|format((level + 1)) }}
+    {%- if isActive %} active text-white{% endif -%}
+            "
+            {%- if voiceProperties.navigation -%}
+            data-bs-toggle="collapse" aria-expanded="{{ isActive ? 'true' : 'false' }}" data-bs-target="#{{ subLevelId }}" aria-controls="{{ subLevelId }}"
+            {%- endif -%}
+            >
+    {%- if voiceProperties.icon -%}
+                <i class="{{ voiceProperties.icon }} mr-3"></i>
+    {%- endif -%}
+    {# labels have been set in the area template #}
+                {{- attribute(navigationLabels, voiceKey) -}}
+    {%- if isActive %}
+                <span class="visually-hidden">({% trans 'current' %})</span>
+    {%- endif -%}
+            </a>
+    {% if voiceProperties.navigation %}
+<nav class="sublevel nav flex-column flex-nowrap collapse{% if isActive %} show{% endif %}" id="{{ subLevelId }}"
+             aria-labelledby="{{ voiceLabelId }}" data-parent="#{{ parentId }}">
+        {% for voiceKey, voiceProperties in voiceProperties.navigation %}
+            {{ selfMacros.displaySidebarVoice(routeParameters, voiceKey, voiceProperties, navigationLabels, subLevelId, level + 1) }}
+        {% endfor %}
+            </ul>
+    {% endif %}
+        </div>
+{% endmacro %}
+
+{##
+# Displays model global actions navigation
+# @param array navigation: the navigation array containing objects With actions properties, as loaded from PHP navigation definition file
+##}
+{% macro displaySubjectGlobalActionsNavigation(context, navigation) %}
+    {% if navigation|length %}
+    <nav class="mb-3">
+        <ul class="nav nav-tabs">
+            {% for voiceKey, voiceProperties in navigation %}
+              {% if voiceProperties is not null %}
+            <li class="nav-item">
+                <a
+                    href="{{ buildRouteToAction(voiceProperties) }}"
+                    class="nav-link{% if voiceProperties.isActive %} active{% endif %} text-capitalize"
+                {% if voiceProperties.target %}target="{{ voiceProperties.target }}"{% endif %}
+                >
+                {{- getLabel('actions', voiceKey) -}}
+                </a>
+            </li>
+          {% endif %}
+            {% endfor %}
+        </ul>
+    </nav>
+    {% endif %}
+{% endmacro %}
+
+{##
+# Displays model record actions navigation
+# @param array navigations: the navigation object containing recordVisibleActions and recordHiddenActions, as loaded from PHP navigation definition file
+##}
+{#% macro displaySubjectRecordActionsNavigation(context, navigations) %}
+    {% import _self as selfMacros %}
+    {% set recordActions = [] %}
+    {% set recordActions = recordActions|merge(navigations.recordVisibleActions) %}
+    {% set recordActions = recordActions|merge(navigations.recordHiddenActions) %}
+    {% if context.CRUDLConfig.showRecordNavigation and attribute(context.routeParameters, context.model.getConfig().primaryKey) and recordActions|length %}
+    <nav class="mb-3">
+        <ul class="nav nav-tabs">
+            {% for voiceKey, voiceProperties in recordActions %}
+                {% set class = 'nav-link' %}
+                {% if voiceKey == context.routeParameters.action %}
+                    {% set class = class ~ ' active' %}
+                {% endif %}
+                {% set voiceProperties = updateProperty(voiceProperties, 'linkClass', class) %}
+            <li class="nav-item">
+                {{ selfMacros.displayRecordActionLink(voiceProperties, getLabel('actions', voiceKey), context.record) }}
+            </li>
+            {% endfor %}
+        </ul>
+    </nav>
+    {% endif %}
+{% endmacro %#}
+
+{% macro displaySubjectRecordMenu(context, controllerName, primaryKeyField, record, baseRoute, title) %}
+    {% import _self as selfMacros %}
+    {% set controller = getInstanceFromDIContainer(controllerName) %}
+    {% set navigations = getNavigations(controller) %}
+    {% if navigations.recordMenuActions is defined and navigations.recordMenuActions|length and attribute(context.routeParameters, primaryKeyField) %}
+        {% set recordActions = {} %}
+        {% for action in navigations.recordMenuActions %}
+            {% set actionDefinition = attribute(navigations.recordVisibleActions, action) ?? (attribute(navigations.recordHiddenActions, action) ?? null) %}
+            {% if actionDefinition %}
+                {% set recordActions = updateProperty(recordActions, action, actionDefinition) %}
+            {% endif %}
+        {% endfor %}
+        <nav class="mb-3 d-flex align-items-center subject-record-menu">
+        {% if title %}
+            <span class="title">{{ title }}</span>
+        {% endif %}
+            <ul class="nav nav-tabs">
+                {% for voiceKey, voiceProperties in recordActions %}
+                    {% set class = 'nav-link' %}
+                    {% if voiceKey == context.routeParameters.action %}
+                        {% set class = class ~ ' active' %}
+                    {% endif %}
+                    {% set voiceProperties = updateProperty(voiceProperties, 'linkClass', class) %}
+                <li class="nav-item">
+                    {% set actionLabel = parseRecordActionRoute(getLabel('actions', voiceKey), record) %}
+                    {{ selfMacros.displayRecordActionLink(voiceProperties, actionLabel, record, baseRoute) }}
+                </li>
+                {% endfor %}
+            </ul>
+        </nav>
+    {% endif %}
+{% endmacro %}
+
+{% macro displayRecordActionLink(actionProperties, actionLabel, record, baseRoute) %}
+    {% set allowed = true %}
+    {% if actionProperties.conditions is defined %}
+        {% for conditionField in actionProperties.conditions %}
+            {# ! in front of field name negates #}
+            {% if 
+                (conditionField|first != '!' and attribute(record, conditionField) == false)
+                or
+                (conditionField|first == '!' and attribute(record, conditionField[1:]) == true)
+            %}
+                {% set allowed = false %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+    {% if allowed %}
+        {% set route = actionProperties.routeFromSubject is defined ? buildRouteToActionFromRoot(actionProperties.routeFromSubject, baseRoute) : actionProperties.route %}
+    <a
+        href="{{ parseRecordActionRoute(route, record) }}"
+        {% if actionProperties.linkClass is defined  %} class="{{ actionProperties.linkClass }}"{% endif %}
+    {% if actionProperties.target is defined  %} target="{{ actionProperties.target }}"{% endif %}
+        title="{{- actionLabel|escape('html_attr') -}}"
+    >
+        {% if actionProperties.hideLabel is not defined or actionProperties.hideLabel == false %}
+            {{- actionLabel -}}
+        {% endif %}
+    </a>
+    {% endif %}
+{% endmacro %}
+
+{% macro displayAncestorsSubjectRecordMenus(context, ancestors) %}
+  {% import _self as selfMacros %}
+  {% for ancestorSubject, ancestor in ancestors %}
+    {{ include(getInstanceTemplate(attribute(ancestor, 'controller'), 'labels.twig'), {'labels': labels, 'actionsNeeded': true}, with_context = true) }}
+    {{ selfMacros.displaySubjectRecordMenu(
+        context,
+        '%s-controller'|format(ancestorSubject),
+        ancestor.model.config.primaryKey,
+        ancestor.record,
+        ancestor.baseRoute,
+        getLabel(ancestorSubject, 'subject-record-menu-title')|format(buildRecordTokenLabel(ancestorSubject, ancestor.record))
+    ) }}
+  {% endfor %}
+{% endmacro %}

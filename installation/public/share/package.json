@@ -1,0 +1,20 @@
+{
+    "name": "simplex",
+    "description": "Simplex dev app",
+    "license": "MIT",
+    "dependencies": {
+        "bootstrap": ">=5",
+        "bootstrap-fileinput": ">=5.2",
+        "bootstrap-colorpicker": "^3.2.0",
+        "flag-icons": ">=6.5",
+        "hamburgers": ">=1.2",
+        "jquery": "latest",
+        "jquery.safemail": ">=1.0.2",
+        "js-cookie": ">=3.0",
+        "tinymce": ">=6.0",
+        "select2": ">=4",
+        "select2-theme-bootstrap5": ">=0.1",
+        "flatpickr": ">=4.6",
+        "fullcalendar": ">=5.11"
+    }
+}

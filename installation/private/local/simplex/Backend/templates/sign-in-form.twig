@@ -1,0 +1,14 @@
+{% extends '@share/Authentication/templates/sign-in-form.twig' %}
+
+{% block pageTitle %}
+    {{ parent() }}
+    {% trans ' :: Backend Sign In' %}
+{% endblock %}
+
+{% block body %}
+    {% set logoPath = 'PATH/TO/LOGO/IMAGE' %}
+    {#% set signIntitle = '' %#}
+    {#% set usernameFieldType = 'email' %#}
+    {#% set passwordConfig = {pattern: '[0-9]{8,}', message: 'pASSWORD MUST BE 8 CHARACHTERS LONG AND CONTAIN ONLY DIGITS'|trans} %#}
+    {{ parent() }}
+{% endblock %}

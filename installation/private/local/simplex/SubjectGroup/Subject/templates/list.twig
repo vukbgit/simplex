@@ -1,0 +1,66 @@
+{% extends '@share/Erp/templates/table.twig' %}
+
+{% import '@share/Erp/templates/macros/table.twig' as tableMacros %}
+{# for ancestors record menus #}
+{# % import '@share/Erp/templates/macros/navigation.twig' as navigationMacros %#}
+
+{# ancestors record menus #}
+{# % block subjectGlobalNavigation %}
+  {{ navigationMacros.displayAncestorsSubjectRecordMenus(_context, ancestors) }}
+  {{ parent() }}
+{% endblock %#}
+
+{% block tableHeaders %}
+  {# unsortable header #}
+  <th>{{ getLabel(subject, 'fields', 'FIELD-NAME') }}</th>
+  {# sortable header #}
+  {{ tableMacros.displaySortableHeader(_context, 'FIELD-NAME') }}
+{% endblock %}
+
+{% block rows %}
+  {% for record in records %}
+  <tr>
+    {{ tableMacros.displayRowBegin(_context, loop, record) }}
+    
+    <td>
+        <img src="{{ getPublicOutputFilePath('UPLOAD-KEY', 'OUTPUT-KEY', record.UPLOAD-KEY) }}">
+    </td>
+    {# plain field #}
+    <td>{{ record.FIELD-NAME }}</td>
+    {# number #}
+    <td class="text-end">
+      {{ record.FIELD-NAME|format_number(
+        {
+          'fraction_digit': 2
+        }
+      ) }}
+    </td>
+    {# currency #}
+    <td class="text-end">
+      {{ record.FIELD-NAME|format_currency(
+        language.localeconv.int_curr_symbol,
+        {
+          'fraction_digit': 2
+        }
+      ) }}
+    </td>
+    {# localized field #}
+    <td>{{ getLocaleRecordValue(record.nome) }}</td>
+    
+    {{ tableMacros.displayRowEnd(_context, loop, record) }}
+  </tr>
+  {% endfor %}
+{% endblock %}
+
+{# tableTotals are turned on by settinf fields total in CRUDL config #}
+{% block tableFooter %}
+  <td colspan=""></td>
+  <th class="text-end">
+    {{ tableTotals.FIELD-NAME|format_number(
+      {
+        'fraction_digit': 2
+      }
+    ) }}
+  </th>
+{% endblock %}
+  

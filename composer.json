@@ -1,0 +1,61 @@
+{
+    "name": "vukbgit/simplex",
+    "type": "library",
+    "description": "Simplex",
+    "license": "MIT",
+    "authors": [
+       {
+            "name": "vuk",
+            "email": "info@vuk.bg.it"
+       }
+    ],
+    "require": {
+        "php": ">=8.0",
+        "ext-gettext": "*",
+        "php-di/php-di": ">=6.0",
+        "laminas/laminas-diactoros": ">=2.11",
+        "nikic/fast-route": ">=1.0",
+        "middlewares/utils": ">=3.3",
+        "middlewares/request-handler": ">=2.0",
+        "filp/whoops": ">=2.14",
+        "kint-php/kint": ">=4.1",
+        "narrowspark/http-emitter": ">=1.0",
+        "oscarotero/middleland": ">=1.0",
+        "twig/twig": ">=3.4",
+        "twig/intl-extra": ">=3.4",
+        "jblond/twig-trans": ">=1.1",
+        "usmanhalalit/pixie": "2.*@dev",
+        "nette/finder": ">=2.5",
+        "aura/auth": ">=4.0",
+        "slowprog/composer-copy-file": "~0.3",
+        "aptoma/twig-markdown": ">=3.4",
+        "michelf/php-markdown": ">=1.9",
+        "codezero/cookie": ">=2.0",
+        "cocur/slugify": ">=4.1",
+        "spatie/image": ">=2.2",
+        "pschultz/php-bytes": ">=1.0",
+        "gabrielelana/byte-units": ">=0.5.0",
+        "box/spout": ">=3.0",
+        "phpmailer/phpmailer": ">=6.0",
+        "hackzilla/password-generator": ">=1.6"
+    },
+    "autoload": {
+        "psr-4" : {
+            "Simplex\\" : "src/"
+        },
+        "files": [
+            "src/functions.php",
+            "src/global-functions.php"
+        ]
+    },
+    "bin": [
+        "bin/npm.sh",
+        "bin/yarn.sh",
+        "bin/sass.sh",
+        "bin/git-setup-dev.sh",
+        "bin/git-setup-prod.sh",
+        "bin/update-all.sh",
+        "bin/git-push-all.sh",
+        "bin/clean-cache.sh"
+    ]
+}
