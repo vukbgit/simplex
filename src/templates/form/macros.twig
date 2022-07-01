@@ -339,6 +339,10 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
 #########}
 
 {# displays a select
+<<<<<<< HEAD
+=======
+WARNING: uses Bootstrap custom select, so BS custom-forms component must be included
+>>>>>>> f10e78d97f82fb2d2d6bb95a5d276dd103c996d9
 @param hash config: hash for field properties (see setFieldAttributes macro explanation) plus specific properties:
     noOption0 (bool) whether not to display the first zero-value option
     option0Label (string) label to be used for the first option instead of the default one
@@ -349,7 +353,11 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
     {% set value = config.value %}
     {% set config = deleteProperty(config, 'value') %}
     {% set classes = config.classes ?? [] %}
+<<<<<<< HEAD
     {% set classes = ['form-select']|merge(classes) %}
+=======
+    {% set classes = ['custom-select']|merge(classes) %}
+>>>>>>> f10e78d97f82fb2d2d6bb95a5d276dd103c996d9
     {% set config = updateProperty(config, 'classes', classes) %}
 <select {{ selfMacros.setFieldAttributes(config) }}>
     {% if config.noOption0 is not defined or config.noOption0 == false %}
@@ -670,6 +678,10 @@ NOTE: for checkbox group config.mandatory means that at least one input must be 
 ########}
 
 {# displays a range input field block
+<<<<<<< HEAD
+=======
+WARNING: uses Bootstrap custom range input, so BS custom-forms component must be included
+>>>>>>> f10e78d97f82fb2d2d6bb95a5d276dd103c996d9
 @param hash config: hash for field properties (see setFieldAttributes macro explanation) plus:
     prepended: content to be prepended to input
     append: content to be appended to input
@@ -680,7 +692,11 @@ NOTE: for checkbox group config.mandatory means that at least one input must be 
         {{ selfMacros.displayFormGroup(config, inputId, 'range-group') }}
         {{ selfMacros.displayLabel(config) }}
         {% set classes = config.classes ?? [] %}
+<<<<<<< HEAD
         {% set classes = ['form-range']|merge(classes) %}
+=======
+        {% set classes = ['custom-range']|merge(classes) %}
+>>>>>>> f10e78d97f82fb2d2d6bb95a5d276dd103c996d9
         {% set config = updateProperty(config, 'classes', classes) %}
         {% if config.cols is defined %}
         <div class="col-12 col-sm-{{ config.cols[1] }}">
