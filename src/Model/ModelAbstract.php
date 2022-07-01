@@ -198,6 +198,9 @@ abstract class ModelAbstract
                 $code = sprintf('SQLSTATE_%s', $errorCode);
                 //data can only be passed through message
                 $data = explode('|', $errorMessage);
+              } else {
+                $code = null;
+                $rawMessage = sprintf('error code: %s; error message: %s', $errorCode, $errorMessage);
               }
             break;
             //Integrity constraint violation
