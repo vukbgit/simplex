@@ -1,3 +1,7 @@
+## 2.2.20 (July 02, 2022)
+- chore: Updated package.json, updated CHANGELOG.md, bumped 2.2.19 -> 2.2.20
+- spreadsheet reader / writer
+
 ## 2.2.19 (July 02, 2022)
 - chore: Updated package.json, updated CHANGELOG.md, bumped 2.2.18 -> 2.2.19
 - phpoffice/phpspreadsheet dependency
