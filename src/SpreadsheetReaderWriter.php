@@ -3,10 +3,11 @@ declare(strict_types=1);
 
 namespace Simplex;
 
-use \Box\Spout\Reader\Common\Creator\ReaderEntityFactory;
-use \Box\Spout\Writer\Common\Creator\WriterEntityFactory;
-use \Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
-use \Box\Spout\Common\Entity\Style\Style;
+//use \Box\Spout\Reader\Common\Creator\ReaderEntityFactory;
+use \PhpOffice\PhpSpreadsheet;
+//use \Box\Spout\Writer\Common\Creator\WriterEntityFactory;
+//use \Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
+//use \Box\Spout\Common\Entity\Style\Style;
 
 /*
 * Uses Box\Spout (http://opensource.box.com/spout) to read and write spreadsheets (csv, ods and xlsx)
@@ -33,58 +34,63 @@ class SpreadsheetReaderWriter
     
     /*
     * Reads a spreadsheet
-    * @param string path
-    * @param type path
+    * @param string $path
+    * @param string $type: csv | xslx
+    * @param bool $firstRowIsHEaders
+    * @param bool $rowsToObjects
     */
     public function read(string $path, $type = null, $firstRowIsHEaders = true, $rowsToObjects = false)
     {
         switch ($type) {
             case 'csv':
-                $this->reader = ReaderEntityFactory::createCSVReader();
+            $this->reader = new PhpSpreadsheet\Reader\Csv();
             break;
             case 'xslx':
-                $this->reader = ReaderEntityFactory::createXLSXReader();
+              //read anly data and ignore styiling
+              $this->reader = new PhpSpreadsheet\Reader\Xlsx();
             break;
             default:
-                $this->reader = ReaderEntityFactory::createReaderFromFile($path);
+                $this->reader = PhpSpreadsheet\IOFactory::createReaderForFile($path);
             break;
         }
-        $this->reader->open($path);
+        $this->reader->setReadDataOnly(true);
+        $this->reader->setLoadAllSheets();
+        $spreadsheet = $this->reader->load($path);
+        $loadedSheetNames = $spreadsheet->getSheetNames();
         $sheets = [];
-        //loop sheets
-        foreach ($this->reader->getSheetIterator() as $sheet) {
-            $i = 0;
-            $rows = [];
-            //loop rows
-            foreach ($sheet->getRowIterator() as $row) {
-                //headers row
-                if($firstRowIsHEaders && $rowsToObjects && $i === 0) {
-                    $headersRow = $row->toArray();
-                    $i++;
-                    continue;
-                }
-                //get cells
-                $cellsArray = $row->toArray();
-                //turn row to object?
-                if($firstRowIsHEaders && $rowsToObjects) {
-                    $rowObject = new \stdClass;
-                    foreach($headersRow as $j => $header) {
-                      //in case of empty cells at the and of the header row
-                      if(!isset($cellsArray[$j])) {
-                        continue(2);
-                      } else {
-                        $rowObject->$header = $cellsArray[$j];
-                      }
-                    }
-                    $rows[] = $rowObject;
+        foreach ($loadedSheetNames as $sheetIndex => $loadedSheetName) {
+          /*
+          * PhpOffice\PhpSpreadsheet\Worksheet::toArray parameters:
+          * @param mixed $nullValue Value returned in the array entry if a cell doesn't exist
+          * @param bool $calculateFormulas Should formulas be calculated?
+          * @param bool $formatData Should formatting be applied to cell values?
+          * @param bool $returnCellRef False - Return a simple array of rows and columns indexed by number counting from zero
+          *                               True - Return rows and columns indexed by their actual row and column IDs
+          */
+          $rows = $spreadsheet->getSheet($sheetIndex)->toArray(null, true, true, false);
+          //headers row
+          if($firstRowIsHEaders) {
+            $headers = array_shift($rows);
+          }
+          //rows to object
+          if($rowsToObjects) {
+            $objectsRows = [];
+            foreach ((array) $rows as $row) {
+              $rowObject = new \stdClass;
+              foreach ($headers as $j => $header) {
+                //in case of empty cells at the and of the header row
+                if(!isset($row[$j])) {
+                  continue(2);
                 } else {
-                    $rows[] = $cellsArray;
+                  $rowObject->$header = $row[$j];
                 }
-                $i++;
+              }
+              $objectsRows[] = $rowObject;
             }
-            $sheets[] = $rows;
+            $rows = $objectsRows;
+          }
+          $sheets[] = $rows;
         }
-        $this->reader->close();
         return $sheets;
     }
     
