@@ -1,3 +1,8 @@
+## 2.2.18 (July 02, 2022)
+- chore: Updated package.json, updated CHANGELOG.md, bumped 2.2.15 -> 2.2.18
+- added infos for transition to v2
+- fixes for ERP
+
 ## 2.2.15 (July 01, 2022)
 - chore: Updated package.json, updated CHANGELOG.md, bumped 2.2.14 -> 2.2.15
 - sql error handling
