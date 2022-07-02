@@ -20,6 +20,7 @@ A tool for web developers
     * [Logical Structure](#Logical-Structure)
     * [Application Flow](#Application-Flow)
 * [Folders and Files Structure](#Folders-and-Files-Structure)
+* [Migration from v1 to v2](#Migration-from-v1-to-v2)
 * [Considerations](#Considerations)
 * [API Documentation](#API-Documentation)
 * [References](#References)
@@ -605,6 +606,40 @@ So here are folders and files as installed from Simplex, from the installation r
 * __index.php__: application bootstrap file, since it is stored into site root all PHP includes in every file work with absolute path form site root, see "Application Flow" above for details
 * __sass.sh__: soft link to the helper script _private/share/packagist/vukbgit/simplex/bin/sass.sh_ to compile Sass files, see the _private/local/simplex/config/sass.config_ explanation above for details
 * __yarn.sh__: soft link to the helper script _private/share/packagist/vukbgit/simplex/bin/yarn.sh_ to manage yarn packages into _public/share_ folder (instead of the predefined node_modules one), call it `./yarn.sh yarn-command`, i.e `./yarn.sh install foolibrary` to perform the installation into _local/share/foolibrary_
+
+## Migration from v1 to v2 ##
+
+* index.php: Zend -> Laminas
+*  FILTER_SANITIZE_STRING -> FILTER_SANITIZE_SPECIAL_CHARS:
+  * grep -rl FILTER_SANITIZE_STRING private/local/simplex | xargs sed -i 's/FILTER_SANITIZE_STRING/FILTER_SANITIZE_SPECIAL_CHARS/'
+* ERP:
+  * list:{% block rows %} {% for record in records %}<tr> {{ tableMacros.displayRowBegin(_context, loop, record) }} <td>{{ record.FIELD }}</td> {{ tableMacros.displayRowEnd(_context, loop, record) }}</tr> {% endfor %}{% endblock %}
+  * crudl-form:
+    * dateTimePickers bound for a date range now unified
+  * css:
+    * ERP style no more directly included but integrated into area (i.e. Backend) scss file:
+      * create area scc file (copy from installation folder), i.e. _private/local/simplex/Backend/sass/backend.css_
+      * compile it, i.e. `./sass.sh be`
+      * include into area template, i.e. _private/local/simplex/Backend/templates/backend.twig_
+* FORMS:
+  * alla captchas dependencies and functionalities removed, implement honey trap technique
+  * update (copy from installation folder) calendar dates format for languages into _private/local/simplex/config/languages.json_
+* TWIG:
+  * move if conditions out of for loops, regular expression to search for them: `grep -rE "{%\s+for\s+[a-zA-Z ,]+\s+in\s+[a-zA-Z\.]+\s+if" private/local`
+* SASS:
+  * enclose arithmetic operations into `calc()` function
+* BOOTSTRAP 5:
+  * .ml-* and .mr-* -> .ms-* and .me-*.
+  * .sr-only -> .visually-hidden
+  * form grid: form-row -> row
+  * .form-inline: use grid row > col / col-md-auto
+  * all af _data-*_ attributes in collapse (i.e. menu voices), carousels, etc become _data-bs-*_
+  * text-alignment: -left -> -start; right->end
+  * remove input-group-append / prepend
+  * close buttons (modal, alert...):
+    * class close -> btn-close
+    * data-dismiss -> data-bs-dismiss
+    * remove inner span
 
 ## Considerations ##
 
