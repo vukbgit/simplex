@@ -640,6 +640,7 @@ So here are folders and files as installed from Simplex, from the installation r
     * class close -> btn-close
     * data-dismiss -> data-bs-dismiss
     * remove inner span
+* SPREADSHEET READER/WRITER: reader moved to phpoffice/phpspreadsheet should be fine, __writer implementation currently still broken!__
 
 ## Considerations ##
 
