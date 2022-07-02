@@ -1,3 +1,7 @@
+## 2.2.21 (July 02, 2022)
+- chore: Updated package.json, updated CHANGELOG.md, bumped 2.2.20 -> 2.2.21
+- readme for migration
+
 ## 2.2.20 (July 02, 2022)
 - chore: Updated package.json, updated CHANGELOG.md, bumped 2.2.19 -> 2.2.20
 - spreadsheet reader / writer
