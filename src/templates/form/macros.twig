@@ -339,7 +339,6 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
 #########}
 
 {# displays a select
-WARNING: uses Bootstrap custom select, so BS custom-forms component must be included
 @param hash config: hash for field properties (see setFieldAttributes macro explanation) plus specific properties:
     noOption0 (bool) whether not to display the first zero-value option
     option0Label (string) label to be used for the first option instead of the default one
@@ -350,7 +349,7 @@ WARNING: uses Bootstrap custom select, so BS custom-forms component must be incl
     {% set value = config.value %}
     {% set config = deleteProperty(config, 'value') %}
     {% set classes = config.classes ?? [] %}
-    {% set classes = ['custom-select']|merge(classes) %}
+    {% set classes = ['form-select']|merge(classes) %}
     {% set config = updateProperty(config, 'classes', classes) %}
 <select {{ selfMacros.setFieldAttributes(config) }}>
     {% if config.noOption0 is not defined or config.noOption0 == false %}
@@ -654,14 +653,14 @@ NOTE: for checkbox group config.mandatory means that at least one input must be 
 #}
 {% macro displaySwitch(config) %}
     {% import _self as selfMacros %}
-    <div class="custom-control custom-switch">
+    <div class="form-check form-switch">
     {% set config = updateProperty(config, 'checked', config.value == 1) %}
     {% set config = updateProperty(config, 'value', 1) %}
     {% set classes = config.classes ?? [] %}
-    {% set classes = ['custom-control-input']|merge(classes) %}
+    {% set classes = ['form-check-input']|merge(classes) %}
     {% set config = updateProperty(config, 'classes', classes) %}
     {{ selfMacros.displayInput('checkbox', config) }}
-    {% set classes = 'custom-control-label' %}
+    {% set classes = 'form-check-label' %}
     {{ selfMacros.displayLabel(config, classes) }}
     </div>
 {% endmacro %}
@@ -671,7 +670,6 @@ NOTE: for checkbox group config.mandatory means that at least one input must be 
 ########}
 
 {# displays a range input field block
-WARNING: uses Bootstrap custom range input, so BS custom-forms component must be included
 @param hash config: hash for field properties (see setFieldAttributes macro explanation) plus:
     prepended: content to be prepended to input
     append: content to be appended to input
@@ -682,7 +680,7 @@ WARNING: uses Bootstrap custom range input, so BS custom-forms component must be
         {{ selfMacros.displayFormGroup(config, inputId, 'range-group') }}
         {{ selfMacros.displayLabel(config) }}
         {% set classes = config.classes ?? [] %}
-        {% set classes = ['custom-range']|merge(classes) %}
+        {% set classes = ['form-range']|merge(classes) %}
         {% set config = updateProperty(config, 'classes', classes) %}
         {% if config.cols is defined %}
         <div class="col-12 col-sm-{{ config.cols[1] }}">
@@ -715,7 +713,6 @@ WARNING: uses Bootstrap custom range input, so BS custom-forms component must be
   {% if config.value and config.format != 'H:i' %}
     {% set config = updateProperty(config, 'value', config.value|date(attribute(getLanguage(config.time ? 'dateTimeFormat' : 'dateFormat'), 'PHP'))) %}
   {% endif %}
-  
   {% set config = updateProperty(config, 'autocomplete', 'off') %}
   {% set classes = config.classes ?? [] %}
   {% set classes = ['form-control', 'datetimepicker-input']|merge(classes) %}
@@ -1250,7 +1247,7 @@ NOTE: javascript validation function creates automatically if needed, this macro
 </span>
         {% endif %}
         {% if config.countryCode is defined %}
-<span class="{{ 'flag-icon flag-icon-%s'|format(config.countryCode) }}"></span>
+<span class="{{ 'fi fi-%s'|format(config.countryCode) }}"></span>
         {% endif %}
         {% if config.insertRecord is defined %}
           {% set insertRecordId = 'insert-foreign-key-record_%s'|format(config.name) %}
@@ -1708,7 +1705,7 @@ simplexValidation.init();
 #}
 {% macro localesAssets(context) %}
 <!-- Flag icon css -->
-<link href="{{ 'flag-icon-css/css/flag-icon.min.css'|pathToNpmAsset }}" media="all" rel="stylesheet" type="text/css" />
+<link href="{{ 'flag-icons/css/flag-icons.min.css'|pathToNpmAsset }}" media="all" rel="stylesheet" type="text/css" />
 {% endmacro %}
 
 {# date time picker
