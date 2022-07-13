@@ -632,14 +632,14 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
                   ||
                   (is_object($fieldConfig->table->filter) && $fieldConfig->table->filter->active)
                 ) {
-                    if(isset($fieldConfig->table->filter) && is_object($fieldConfig->table->filter) && isset($fieldConfig->table->filter->dateLocaleToEn) && $fieldConfig->table->filter->dateLocaleToEn) {
+                    /*if(isset($fieldConfig->table->filter) && is_object($fieldConfig->table->filter) && isset($fieldConfig->table->filter->dateLocaleToEn) && $fieldConfig->table->filter->dateLocaleToEn) {
                       $tokenValue = $this->formatDateLocaleToEn($filterToken);
                       if($tokenValue === null) {
                         continue;
                       }
                     } else {
                       $tokenValue = $filterToken;
-                    }
+                    }*/
                     $tokenFields[] = [
                       'logical' => 'OR',
                       $this->model->rawField(
@@ -649,10 +649,28 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
                             $fieldName,
                             $this->model->getQuery()->getDriverOption('likeOperatorTextCastDataType'),
                             $this->model->getQuery()->getDriverOption('caseInsensitiveLikeOperator'),
-                            $tokenValue
+                            $filterToken
                         )
                       )
                     ];
+                    if(isset($fieldConfig->table->filter) && is_object($fieldConfig->table->filter) && isset($fieldConfig->table->filter->dateLocaleToEn) && $fieldConfig->table->filter->dateLocaleToEn) {
+                      $tokenValue = $this->formatDateLocaleToEn($filterToken);
+                      if($tokenValue !== null) {
+                        $tokenFields[] = [
+                          'logical' => 'OR',
+                          $this->model->rawField(
+                            sprintf(
+                                'CAST(%1$s%2$s%1$s AS %3$s) %4$s \'%%%5$s%%\'',
+                                $this->model->getQuery()->getDriverOption('labelDelimiter'),
+                                $fieldName,
+                                $this->model->getQuery()->getDriverOption('likeOperatorTextCastDataType'),
+                                $this->model->getQuery()->getDriverOption('caseInsensitiveLikeOperator'),
+                                $tokenValue
+                            )
+                          )
+                        ];
+                      }
+                    }
                 }
             }
             $filterWhere[] = $tokenFields;
