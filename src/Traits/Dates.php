@@ -12,7 +12,12 @@ trait Dates {
      */
     protected function formatDateLocaleToEn($dateLocale)
     {
-        return \DateTime::createFromFormat($this->language->dateFormat->PHP, $dateLocale)->format('Y-m-d');
+        $date = \DateTime::createFromFormat($this->language->dateFormat->PHP, $dateLocale);
+        if($date) {
+          return $date->format('Y-m-d');
+        } else {
+          return null;
+        }
     }
     
     /**

@@ -26,7 +26,10 @@ return (object) [
         'DATE-FIELD' => (object) [
             'table' => (object)[
                 //boolean defaults to true
-                'filter' => true,
+                'filter' => (object) [
+                  'active' => true,
+                  'dateLocaleToEn' => true //turns date from local format to Y-m-d into filter where
+                ],
                 //boolean defaults to false
                 'total' => false
             ],

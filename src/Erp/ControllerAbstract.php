@@ -23,6 +23,8 @@ use function Simplex\getInstancePath;
 */
 abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
 {
+  use \Simplex\Traits\Dates;
+  
     /**
     * @var array
     * ancestors models passed by route
@@ -623,7 +625,21 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
               'grouped' => true
             ];
             foreach ((array) $CRUDLConfig->fields as $fieldName => $fieldConfig) {
-                if(!isset($fieldConfig->table->filter) || $fieldConfig->table->filter) {
+                if(
+                  !isset($fieldConfig->table->filter)
+                  ||
+                  (is_bool($fieldConfig->table->filter) && $fieldConfig->table->filter)
+                  ||
+                  (is_object($fieldConfig->table->filter) && $fieldConfig->table->filter->active)
+                ) {
+                    if(isset($fieldConfig->table->filter) && is_object($fieldConfig->table->filter) && isset($fieldConfig->table->filter->dateLocaleToEn) && $fieldConfig->table->filter->dateLocaleToEn) {
+                      $tokenValue = $this->formatDateLocaleToEn($filterToken);
+                      if($tokenValue === null) {
+                        continue;
+                      }
+                    } else {
+                      $tokenValue = $filterToken;
+                    }
                     $tokenFields[] = [
                       'logical' => 'OR',
                       $this->model->rawField(
@@ -633,7 +649,7 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
                             $fieldName,
                             $this->model->getQuery()->getDriverOption('likeOperatorTextCastDataType'),
                             $this->model->getQuery()->getDriverOption('caseInsensitiveLikeOperator'),
-                            $filterToken
+                            $tokenValue
                         )
                       )
                     ];
