@@ -632,14 +632,6 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
                   ||
                   (is_object($fieldConfig->table->filter) && $fieldConfig->table->filter->active)
                 ) {
-                    /*if(isset($fieldConfig->table->filter) && is_object($fieldConfig->table->filter) && isset($fieldConfig->table->filter->dateLocaleToEn) && $fieldConfig->table->filter->dateLocaleToEn) {
-                      $tokenValue = $this->formatDateLocaleToEn($filterToken);
-                      if($tokenValue === null) {
-                        continue;
-                      }
-                    } else {
-                      $tokenValue = $filterToken;
-                    }*/
                     $tokenFields[] = [
                       'logical' => 'OR',
                       $this->model->rawField(
