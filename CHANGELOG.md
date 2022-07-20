@@ -1,3 +1,7 @@
+## 2.2.22 (July 20, 2022)
+- chore: Updated package.json, updated CHANGELOG.md, bumped 2.2.21 -> 2.2.22
+- bootstrap sass drafts
+
 ## 2.2.21 (July 02, 2022)
 - chore: Updated package.json, updated CHANGELOG.md, bumped 2.2.20 -> 2.2.21
 - readme for migration
