@@ -490,7 +490,14 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
             switch ($input->modifier) {
                 //sorting
                 case 'sort':
-                    $this->replaceListSort([[$input->field, strtoupper($input->direction)]]);
+                  if($input->field) {
+                    $sorting = [
+                      [$input->field, strtoupper($input->direction)]
+                    ];
+                  } else {
+                    $sorting = [];
+                  }
+                    $this->replaceListSort($sorting);
                 break;
                 //filter
                 case 'filter':

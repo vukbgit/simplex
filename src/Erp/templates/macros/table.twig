@@ -36,8 +36,15 @@
         {% set justifyContent = 'end' %}
     {% endif %}
         <div class="d-flex align-items-start align-content-center justify-content-{{ justifyContent }}">
-    <label class="font-weight-bold{% if labelExtraClasses %} {{ labelExtraClasses }}{% endif %}">{{ label ?? getLabel(context.subject, 'fields', fieldName) }}</label>
-            <button type="submit" class="{{ buttonClass }}" title="{{ buttonTitle }}"></button>
+        {% if sorting is not null %}
+            <button type="button" data-field="{{ fieldName }}" class="reset-sorting mr-2 text-muted font-weight-bold" title="{{ getLabel('table', 'sort-reset') }}">x</button>
+        {% endif %}
+            <button type="submit" title="{{ buttonTitle }}">
+              <label class="font-weight-bold{% if labelExtraClasses %} {{ labelExtraClasses }}{% endif %}">
+              {{ label ?? getLabel(context.subject, 'fields', fieldName) }}
+              </label>
+              <span class="{{ buttonClass }}"></span>
+            </button>
         </div>
     </form>
 {% endmacro %}

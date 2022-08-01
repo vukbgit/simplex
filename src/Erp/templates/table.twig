@@ -37,7 +37,7 @@
           {% set fieldsLabels = fieldsLabels|merge([getLabel(subject, 'fields', fieldName)]) %}
           {% endif %}
         {% endfor %}
-        
+        //filter info
         $('#default-filter-form-help').popover({
           'trigger': 'focus',
           'title': '{{ 'filter help'|trans|escape('js') }}',
@@ -49,6 +49,13 @@
             results will be searched into the following fields: %s 
             results will contain all of the search terms
           '|trans|format(fieldsLabels|join(', '))|nl2br|escape('js') }}'
+        })
+        //reset sorting
+        $('.reset-sorting').click(function() {
+          const form = $($(this)[0].form);
+          let fi = $(form.children('[name="field"]')[0])
+          fi.val('')
+          $(this)[0].form.submit()
         })
       })
     </script>
