@@ -1,3 +1,7 @@
+## 2.2.24 (August 05, 2022)
+- chore: updated package.json, updated CHANGELOG.md, bumped 2.2.23 -> 2.2.24
+- subject crudl draft
+
 ## 2.2.23 (August 05, 2022)
 - chore: updated package.json, updated CHANGELOG.md, bumped 2.2.22 -> 2.2.23
 
