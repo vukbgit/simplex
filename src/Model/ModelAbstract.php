@@ -479,11 +479,12 @@ abstract class ModelAbstract
     * Deletes a record by primary key value and/or other where conditions
     * @param mixed $primaryKeyValue
     * @param array $where: see Simplex\PixieExtended::buildWhere for details
+    * @param boolean $emptyTable: whether to really run query without a primary key value or any other condition
     */
-    public function delete($primaryKeyValue = null, $where = [])
+    public function delete($primaryKeyValue = null, array $where = [], bool $emptyTable = false)
     {
       //check that a where condition is set
-      if($primaryKeyValue == null && empty($where)) {
+      if($primaryKeyValue == null && empty($where) && $emptyTable === false) {
         throw new \PDOException(sprintf('Trying to delete from table %s without any where condition!', $this->table()), 1);
       }
         //set where conditions
