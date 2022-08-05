@@ -1,3 +1,7 @@
+## 2.2.26 (August 05, 2022)
+- chore: updated package.json, updated CHANGELOG.md, bumped 2.2.25 -> 2.2.26
+- empty model method
+
 ## 2.2.25 (August 05, 2022)
 - chore: updated package.json, updated CHANGELOG.md, bumped 2.2.24 -> 2.2.25
 - erp table stylesheet
