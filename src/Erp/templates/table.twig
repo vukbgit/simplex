@@ -12,8 +12,6 @@
 
 {% block head %}
     {{ parent() }}
-    <!-- ERP table style -->
-    <link rel="stylesheet" href="{{ 'simplex/Erp/css/table.min.css'|pathToShareAsset }}">
     {% if searchFields|length %}
       {{ include(getInstanceTemplate(null, 'labels.twig'), {'labels': labels}, with_context = true) }}
     <script type="text/javascript">
