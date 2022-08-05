@@ -22,7 +22,7 @@ return (object) [
             ],
             //input filter see https://www.php.net/manual/en/filter.filters.php
             'inputFilter' => [
-              'filter' => FILTER_SANITIZE_STRING,
+              'filter' => FILTER_SANITIZE_SPECIAL_CHARS,
               'flags' => FILTER_FLAG_NO_ENCODE_QUOTES //do not encode single ' and double " quotes
             ],
             'flags' => FILTER_NULL_ON_FAILURE
