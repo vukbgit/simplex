@@ -1,3 +1,7 @@
+## 2.2.28 (August 06, 2022)
+- chore: updated package.json, updated CHANGELOG.md, bumped 2.2.27 -> 2.2.28
+- ERP table tweaks
+
 ## 2.2.27 (August 06, 2022)
 - chore: updated package.json, updated CHANGELOG.md, bumped 2.2.26 -> 2.2.27
 - ERP table tweaks
