@@ -70,7 +70,7 @@
         {% set fieldsFilter = attribute(attribute(areaCookie, subject), 'filter') ?? null %}
   <div>
     {% if searchFields|length %}
-    <form method="post" action="" class="form-inline" id="default-filter-form">
+    <form method="post" action="" class="" id="default-filter-form">
       <input type="hidden" name="modifier" value="filter">
       <div class="row">
         <div class="col-md-auto">
@@ -80,10 +80,8 @@
           <div class="input-group">
               <input name="filter" value="{{ fieldsFilter }}" type="search"
           class="form-control form-control-sm" placeholder="{{ 'Filter'|trans }}" aria-label="{{ 'Filter'|trans }}">
-              <div class="input-group-append">
-                  <button class="btn btn-sm btn-outline-warning" type="reset">{{ 'Reset'|trans }}</button>
-                  <button class="btn btn-sm btn-outline-success" type="submit">{{ 'Filter'|trans }}</button>
-              </div>
+              <button class="btn btn-sm btn-outline-warning" type="reset">{{ 'Reset'|trans }}</button>
+              <button class="btn btn-sm btn-outline-success" type="submit">{{ 'Filter'|trans }}</button>
           </div>  
         </div>
       </div>
