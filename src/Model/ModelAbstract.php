@@ -348,12 +348,21 @@ abstract class ModelAbstract
     * Gets a recordset
     * @param array $where: see Simplex\PixieExtended::buildWhere for details
     * @param array $order: array of arrays, each with 1 element (field name, direction defaults to 'ASC') or 2 elements (field name, order 'ASC' | 'DESC')
+    * @param int $limit
+    * @param array $extraFields: any other field to get in addition to the ones defined into table/view for example:
+    *                fields aliases
+    *                fields based on runtime variables
     */
-    public function get(array $where = [], array $order = [], int $limit = null)
+    public function get(array $where = [], array $order = [], int $limit = null, array $extraFields = [])
     {
         //table
         $this->query
-            ->table($this->view());
+            ->table($this->view())
+            ->select('*');
+        if(!empty($extraFields)) {
+          $this->query
+            ->select($extraFields);
+        }
         //where conditions
         $this->query->buildWhere($where);
         //order
@@ -368,6 +377,7 @@ abstract class ModelAbstract
         $records = $this->query->get();
         //localized fields
         $records = $this->extractLocales($records);
+        //xx($records);
         return $records;
     }
     

@@ -48,6 +48,14 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
     protected $queryLimit = null;
     
     /**
+    * @param array
+    * list extra fields any field to get into list query in addition to the ones defined into table/view for example:
+    *                fields aliases
+    *                fields based on runtime variables
+    **/
+    protected $extraFields = [];
+    
+    /**
     * Constructor
     * @param ContainerInterface $DIContainer
     * @param ResponseInterface $response
@@ -425,7 +433,8 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
         $records = $this->model->get(
             $this->buildListWhere(),
             $sorting,
-            $this->queryLimit
+            $this->queryLimit,
+            $this->extraFields
         );
         //xx($this->model->sql());
         if($this->model->hasPositionField) {
@@ -562,12 +571,23 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
     }
     
     /**
-    * Set query limit
+    * Set query list limit
     * @param int $limit
     */
     public function setQueryLimit(int $limit)
     {
         $this->queryLimit = $limit;
+    }
+    
+    /**
+    * Set query list extra fields
+    * @param array $extraFields: any other field to get in addition to the ones defined into table/view for example:
+    *                fields aliases
+    *                fields based on runtime variables
+    */
+    public function setListExtraFields(array $extraFields)
+    {
+        $this->extraFields = $extraFields;
     }
     
     /**
