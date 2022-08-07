@@ -1,3 +1,7 @@
+## 2.2.30 (August 07, 2022)
+- chore: updated package.json, updated CHANGELOG.md, bumped 2.2.29 -> 2.2.30
+- model and ERP list get extra fields
+
 ## 2.2.29 (August 06, 2022)
 - chore: updated package.json, updated CHANGELOG.md, bumped 2.2.28 -> 2.2.29
 - ERP table tweaks
