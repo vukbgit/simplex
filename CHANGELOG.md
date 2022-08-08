@@ -1,3 +1,7 @@
+## 2.2.31 (August 08, 2022)
+- chore: updated package.json, updated CHANGELOG.md, bumped 2.2.30 -> 2.2.31
+- table record action class
+
 ## 2.2.30 (August 07, 2022)
 - chore: updated package.json, updated CHANGELOG.md, bumped 2.2.29 -> 2.2.30
 - model and ERP list get extra fields
