@@ -65,7 +65,7 @@
   {% for actionKey, actionProperties in context.navigations.recordVisibleActions %}
     {% set actionLabel = parseRecordActionRoute(getLabel('actions', actionKey), record) %}
   <td class="record-action text-right">
-    {{ navigationMacros.displayRecordActionLink(actionProperties, actionLabel, record)}}
+    {{ navigationMacros.displayRecordActionLink(actionKey, actionProperties, actionLabel, record)}}
   </td>
   {% endfor %}
   {# record hidden actions #}
@@ -79,7 +79,7 @@
     {% for actionKey, actionProperties in context.navigations.recordHiddenActions %}
       {% set actionLabel = parseRecordActionRoute(getLabel('actions', actionKey), record) %}
       {% set actionProperties = updateProperty(actionProperties, 'linkClass', 'dropdown-item') %}
-      {{ navigationMacros.displayRecordActionLink(actionProperties, actionLabel, record)}}
+      {{ navigationMacros.displayRecordActionLink(actionKey, actionProperties, actionLabel, record)}}
     {% endfor %}
       </div>
     </div>
