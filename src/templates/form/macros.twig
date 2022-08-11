@@ -780,6 +780,19 @@ NOTE: for checkbox group config.mandatory means that at least one input must be 
     </div>
 {% endmacro %}
 
+{#############
+# HONEY TRAP #
+#############}
+
+{# displays a date time picker block
+@param hash config: hash for field properties (see setFieldAttributes macro explanation) plus specific properties (see displayDateTimePicker)
+#}
+{% macro displayHoneyTrap(fieldName) %}
+<div class="d-none">
+  <input type="text" class="form-control" id="{{ fieldName }}" name="{{ fieldName }}" value="">
+</div>
+{% endmacro %}
+
 {#########
 # UPLOAD #
 #########}
