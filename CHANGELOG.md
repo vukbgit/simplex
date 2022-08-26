@@ -1,3 +1,7 @@
+## 2.2.34 (August 26, 2022)
+- chore: updated package.json, updated CHANGELOG.md, bumped 2.2.33 -> 2.2.34
+- locale month names
+
 ## 2.2.33 (August 26, 2022)
 - chore: updated package.json, updated CHANGELOG.md, bumped 2.2.32 -> 2.2.33
 - erp frame header
