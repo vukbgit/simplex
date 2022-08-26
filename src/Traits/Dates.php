@@ -57,4 +57,33 @@ trait Dates {
         }
         return 0;
     }
+    
+    /**
+     * Gets a locale month name 
+     * @param int $monthIndex
+     */
+    protected function getLocaleMonthName(int $monthIndex): string
+    {
+      $fmt = new \IntlDateFormatter(
+        null,
+        \IntlDateFormatter::FULL,
+        \IntlDateFormatter::FULL,
+        null,
+        null,
+        'MMMM'
+      );
+      return $fmt->format(['tm_mon' => $monthIndex]);
+    }
+    
+    /**
+     * Gets locale months names indexed by month index into an array
+     */
+    protected function getLocaleMonthNames(): array
+    {
+      $months = [];
+      for ($i=1; $i <=12 ; $i++) {
+        $months[$i] = $this->getLocaleMonthName($i);
+      }
+      return $months;
+    }
 }
