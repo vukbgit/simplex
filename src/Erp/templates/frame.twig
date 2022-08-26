@@ -34,7 +34,9 @@
     {% if constant('ENVIRONMENT') == 'development' %}
       <div class="mr-3 icon-erp-development text-warning"></div>
     {% endif %}
-    {% if hideUser == false %}
+    {% block headerUser %}
+      {{ parent() }}
+      {% if hideHeaderUser == false %}
       <div>{{ userData.username }}</div>
       <i class="icon-erp-user"></i>
       <ul class="navbar-nav px-3">
@@ -45,7 +47,8 @@
               </a>
           </li>
       </ul>
-    {% endif %}
+      {% endif %}
+    {% endblock %}
     </div>
 </nav>
 

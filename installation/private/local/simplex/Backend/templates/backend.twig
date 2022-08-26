@@ -1,11 +1,16 @@
 {% extends '@local/templates/application.twig' %}
 
+{# the following blocks are defined here so that content defined into Erp/frame.twig can be overridden #}
 {% set logoPath = '/PATH/TO/MASTHEAD/LOGO/IMAGES' %}
-
 {% block headerLogo %}
 {% endblock %}
 
+{% set hideHeaderTitle = false %}
 {% block headerTitle %}
+{% endblock %}
+
+{% set hideHeaderUser = false %}
+{% block headerUser %}
 {% endblock %}
 
 {% set areaNavigationLabels = {
