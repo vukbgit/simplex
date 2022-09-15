@@ -1,3 +1,7 @@
+## 2.2.38 (September 15, 2022)
+- chore: updated package.json, updated CHANGELOG.md, bumped 2.2.37 -> 2.2.38
+- ERP list sorting
+
 ## 2.2.37 (September 15, 2022)
 - chore: updated package.json, updated CHANGELOG.md, bumped 2.2.36 -> 2.2.37
 - doc: CRUD subject config
