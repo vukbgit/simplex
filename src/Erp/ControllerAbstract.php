@@ -419,7 +419,7 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
      */
     protected function getList()
     {
-        if(isset($this->subjectCookie->sorting)) {
+        if(isset($this->subjectCookie->sorting) && !empty($this->subjectCookie->sorting)) {
             $sorting = $this->subjectCookie->sorting;
         } elseif($this->model->hasPositionField) {
             $sorting = [[$this->model->getConfig()->position->field]];
