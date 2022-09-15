@@ -105,5 +105,10 @@ return (object) [
         'FIELD-NAME',
         'STRING'
       ]
-    ],*/
+    ],
+    //default list order
+    'listOrderBy' => [
+      ['data_domanda', 'DESC'],
+    ],
+    */
 ];
