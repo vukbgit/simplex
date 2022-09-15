@@ -1,3 +1,7 @@
+## 2.2.37 (September 15, 2022)
+- chore: updated package.json, updated CHANGELOG.md, bumped 2.2.36 -> 2.2.37
+- doc: CRUD subject config
+
 ## 2.2.36 (September 15, 2022)
 - chore: updated package.json, updated CHANGELOG.md, bumped 2.2.35 -> 2.2.36
 - fix: ERP side bar state
