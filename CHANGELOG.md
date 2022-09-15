@@ -1,3 +1,7 @@
+## 2.2.35 (September 15, 2022)
+- chore: updated package.json, updated CHANGELOG.md, bumped 2.2.34 -> 2.2.35
+- fix: ERP side bar state
+
 ## 2.2.34 (August 26, 2022)
 - chore: updated package.json, updated CHANGELOG.md, bumped 2.2.33 -> 2.2.34
 - locale month names
