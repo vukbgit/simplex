@@ -248,4 +248,25 @@ abstract class ControllerWithoutCRUDLAbstract extends ControllerWithTemplateAbst
             }
         );
     }
+    
+    /**
+     * Sets sidebar state, ERP subjects routes contain matching route by default
+     */
+    protected function setSideBarState()
+    {
+      $state = filter_input(
+        INPUT_GET,
+        's',
+        FILTER_VALIDATE_REGEXP,
+        [
+          'options' => [
+            'regexp'=>'/^[0-1]{1}$/'
+          ]
+        ]
+      );
+      if($state !== false) {
+        $this->setAreaCookie('sideBarState', $state);
+      }
+    }
+    
 }

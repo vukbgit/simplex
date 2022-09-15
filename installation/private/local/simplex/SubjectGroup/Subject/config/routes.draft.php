@@ -25,16 +25,28 @@ require 'variables.php';
 $modelConfig = require 'model.php';
 //definitions array
 return [
-    [
-        'method' => ['GET','POST'],
-        'route' => sprintf('/{area:%s}/{subject:%s}/{action}[/{%s:\d+}]', $area, $subject, $modelConfig->primaryKey),
-        //children route
-        //'route' => sprintf('/{area:%s}/{ancestor0:ANCESTOR-SUBJECT}/{ANCESTOR-PRIMARY-KEY:\d+}/{subject:%s}/{action}[/{%s:\d+}]', $area, $subject, $modelConfig->primaryKey),
-        'handler' => [
-            sprintf('%s-controller', $subject),
-            [
-                'authentication' => $authentication
-            ]
-        ]
+  //standard ERP actions, corresponding methods are defined in Simplex\Erp\ControllerAbstract
+  [
+    'method' => ['GET','POST'],
+    'route' => sprintf('/{area:%s}/{subject:%s}/{action:autocomplete|set-side-bar-state}', $area, $subject),
+    'handler' => [
+      sprintf('%s-controller', $subject),
+      [
+        'authentication' => $authentication
+      ]
     ]
+  ],
+  //CRUD actions
+  [
+    'method' => ['GET','POST'],
+    'route' => sprintf('/{area:%s}/{subject:%s}/{action}[/{%s:\d+}]', $area, $subject, $modelConfig->primaryKey),
+    //children route
+    //'route' => sprintf('/{area:%s}/{ancestor0:ANCESTOR-SUBJECT}/{ANCESTOR-PRIMARY-KEY:\d+}/{subject:%s}/{action}[/{%s:\d+}]', $area, $subject, $modelConfig->primaryKey),
+    'handler' => [
+      sprintf('%s-controller', $subject),
+      [
+        'authentication' => $authentication
+      ]
+    ]
+  ],
 ];
