@@ -47,3 +47,12 @@ iframe[id^="twitter-widget-"] {
     font-size: 12px;
     font-weight:bold;
 }
+
+/***********
+* MARKDOWN *
+***********/
+.with-markdown {
+  p {
+    margin-bottom: 0;
+  }
+}
