@@ -978,7 +978,8 @@ WARNING: uses Bootstrap custom range input, so BS custom-forms component must be
             var filesList = this.getInputFiles(inputId);
             //check maxFileCount
             var maxFileCount = {{ jsOptions }}.maxFileCount ? {{ jsOptions }}.maxFileCount : 0;
-            if(maxFileCount == filesList.length) {
+            //maxFileCount == 0 means no limits
+            if(maxFileCount > 0 && maxFileCount == filesList.length) {
                 //remove first file in the list to make room
                 this.removeFileFromInput(inputId, 0);
                 this.removeFileFromPreviews(0);
