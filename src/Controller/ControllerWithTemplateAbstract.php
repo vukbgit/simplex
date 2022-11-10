@@ -788,15 +788,21 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         $areaCookie = $this->cookie->getAreaCookie($this->area);
         //get top level property name
         $topPropertyName = array_shift($propertyNames);
+        if(!isset($areaCookie->$topPropertyName) || !$areaCookie->$topPropertyName) {
+            $areaCookie->$topPropertyName = new \stdClass;
+          }
         $property =& $areaCookie->$topPropertyName;
         //loop other property names
         foreach ((array) $propertyNames as $propertyName) {
-            $property =& $property->$propertyName;
+          if(!isset($property->$propertyName) || !$property->$propertyName) {
+            $property->$propertyName = new \stdClass;
+          }
+          $property =& $property->$propertyName;
         }
         //set value
         $property = $propertyValue;
         //set area cookie
-        $this->cookie->setAreaCookie($this->area, $topPropertyName, $areaCookie);
+        $this->cookie->setAreaCookie($this->area, $topPropertyName, $areaCookie->$topPropertyName);
         //update template parameter
         $this->setTemplateParameter('areaCookie', $areaCookie);
     }
