@@ -1,3 +1,7 @@
+## 2.2.39 (November 14, 2022)
+- chore: Updated package.json, updated CHANGELOG.md, bumped 2.2.38 -> 2.2.39
+warning: refname 'v2.2.38' is ambiguous.
+
 ## 2.2.38 (September 15, 2022)
 - chore: updated package.json, updated CHANGELOG.md, bumped 2.2.37 -> 2.2.38
 - ERP list sorting
