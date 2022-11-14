@@ -1,3 +1,7 @@
+## 2.2.40 (November 14, 2022)
+- chore: Updated package.json, updated CHANGELOG.md, bumped 2.2.39 -> 2.2.40
+- UUID support
+
 ## 2.2.39 (November 14, 2022)
 - chore: Updated package.json, updated CHANGELOG.md, bumped 2.2.38 -> 2.2.39
 warning: refname 'v2.2.38' is ambiguous.
