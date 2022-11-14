@@ -11,7 +11,15 @@ return (object) [
                 'total' => false
             ],
             //input filter see https://www.php.net/manual/en/filter.filters.php
+            //int type
             'inputFilter' => FILTER_VALIDATE_INT,
+            //uuid type
+            'inputFilter' => [
+              'filter' => FILTER_VALIDATE_REGEXP,
+              'options' => [
+                'regexp'=>sprintf('/%s/', UUID_REGEXP),
+              ]
+            ]
         ],
         'VARCHAR-FIELD' => (object) [
             'table' => (object)[

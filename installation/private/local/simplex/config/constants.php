@@ -47,11 +47,12 @@ if(php_sapi_name() != 'cli') {
         echo 'It is not possible to check HTTPS by $_SERVER[\'HTTPS\'] and therefore it is not possible to set SESSION_COOKIE_SECURE constant';
         exit;
     } else {
-        define('SESSION_COOKIE_SECURE', $_SERVER['HTTPS'] == 'on');
+        $sessionCookieSecure = $_SERVER['HTTPS'] == 'on';
     }
 } else {
-    define('SESSION_COOKIE_SECURE', false);
+    $sessionCookieSecure = false;
 }
+define('SESSION_COOKIE_SECURE', $sessionCookieSecure);
 /**********
 * COOKIES *
 **********/
@@ -74,6 +75,9 @@ define('TEMPLATES_DEFAULT_FOLDER', 'templates');
 ******/
 //whether not to store tables filters values into subjects cookies 
 define('FORGET_ALL_FILTERS', false);
+//for UUID primary keys validation
+define('UUID_REGEXP_CORE', '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}');
+define('UUID_REGEXP', sprintf('^%s$', UUID_REGEXP_CORE));
 /***************
 * TRANSLATIONS *
 ***************/
