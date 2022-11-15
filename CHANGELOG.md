@@ -1,3 +1,7 @@
+## 2.2.42 (November 15, 2022)
+- chore: Updated package.json, updated CHANGELOG.md, bumped 2.2.41 -> 2.2.42
+- UUID support
+
 ## 2.2.41 (November 15, 2022)
 - chore: Updated package.json, updated CHANGELOG.md, bumped 2.2.40 -> 2.2.41
 - child UUID route draft
