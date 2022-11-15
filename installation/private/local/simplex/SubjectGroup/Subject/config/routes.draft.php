@@ -46,7 +46,7 @@ return [
     //children route with int primary key
     //'route' => sprintf('/{area:%s}/{ancestor0:ANCESTOR-SUBJECT}/{ANCESTOR-PRIMARY-KEY:\d+}/{subject:%s}/{action}[/{%s:\d+}]', $area, $subject, $modelConfig->primaryKey),
     //children route with UUID primary key
-    //'route' => sprintf('/{area:%s}/{ancestor0:ANCESTOR-SUBJECT}/{ANCESTOR-PRIMARY-KEY:\d+}/{subject:%s}/{action}[/{%s:%s}]', $area, $subject, $modelConfig->primaryKey, UUID_REGEXP_CORE),
+    //'route' => sprintf('/{area:%s}/{ancestor0:ANCESTOR-SUBJECT}/{ANCESTOR-PRIMARY-KEY:%4$s}/{subject:%s}/{action}[/{%s:%4$s}]', $area, $subject, $modelConfig->primaryKey, UUID_REGEXP_CORE),
     'handler' => [
       sprintf('%s-controller', $subject),
       [
