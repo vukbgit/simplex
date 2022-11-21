@@ -1,3 +1,7 @@
+## 2.2.43 (November 21, 2022)
+- chore: updated package.json, updated CHANGELOG.md, bumped 2.2.42 -> 2.2.43
+- htmlEntityDecode template filter
+
 ## 2.2.42 (November 15, 2022)
 - chore: Updated package.json, updated CHANGELOG.md, bumped 2.2.41 -> 2.2.42
 - UUID support
