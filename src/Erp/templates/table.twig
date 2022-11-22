@@ -209,7 +209,7 @@
             {% if navigations.bulkActions|length %}
                 <td class="align-middle">
                     <div>
-                        <input type="checkbox" name="bulk_action_records_ids[]" value="{{ attribute(record, model.getConfig().primaryKey) }}">
+                        <input type="checkbox" name="bulk_action_records_ids[]" value="{{ attribute(record, model.getConfig().bulkActionsKey ?? model.getConfig().primaryKey) }}">
                     </div>
                 </td>
             {% endif %}
