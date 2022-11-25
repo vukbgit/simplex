@@ -233,6 +233,10 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         $this->addTemplateFilter('ucwords', function(string $string, string $separators = " \t\r\n\f\v"): string{
             return ucwords($string, $separators);
         });
+        //html_entity_decode wrapper
+        $this->addTemplateFilter('htmlEntityDecode', function(string $string, int $flags = ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401, $encoding = ''): string{
+            return html_entity_decode($string, $flags, $encoding);
+        });
         //gets an instance from container 
         $this->addTemplateFunction('getInstanceFromDIContainer', function(string $key) {
             return $this->DIContainer->get($key);
