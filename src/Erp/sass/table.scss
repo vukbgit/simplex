@@ -26,6 +26,10 @@
             width:1%;
             padding:.3rem 1rem;
             white-space: nowrap;
+            .dropdown-menu {
+              //to appear over header navbar
+              z-index:2000;
+            }
         }
     }
 }
