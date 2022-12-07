@@ -15,12 +15,6 @@ use \PhpOffice\PhpSpreadsheet;
 class SpreadsheetReaderWriter
 {    
     /*
-    * File type instance
-    * @param string csv | ods | xlsx
-    */
-    private $type;
-    
-    /*
     * Writer instance
     * @param Box\Spout\Writer\XLSX\Writer
     */
@@ -152,7 +146,7 @@ class SpreadsheetReaderWriter
     
     /*
     * Writes a spreadsheet
-    * @param string $type: c | csv | o | ods | x | xlsx
+    * @param string $type: csv | xslx |
     * @param string $output: f | file | b | browser
     * @param string $FileName: in case of output = file must be complete path
     * @param array $rows: an array of objects (like a recordset)
@@ -161,52 +155,66 @@ class SpreadsheetReaderWriter
     */
     public function write(string $type, string $output, string $fileName, array $rows, array $headersRow = [], string $delimiter = '')
     {
-        //normalize parameters short values
-        switch ($type) {
-            case 'c':
-                $type = 'csv';
-            break;
-            case 'o':
-                $type = 'ods';
-            break;
-            case 'x':
-                $type = 'xlsx';
-            break;
+    //xx($rows);
+      /*switch ($output) {
+          case 'f':
+              $output = 'file';
+          break;
+          case 'b':
+              $output = 'browser';
+          break;
+      }*/
+      //create workbook and sheet
+      $spreadsheet = new PhpSpreadsheet\Spreadsheet();
+      $sheet = $spreadsheet->setActiveSheetIndex(0);
+      //set starting sheet row index
+      $y = 1;
+      $headerRow = 0;
+      //headers row
+      if(!empty($headersRow)) {
+        $numCols = count($headersRow);
+        for($x = 1;$x <= $numCols; $x++) {
+          $sheet->setCellValueByColumnAndRow($x, $y, $headersRow[$x - 1]);
         }
-        $this->type = $type;
-        switch ($output) {
-            case 'f':
-                $output = 'file';
-            break;
-            case 'b':
-                $output = 'browser';
-            break;
+        $headerRow = 1;
+        $y++;
+      }
+      //loop rows
+      $numRows = count($rows);
+      $numCols = $numCols ?? ($numRows ? count(get_object_vars(($rows[0]))) : 0);
+      for($i = 0;$i < $numRows; $i++) {
+        $row = $rows[$i];
+        $y = $i + $headerRow + 1;
+        //loop cells
+        $x = 1;
+        foreach($row as $value) {
+          $sheet->setCellValueByColumnAndRow($x, $y, $value);
+          $x++;
         }
-        //create writer
-        $method = sprintf('create%sWriter', strtoupper($this->type));
-        $this->writer = WriterEntityFactory::$method();
-        //delimiter
-        if($delimiter && $type == 'csv') {
-          $this->writer->setFieldDelimiter($delimiter);
-        }
-        //output
-        switch ($output) {
-            case 'file':
-                //save to filesystem
-                $this->writer->openToFile($fileName);
-            break;
-            case 'browser':
-                //to browser
-                $this->writer->openToBrowser($fileName);
-            break;
-        }
-        //headers row
-        $this->addHeadersRow($headersRow);
-        //rows
-        foreach ($rows as $row) {
-            $this->addRowFromObject($row);
-        }
-        //close
-        $this->writer->close();
+      }
+      switch ($type) {
+        case 'csv':
+          $this->writer = new PhpSpreadsheet\Writer\Csv($spreadsheet);
+          $contentType = 'text/csv';
+        break;
+        case 'xslx':
+          $this->writer = new PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+          $contentType = 'application/vnd.ms-excel';
+        break;
+      }
+      
+      header(sprintf('Content-Type: %s', $contentType));
+      header(sprintf('Content-Disposition: attachment;filename="%s"', $fileName));
+      header('Cache-Control: max-age=0');
+      // If you're serving to IE 9, then the following may be needed
+      header('Cache-Control: max-age=1');
+
+      // If you're serving to IE over SSL, then the following may be needed
+      header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+      header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // always modified
+      header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+      header('Pragma: public'); // HTTP/1.0
+
+      $this->writer->save('php://output');
     }
 }
