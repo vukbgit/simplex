@@ -1,3 +1,7 @@
+## 2.2.45 (December 07, 2022)
+- chore: Updated package.json, updated CHANGELOG.md, bumped 2.2.44 -> 2.2.45
+- spreadshit writer
+
 ## 2.2.44 (December 07, 2022)
 - chore: Updated package.json, updated CHANGELOG.md, bumped 2.2.43 -> 2.2.44
 - spreadsheet write
