@@ -29,7 +29,7 @@ class SpreadsheetReaderWriter
     /*
     * Reads a spreadsheet
     * @param string $path
-    * @param string $type: csv | xslx
+    * @param string $type: csv | xlsx
     * @param bool $firstRowIsHEaders
     * @param bool $rowsToObjects
     */
@@ -39,7 +39,7 @@ class SpreadsheetReaderWriter
             case 'csv':
             $this->reader = new PhpSpreadsheet\Reader\Csv();
             break;
-            case 'xslx':
+            case 'xlsx':
               //read anly data and ignore styiling
               $this->reader = new PhpSpreadsheet\Reader\Xlsx();
             break;
@@ -146,7 +146,7 @@ class SpreadsheetReaderWriter
     
     /*
     * Writes a spreadsheet
-    * @param string $type: csv | xslx |
+    * @param string $type: csv | xlsx |
     * @param string $output: f | file | b | browser
     * @param string $FileName: in case of output = file must be complete path
     * @param array $rows: an array of objects (like a recordset)
@@ -155,15 +155,6 @@ class SpreadsheetReaderWriter
     */
     public function write(string $type, string $output, string $fileName, array $rows, array $headersRow = [], string $delimiter = '')
     {
-    //xx($rows);
-      /*switch ($output) {
-          case 'f':
-              $output = 'file';
-          break;
-          case 'b':
-              $output = 'browser';
-          break;
-      }*/
       //create workbook and sheet
       $spreadsheet = new PhpSpreadsheet\Spreadsheet();
       $sheet = $spreadsheet->setActiveSheetIndex(0);
@@ -197,24 +188,32 @@ class SpreadsheetReaderWriter
           $this->writer = new PhpSpreadsheet\Writer\Csv($spreadsheet);
           $contentType = 'text/csv';
         break;
-        case 'xslx':
+        case 'xlsx':
           $this->writer = new PhpSpreadsheet\Writer\Xlsx($spreadsheet);
           $contentType = 'application/vnd.ms-excel';
         break;
       }
-      
-      header(sprintf('Content-Type: %s', $contentType));
-      header(sprintf('Content-Disposition: attachment;filename="%s"', $fileName));
-      header('Cache-Control: max-age=0');
-      // If you're serving to IE 9, then the following may be needed
-      header('Cache-Control: max-age=1');
+      //output
+      switch ($output) {
+        case 'f':
+        case 'file':
+          //TODO
+        break;
+        case 'b':
+        case 'browser':
+          header(sprintf('Content-Type: %s', $contentType));
+          header(sprintf('Content-Disposition: attachment;filename="%s"', $fileName));
+          header('Cache-Control: max-age=0');
+          /*// If you're serving to IE 9, then the following may be needed
+          header('Cache-Control: max-age=1');
+          // If you're serving to IE over SSL, then the following may be needed
+          header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+          header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // always modified
+          header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+          header('Pragma: public'); // HTTP/1.0*/
 
-      // If you're serving to IE over SSL, then the following may be needed
-      header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
-      header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // always modified
-      header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
-      header('Pragma: public'); // HTTP/1.0
-
-      $this->writer->save('php://output');
+          $this->writer->save('php://output');
+        break;
+      }
     }
 }
