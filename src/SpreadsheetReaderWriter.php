@@ -29,11 +29,11 @@ class SpreadsheetReaderWriter
     /*
     * Reads a spreadsheet
     * @param string $path
-    * @param string $type: csv | xlsx
+    * @param string $type: csv | xlsx, if null it is guessed by file itself
     * @param bool $firstRowIsHEaders
-    * @param bool $rowsToObjects
+    * @param bool $rowsToObjects: turn rows arrays into object, it works only if $firstRowIsHEaders is true (otherwise thera are no properties to be used for the object)
     */
-    public function read(string $path, $type = null, $firstRowIsHEaders = true, $rowsToObjects = false)
+    public function read(string $path, string $type = null, bool $firstRowIsHEaders = true, bool $rowsToObjects = false)
     {
         switch ($type) {
             case 'csv':
@@ -65,23 +65,23 @@ class SpreadsheetReaderWriter
           //headers row
           if($firstRowIsHEaders) {
             $headers = array_shift($rows);
-          }
-          //rows to object
-          if($rowsToObjects) {
-            $objectsRows = [];
-            foreach ((array) $rows as $row) {
-              $rowObject = new \stdClass;
-              foreach ($headers as $j => $header) {
-                //in case of empty cells at the and of the header row
-                if(!isset($row[$j])) {
-                  continue(2);
-                } else {
-                  $rowObject->$header = $row[$j];
+            //rows to object
+            if($rowsToObjects) {
+              $objectsRows = [];
+              foreach ((array) $rows as $row) {
+                $rowObject = new \stdClass;
+                foreach ($headers as $j => $header) {
+                  //in case of empty cells at the and of the header row
+                  if(!isset($row[$j])) {
+                    continue(2);
+                  } else {
+                    $rowObject->$header = $row[$j];
+                  }
                 }
+                $objectsRows[] = $rowObject;
               }
-              $objectsRows[] = $rowObject;
+              $rows = $objectsRows;
             }
-            $rows = $objectsRows;
           }
           $sheets[] = $rows;
         }
