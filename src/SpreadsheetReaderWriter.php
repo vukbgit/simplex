@@ -199,7 +199,7 @@ class SpreadsheetReaderWriter
       switch ($output) {
         case 'f':
         case 'file':
-          //TODO
+          $this->writer->save($fileName);
         break;
         case 'b':
         case 'browser':
