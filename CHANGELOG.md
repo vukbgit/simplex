@@ -1,3 +1,7 @@
+## 2.2.49 (January 18, 2023)
+- chore: Updated package.json, updated CHANGELOG.md, bumped 2.2.48 -> 2.2.49
+- spreadsheert writer new line
+
 ## 2.2.48 (January 18, 2023)
 - chore: Updated package.json, updated CHANGELOG.md, bumped 2.2.47 -> 2.2.48
 - spreadsheet read
