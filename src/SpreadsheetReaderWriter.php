@@ -72,11 +72,12 @@ class SpreadsheetReaderWriter
                 $rowObject = new \stdClass;
                 foreach ($headers as $j => $header) {
                   //in case of empty cells at the and of the header row
-                  if(!isset($row[$j])) {
+                  /*if(!isset($row[$j])) {
                     continue(2);
                   } else {
                     $rowObject->$header = $row[$j];
-                  }
+                  }*/
+                    $rowObject->$header = $row[$j];
                 }
                 $objectsRows[] = $rowObject;
               }
