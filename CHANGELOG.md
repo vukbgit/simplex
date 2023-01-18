@@ -1,3 +1,7 @@
+## 2.2.48 (January 18, 2023)
+- chore: Updated package.json, updated CHANGELOG.md, bumped 2.2.47 -> 2.2.48
+- spreadsheet read
+
 ## 2.2.47 (January 18, 2023)
 - chore: Updated package.json, updated CHANGELOG.md, bumped 2.2.46 -> 2.2.47
 - spreadsheet read
