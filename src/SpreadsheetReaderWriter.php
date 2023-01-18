@@ -154,6 +154,8 @@ class SpreadsheetReaderWriter
     */
     public function write(string $type, string $output, string $fileName, array $rows, array $headersRow = [], string $delimiter = '')
     {
+      //AdvancedValuebinder.php automatically turns on "wrap text" for the cell when it sees a newline character in a string that you are inserting in a cell
+      \PhpOffice\PhpSpreadsheet\Cell\Cell::setValueBinder( new \PhpOffice\PhpSpreadsheet\Cell\AdvancedValueBinder() );
       //create workbook and sheet
       $spreadsheet = new PhpSpreadsheet\Spreadsheet();
       $sheet = $spreadsheet->setActiveSheetIndex(0);
@@ -179,6 +181,7 @@ class SpreadsheetReaderWriter
         $x = 1;
         foreach($row as $value) {
           $sheet->setCellValueByColumnAndRow($x, $y, $value);
+          //$sheet->getStyle([$x,$y])->getAlignment()->setWrapText(true);
           $x++;
         }
       }
