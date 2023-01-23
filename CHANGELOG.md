@@ -1,3 +1,7 @@
+## 2.2.51 (January 23, 2023)
+- chore: Updated package.json, updated CHANGELOG.md, bumped 2.2.50 -> 2.2.51
+- spreadsheet read null header
+
 ## 2.2.50 (January 18, 2023)
 - chore: Updated package.json, updated CHANGELOG.md, bumped 2.2.49 -> 2.2.50
 - spreadsheert writer save to file
