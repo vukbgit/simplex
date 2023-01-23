@@ -72,7 +72,7 @@ class SpreadsheetReaderWriter
                 $rowObject = new \stdClass;
                 foreach ($headers as $j => $header) {
                   //skip empty headers columns
-                  if(!trim($header)) {
+                  if(!trim((string) $header)) {
                     continue;
                   }
                   $rowObject->$header = $row[$j];
