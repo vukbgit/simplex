@@ -31,6 +31,11 @@ class FastRouteMiddleware implements MiddlewareInterface
     private $attribute = 'request-handler';
 
     /**
+     * @var ResponseFactoryInterface
+     */
+    private $responseFactory;
+
+    /**
      * Set the Dispatcher instance and optionally the response factory to return the error responses.
      * @param string $environment: 'development': no cache used | any other value routes are cached
      * @param array $routes: array of routes definition
