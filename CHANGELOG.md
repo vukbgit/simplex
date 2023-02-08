@@ -1,3 +1,7 @@
+## 2.2.52 (February 08, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 2.2.51 -> 2.2.52
+- fix: FastRouteMiddleware dynamic property
+
 ## 2.2.51 (January 23, 2023)
 - chore: Updated package.json, updated CHANGELOG.md, bumped 2.2.50 -> 2.2.51
 - spreadsheet read null header
