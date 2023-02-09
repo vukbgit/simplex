@@ -1,3 +1,7 @@
+## 2.2.54 (February 09, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 2.2.53 -> 2.2.54
+- new pixie branch name
+
 ## 2.2.53 (February 09, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 2.2.52 -> 2.2.53
 - forking pixie
