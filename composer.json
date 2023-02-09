@@ -9,6 +9,12 @@
             "email": "info@vuk.bg.it"
        }
     ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/vukbgit/pixie"
+        }
+    ],
     "require": {
         "php": ">=8.0",
         "ext-gettext": "*",
@@ -24,7 +30,7 @@
         "twig/twig": ">=3.4",
         "twig/intl-extra": ">=3.4",
         "jblond/twig-trans": ">=1.1",
-        "usmanhalalit/pixie": "2.*@dev",
+        "usmanhalalit/pixie": "dev-master",
         "nette/finder": ">=2.5",
         "aura/auth": ">=4.0",
         "slowprog/composer-copy-file": "~0.3",
