@@ -9,12 +9,6 @@
             "email": "info@vuk.bg.it"
        }
     ],
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/vukbgit/pixie"
-        }
-    ],
     "require": {
         "php": ">=8.0",
         "ext-gettext": "*",
