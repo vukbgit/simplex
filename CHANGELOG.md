@@ -1,3 +1,7 @@
+## 2.2.56 (February 09, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 2.2.55 -> 2.2.56
+- fixed branched pixie repository
+
 ## 2.2.55 (February 09, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 2.2.54 -> 2.2.55
 - fixed branched pixie repository
