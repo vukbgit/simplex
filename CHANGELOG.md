@@ -1,3 +1,7 @@
+## 2.2.53 (February 09, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 2.2.52 -> 2.2.53
+- forked pixie
+
 ## 2.2.52 (February 08, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 2.2.51 -> 2.2.52
 - fix: FastRouteMiddleware dynamic property
