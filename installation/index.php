@@ -45,7 +45,6 @@ switch(ENVIRONMENT) {
     break;
 }
 $DIContainerBuilder->useAutowiring(false);
-$DIContainerBuilder->useAnnotations(false);
 $DIContainerBuilder->addDefinitions(require sprintf('%s/di-container.php', SHARE_CONFIG_DIR));
 $DIContainer = $DIContainerBuilder->build();
 /*****************************************
