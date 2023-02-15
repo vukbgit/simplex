@@ -1,3 +1,7 @@
+## 2.2.57 (February 15, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 2.2.56 -> 2.2.57
+- index DI container
+
 ## 2.2.56 (February 09, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 2.2.55 -> 2.2.56
 - fixed branched pixie repository
