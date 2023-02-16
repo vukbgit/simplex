@@ -416,6 +416,7 @@ WARNING: uses Bootstrap custom select, so BS custom-forms component must be incl
         search action must return json
     remoteDataRouteExtraParameters: object with extra parameters to be passed into route, each parameter *must* be already in a correct form to be turned into a javascript variable value, for example strings must be already enclosed by quotes
     valueLabel:
+    customMatchFunction: name of a javascript function (defined into calling page) to be used as a matcher, (see https://select2.org/searching#customizing-how-results-are-matched)
     options: hash container for any extra specific select2 option (see https://select2.org/configuration/options-api)
 @param array items: array of hashes each with value and label property, alternative to remoteDataRoute; if minimumInputLength is passed they are not shown but searched
 #}
@@ -468,6 +469,9 @@ $(document).ready(function() {
                 };
             }
         }
+    {% endif %}
+    {% if config.customMatchFunction %}
+        matcher: {{ config.customMatchFunction }}
     {% endif %}
     {# select2 specific options #}
     {% for option,value in config.options %}
