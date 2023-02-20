@@ -1,3 +1,7 @@
+## 2.2.58 (February 20, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 2.2.57 -> 2.2.58
+- richselect autofocus
+
 ## 2.2.57 (February 15, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 2.2.56 -> 2.2.57
 - index DI container
