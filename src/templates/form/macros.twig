@@ -475,6 +475,9 @@ $(document).ready(function() {
         //var data = e.params.data;
         simplexValidation.validateField(e.target);
     });
+    {% if config.autofocus %}
+    $('{{ '#%s'|format(id) }}').select2('open')
+    {% endif %}
 });
 </script>
 {% endmacro %}
