@@ -201,7 +201,7 @@ For details see _Folders and Files Structure_ below
 
 Simplex is shipped with an ERP namespace draft and uses it to build backends and ERP applications. Here we assume the area name is "Backend" but it can be changed to anything else, you just need to rename Backend folder accordingly and substitute the "backend" word (minding letters case) accordingly. Besides the common operations discussed above, here are the steps to configure the provided Backend area :
 * _.htaccess_: set redirection of _/backend_ route to _/backend/sign-in-form_
-* check and set up _variables_ into _private/local/simplex/Backend/config/variables.php_, at least _$successfulSignInRoute_, the other default values should be ok out of the box
+* check and set up _variables_ into _private/local/simplex/Backend/config/variables.php_, at least _$successfulSignInRoute_ (defaults to backend/dashboard), the other default values should be ok out of the box
 * set up _authentication_ methods into _private/local/simplex/Backend/config/routes.php_ :
     * _htpasswd_: (enabled by default)
         * points to a htpasswd file that must be set manually, cd into desired folder (defaults to _private/local/simplex/Backend/config_):

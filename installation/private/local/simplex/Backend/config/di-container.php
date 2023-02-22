@@ -19,4 +19,11 @@ return [
             get('templateEngine'),
             get('cookieManager')
     ),
+    'backend-controller' => create(Backend\Controller::class)
+        ->constructor(
+            get('DIContainer'),
+            get('response'),
+            get('templateEngine'),
+            get('cookieManager')
+    ),
 ];

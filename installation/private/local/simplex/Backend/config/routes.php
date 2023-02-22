@@ -88,5 +88,16 @@ return [
                 ]
             ]
         ]
-    ]
+    ],
+    //dashboard
+    [
+        'method' => 'GET',
+        'route' => sprintf('/{area:%s}/{action:dashboard}', $area),
+        'handler' => [
+          sprintf('%s-controller', $area),
+          [
+            'authentication' => $authentication
+          ]
+        ]
+    ],
 ];

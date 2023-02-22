@@ -11,7 +11,7 @@ $signInRoute = sprintf('/%s/sign-in', $area);
 //sign out action route
 $signOutRoute = sprintf('/%s/sign-out', $area);
 //default route to redirect after a successful login
-$successfulSignInRoute = sprintf('/%s/DEFAULT-SUBJECT/list', $area);
+$successfulSignInRoute = sprintf('/%s/dashboard', $area);
 //authentication object to be used with routes that need authentication verification
 $authentication = (object) [
     'action' => 'verify',
