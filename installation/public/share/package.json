@@ -9,7 +9,6 @@
         "flag-icons": ">=6.5",
         "hamburgers": ">=1.2",
         "jquery": "latest",
-        "jquery.safemail": ">=1.0.2",
         "js-cookie": ">=3.0",
         "tinymce": ">=6.0",
         "select2": ">=4",

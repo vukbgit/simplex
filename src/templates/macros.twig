@@ -21,9 +21,21 @@
 <meta name="theme-color" content="#ffffff">
 {% endmacro %}
 
+{# triggers the unobfuscation of obfuscated email links displayed into page by means of sanitizeEmail macro
+relys on MAIL_AT_REPLACEMENT and MAIL_DOT_REPLACEMENT constants which must be set to some charachters combination
+uses /public/share/simplex/js/simplex.js::EmailUnobsfuscate
+#}
+{% macro emailsUnobsfuscate() %}
+<script>
+$(document).ready(function () {
+  EmailUnobsfuscate('{{constant('MAIL_AT_REPLACEMENT')}}', '{{constant('MAIL_DOT_REPLACEMENT')}}');
+})
+</script>
+{% endmacro %}
+
 {# displays a sanitized email link
 relys on MAIL_AT_REPLACEMENT and MAIL_DOT_REPLACEMENT constants which must be set to some charachters combination
-uses /public/share/simplex/js/simplex.js::EmailUnobsfuscate which must be called manually with the same replacement values
+uses /public/share/simplex/js/simplex.js::EmailUnobsfuscate which must be called manually (once for page by emailsUnobsfuscate macro) with the same replacement values
 @param string email
 @param string extraClasses
 #}

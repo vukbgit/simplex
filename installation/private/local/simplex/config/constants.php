@@ -6,6 +6,9 @@
 define('TECH_EMAIL', '');
 //used to set page title tag in some templates
 define('BRAND', '');
+//characters to be used for emails obfuscation
+define("MAIL_AT_REPLACEMENT","xxx");
+define("MAIL_DOT_REPLACEMENT","§§§");
 /**************
 * ENVIRONMENT *
 **************/
