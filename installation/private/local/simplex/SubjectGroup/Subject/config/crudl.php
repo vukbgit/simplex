@@ -45,28 +45,9 @@ return (object) [
             //input filter see https://www.php.net/manual/en/filter.filters.php
             'inputFilter' => [
               'filter' => FILTER_VALIDATE_REGEXP,
-              'options' => [
-                //, AS THOUSAND SEPARATOR AND . AS DECIMAL SEPARATOR
-                'regexp'=>'/^(?:[0-9]{0,3},?)?[0-9]{1,3}(?:\.[0-9]{1,2})?$/',
-                //. AS THOUSAND SEPARATOR AND , AS DECIMAL SEPARATOR
-                'regexp'=>'/^(?:[0-9]{0,3}\.?)?[0-9]{1,3}(?:,[0-9]{1,2})?$/',
-              ],
+              'options' => ['regexp'=>sprintf('/%s/', FLOAT_REGEX)],
               'flags' => FILTER_NULL_ON_FAILURE //for nullable fields set to null otherwise woll be saved as 0
             ]
-        ],
-        'imponibile_importo' => (object) [
-            'table' => (object)[
-                //boolean defaults to true
-                'filter' => false,
-                //boolean defaults to false
-                'total' => true
-            ],
-            //input filter see https://www.php.net/manual/en/filter.filters.php
-            'inputFilter' => [
-                'filter' => FILTER_VALIDATE_REGEXP,
-                //'options' => array('regexp'=>'/[0-9]{0,3}\.{0,1}[0-9]{1,3},{0,1}[0-9]{0,2}/')
-                'options' => array('regexp'=>sprintf('/%s/', FLOAT_REGEX))
-            ],
         ],
         'DATE-FIELD' => (object) [
             'table' => (object)[
@@ -86,6 +67,7 @@ return (object) [
                 'options' => ['regexp'=>'/^[0-9]{2}-[0-9]{2}-[0-9]{4} \/ [0-9]{2}-[0-9]{2}-[0-9]{4}$/']
             ],
         ],
+        //position field is automatically handled
     ],
     /*to build a label when subject is ancestor each element can be:
     * - a field name to extract value from ancestor record

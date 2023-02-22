@@ -78,6 +78,11 @@ define('TEMPLATES_DEFAULT_FOLDER', 'templates');
 ******/
 //whether not to store tables filters values into subjects cookies 
 define('FORGET_ALL_FILTERS', false);
+//for decimal fields validation
+//, AS THOUSAND SEPARATOR AND . AS DECIMAL SEPARATOR
+define('FLOAT_REGEX', '^(?:[0-9]{0,3}\.?)?[0-9]{1,3}(?:,[0-9]{1,2})?$');
+//. AS THOUSAND SEPARATOR AND , AS DECIMAL SEPARATOR
+//define('FLOAT_REGEX', '^(?:[0-9]{0,3},?)?[0-9]{1,3}(?:\.[0-9]{1,2})?$');
 //for UUID primary keys validation
 define('UUID_REGEXP_CORE', '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}');
 define('UUID_REGEXP', sprintf('^%s$', UUID_REGEXP_CORE));
