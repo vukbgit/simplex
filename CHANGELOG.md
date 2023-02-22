@@ -1,3 +1,7 @@
+## 2.2.60 (February 22, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 2.2.59 -> 2.2.60
+- subject crudl draft
+
 ## 2.2.59 (February 22, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 2.2.58 -> 2.2.59
 - backend dashboard installation
