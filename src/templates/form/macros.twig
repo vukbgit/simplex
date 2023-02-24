@@ -471,7 +471,7 @@ $(document).ready(function() {
         }
     {% endif %}
     {% if config.customMatchFunction %}
-        matcher: {{ config.customMatchFunction }}
+        matcher: {{ config.customMatchFunction }},
     {% endif %}
     {# select2 specific options #}
     {% for option,value in config.options %}
