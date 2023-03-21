@@ -1,3 +1,7 @@
+## 2.2.61 (March 21, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 2.2.60 -> 2.2.61
+- di-container update
+
 ## 2.2.60 (February 22, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 2.2.59 -> 2.2.60
 - subject crudl draft
