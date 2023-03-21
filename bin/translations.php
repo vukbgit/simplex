@@ -45,7 +45,6 @@ requireFromFiles(sprintf('%s/private/local/simplex', $absPathToRoot), 'constants
 ************/
 $DIContainerBuilder = new ContainerBuilder();
 $DIContainerBuilder->useAutowiring(false);
-$DIContainerBuilder->useAnnotations(false);
 $DIContainerBuilder->addDefinitions(require sprintf('%s/di-container.php', SHARE_CONFIG_DIR));
 $DIContainer = $DIContainerBuilder->build();
 
