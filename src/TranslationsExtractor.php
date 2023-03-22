@@ -5,6 +5,7 @@ namespace Simplex;
 
 use Simplex\Erp\ControllerAbstract;
 use function Simplex\loadLanguages;
+use jblond\TwigTrans\Translation;
 
 /*
 * Class to extract translations from templates
@@ -105,8 +106,11 @@ class TranslationsExtractor extends ControllerAbstract
         foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($pathToTemplatesFolder), \RecursiveIteratorIterator::LEAVES_ONLY) as $file) {
             // force compilation
             if ($file->isFile() && $file->getExtension() == 'twig') {
-                echo sprintf('%s/%s%s', $file->getPath(), $file->getFilename(), PHP_EOL);
-                $template = $this->template->loadTemplate(str_replace($pathToTemplatesFolder.'/', '', $file));
+              $absolutePathToTemplate = sprintf('%s/%s', $file->getPath(), $file->getFilename());
+              echo sprintf('%s%s', $absolutePathToTemplate, PHP_EOL);
+              $relativePathToTemplate = str_replace($pathToTemplatesFolder . '/', '', $absolutePathToTemplate);
+              $templateClass = $this->template->getTemplateClass($relativePathToTemplate);
+              $template = $this->template->loadTemplate($templateClass, $relativePathToTemplate);
             }
         }
         echo PHP_EOL;
@@ -210,7 +214,7 @@ EOT;
 find {$this->buildPathToTranslationsCache()} -type f \( -name '*.php' \) -print | xargs xgettext -c --default-domain={$domain} -p {$paths[$context]->poFolder} --from-code=UTF-8 --no-location -L PHP -d {$domain} --package-name={$package} -j - && msgattrib --set-obsolete --ignore-file={$pathToPotFile} -o {$paths[$context]->poFile} {$paths[$context]->poFile}
 EOT;
         //if local context cat the share po file and regenerate the mo file to incorporate any new share translation
-        if($context == 'local') {
+        if($context == 'local' && is_file($pathToSharePoFile)) {
             $commands .= <<<EOT
             && msgcat --use-first -o {$pathToLocalPoFile} {$pathToSharePoFile} {$pathToLocalPoFile} && msgfmt -o {$pathToLocalMoFile} {$pathToLocalPoFile}
 EOT;
