@@ -328,6 +328,7 @@ abstract class ControllerAbstract
         $response = $this->response->withHeader('Content-Type', $contentType);
         $response->getBody()
             ->write($content);
+        $this->response = $response;
     }
     
     /**
