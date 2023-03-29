@@ -198,7 +198,11 @@ class SpreadsheetReaderWriter
         $this->addHeadersRow($headersRow);
         //rows
         foreach ($rows as $row) {
+          if(is_array($row)) {
+            $this->addRowFromArray($row);
+          } elseif (is_object($row)) {
             $this->addRowFromObject($row);
+          }
         }
         //close
         $this->writer->close();
