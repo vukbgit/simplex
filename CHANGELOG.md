@@ -1,3 +1,7 @@
+## 2.2.65 (April 04, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 2.2.64 -> 2.2.65
+- pixie version restored
+
 ## 2.2.64 (April 04, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 2.2.63 -> 2.2.64
 - pixie dependency for PHP 8.2
