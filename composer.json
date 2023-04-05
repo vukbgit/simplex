@@ -24,7 +24,7 @@
         "twig/twig": ">=3.4",
         "twig/intl-extra": ">=3.4",
         "jblond/twig-trans": ">=1.1",
-        "usmanhalalit/pixie": "2.*@dev",
+        "vukbgit/pixie": ">=1.0",
         "nette/finder": ">=2.5",
         "aura/auth": ">=4.0",
         "slowprog/composer-copy-file": "~0.3",
