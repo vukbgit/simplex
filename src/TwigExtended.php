@@ -30,10 +30,14 @@ class TwigExtended extends Environment
         $this->addExtension(new Translation());
         $filter = new TwigFilter(
             'trans', 
-            function ($context, $string) {
+            /*function ($context, $string) {
                 return Translation::transGetText($string, $context);
-            }, 
-            ['needs_context' => true]
+            },*/
+            'gettext',
+            [
+              //'needs_context' => true,
+              'is_safe_callback' => 'twig_escape_filter_is_safe',
+            ]
         );
         $this->addFilter($filter);
         //Twig IntlExtension
