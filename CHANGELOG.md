@@ -1,3 +1,7 @@
+## 2.2.67 (April 06, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 2.2.66 -> 2.2.67
+- trans filter definition
+
 ## 2.2.66 (April 05, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 2.2.65 -> 2.2.66
 - switched pixie dependency
