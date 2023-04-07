@@ -120,11 +120,11 @@ $hamburger-layer-spacing       : 6px !default;
 //correct hamburger vertical alignment error (due to bottom spacing)
 #sidebar-hat {
     .hamburger {
-        margin-top:$hamburger-layer-spacing / 2;
+        margin-top: calc($hamburger-layer-spacing / 2);
     }
 }
 $hamburger-height: $hamburger-layer-height * 3 + $hamburger-layer-spacing * 3;
-$hamburger-padding-y: ($navBarHeight - $hamburger-height) / 2;
+$hamburger-padding-y: calc(($navBarHeight - $hamburger-height) / 2);
 $hamburger-layer-color         : #fff !default;
 $hamburger-types: (
   //3dx,
