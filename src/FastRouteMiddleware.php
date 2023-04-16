@@ -36,6 +36,11 @@ class FastRouteMiddleware implements MiddlewareInterface
     private $responseFactory;
 
     /**
+     * @var array
+     */
+    private $routesDefinitions;
+
+    /**
      * Set the Dispatcher instance and optionally the response factory to return the error responses.
      * @param string $environment: 'development': no cache used | any other value routes are cached
      * @param array $routes: array of routes definition
@@ -44,6 +49,7 @@ class FastRouteMiddleware implements MiddlewareInterface
      */
     public function __construct(string $environment, array $routes, string $tmpFolderPath = null, ResponseFactoryInterface $responseFactory = null)
     {
+        $this->routesDefinitions  = $routes;
         //until PHP 7.3 var_export uses stdClass::__setState() which causes problems
         if($environment == 'production' && version_compare(PHP_VERSION, '7.3.0') >= 0) {
             $fastRouteDispatcherClass = 'FastRoute\cachedDispatcher';
@@ -80,6 +86,8 @@ class FastRouteMiddleware implements MiddlewareInterface
     {
         //get current matching route (/if any)
         $route = $this->router->dispatch($request->getMethod(), rawurldecode($request->getUri()->getPath()));
+        //add routes definitions to parameters
+        $route[2]['routesDefinitions'] = $this->routesDefinitions;
         //handle errors
         if ($route[0] === Dispatcher::NOT_FOUND) {
             return $this->responseFactory->createResponse(404);

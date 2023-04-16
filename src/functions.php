@@ -3,6 +3,7 @@
 namespace Simplex;
 
 use \Nette\Utils\Finder;
+use Cocur\Slugify\Slugify;
 
 if (!function_exists('Simplex\slugToPSR1Name')) {
     /**
@@ -162,4 +163,92 @@ if (!function_exists('Simplex\loadLanguages')) {
         }
         return json_decode(file_get_contents($languagesConfigFilePath));
     }
+}
+
+if (!function_exists('Simplex\buildLocaleRoute')) {
+  /**
+  * Builds a route definition for router or an actual route locale aware
+  * @param string $target: definition | route
+  * @param object $language: as returned from a loadLanguages call
+  * @param array $tokensDefinitions
+  * @return string
+  */
+  function buildLocaleRoute(string $target, object $language, array $tokensDefinitions = []) : string
+  {
+    $slugifier = new Slugify();
+    $languageCode = $language->{'ISO-639-1'};
+    $languageIETF = sprintf('%s_%s', $languageCode, $language->{'ISO-3166-1-2'});
+    //putenv(sprintf('LC_ALL=%s', $languageIETF));
+    setlocale(LC_ALL, sprintf('%s.utf8', $languageIETF));
+    $domain = 'simplex';
+    // Specify the location of the translation tables
+    bindtextdomain($domain, sprintf('%s/locales', PRIVATE_LOCAL_DIR));
+    bind_textdomain_codeset($domain, 'UTF-8');
+    textdomain($domain);
+    $routeTokens = [];
+    foreach($tokensDefinitions as $tokenDefinition) {
+      //language code
+      if($tokenDefinition == '__lang') {
+        switch ($target) {
+          case 'definition':
+            $routeTokens[] = sprintf('{lang:%s}', $languageCode);
+          break;
+          case 'route':
+            $routeTokens[] = $languageCode;
+          break;
+        }
+      } elseif(is_object($tokenDefinition)) {
+        switch ($tokenDefinition->source) {
+          case 'gettext':
+            $translatedLabel = gettext($tokenDefinition->key);
+            $sluggedLabel = $slugifier->slugify($translatedLabel);
+          break;
+        }
+        switch ($target) {
+          case 'definition':
+            $routeTokens[] = sprintf('{%s:%s}', $tokenDefinition->key, $sluggedLabel);
+          break;
+          case 'route':
+            $routeTokens[] = $sluggedLabel;
+          break;
+        }
+      }
+    }
+    return sprintf(
+      '/%s',
+      implode('/', $routeTokens)
+    );
+  }
+}
+  /**
+  * Builds routes definition for router
+  * @param object $languages as returned from a loadLanguages call
+  * @param array $routesDefinitions
+  * @return string
+  */
+if (!function_exists('Simplex\buildLocaleRoutes')) {
+  function buildLocaleRoutes(object $languages, array $routesDefinitions) : array
+  {
+    $routes = [];
+    foreach($routesDefinitions as $routeDefinition) {
+      //locale route
+      if(isset($routeDefinition['locale'])) {
+        if(!isset($routeDefinition['locale']->key)) {
+          throw new \Exception(sprintf('Missing key for locale route definition in %s', __FILE__));      
+        }
+        if(!isset($routeDefinition['locale']->tokens)) {
+          throw new \Exception(sprintf('Missing tokens for locale route definition in %s', __FILE__));      
+        }
+        //loop languages
+        foreach($languages as $language) {
+          $routeDefinition['key'] = sprintf('%s_%s', $routeDefinition['locale']->key, $language->{'ISO-639-1'});
+          $routeDefinition['route'] = buildLocaleRoute('definition', $language, $routeDefinition['locale']->tokens);
+          $routes[] = $routeDefinition;
+        }
+      } else {
+        $routes[] = $routeDefinition;
+      }
+    }
+    return $routes;
+  }
 }

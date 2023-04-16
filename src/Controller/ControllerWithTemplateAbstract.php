@@ -15,6 +15,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use function Simplex\slugToPSR1Name;
 use function Simplex\PSR1NameToSlug;
 use function Simplex\getInstancePath;
+use function Simplex\buildLocaleRoute;
 
 /*
 * In this context controller means a class that:
@@ -86,6 +87,8 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
             'alerts' => (object) [],
             'table' => (object) []
         ];
+        //reset translations sources
+        //$_SESSION[TRANSLATIONS_SOURCE_KEY] = [];
     }
 
     /**
@@ -159,6 +162,41 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
             '../',
             count(explode('/', $_SERVER['REQUEST_URI'])) - 1
         );
+    }
+    
+    /**
+    * Gets a route definition by key and language
+    * @param string $routeKey
+    * @param string $languageCode
+    */
+    protected function getRouteDefinition(string $routeKey, string $languageCode)
+    {
+      $completeKey = sprintf('%s_%s', $routeKey, $languageCode);
+      foreach((array) $this->routeParameters->routesDefinitions as $routeDefinition) {
+        if(isset($routeDefinition['key']) && $routeDefinition['key'] == $completeKey) {
+          return $routeDefinition;
+        }
+      }
+    }
+    
+    /**
+    * Gets a label by category and (nested) keys
+    * first parameter is category, others are nested keys
+    * @param string $label translation in current language
+    */
+    protected function getLabel()
+    {
+      $arguments = func_get_args();
+      if(count($arguments) == 1 && is_array($arguments)) {
+          $arguments = $arguments[0];
+      }
+      $category = array_shift($arguments);
+      $result = $this->labels->$category;
+      foreach($arguments as $key) {
+          //$result = isset($result->$key) ? (is_array($result->$key) ? (object) $result->$key : $result->$key) : sprintf('<span class="alert alert-danger"><b>LABEL NOT FOUND</b>: %s.%s</span>', $category, implode('.', $arguments));
+          $result = isset($result->$key) ? (is_array($result->$key) ? (object) $result->$key : $result->$key) : null;
+      }
+      return $result;
     }
 
     /**
@@ -406,6 +444,29 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
             return $field[$this->language->{'ISO-639-1'}] ?? null;
         });
         
+        /* Build a route locale aware from an array o tokens
+        * @param array $routeKey: as set into route definition property 'locale'->key
+        * @param string $languageCode
+        * @return string the route
+        */
+        $this->addTemplateFunction('buildLocaleRoute', function(string $routeKey, string $languageCode = null){
+          $routeDefinition = $this->getRouteDefinition($routeKey, $languageCode);
+          $tokensDefinitions = $routeDefinition['locale']->tokens;
+          //set language
+          if(!$languageCode) {
+            $languageCode = $this->language->{'ISO-639-1'};
+          }
+          $language = $this->languages->$languageCode;
+          //compare to page selected language
+          $changeLanguage = $languageCode != $this->language->{'ISO-639-1'};
+          $route = buildLocaleRoute('route', $language, $tokensDefinitions);
+          if($changeLanguage) {
+            $languageIETF = sprintf('%s_%s', $this->language->{'ISO-639-1'}, $this->language->{'ISO-3166-1-2'});
+            setlocale(LC_ALL, sprintf('%s.utf8', $languageIETF));
+          }
+          return $route;
+        });
+        
         /*******
         * FORM *
         *******/
@@ -460,17 +521,7 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
                 return $this->labels;
             }
         );
-        //gets a label by category and key
-        /*$this->addTemplateFunction(
-            'getLabel',
-            function($labels, $subject, $type, $key = null){
-                $label = $labels->{$subject}[$type] ?? '';
-                if($key) {
-                    $label = $label[$key] ?? '';
-                }
-                return $label;
-            }
-        );*/
+        //gets a label by categories and key path
         $this->addTemplateFunction(
             'getLabel',
             /**
@@ -478,16 +529,7 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
             **/
             function() {
                 $arguments = func_get_args();
-                if(count($arguments) == 1 && is_array($arguments)) {
-                    $arguments = $arguments[0];
-                }
-                $category = array_shift($arguments);
-                $result = $this->labels->$category;
-                foreach($arguments as $key) {
-                    //$result = isset($result->$key) ? (is_array($result->$key) ? (object) $result->$key : $result->$key) : sprintf('<span class="alert alert-danger"><b>LABEL NOT FOUND</b>: %s.%s</span>', $category, implode('.', $arguments));
-                    $result = isset($result->$key) ? (is_array($result->$key) ? (object) $result->$key : $result->$key) : null;
-                }
-                return $result;
+                return $this->getLabel(...$arguments);
             }
         );
         /********
