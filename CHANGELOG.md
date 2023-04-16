@@ -1,3 +1,7 @@
+## 2.2.68 (April 16, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 2.2.67 -> 2.2.68
+- locale aware routes
+
 ## 2.2.67 (April 06, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 2.2.66 -> 2.2.67
 - trans filter definition
