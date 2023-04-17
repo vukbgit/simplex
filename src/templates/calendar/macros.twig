@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
      locale: '{{ attribute(context.language, 'ISO-639-1') }}',
  {% for option, value in options %}
   {# events options need to be displayed without quotes #}
-  {% if option in ['eventClick', 'eventMouseEnter', 'eventMouseLeave', 'eventSourceSuccess', 'viewWillUnmount', 'viewDidMount', 'viewClassNames'] %}
+  {% if option in ['eventClick', 'eventMouseEnter', 'eventMouseLeave', 'eventSourceSuccess', 'eventClassNames', 'viewWillUnmount', 'viewDidMount', 'viewClassNames'] %}
    {{ option }}: {{ value }},
   {% else %}   
    {{ option }}: {{ value|varToJs }},
