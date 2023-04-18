@@ -1,3 +1,7 @@
+## 2.2.70 (April 18, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 2.2.69 -> 2.2.70
+- translated routes
+
 ## 2.2.69 (April 18, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 2.2.68 -> 2.2.69
 - translated routes
