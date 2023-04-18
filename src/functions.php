@@ -198,15 +198,21 @@ if (!function_exists('Simplex\buildLocaleRoute')) {
           break;
         }
       } elseif(is_object($tokenDefinition)) {
+        //if no values property for alternatives, use the key
+        $keysToBeTranslated = $tokenDefinition->values ?? [$tokenDefinition->key];
         switch ($tokenDefinition->source) {
           case 'gettext':
-            $translatedLabel = gettext($tokenDefinition->key);
-            $sluggedLabel = $slugifier->slugify($translatedLabel);
+            $translatedSlugs = [];
+            foreach($keysToBeTranslated as $keyToBeTranslated) {
+              $translatedLabel = gettext($keyToBeTranslated);
+              $sluggedLabel = $slugifier->slugify($translatedLabel);
+              $translatedSlugs[] = $sluggedLabel;
+            }
           break;
         }
         switch ($target) {
           case 'definition':
-            $routeTokens[] = sprintf('{%s:%s}', $tokenDefinition->key, $sluggedLabel);
+            $routeTokens[] = sprintf('{%s:%s}', $tokenDefinition->key, implode('|', $translatedSlugs));
           break;
           case 'route':
             $routeTokens[] = $sluggedLabel;
@@ -229,6 +235,7 @@ if (!function_exists('Simplex\buildLocaleRoute')) {
 if (!function_exists('Simplex\buildLocaleRoutes')) {
   function buildLocaleRoutes(object $languages, array $routesDefinitions) : array
   {
+    x($routesDefinitions);
     $routes = [];
     foreach($routesDefinitions as $routeDefinition) {
       //locale route
@@ -249,6 +256,7 @@ if (!function_exists('Simplex\buildLocaleRoutes')) {
         $routes[] = $routeDefinition;
       }
     }
+    xx($routes);
     return $routes;
   }
 }

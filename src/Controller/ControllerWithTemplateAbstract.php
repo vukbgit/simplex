@@ -450,12 +450,12 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         * @return string the route
         */
         $this->addTemplateFunction('buildLocaleRoute', function(string $routeKey, string $languageCode = null){
-          $routeDefinition = $this->getRouteDefinition($routeKey, $languageCode);
-          $tokensDefinitions = $routeDefinition['locale']->tokens;
           //set language
           if(!$languageCode) {
             $languageCode = $this->language->{'ISO-639-1'};
           }
+          $routeDefinition = $this->getRouteDefinition($routeKey, $languageCode);
+          $tokensDefinitions = $routeDefinition['locale']->tokens;
           $language = $this->languages->$languageCode;
           //compare to page selected language
           $changeLanguage = $languageCode != $this->language->{'ISO-639-1'};
