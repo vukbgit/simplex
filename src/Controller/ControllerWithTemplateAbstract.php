@@ -200,6 +200,32 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
     }
 
     /**
+    * Gets a label key by category, (nested) keys and slugged translation
+    * first parameter is category, last is slugged translation, others are nested keys
+    * @param string $label translation in current language
+    */
+    protected function getLabelKeyBySlug()
+    {
+      $arguments = func_get_args();
+      if(count($arguments) == 1 && is_array($arguments)) {
+          $arguments = $arguments[0];
+      }
+      $category = array_shift($arguments);
+      $slug = array_pop($arguments);
+      $result = $this->labels->$category;
+      $slugifier = $this->DIContainer->get('slugifier');
+      foreach($arguments as $key) {
+          //$result = isset($result->$key) ? (is_array($result->$key) ? (object) $result->$key : $result->$key) : sprintf('<span class="alert alert-danger"><b>LABEL NOT FOUND</b>: %s.%s</span>', $category, implode('.', $arguments));
+          $result = isset($result->$key) ? (is_array($result->$key) ? (object) $result->$key : $result->$key) : null;
+      }
+      foreach((array) $result as $translationKey => $translation) {
+        if($slugifier->slugify($translation) == $slug) {
+          return $translationKey;
+        }
+      }
+    }
+
+    /**
     * Builds common template helpers
     * NOTE: do not change visibility
     */
@@ -530,6 +556,31 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
             **/
             function() {
                 $arguments = func_get_args();
+                return $this->getLabel(...$arguments);
+            }
+        );
+        //Gets a label key by category, (nested) keys and slugged translation
+        $this->addTemplateFunction(
+            'getLabelKeyBySlug',
+            /** 
+            * first parameter is category, last is slugged translation, others are nested keys
+            **/
+            function() {
+                $arguments = func_get_args();
+                return $this->getLabelKeyBySlug(...$arguments);
+            }
+        );
+        //Gets a label by category, (nested) keys and slugged translation
+        $this->addTemplateFunction(
+            'getLabelBySlug',
+            /** 
+            * first parameter is category, last is slugged translation, others are nested keys
+            **/
+            function() {
+                $arguments = func_get_args();
+                $labelKey = $this->getLabelKeyBySlug(...$arguments);
+                array_pop($arguments);
+                array_push($arguments, $labelKey);
                 return $this->getLabel(...$arguments);
             }
         );
