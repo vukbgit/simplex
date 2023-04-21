@@ -554,8 +554,17 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
             /**
             * first parameter is category, others are nested keys
             **/
-            function() {
-                $arguments = func_get_args();
+            function(...$arguments) {
+                return $this->getLabel(...$arguments);
+            }
+        );
+        //gets a label by an array containing categories and key path
+        $this->addTemplateFunction(
+            'getLabelArray',
+            /**
+            * first parameter is category, others are nested keys
+            **/
+            function($arguments) {
                 return $this->getLabel(...$arguments);
             }
         );
@@ -565,8 +574,7 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
             /** 
             * first parameter is category, last is slugged translation, others are nested keys
             **/
-            function() {
-                $arguments = func_get_args();
+            function(...$arguments) {
                 return $this->getLabelKeyBySlug(...$arguments);
             }
         );
@@ -576,7 +584,7 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
             /** 
             * first parameter is category, last is slugged translation, others are nested keys
             **/
-            function() {
+            function(...$arguments) {
                 $arguments = func_get_args();
                 $labelKey = $this->getLabelKeyBySlug(...$arguments);
                 array_pop($arguments);
