@@ -1,3 +1,7 @@
+## 2.2.72 (April 21, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 2.2.71 -> 2.2.72
+- get label by array path template function
+
 ## 2.2.71 (April 19, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 2.2.70 -> 2.2.71
 - label methods
