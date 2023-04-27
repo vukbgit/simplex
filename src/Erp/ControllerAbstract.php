@@ -1006,7 +1006,7 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
             $error = $this->model->handleException($exception);
             //xx($error);
             $this->setSubjectAlert('danger', $error);
-            $redirectRoute = $this->buildRouteToActionFromRoot(sprintf('update-form/%s', $fieldsData->primaryKeyValue));
+            $redirectRoute = $_SERVER['HTTP_REFERER'] ?? $this->buildRouteToActionFromRoot(sprintf('update-form/%s', $fieldsData->primaryKeyValue));
         }
         //redirect
         $this->redirect($redirectRoute, (object) $fieldsData->saveFieldsValues);
