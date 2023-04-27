@@ -261,7 +261,8 @@ abstract class ModelAbstract
             break;
             default:
                 $code = null;
-                $rawMessage = sprintf('error code: %s; error message: %s', $errorCode, $errorMessage);
+                $trace = $exception->getTrace();
+                $rawMessage = sprintf('error code: %s; error message: %s; file: %s:%d', $errorCode, $errorMessage, $trace[0]['file'], $trace[0]['line']);
             break;
         }
         return (object) [
