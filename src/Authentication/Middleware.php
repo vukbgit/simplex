@@ -536,17 +536,17 @@ class Middleware implements MiddlewareInterface
             return;
         }
         //get users roles
-        $userRoles = require $authenticationParameters->usersRolesPath;
+        $usersRoles = require $authenticationParameters->usersRolesPath;
         //check it's an object
-        if(!is_object($userRoles)) {
+        if(!is_object($usersRoles)) {
             throw new \Exception(sprintf('File %s must return an object', $authenticationParameters->usersRolesPath));
         }
         //check user role
-        if(!isset($userRoles->{$userData->username})) {
+        if(!isset($usersRoles->{$userData->username})) {
             throw new \Exception(sprintf('A role must be assigned to user \'%s\' into file %s', $userData->username, $authenticationParameters->usersRolesPath));
         }
         //set user role
-        $userData->role = $userRoles->{$userData->username};
+        $userData->role = $usersRoles->{$userData->username};
         $this->setUserData((array) $userData);
     }
     
@@ -566,8 +566,12 @@ class Middleware implements MiddlewareInterface
         }
         //set user's role permissions
         $userPermissions = [];
+        $userRoles = $userData->role;
+        if(!is_array($userRoles)) {
+          $userRoles = [$userRoles];
+        }
         foreach ((array) $permissionsRoles as $permission => $roles) {
-            if(in_array($userData->role, $roles)) {
+            if(!empty(array_intersect($userRoles, $roles))) {
                 $userPermissions[] = $permission;
             }
         }
