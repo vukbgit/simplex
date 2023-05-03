@@ -1,3 +1,7 @@
+## 2.2.74 (May 03, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 2.2.73 -> 2.2.74
+- multiple user roles
+
 ## 2.2.73 (May 03, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 2.2.72 -> 2.2.73
 - custom authentication sign in return codes
