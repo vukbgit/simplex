@@ -413,7 +413,7 @@ class Middleware implements MiddlewareInterface
             $loginService->forceLogin($auth, $userData['username'], $userData);
             $returnCode = 4;
         } else {
-            $returnCode = 5;
+            $returnCode = $userData['returnCode'] ?? 5;
         }
         return $returnCode;
     }
