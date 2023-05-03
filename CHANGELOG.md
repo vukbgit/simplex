@@ -1,3 +1,7 @@
+## 2.2.73 (May 03, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 2.2.72 -> 2.2.73
+- custom authentication sign in return codes
+
 ## 2.2.72 (April 21, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 2.2.71 -> 2.2.72
 - get label by array path template function
