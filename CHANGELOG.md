@@ -1,3 +1,7 @@
+## 2.2.75 (May 06, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 2.2.74 -> 2.2.75
+- upgrade to laminas/laminas-diactoros 3.0
+
 ## 2.2.74 (May 03, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 2.2.73 -> 2.2.74
 - multiple user roles
