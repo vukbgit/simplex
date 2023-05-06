@@ -140,7 +140,7 @@ class Middleware implements MiddlewareInterface
         //redirect
         if($authenticationResult->redirectTo) {
             $response = $response->withHeader('Location', $authenticationResult->redirectTo);
-            $response = $response->withStatus('302');
+            $response = $response->withStatus(302);
         }
         //cookies
         if(!$authenticationResult->authenticated) {
