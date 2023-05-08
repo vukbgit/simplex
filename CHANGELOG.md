@@ -1,3 +1,7 @@
+## 2.2.76 (May 08, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 2.2.75 -> 2.2.76
+- build route from db record
+
 ## 2.2.75 (May 06, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 2.2.74 -> 2.2.75
 - upgrade to laminas/laminas-diactoros 3.0
