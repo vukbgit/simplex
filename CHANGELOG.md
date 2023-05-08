@@ -1,3 +1,7 @@
+## 2.2.78 (May 08, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 2.2.77 -> 2.2.78
+- localized routes
+
 ## 2.2.77 (May 08, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 2.2.76 -> 2.2.77
 - build route from db record
