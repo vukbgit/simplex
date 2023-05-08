@@ -261,17 +261,18 @@ if (!function_exists('Simplex\buildLocaleRoutes')) {
     $routes = [];
     foreach($routesDefinitions as $routeDefinition) {
       //locale route
-      if(isset($routeDefinition['locale'])) {
-        if(!isset($routeDefinition['locale']->key)) {
+      if(isset($routeDefinition['handler'][1]['locale'])) {
+        $locale = $routeDefinition['handler'][1]['locale'];
+        if(!isset($locale->key)) {
           throw new \Exception(sprintf('Missing key for locale route definition in %s', __FILE__));      
         }
-        if(!isset($routeDefinition['locale']->tokens)) {
+        if(!isset($locale->tokens)) {
           throw new \Exception(sprintf('Missing tokens for locale route definition in %s', __FILE__));      
         }
         //loop languages
         foreach($languages as $language) {
-          $routeDefinition['key'] = sprintf('%s_%s', $routeDefinition['locale']->key, $language->{'ISO-639-1'});
-          $routeDefinition['route'] = buildLocaleRoute('definition', $language, $routeDefinition['locale']);
+          $routeDefinition['key'] = sprintf('%s_%s', $locale->key, $language->{'ISO-639-1'});
+          $routeDefinition['route'] = buildLocaleRoute('definition', $language, $locale);
           $routes[] = $routeDefinition;
         }
       } else {
