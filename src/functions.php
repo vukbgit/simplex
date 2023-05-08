@@ -174,7 +174,7 @@ if (!function_exists('Simplex\buildLocaleRoute')) {
   * @param array $multipleTokensKeys: in case some token has multiple possible values the key to be used, in the order they appear inside route definition
   * @return string
   */
-  function buildLocaleRoute(string $target, object $language, object $routeDefinitionLocale, array $multipleTokensKeys = []) : string
+  function buildLocaleRoute(string $target, object $language, object $routeDefinitionLocale, array $multipleTokensKeys = []) :string
   {
     $routeKey = $routeDefinitionLocale->key;
     $tokensDefinitions = $routeDefinitionLocale->tokens;
@@ -219,10 +219,13 @@ if (!function_exists('Simplex\buildLocaleRoute')) {
             }
           break;
           case 'db':
-            //value is an array of records, each contains a 'slug' property array, indexed by language code
+            /*value is an array of records, each contains properties:
+            * mixed 'id' unique record identifier (i.e. int table autoincrement field)
+            * array 'slug' indexed by language code
+            */
             foreach($tokenDefinition->values as $record) {
               $slug = $record->slug[$languageCode];
-              $translatedSlugs[sprintf('%s-%s', $routeKey, $slug)] = $slug;
+              $translatedSlugs[sprintf('%s-%s', $routeKey, $record->id)] = $slug;
             }
           break;
         }
