@@ -482,11 +482,10 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
             $languageCode = $this->language->{'ISO-639-1'};
           }
           $routeDefinition = $this->getRouteDefinition($routeKey, $languageCode);
-          $tokensDefinitions = $routeDefinition['locale']->tokens;
           $language = $this->languages->$languageCode;
           //compare to page selected language
           $changeLanguage = $languageCode != $this->language->{'ISO-639-1'};
-          $route = buildLocaleRoute('route', $language, $tokensDefinitions, $multipleTokensKeys);
+          $route = buildLocaleRoute('route', $language, $routeDefinition['locale'], $multipleTokensKeys);
           if($changeLanguage) {
             $languageIETF = sprintf('%s_%s', $this->language->{'ISO-639-1'}, $this->language->{'ISO-3166-1-2'});
             setlocale(LC_ALL, sprintf('%s.utf8', $languageIETF));

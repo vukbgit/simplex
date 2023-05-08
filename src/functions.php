@@ -170,12 +170,14 @@ if (!function_exists('Simplex\buildLocaleRoute')) {
   * Builds a route definition for router or an actual route locale aware
   * @param string $target: definition | route
   * @param object $language: as returned from a loadLanguages call
-  * @param array $tokensDefinitions
+  * @param object $routeDefinitionLocale
   * @param array $multipleTokensKeys: in case some token has multiple possible values the key to be used, in the order they appear inside route definition
   * @return string
   */
-  function buildLocaleRoute(string $target, object $language, array $tokensDefinitions = [], array $multipleTokensKeys = []) : string
+  function buildLocaleRoute(string $target, object $language, object $routeDefinitionLocale, array $multipleTokensKeys = []) : string
   {
+    $routeKey = $routeDefinitionLocale->key;
+    $tokensDefinitions = $routeDefinitionLocale->tokens;
     $slugifier = new Slugify();
     $languageCode = $language->{'ISO-639-1'};
     $languageIETF = sprintf('%s_%s', $languageCode, $language->{'ISO-3166-1-2'});
@@ -207,13 +209,20 @@ if (!function_exists('Simplex\buildLocaleRoute')) {
         } else {
           $keysToBeTranslated = [$tokenDefinition->key];
         }
+        $translatedSlugs = [];
         switch ($tokenDefinition->source) {
           case 'gettext':
-            $translatedSlugs = [];
             foreach($keysToBeTranslated as $keyToBeTranslated) {
               $translatedLabel = gettext($keyToBeTranslated);
               $sluggedLabel = $slugifier->slugify($translatedLabel);
               $translatedSlugs[$keyToBeTranslated] = $sluggedLabel;
+            }
+          break;
+          case 'db':
+            //value is an array of records, each contains a 'slug' property array, indexed by language code
+            foreach($tokenDefinition->values as $record) {
+              $slug = $record->slug[$languageCode];
+              $translatedSlugs[sprintf('%s-%s', $routeKey, $slug)] = $slug;
             }
           break;
         }
@@ -259,7 +268,7 @@ if (!function_exists('Simplex\buildLocaleRoutes')) {
         //loop languages
         foreach($languages as $language) {
           $routeDefinition['key'] = sprintf('%s_%s', $routeDefinition['locale']->key, $language->{'ISO-639-1'});
-          $routeDefinition['route'] = buildLocaleRoute('definition', $language, $routeDefinition['locale']->tokens);
+          $routeDefinition['route'] = buildLocaleRoute('definition', $language, $routeDefinition['locale']);
           $routes[] = $routeDefinition;
         }
       } else {
