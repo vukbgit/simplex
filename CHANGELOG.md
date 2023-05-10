@@ -1,3 +1,7 @@
+## 2.2.79 (May 10, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 2.2.78 -> 2.2.79
+- fix: displayInputCheckbox macro name
+
 ## 2.2.78 (May 08, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 2.2.77 -> 2.2.78
 - localized routes
