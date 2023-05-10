@@ -180,6 +180,31 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
     }
     
     /**
+    * Builds a localized route
+    * @param string $routeKey
+    * @param array $multipleTokensKeys: in case some token has multiple possible values the key to be used, in the order they appear inside route definition
+    * @param string $languageCode
+    * @return string the route
+    */
+    protected function buildLocaleRoute(string $routeKey, array $multipleTokensKeys = [], string $languageCode = null): string
+    {
+      //set language
+      if(!$languageCode) {
+        $languageCode = $this->language->{'ISO-639-1'};
+      }
+      $routeDefinition = $this->getRouteDefinition($routeKey, $languageCode);
+      $language = $this->languages->$languageCode;
+      //compare to page selected language
+      $changeLanguage = $languageCode != $this->language->{'ISO-639-1'};
+      $route = buildLocaleRoute('route', $language, $routeDefinition['handler'][1]['locale'], $multipleTokensKeys);
+      if($changeLanguage) {
+        $languageIETF = sprintf('%s_%s', $this->language->{'ISO-639-1'}, $this->language->{'ISO-3166-1-2'});
+        setlocale(LC_ALL, sprintf('%s.utf8', $languageIETF));
+      }
+      return $route;
+    }
+    
+    /**
     * Gets a label by category and (nested) keys
     * first parameter is category, others are nested keys
     * @param string $label translation in current language
@@ -477,20 +502,7 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         * @return string the route
         */
         $this->addTemplateFunction('buildLocaleRoute', function(string $routeKey, array $multipleTokensKeys = [], string $languageCode = null){
-          //set language
-          if(!$languageCode) {
-            $languageCode = $this->language->{'ISO-639-1'};
-          }
-          $routeDefinition = $this->getRouteDefinition($routeKey, $languageCode);
-          $language = $this->languages->$languageCode;
-          //compare to page selected language
-          $changeLanguage = $languageCode != $this->language->{'ISO-639-1'};
-          $route = buildLocaleRoute('route', $language, $routeDefinition['handler'][1]['locale'], $multipleTokensKeys);
-          if($changeLanguage) {
-            $languageIETF = sprintf('%s_%s', $this->language->{'ISO-639-1'}, $this->language->{'ISO-3166-1-2'});
-            setlocale(LC_ALL, sprintf('%s.utf8', $languageIETF));
-          }
-          return $route;
+          return $this->buildLocaleRoute($routeKey, $multipleTokensKeys, $languageCode);
         });
         
         /*******
