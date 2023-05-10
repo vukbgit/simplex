@@ -1,3 +1,7 @@
+## 2.2.80 (May 10, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 2.2.79 -> 2.2.80
+- buildLocaleRoute method
+
 ## 2.2.79 (May 10, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 2.2.78 -> 2.2.79
 - fix: displayInputCheckbox macro name
