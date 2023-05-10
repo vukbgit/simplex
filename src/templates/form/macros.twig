@@ -501,7 +501,7 @@ $(document).ready(function() {
     bool inline
 @param array items: array of hashes each with value and label property
 #}
-{% macro displayInputRadio(config, items) %}
+{% macro displayInputCheckbox(config, items) %}
     {% import _self as selfMacros %}
     {{ selfMacros.displayInputRadioCheckbox('checkbox', config, items) }}
 {% endmacro %}
