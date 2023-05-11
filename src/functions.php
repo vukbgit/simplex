@@ -201,6 +201,9 @@ if (!function_exists('Simplex\buildLocaleRoute')) {
             $routeTokens[] = $languageCode;
           break;
         }
+      } elseif(is_string($tokenDefinition)) {
+      //fixed value
+        $routeTokens[] = $tokenDefinition;
       } elseif(is_object($tokenDefinition)) {
         //if no values property for alternatives, use the key
         if(isset($tokenDefinition->values)) {
