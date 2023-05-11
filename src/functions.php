@@ -189,6 +189,7 @@ if (!function_exists('Simplex\buildLocaleRoute')) {
     bind_textdomain_codeset($domain, 'UTF-8');
     textdomain($domain);
     $routeTokens = [];
+    $tokenIndex = 0;
     $multipleTokensIndex = -1;
     foreach($tokensDefinitions as $tokenDefinition) {
       //language code
@@ -203,7 +204,18 @@ if (!function_exists('Simplex\buildLocaleRoute')) {
         }
       } elseif(is_string($tokenDefinition)) {
       //fixed value
-        $routeTokens[] = $tokenDefinition;
+        switch ($target) {
+          case 'definition':
+            $routeTokens[] = $tokenDefinition;
+          break;
+          case 'route':
+            if(empty($multipleTokensKeys)) {
+              $routeTokens[] = $tokenDefinition;
+            } else {
+              $routeTokens[] = $multipleTokensKeys[$tokenIndex][$languageCode];
+            }
+          break;
+        }
       } elseif(is_object($tokenDefinition)) {
         //if no values property for alternatives, use the key
         if(isset($tokenDefinition->values)) {
@@ -245,6 +257,7 @@ if (!function_exists('Simplex\buildLocaleRoute')) {
           break;
         }
       }
+      $tokenIndex++;
     }
     return sprintf(
       '/%s',
