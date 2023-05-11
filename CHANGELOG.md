@@ -1,3 +1,7 @@
+## 2.2.82 (May 11, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 2.2.81 -> 2.2.82
+- localized routes
+
 ## 2.2.81 (May 11, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 2.2.80 -> 2.2.81
 - feat: fixed route parameters in definition
