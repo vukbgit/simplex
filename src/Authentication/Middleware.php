@@ -65,6 +65,18 @@ class Middleware implements MiddlewareInterface
     */
     private $signInMethods = ['htpasswd', 'db', 'custom'];
     
+    /*
+    * @var string
+    * Persistent logins table
+    */
+    private $persistentLoginsTableName = 'persistent_logins';
+    
+    /*
+    * @var string
+    * Persistent logins key length
+    */
+    private $persistentLoginsKeyBinLength = 12;
+    
     /**
     * Constructor
     * @param ContainerInterface $DIContainer
@@ -75,10 +87,15 @@ class Middleware implements MiddlewareInterface
         VanillaCookieExtended $cookie
     )
     {
-        session_start([
-            'cookie_secure' => SESSION_COOKIE_SECURE ?? true,
-            'cookie_path' => SESSION_COOKIE_PATH ? sprintf('/%s/', SESSION_COOKIE_PATH) : '/'
-        ]);
+      session_set_cookie_params([
+        //'lifetime' => $cookie_timeout,
+        'path' => SESSION_COOKIE_PATH ? sprintf('/%s/', SESSION_COOKIE_PATH) : '/',
+        //'domain' => $cookie_domain,
+        'secure' => SESSION_COOKIE_SECURE ?? true,
+        'httponly' => true,
+        'samesite' => 'None'
+      ]);
+        session_start();
         $this->DIContainer = $DIContainer;
         $this->cookie = $cookie;
     }
@@ -270,9 +287,7 @@ class Middleware implements MiddlewareInterface
                 $this->setUserRole($authenticationParameters);
                 //load role permissions
                 $this->loadPermissionsRoles($authenticationParameters);
-                //set authentication status
                 //redirect
-                //$location = $this->cookie->getAreaCookie($this->area, 'signInRequestedUrl') ?? $this->getUserData()->redirectTo ?? $authenticationParameters->urls->successDefault;
                 $redirectToAfterLogin = $this->cookie->getAreaCookie($this->area, 'redirectToAfterLogin');
                 if($redirectToAfterLogin) {
                     $location = $redirectToAfterLogin;
@@ -282,7 +297,12 @@ class Middleware implements MiddlewareInterface
                 } else {
                     $location = $authenticationParameters->urls->successDefault;
                 }
+                //set authentication status
                 $this->setAuthenticationStatus(true, 4, $location);
+                //handle persistent login
+                if(isset($authenticationParameters->persistentLogin)) {
+                  $this->setPersistentLogin();
+                }
             break;
             //failure
             default:
@@ -429,26 +449,92 @@ class Middleware implements MiddlewareInterface
      */
     private function verify(object $authenticationParameters)
     {
-        $returnCode = 0;
-        //check urls
-        $mandatoryUrls = ['signInForm', 'signOut'];
-        foreach ($mandatoryUrls as $parameter) {
-            if(!isset($authenticationParameters->urls->$parameter) || !$authenticationParameters->urls->$parameter) {
-                throw new \Exception(sprintf('Current route definition MUST contain a \'handler\'[1][\'authentication\']->urls->%s parameter', $parameter));
-            }
+      $returnCode = 0;
+      $isSignInFormRoute = $this->request->getAttributes()['parameters']->action == 'sign-in-form';
+      //check urls
+      $mandatoryUrls = ['signInForm', 'signOut'];
+      foreach ($mandatoryUrls as $parameter) {
+        if(!isset($authenticationParameters->urls->$parameter) || !$authenticationParameters->urls->$parameter) {
+          throw new \Exception(sprintf('Current route definition MUST contain a \'handler\'[1][\'authentication\']->urls->%s parameter', $parameter));
         }
-        //verify
-        if($this->isAuthenticated()) {
-            //store userdata into request
-            $auth = $this->authFactory->newInstance();
-            $this->setUserData();
-            $this->setAuthenticationStatus(true, 4);
+      }
+      //verify
+      if($this->isAuthenticated()) {
+        //store userdata into request
+        $auth = $this->authFactory->newInstance();
+        $this->setUserData();
+        //verify from sign-in form
+        if($isSignInFormRoute) {
+          if(!isset($authenticationParameters->urls->successDefault)) {
+            throw new \Exception('Route definition for sign-in-form must include "successDefault" url');
+          } else {
+            $this->setAuthenticationStatus(true, 4, $authenticationParameters->urls->successDefault);
+          }
         } else {
-            //status
-            $this->setAuthenticationStatus(false, $returnCode, $authenticationParameters->urls->signInForm);
-            //store current route for redirect
-            $this->cookie->setAreaCookie($this->area, 'redirectToAfterLogin', $this->request->getUri()->getPath());
+        //verify from other route, do no redirect
+          $this->setAuthenticationStatus(true, 4);
         }
+      } else {
+        //check persistent login
+        $validPersistentLogin = false;
+        if(isset($authenticationParameters->persistentLogin)) {
+          $persistentLoginKey = $this->cookie->getAreaCookie($this->area, 'plk');
+          //x($persistentLoginKey);
+          //cookie with key
+          if($persistentLoginKey) {
+            $query = $this->DIContainer->get('queryBuilder');
+            $persistentLogin = $query
+              ->table($this->persistentLoginsTableName)
+              ->select([
+                'username',
+                'userdata',
+                $query->raw(sprintf('DATE_ADD(`date`, INTERVAL %d DAY) < NOW() AS expired', $authenticationParameters->persistentLogin->expirationDays))
+              ])
+              ->where('key', $persistentLoginKey)
+              ->first();
+            if($persistentLogin) {
+              //expired
+              if($persistentLogin->expired) {
+                //delete
+                $query
+                  ->table($this->persistentLoginsTableName)
+                  ->where('key', $persistentLoginKey)
+                  ->delete();
+              } else {
+                $validPersistentLogin = false;
+                //update
+                $newPersistentLoginKey = $this->generatePersistentLoginKey();
+                $query
+                  ->table($this->persistentLoginsTableName)
+                  ->where('key', $persistentLoginKey)
+                  ->update([
+                    'key' => $newPersistentLoginKey,
+                    'date' => $query->raw('NOW()'),
+                  ]);
+                //force authentication
+                $userData = (array) json_decode($persistentLogin->userdata);
+                $auth = $this->authFactory->newInstance();
+                $loginService = $this->authFactory->newLoginService();
+                $loginService->forceLogin($auth, $persistentLogin->username, $userData);
+                $this->setUserData($userData);
+                $this->setAuthenticationStatus(true, 4);
+              }
+            }
+          }
+        }
+        //xx($validPersistentLogin);
+        if(!$validPersistentLogin) {
+          //status
+          //sign in form without valid authentication (handled above) and persistent login, 
+          if($isSignInFormRoute) {
+            $this->setAuthenticationStatus(true, 4);
+          } else {
+            $this->setAuthenticationStatus(false, $returnCode, $authenticationParameters->urls->signInForm);
+          }
+          //store current route for redirect
+          $this->cookie->setAreaCookie($this->area, 'redirectToAfterLogin', $this->request->getUri()->getPath());
+        }
+      }
     }
     
     /**
@@ -497,6 +583,69 @@ class Middleware implements MiddlewareInterface
                 ]
             ]
         );
+    }
+    
+    /**
+     * Generates persistent login key
+     **/
+    private function generatePersistentLoginKey()
+    {
+      return bin2hex(random_bytes($this->persistentLoginsKeyBinLength));
+    }
+    
+    /**
+     * Sets persistent login
+     **/
+    protected function setPersistentLogin()
+    {
+      $userData = $this->getUserData();
+      //generate persistent login key
+      $persistentLoginKey = $this->generatePersistentLoginKey();
+      $query = $this->DIContainer->get('queryBuilder');
+      //check stored persistent login key
+      $oldPersistentLoginKey = $this->cookie->getAreaCookie($this->area, 'plk');
+      //check table
+      if (!$query->tableExists($this->persistentLoginsTableName)) {
+        $keyHexLength = $this->persistentLoginsKeyBinLength * 2;
+        $sql = <<<EOT
+        CREATE TABLE `persistent_logins` (
+          `key` varchar($keyHexLength) NOT NULL,
+          `username` varchar(48) NOT NULL,
+          `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          `userdata` text NOT NULL,
+          PRIMARY KEY (`key`),
+        );
+EOT;
+        $query->query($sql);
+      }
+      if($oldPersistentLoginKey) {
+        $persistentLogin = $query
+          ->table($this->persistentLoginsTableName)
+          ->where('key', $oldPersistentLoginKey)
+          ->where('username', $userData->username)
+          ->first();
+        if($persistentLogin) {
+          $query
+          ->table($this->persistentLoginsTableName)
+          ->where('key', $oldPersistentLoginKey)
+          ->update([
+            'key' => $persistentLoginKey,
+            'date' => $query->raw('NOW()'),
+          ]);
+        }
+      }
+      if($oldPersistentLoginKey === null || $persistentLogin === null) {
+        //insert
+        $query
+          ->table($this->persistentLoginsTableName)
+          ->insert([
+            'key' => $persistentLoginKey,
+            'username' => $userData->username,
+            'userdata' => json_encode($userData),
+          ]);
+      }
+      //set cookie
+      $this->cookie->setAreaCookie($this->area, 'plk', $persistentLoginKey);
     }
     
     /**

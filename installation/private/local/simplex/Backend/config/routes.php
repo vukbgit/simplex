@@ -33,7 +33,8 @@ return [
             [
                 'action' => 'sign-in-form',
                 'area' => $area,
-                'signInUrl' => $signInRoute
+                'signInUrl' => $signInRoute,
+                'authentication' => $authentication,
             ]
         ]
     ],
@@ -66,7 +67,8 @@ return [
                     'urls' => (object) [
                         'signInForm' => $signInFormRoute,
                         'successDefault' => $successfulSignInRoute,
-                    ]
+                    ],
+                    'persistentLogin' => $persistentLogin,
                 ]
             ]
         ]
@@ -84,7 +86,8 @@ return [
                     'action' => 'sign-out',
                     'urls' => (object) [
                         'signInForm' => $signInFormRoute
-                    ]
+                    ],
+                    'persistentLogin' => $persistentLogin,
                 ]
             ]
         ]

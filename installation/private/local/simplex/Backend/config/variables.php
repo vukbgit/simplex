@@ -12,11 +12,17 @@ $signInRoute = sprintf('/%s/sign-in', $area);
 $signOutRoute = sprintf('/%s/sign-out', $area);
 //default route to redirect after a successful login
 $successfulSignInRoute = sprintf('/%s/dashboard', $area);
+//persistent login activation and properties
+$persistentLogin = (object) [
+  'expirationDays' => DASHBOARD_PERSISTENT_LOGIN_EXPIRATION_DAYS,
+];
 //authentication object to be used with routes that need authentication verification
 $authentication = (object) [
     'action' => 'verify',
     'urls' => (object) [
         'signInForm' => $signInFormRoute,
         'signOut' => $signOutRoute,
-    ]
+        'successDefault' => $successfulSignInRoute,
+    ],
+    'persistentLogin' => $persistentLogin,
 ];
