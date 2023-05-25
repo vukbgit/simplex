@@ -1,3 +1,7 @@
+## 2.2.84 (May 25, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 2.2.83 -> 2.2.84
+- calendar macros
+
 ## 2.2.83 (May 24, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 2.2.82 -> 2.2.83
 - persistent login
