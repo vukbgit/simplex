@@ -14,13 +14,15 @@
 #}
 {% macro setupCalendar(context, containerId, options) %}
 <script type="text/javascript">
+//global variable to be used by other scripts to access calendar
+var calendar;
 document.addEventListener('DOMContentLoaded', function() {
-   var calendarEl = document.getElementById('{{ containerId|default('calendar') }}');
-   var calendar = new FullCalendar.Calendar(calendarEl, {
+   let calendarEl = document.getElementById('{{ containerId|default('calendar') }}');
+   calendar = new FullCalendar.Calendar(calendarEl, {
      locale: '{{ attribute(context.language, 'ISO-639-1') }}',
  {% for option, value in options %}
   {# events options need to be displayed without quotes #}
-  {% if option in ['eventClick', 'eventMouseEnter', 'eventMouseLeave'] %}
+  {% if option in ['eventClick', 'eventMouseEnter', 'eventMouseLeave', 'eventSourceSuccess', 'eventClassNames', 'viewWillUnmount', 'viewDidMount', 'viewClassNames'] %}
    {{ option }}: {{ value }},
   {% else %}   
    {{ option }}: {{ value|varToJs }},
