@@ -1,3 +1,7 @@
+## 2.2.85 (May 25, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 2.2.84 -> 2.2.85
+- calendar assets
+
 ## 2.2.84 (May 25, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 2.2.83 -> 2.2.84
 - calendar macros
