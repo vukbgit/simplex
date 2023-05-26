@@ -305,13 +305,13 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
             }
         });
         //outputs a variable to be used in javascript context
+        //to pass  ablock of javascript code (such as an anonymous function) define in Twig template the variable as an object with a "raw" property set to true and a "value" property set to the javascript block of code
         $this->addTemplateFilter('varToJs', function($var) {
-            /*if(is_bool($var)) {
-                return $var ? 'true' : 'false';
-            } elseif(is_string($var)) {
-                return $var ? 'true' : 'false';
-            }*/
-            return json_encode($var);
+            if(is_array($var) && isset($var['raw']) && $var['raw']) {
+              return $var['value'];
+            } else {
+              return json_encode($var);
+            }
         },
         ['is_safe' => ['html']]);
         //convert metric byte units
