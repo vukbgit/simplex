@@ -1,3 +1,7 @@
+## 2.2.87 (May 26, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 2.2.86 -> 2.2.87
+- varToJs template filter
+
 ## 2.2.86 (May 26, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 2.2.85 -> 2.2.86
 - fix: calendar library
