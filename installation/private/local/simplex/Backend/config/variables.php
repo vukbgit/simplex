@@ -14,7 +14,7 @@ $signOutRoute = sprintf('/%s/sign-out', $area);
 $successfulSignInRoute = sprintf('/%s/dashboard', $area);
 //persistent login activation and properties
 $persistentLogin = (object) [
-  'expirationDays' => DASHBOARD_PERSISTENT_LOGIN_EXPIRATION_DAYS,
+  'expirationDays' => BACKEND_PERSISTENT_LOGIN_EXPIRATION_DAYS,
 ];
 //authentication object to be used with routes that need authentication verification
 $authentication = (object) [
