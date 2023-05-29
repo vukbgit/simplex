@@ -706,34 +706,51 @@ NOTE: for checkbox group config.mandatory means that at least one input must be 
 - format (string, i.e. 'DD-MM-YYYY'), default to the one returnd by getdateFormat function
 - time (bool): whether the time part is also present
 - noCalendar (bool): whether the calendar part is NOT present
+- before / after: id of another input to be used as other date range end
 - options (hash): specific datetime options (see https://flatpickr.js.org/options/), some:
   - mode: "single", "multiple", or "range"
+  NOTE: multiple and range currently does not used, for range use 'before' and 'after' options on twin inputs
 #}
 {% macro displayDateTimePicker(config) %}
+  {% set isDatePicker = config.noCalendar is not defined or not config.noCalendar %}
+  {% set isTimePicker = config.time is defined and config.time %}
+  {% set isDateTimePicker = isDatePicker and isTimePicker %}
   {% import _self as selfMacros %}
   {% set id = (config.id ?? config.name)|formatIdforJs %}
   {% set containerId = '%s_container'|format(id) %}
-  {% if config.value and config.format != 'H:i' %}
-    {% set config = updateProperty(config, 'value', config.value|date(attribute(getLanguage(config.time ? 'dateTimeFormat' : 'dateFormat'), 'PHP'))) %}
+  {% if config.value %}
+    {% if isDatePicker %}
+      {% set config = updateProperty(config, 'value', config.value|date(attribute(getLanguage(isTimePicker ? 'dateTimeFormat' : 'dateFormat'), 'PHP'))) %}
+    {% endif %}
+  {% else %}
+    {% if isTimePicker and not isDatePicker %}
+      {% set defaultTime = 'now'|date('H:i')|split(':') %}
+    {% endif %}
   {% endif %}
   {% set config = updateProperty(config, 'autocomplete', 'off') %}
   {% set classes = config.classes ?? [] %}
   {% set classes = ['form-control', 'datetimepicker-input']|merge(classes) %}
   {% set config = updateProperty(config, 'classes', classes) %}
+  {# data-input needed for flatpickr + buttons #}
   {% set config = updateProperty(config, 'data', {'input': null}) %}
-  {#% set config = updateProperty(config, 'custom', {'data-target': '#%s'|format(containerId)}) %#}
   <div class="input-group datetime-picker flatpickr" id="{{ containerId }}">
     {{ selfMacros.displayInputText(config) }}
-    <div class="trigger input-group-text" data-toggle><i class="icon-form-calendar"></i></div>
+    {% set icon = isDatePicker or isDateTimePicker ? 'calendar' : 'clock' %}
+    <div class="trigger input-group-text" data-toggle><i class="icon-form-{{ icon }}"></i></div>
     <div class="trigger input-group-text" data-clear><i class="icon-form-trash"></i></div>
   </div>
   <script type="text/javascript">
-    $(function () {
-      flatpickr.localize(flatpickr.l10ns.{{ getLanguage('ISO-639-1') }});
-      $('#{{ containerId }}').flatpickr({
+    //$(function () {
+      const dateTimePicker_{{ id }} = $('#{{ containerId }}').flatpickr({
         dateFormat: '{{ config.format|default(attribute(getLanguage(config.time ? 'dateTimeFormat' : 'dateFormat'), 'calendar')) }}',
-      {% if not config.value and config.validation.required %}
-        defaultDate: 'today',
+      //value
+      {% if not config.value %}
+        {% if isDatePicker %}
+        defaultDate: null,
+        {% elseif isTimePicker %}
+        defaultHour: {{ defaultTime[0] }},
+        defaultMinute: {{ defaultTime[1] }},
+        {% endif %}
       {% endif %}
         wrap: true,
       {% if config.time %}
@@ -749,13 +766,32 @@ NOTE: for checkbox group config.mandatory means that at least one input must be 
       {# adjust separator for range #}
       {% if config.options.mode == 'range' %}
       locale: {
-        rangeSeparator: ' / '
-      }
+        rangeSeparator: '{{ config.rangeSeparator ?? ' / ' }}'
+      },
       {% else %}
+        {% if config.options.allowInput is not defined %}
         allowInput: true,
+        {% endif %}
+      {% endif %}
+      {% if config.options.position is not defined %}
+        position: 'auto right',
+      {% endif %}
+      plugins: [
+      ],
+      {# if no value set to current date/time #}
+      onOpen: function(selectedDates, dateStr, instance) {
+        if(selectedDates.length === 0) {
+          instance.setDate(instance.now);
+        }
+      },
+      {% if config.before or config.after %}
+      onChange: function(selectedDates, dateStr, instance) {
+        const otherInput = dateTimePicker_{{ config.before ?? config.after }};
+        otherInput.set('{{ config.before ? 'minDate' : 'maxDate' }}', flatpickr.parseDate(dateStr, otherInput.config.dateFormat));
+      }
       {% endif %}
      });
-   });
+   //});
  </script>
 {% endmacro %}
 
@@ -1182,12 +1218,6 @@ for autocomplete see https://developer.mozilla.org/en-US/docs/Web/HTML/Attribute
     {% if config.help %}
     aria-describedby="{{ '%s-help'|format(config.id ?? config.name ) }}"
     {% endif %}
-    {# data #}
-    {% if config.data %}
-        {% for name, value in config.data %}
-            {{ 'data-%s=%s'|format(name, value|escape('html_attr')) }}
-        {% endfor %}
-    {% endif %}
     {# custom #}
     {% if config.custom %}
         {% for name, value in config.custom %}
@@ -1212,6 +1242,12 @@ for autocomplete see https://developer.mozilla.org/en-US/docs/Web/HTML/Attribute
                 {% endif %}
             {% endfor %}
         {% endif %}
+    {% endif %}
+    {# data #}
+    {% if config.data %}
+        {% for name, value in config.data %}
+            {{ 'data-%s=%s'|format(name, value|escape('html_attr')) }}
+        {% endfor %}
     {% endif %}
 {% endmacro %}
 
@@ -1732,8 +1768,11 @@ https://flatpickr.js.org/
 <!-- date time picker -->
 <link rel="stylesheet" href="{{ 'flatpickr/dist/flatpickr.min.css'|pathToNpmAsset }}">
 <script src="{{ 'flatpickr/dist/flatpickr.min.js'|pathToNpmAsset }}"></script>
+<script src="{{ 'flatpickr/dist/plugins/rangePlugin.js'|pathToNpmAsset }}"></script>
 <script src="{{ 'flatpickr/dist/l10n/%s.js'|format(getLanguage('ISO-639-1'))|pathToNpmAsset }}"></script>
-
+<script>
+flatpickr.localize(flatpickr.l10ns.{{ getLanguage('ISO-639-1') }});
+</script>
 {% endmacro %}
 
 {# rich text editor
