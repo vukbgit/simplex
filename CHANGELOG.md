@@ -1,3 +1,7 @@
+## 2.2.89 (May 29, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 2.2.88 -> 2.2.89
+- date time picker
+
 ## 2.2.88 (May 27, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 2.2.87 -> 2.2.88
 - fix: backend variables template
