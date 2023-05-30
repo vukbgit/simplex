@@ -261,7 +261,7 @@ abstract class ControllerAbstract
     {
       $request = $this->request ?? $request;
         if($this->needsAuthentication($request) && $this->verifyAuthentication($request)) {
-            return $request->getAttributes()['userData'];
+            return $request->getAttributes()['userData'] ?? null;
         } else {
             return null;
         }
@@ -276,7 +276,7 @@ abstract class ControllerAbstract
     protected function checkPermission(string $permission, ServerRequestInterface $request = null): bool
     {
       $request = $this->request ?? $request;
-        return in_array($permission, $this->getAuthenticatedUserData($request)->permissions);
+      return in_array($permission, $this->getAuthenticatedUserData($request)->permissions ?? []);
     }
     
     /**
