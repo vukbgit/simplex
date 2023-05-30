@@ -1,3 +1,7 @@
+## 2.2.94 (May 30, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 2.2.93 -> 2.2.94
+- fix: sign in form authentication
+
 ## 2.2.93 (May 30, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 2.2.92 -> 2.2.93
 - fix: inline radio/checkbox help
