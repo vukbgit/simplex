@@ -706,6 +706,7 @@ NOTE: for checkbox group config.mandatory means that at least one input must be 
 - format (string, i.e. 'DD-MM-YYYY'), default to the one returnd by getdateFormat function
 - time (bool): whether the time part is also present
 - noCalendar (bool): whether the calendar part is NOT present
+- defaultToNow (bool): whether the input without value should be pre-selected to current date/time
 - before / after: id of another input to be used as other date range end
 - options (hash): specific datetime options (see https://flatpickr.js.org/options/), some:
   - mode: "single", "multiple", or "range"
@@ -748,8 +749,13 @@ NOTE: for checkbox group config.mandatory means that at least one input must be 
         {% if isDatePicker %}
         defaultDate: null,
         {% elseif isTimePicker %}
+          {% if config.defaultToNow %}
         defaultHour: {{ defaultTime[0] }},
         defaultMinute: {{ defaultTime[1] }},
+          {% else %}
+        defaultHour: 12,
+        defaultMinute: 30,
+          {% endif %}
         {% endif %}
       {% endif %}
         wrap: true,
@@ -778,13 +784,14 @@ NOTE: for checkbox group config.mandatory means that at least one input must be 
       {% endif %}
       plugins: [
       ],
-      {# if no value set to current date/time #}
+      {% if config.defaultToNow and config.options.onOpen is not defined %}
       onOpen: function(selectedDates, dateStr, instance) {
         if(selectedDates.length === 0) {
           instance.setDate(instance.now);
         }
       },
-      {% if config.before or config.after %}
+      {% endif %}
+      {% if (config.before or config.after) and config.options.onChange is not defined %}
       onChange: function(selectedDates, dateStr, instance) {
         const otherInput = dateTimePicker_{{ config.before ?? config.after }};
         otherInput.set('{{ config.before ? 'minDate' : 'maxDate' }}', flatpickr.parseDate(dateStr, otherInput.config.dateFormat));
