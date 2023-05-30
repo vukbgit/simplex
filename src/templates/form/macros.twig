@@ -1119,6 +1119,9 @@ NOTE: for checkbox group config.mandatory means that at least one input must be 
            {% if config.options.preferredFormat is not defined %}
               preferredFormat: 'hex',
            {% endif %}
+           {% if config.options.type is not defined %}
+              type: 'component',
+           {% endif %}
               }
             );
        });
