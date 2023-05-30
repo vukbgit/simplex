@@ -1,3 +1,7 @@
+## 2.2.90 (May 30, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 2.2.89 -> 2.2.90
+- datetimepicker default to now option
+
 ## 2.2.89 (May 29, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 2.2.88 -> 2.2.89
 - date time picker
