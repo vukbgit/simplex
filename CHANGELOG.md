@@ -1,3 +1,7 @@
+## 2.2.92 (May 30, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 2.2.91 -> 2.2.92
+- switched colorpicker npm package
+
 ## 2.2.91 (May 30, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 2.2.90 -> 2.2.91
 - switched colorpicker npm package
