@@ -145,7 +145,7 @@ class SpreadsheetReaderWriter
     
     /*
     * Writes a spreadsheet
-    * @param string $type: csv | xlsx |
+    * @param string $type: c | csv | x | xlsx |
     * @param string $output: f | file | b | browser
     * @param string $FileName: in case of output = file must be complete path
     * @param array $rows: an array of objects (like a recordset)
@@ -187,10 +187,12 @@ class SpreadsheetReaderWriter
       }
       switch ($type) {
         case 'csv':
+        case 'c':
           $this->writer = new PhpSpreadsheet\Writer\Csv($spreadsheet);
           $contentType = 'text/csv';
         break;
         case 'xlsx':
+        case 'x':
           $this->writer = new PhpSpreadsheet\Writer\Xlsx($spreadsheet);
           $contentType = 'application/vnd.ms-excel';
         break;
