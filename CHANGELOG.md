@@ -1,3 +1,7 @@
+## 2.2.95 (May 31, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 2.2.94 -> 2.2.95
+- spreadsheet write type argument
+
 ## 2.2.94 (May 30, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 2.2.93 -> 2.2.94
 - fix: sign in form authentication
