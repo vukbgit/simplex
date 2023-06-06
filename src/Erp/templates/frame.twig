@@ -90,7 +90,6 @@ $(document).ready(function(){
     {% endif %}
     {# main content #}
 <main role="main" class="{% if areaCookie.sideBarState == '0' or hideSideBar %} wide{% endif %}">
-{{dump(areaCookie)}}
     {% block subjectHeader %}
     {% endblock %}
     {% block pageContent %}
