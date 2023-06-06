@@ -1,3 +1,7 @@
+## 2.2.98 (June 06, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 2.2.97 -> 2.2.98
+- fix: erp sidebar
+
 ## 2.2.97 (June 06, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 2.2.96 -> 2.2.97
 - fix erp sidebar
