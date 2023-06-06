@@ -18,19 +18,21 @@ $(document).ready(function(){
         const sideBarState = $('#sidebar').hasClass(className) ? 0 : 1;
         //setAreaCookie(area,  'sideBarClosed', sideBarClosed)
         $.get(
-          '{{ '/%s/%s/set-side-bar-state?s='|format(area, subject) }}' + sideBarState
+          '{{ '/%s%s/set-side-bar-state?s='|format(area, subject ? '/%s'|format(subject) : null) }}' + sideBarState
         )
     });
   })
 </script>
 {% endblock head %}
 
+{% set sideBarOpened = areaCookie.sideBarState is not defined or areaCookie.sideBarState == '1' %}
+
 {% block body %}
     {{ parent() }}
 <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap justify-content-start p-0 shadow" id="navbar-top">
     {% if hideSideBar == false %}
     <div id="sidebar-hat">
-  <button type="button" name="button" class="pf-c-button hamburger hamburger--collapse{% if areaCookie.sideBarState == '1' %} is-active{% endif %}" id="sidebar-toggle">
+  <button type="button" name="button" class="pf-c-button hamburger hamburger--collapse{% if sideBarOpened %} is-active{% endif %}" id="sidebar-toggle">
             <span class="hamburger-box">
                 <span class="hamburger-inner"></span>
             </span>
@@ -76,9 +78,9 @@ $(document).ready(function(){
 </nav>
 
 <div class="container-fluid">
-    {% if areaCookie.sideBarState == '1' or hideSideBar == false %}
+    {% if sideBarOpened or hideSideBar == false %}
     {# sidebar #}
-  <nav class="bg-dark text-light sidebar{% if areaCookie.sideBarState == '0' %} closed{% endif %}" id="sidebar">
+  <nav class="bg-dark text-light sidebar{% if not sideBarOpened %} closed{% endif %}" id="sidebar">
         <div class="sidebar-sticky">
             <nav class="nav flex-column" id="navigation-top">
         {% for voiceKey, voiceProperties in navigations.area %}
@@ -89,7 +91,7 @@ $(document).ready(function(){
     </nav>
     {% endif %}
     {# main content #}
-<main role="main" class="{% if areaCookie.sideBarState == '0' or hideSideBar %} wide{% endif %}">
+<main role="main" class="{% if not sideBarOpened or hideSideBar %} wide{% endif %}">
     {% block subjectHeader %}
     {% endblock %}
     {% block pageContent %}
