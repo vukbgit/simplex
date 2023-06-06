@@ -76,7 +76,7 @@ $(document).ready(function(){
 </nav>
 
 <div class="container-fluid">
-    {% if hideSideBar == false %}
+    {% if areaCookie.sideBarState == '1' or hideSideBar == false %}
     {# sidebar #}
   <nav class="bg-dark text-light sidebar{% if areaCookie.sideBarState == '0' %} closed{% endif %}" id="sidebar">
         <div class="sidebar-sticky">
@@ -90,6 +90,7 @@ $(document).ready(function(){
     {% endif %}
     {# main content #}
 <main role="main" class="{% if areaCookie.sideBarState == '0' or hideSideBar %} wide{% endif %}">
+{{dump(areaCookie)}}
     {% block subjectHeader %}
     {% endblock %}
     {% block pageContent %}
