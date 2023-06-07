@@ -1,3 +1,7 @@
+## 2.2.100 (June 07, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 2.2.99 -> 2.2.100
+- test bump version
+
 ## 2.2.99 (June 06, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 2.2.98 -> 2.2.99
 - bootstrap
