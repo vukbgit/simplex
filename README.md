@@ -92,6 +92,8 @@ Before installing from scratch or upgrading from 2.x:
   
         export PATH_TO_INI_CONFIG=absolute/path/to/config.ini
 
+* if logged into same console where installation/upgrade will be executed, log-out to make $PATH_TO_INI_CONFIG available to scripts
+        
 ## Installation ##
 
 Create a composer.json in the root folder:
