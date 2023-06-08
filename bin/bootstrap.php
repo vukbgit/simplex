@@ -106,9 +106,10 @@ define('PUBLIC_LOCAL_DIR', 'public/local');
 define('PUBLIC_LOCAL_SIMPLEX_DIR', sprintf('%s/simplex', PUBLIC_LOCAL_DIR));
 //include from local namespace constants definition files
 //it can be disabled to avoid collision during refactoring scripts
-if(!isset($includeLocalContants) || !$includeLocalContants) {
+if(!isset($includeLocalContants) || $includeLocalContants) {
   requireFromFiles(sprintf('%s/private/local/simplex', ABS_PATH_TO_ROOT), 'constants.php');
 }
+exit;
 /************
 * CONTAINER
 * definitions into private/local/simplex/config/di-container.php
