@@ -1,3 +1,7 @@
+## 3.0.0 (June 08, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 2.2.100 -> 3.0.0
+- version 3.0.0
+
 ## 2.2.100 (June 07, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 2.2.99 -> 2.2.100
 - test bump version
