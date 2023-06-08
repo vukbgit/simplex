@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 use function outputMessage as om;
+//do not include local constants to avoid collisions
+$includeLocalContants = false;
 //bootstrap
 require_once __DIR__ . '/../bin/bootstrap.php'; 
 $refactor = $DIContainer->get('refactor');
