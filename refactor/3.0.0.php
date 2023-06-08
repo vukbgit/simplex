@@ -60,67 +60,67 @@ $refactor->searchPatternDeleteLine(
   'ABS_PATH_TO_ROOT',
   $folders = ['private/local/simplex/config'],
   $exclude = [],
-  $filesNames = ['constants-old.php']
+  $filesNames = ['constants.php']
 );
 $refactor->searchPatternDeleteLine(
   'PRIVATE_SHARE_BASE_DIR',
   $folders = ['private/local/simplex/config'],
   $exclude = [],
-  $filesNames = ['constants-old.php']
+  $filesNames = ['constants.php']
 );
 $refactor->searchPatternDeleteLine(
   'PRIVATE_SHARE_PACKAGIST_DIR',
   $folders = ['private/local/simplex/config'],
   $exclude = [],
-  $filesNames = ['constants-old.php']
+  $filesNames = ['constants.php']
 );
 $refactor->searchPatternDeleteLine(
   'PRIVATE_SHARE_SIMPLEX_DIR',
   $folders = ['private/local/simplex/config'],
   $exclude = [],
-  $filesNames = ['constants-old.php']
+  $filesNames = ['constants.php']
 );
 $refactor->searchPatternDeleteLine(
   'PRIVATE_LOCAL_DIR',
   $folders = ['private/local/simplex/config'],
   $exclude = [],
-  $filesNames = ['constants-old.php']
+  $filesNames = ['constants.php']
 );
 $refactor->searchPatternDeleteLine(
   "define('SHARE_CONFIG_DIR', sprintf('%s/config', PRIVATE_SHARE_DIR));",
   $folders = ['private/local/simplex/config'],
   $exclude = [],
-  $filesNames = ['constants-old.php']
+  $filesNames = ['constants.php']
 );
 $refactor->searchPatternDeleteLine(
   'LOCAL_CONFIG_DIR',
   $folders = ['private/local/simplex/config'],
   $exclude = [],
-  $filesNames = ['constants-old.php']
+  $filesNames = ['constants.php']
 );
 $refactor->searchPatternDeleteLine(
   'PUBLIC_SHARE_DIR',
   $folders = ['private/local/simplex/config'],
   $exclude = [],
-  $filesNames = ['constants-old.php']
+  $filesNames = ['constants.php']
 );
 $refactor->searchPatternDeleteLine(
   'PUBLIC_LOCAL_DIR',
   $folders = ['private/local/simplex/config'],
   $exclude = [],
-  $filesNames = ['constants-old.php']
+  $filesNames = ['constants.php']
 );
 $refactor->searchPatternDeleteLine(
   'PUBLIC_LOCAL_SIMPLEX_DIR',
   $folders = ['private/local/simplex/config'],
   $exclude = [],
-  $filesNames = ['constants-old.php']
+  $filesNames = ['constants.php']
 );
 $refactor->searchPatternDeleteLine(
   'TMP_DIR',
   $folders = ['private/local/simplex/config'],
   $exclude = [],
-  $filesNames = ['constants-old.php']
+  $filesNames = ['constants.php']
 );
 $refactor->searchPatternReplace(
   "if(getenv('REDIRECT_ENVIRONMENT')) {
@@ -131,5 +131,5 @@ $refactor->searchPatternReplace(
 }",
   $folders = ['private/local/simplex/config'],
   $exclude = [],
-  $filesNames = ['constants-old.php']
+  $filesNames = ['constants.php']
 );
