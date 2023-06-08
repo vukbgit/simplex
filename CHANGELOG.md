@@ -1,3 +1,7 @@
+## 3.0.8 (June 08, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.0.7 -> 3.0.8
+- fix to 3.0 refactor file
+
 ## 3.0.7 (June 08, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.0.6 -> 3.0.7
 - local environment disabling
