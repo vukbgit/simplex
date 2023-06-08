@@ -109,7 +109,6 @@ define('PUBLIC_LOCAL_SIMPLEX_DIR', sprintf('%s/simplex', PUBLIC_LOCAL_DIR));
 if(!isset($includeLocalContants) || $includeLocalContants) {
   requireFromFiles(sprintf('%s/private/local/simplex', ABS_PATH_TO_ROOT), 'constants.php');
 }
-exit;
 /************
 * CONTAINER
 * definitions into private/local/simplex/config/di-container.php
