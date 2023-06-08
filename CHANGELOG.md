@@ -1,3 +1,7 @@
+## 3.0.9 (June 08, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.0.8 -> 3.0.9
+- templates constants
+
 ## 3.0.8 (June 08, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.0.7 -> 3.0.8
 - fix to 3.0 refactor file
