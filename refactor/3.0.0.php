@@ -5,13 +5,11 @@ use function outputMessage as om;
 require_once __DIR__ . '/../bin/bootstrap.php'; 
 $refactor = $DIContainer->get('refactor');
 $refactor->setVerbose(true);
-$refactor->setDryRun(true);
-//copy config ini draft
-$refactor->copyFile(
-  PRIVATE_SHARE_SIMPLEX_DIR . '/installation/config.draft.ini',
+$refactor->setDryRun(false);
+//delete config ini draft
+$refactor->deleteFile(
   ABS_PATH_TO_ROOT . '/config.draft.ini'
 );
-om('e', 'ATTENTION: you should move it outside of web root folder, rename it to "config.ini" and set relative path to it into index.php ($pathToIniConfig variable)');
 //environment in .htaccess
 $refactor->searchPatternDeleteLine(
   'ENVIRONMENT',
@@ -24,6 +22,7 @@ $refactor->copyFile(
   PRIVATE_SHARE_SIMPLEX_DIR . '/installation/index.php',
   ABS_PATH_TO_ROOT . '/index.php'
 );
+om('e', 'ATTENTION: you must set into index.php relative path to ini config file ($pathToIniConfig variable)');
 //filter
 $refactor->searchPatternInLinesReplace(
   'FILTER_SANITIZE_STRING',

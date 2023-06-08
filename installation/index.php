@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 //set path to ini config file
-$pathToIniConfig = '../private/config.ini';
+$pathToIniConfig = false;
 //bootstrap
 require_once './private/share/packagist/vukbgit/simplex/bin/bootstrap.php';
 /*********************

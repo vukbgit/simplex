@@ -7,6 +7,7 @@ A tool for web developers
 * [Introduction](#Introduction)
 * [Requirements](#Requirements)
 * [Terminology](#Terminology)
+* [Pre-Installation - Upgrade Jobs](#Pre-Installation---Upgrade-Jobs)
 * [Installation](#Installation)
 * [Post-Installation Jobs](#Post-Installation-Jobs)
 * [Area set up](#Area-set-up)
@@ -80,6 +81,17 @@ Conventions:
 * in the following explanation files and paths are written in _italic_
 * for each file is always given the path from the root, without leading slash
 
+## Pre-Installation - Upgrade Jobs ##
+
+Before installing from scratch or upgrading from 2.x:
+
+* download [ini config file draft](https://github.com/vukbgit/simplex/blob/development/installation/config.draft.ini)
+* save it into web space __outside__ root folder as _config.ini_
+* edit and set at least mandatory values following comments
+* set permanently the PATH_TO_INI_CONFIG environment variable to the absolute path to the file, adding to system user .bashrc file (usually something like _home/user-name/.bashrc_ ) the file 
+  
+        export PATH_TO_INI_CONFIG=absolute/path/to/config.ini
+
 ## Installation ##
 
 Create a composer.json in the root folder:
@@ -130,14 +142,13 @@ For details see [Folders and Files Structure](#Folders-and-Files-Structure) belo
 
 ## Post-Installation Jobs ##
 
-* _config.ini_: local
-  * move __config.draft.ini__ outside of the root directory and save it as __config.ini__
-  * open and set values following comments
+* _config.ini_: 
+  * should be already in place (see [Pre-Installation - Upgrade Jobs](#Pre-Installation---Upgrade-Jobs)) with minimal configuration (otherwise nothing works...)
   * use this file to store any local information that must be as secret as possible like database credentials, passwords, secret API keys, etc.
-  * optional: simplex bash scripts all include _private/share/packagist/vukbgit/simplex/bin/bootstrap.sh_ which needs to include _config.ini_ so path (absolute or relative to the top level called script) must be provide as:
+  * simplex bash scripts all include _private/share/packagist/vukbgit/simplex/bin/bootstrap.sh_ which needs to include _config.ini_ so path (absolute or relative to the top level called script) must be provide as:
     * the PATH_TO_INI_CONFIG environment variable, which you can export as `export PATH_TO_INI_CONFIG=path/to/config.ini`:
       * temporarily into ssh session
-      * permanently into _user/home/folder/.bashrc_
+      * permanently into _home/user-name/.bashrc_ (or equivalent, which you shold already done before installation)
     * or passing to the called script the -i option followed by the absolute/relative path to the ini config file, i.e. `simplex-script.sh -i path/to/config.ini`
 * _/.htaccess_:
   * set default redirections, i.e _/backend_ to _/backend/sign-in-form_; in any case either you're going to define a route for the plain domain request or you redirect domain request to a default route (i.e. `RewriteRule ^/?$ /my-default-route [R,L]`); for routes definitiosn see below

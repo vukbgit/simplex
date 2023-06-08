@@ -464,7 +464,7 @@ class Refactor
         'e',
         sprintf(
           'path %s is not valid',
-          $path
+          $sourcePath
         )
       );
     }
@@ -485,6 +485,52 @@ class Refactor
             'file "%s" could not be replaced by "%s"',
             $targetPath,
             $sourcePath
+          )
+        );
+      }
+    }
+  }
+  
+  /**
+   * Deletes a file
+   * @param string $targetPath path of file to delete
+   * @return void
+   */
+  public function deleteFile(
+    string $targetPath
+  ): void
+  {
+    $this->outputTitle(sprintf(
+      "delete file \n%s\n",
+      $targetPath
+    ));
+    //check paths
+    $pathsOk = true;
+    if(!is_file($targetPath)) {
+      $pathsOk = false;
+      $this->outputMessage(
+        'h',
+        sprintf(
+          'file %s does not exist',
+          $targetPath
+        )
+      );
+    }
+    if($pathsOk && !$this->dryRun) {
+      if(unlink($targetPath)) {
+        $this->outputMessage(
+          's',
+          sprintf(
+            'file "%s" deleted',
+            $targetPath
+          )
+        );
+      } else {
+        $this->outputMessage(
+          'e',
+          sprintf(
+            'file "%s" could not be deleted',
+            $targetPath
           )
         );
       }
