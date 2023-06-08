@@ -1,3 +1,7 @@
+## 3.0.7 (June 08, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.0.6 -> 3.0.7
+- local environment disabling
+
 ## 3.0.6 (June 08, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.0.5 -> 3.0.6
 - local environment disabling
