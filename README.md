@@ -43,24 +43,29 @@ To do so Simplex relies on:
         * creates the basic starting structure for the application with some draft files almost ready to be used but that can be deleted, modified and integrated at need
     * other selected Composer packages are integrated to create the application core engine
 * [NPM](https://npmjs.com) for Javascript and CSS packages
+* [Bootstrap](https://getbootstrap.com/) as CSS framework
 * [Fontello](http://fontello.com/) for icons
 
 _NOTE ON THIS DOCUMENT_: I will try to be clear and write down all the details to understand and use Simplex, for future-me, any possible colleague and anyone else interested benefit
 
 ## Requirements ##
 
-* [Apache 2.4+ webserver](http://httpd.apache.org/): althoungh not strictly necessary for the core engine, .htaccess files are used for basic routing and domain based environment detection
-* [PHP 8.0+](https://www.php.net/downloads.php) with the PHP [gettext](http://www.php.net/gettext) extension enabled (because every piece of text is considered as a translation even in a mono language application)
-* ssh access to web space: on a shared hosting it's hard to use Composer (and Yarn and Sass), you have to develop locally and commit, but I really suggest to find a provider who can give you ssh access; once I tried the power & comfort of the ssh shell I rented my own virtual machine and never turned back to shared hosting again...
-* even if not strictly required I strongly suggest to have also:
-    * [Yarn](https://yarnpkg.com): to install javascript and css libraries
-    * [Sass](https://sass-lang.com/) 3.5.2+.: to compile css with variables, mixings and many other useful additions
+* server on Linux OS (mainly tested on Debian 10/11)
+* webserver: Simplex has always used [Apache 2.4+](http://httpd.apache.org/), .htaccess files are used for basic routing; I guess it *could* be used also [Nginx](https://nginx.org/) also but it has ever been tested
+* [PHP 8.2+](https://www.php.net/downloads.php) with the PHP [gettext](http://www.php.net/gettext) bcmath extensions enabled
+* ssh access to web space: on a shared hosting it's hard to use Composer (and Npm and Sass), you have to develop locally and commit, but I really suggest to find a provider who can give you ssh access; once I tried the power & comfort of the ssh shell I rented my own virtual machine and never turned back to shared hosting again...
+* [Composer](https://getComposer.org) aliased (globally or locally) as `composer` command
+* a frontend package manager: Simplex suggests [npm](https://www.npmjs.com/) installed globally:
+* [Sass](https://sass-lang.com/) (I currently use version 1.56.1 compiled with dart2js 2.18.4): to compile css with variables, mixings and many other useful additions and customize bootstrap
 
 ## Terminology ##
 
 * __root__: the top folder of the Simplex installation, usually the top folder in the web accessible part of the site web space
 * __application__: the customized installation of Simplex for the specific project/domain
-* __environment__: in which the current request is handled, based usually on the requested domain, takes usually the values of "development" or "production"
+* __private__: area of the application hidden from browsers
+* __public__: area of the application open to browsers
+* __share__: area of the application where third part libraries and files are store, mainly _private/share_ for [Packagist](https://packagist.org/) PHP libraries and _public/share/node_modules_ for [npm](https://www.npmjs.com/) frontend packages
+* __environment__: in which the current request is handled, Simplex assumes the values of "development" and "production" but it's possible to define other variants on a per installation basis
 * __area__: a part of the application matching a set of routes having properties, requirements and behaviours in common, i.e "Backend", "Frontend", "Cron", every route must set an 'area' parameter and it should be formatted as a [slug](https://en.wikipedia.org/wiki/Clean_URL#Slug)
 * __subject__: into an ERP area, a subject is the name of the system formed by:
     * a controller
@@ -72,9 +77,8 @@ _NOTE ON THIS DOCUMENT_: I will try to be clear and write down all the details t
 
 Conventions:
 
-* in the following explanation files are written in _italic_
+* in the following explanation files and paths are written in _italic_
 * for each file is always given the path from the root, without leading slash
-
 
 ## Installation ##
 
@@ -86,7 +90,7 @@ Create a composer.json in the root folder:
         "description": "Simplex app",
         "license": "MIT",
         "require": {
-            "vukbgit/simplex": "^2.0"
+            "vukbgit/simplex": "^3.0"
         },
         "config": {
             "vendor-dir": "private/share/packagist",
@@ -109,7 +113,7 @@ Create a composer.json in the root folder:
        }
     }
 
-Note: for version constraint (^2.0) check last tag on github repository or non-develop version number on packagist.
+Notes: for version constraint (^3.0) check last tag on github repository or non-develop version number on packagist.
 
 Create the Composer project running on command line in the root folder:
 
@@ -122,21 +126,22 @@ Simplex will:
 * make symlinks in the root directory to some shell scripts ([Composer vendor binaries](https://getcomposer.org/doc/articles/vendor-binaries.md))
 * build the folders structure for the local application with some ready draft files
 
-For details see _Folders and Files Structure_ below
+For details see [Folders and Files Structure](#Folders-and-Files-Structure) below
 
 ## Post-Installation Jobs ##
 
-* __/.htaccess__:
-    * set ENVIRONMENT variable:
-        * using `SetEnvIf` directive you can set an enviromental varible name _ENVIRONMENT_ which can be read inside PHP scripts as a constant with `getenv('REDIRECT_ENVIRONMENT')`
-        * value is based on requested domain and the format is:
-            
-            SetEnvIf Host ^domain\.ltd$ ENVIRONMENT=value
-            
-        * _domain\.ltd_ must be replaced by a valid domain name (beware the escaped dot)
-        * _value_ can be either _development_ or _production_ and Simplex expects to have at least one domain mapped to _production_
-    * set default redirections, i.e _/backend_ to _/backend/sign-in-form_; in any case either you're going to define a route for the plain domain request or you redirect domain request to a default route (i.e. `RewriteRule ^/?$ /my-default-route [R,L]`); for routes definitiosn see below
-* local __composer__ bash script: if your system has multiple PHP versions installed it can be useful to have a shortcut to use composer with a version different from the system default one; file _private\local\simplex\bin\composer.sh_ is an example containing PHP and Composer path to custom binaries and it can be softlinked into root folder, i.e. `ln -s private/local/simplex/bin/composer.sh composer.sh`
+* _config.ini_: local
+  * move __config.draft.ini__ outside of the root directory and save it as __config.ini__
+  * open and set values following comments
+  * use this file to store any local information that must be as secret as possible like database credentials, passwords, secret API keys, etc.
+  * optional: simplex bash scripts all include _private/share/packagist/vukbgit/simplex/bin/bootstrap.sh_ which needs to include _config.ini_ so path (absolute or relative to the top level called script) must be provide as:
+    * the PATH_TO_INI_CONFIG environment variable, which you can export as `export PATH_TO_INI_CONFIG=path/to/config.ini`:
+      * temporarily into ssh session
+      * permanently into _user/home/folder/.bashrc_
+    * or passing to the called script the -i option followed by the absolute/relative path to the ini config file, i.e. `simplex-script.sh -i path/to/config.ini`
+* _/.htaccess_:
+  * set default redirections, i.e _/backend_ to _/backend/sign-in-form_; in any case either you're going to define a route for the plain domain request or you redirect domain request to a default route (i.e. `RewriteRule ^/?$ /my-default-route [R,L]`); for routes definitiosn see below
+* __index.php__
 * install __public__ packages:
     * the _public\share\package.json_ file contains some NPM packages for:
         * the whole application:
@@ -154,9 +159,8 @@ For details see _Folders and Files Structure_ below
             * [jquery.safemail](https://github.com/leftclickcomau/jquery.safemail): for obfuscating email
             * [flag-icon-css](https://github.com/lipis/flag-icon-css): SVG country flags
     * edit the file if needed to include/exclude packages
-    * install packages: you can use the both npm and yarn by means of the scripts _yarn.sh_ symlinked into root folder:
+    * install packages: Simplex is prearranged to use npm by means of the script _private/share/packagist/vukbgit/simplex/bin/npm.sh_ symlinked into root folder:
         * `./npm.sh install`
-        * or `./yarn.sh install`
     * packages are installed under _\public\share\node_modules_
 * local __configuration__: file _private\local\simplex\config\constants.php_ defines some PHP constants, most of them regard paths and it should not be necessary to modify them unless you plan to change the filesystem structure Simplex relies on; informations to be set for the local application (tech email, brand name...) are grouped into the _LOCAL_ block at the top of the script
 * __database__ configuration: in case application connects to a database edit file _private\local\simplex\config\db.php_; database accounts are organized by _ENVIRONMENT_ constant values (see __.htaccess_ _ above), so you can have different accounts for development and production
@@ -270,7 +274,7 @@ This is the Backend folder structure:
     * _local_: folder for application files accessible by browsers, will be filled at least by compiled CSS files and probabily by much more application assets
     * _share_
         * _package.json_: default NPM packages
-        * _yarn.sh_: symlinked from web root to handle Yarn commands
+        * _npm.sh_: symlinked into web root to handle npm commands
     * _.htaccess_: Apache configuration file, grants access to real files (CSS, Javascript, imagess, etc) and redirects every other request to index.php
 
 ## Subject set up ##
@@ -480,7 +484,7 @@ If you keep separate development and production environment and manage pubblicat
     * run _update-all.sh_ which:
         * cleans DI container and templates cache, beware of tmp folder path, (see _[Post-Installation Jobs](#Post-Installation-Jobs) > bash scripts settings_
         * updates Composer packages
-        * updates NPM packages through NPM or Yarn (automatically detects into _public/share_ package-lock.json or yarn.lock to decide which package manager to use)
+        * updates NPM packages through npm
 
 ## Simplex Logic overview ##
 
@@ -574,29 +578,25 @@ So here are folders and files as installed from Simplex, from the installation r
                 * __variables.scss__: Sass variables to be used by the application
             * __templates__: some ready to use and customize Twig templates
     * __share__: files installed through Composer and possibly other third-part libraries from other sources
-        * __vukbgit__
-            * __simplex__: shared Simplex modules used by application, some explanations about the less obvious ones:
-                * __bin__: bash scripts, some of the soft linked into root at installation composer project creation time
-                * __installation__: folders and files copied at installation time ready to be used and/or to be customized
-                * __src__: classes and other files used by Simplex at runtime
-                    * __config__: configuration files
-                        * __di-container.php__: definition to be used by the DI Container to instantiate the classes used by the Simplex engine; it is integrated by ANY file with the same name found under the __private/local/simplex__ folder
-                        * __middleware.php__: middleware queue to be processed by the Dispatcher, can be overridden setting _MIDDLEWARE_QUEUE_PATH_ value into _private\local\simplex\config\constants.php_
-                    * __errors__: HTML files to be displayed in case of HTTP errors raised by the request
-                    * __templates__: ready to use Twig templates for backend areas with CRUDL functionalities
-        * all the other Composer libraries used by the application
+        * __packagist__: libraries installed by means of [Packagist](https://packagist.org)
+          * __vukbgit__
+              * __simplex__: shared Simplex modules used by application, some explanations about the less obvious ones:
+                  * __bin__: bash scripts, some of the soft linked into root at installation composer project creation time
+                  * __installation__: folders and files copied at installation time ready to be used and/or to be customized
+                  * __src__: classes and other files used by Simplex at runtime
+                      * __config__: configuration files
+                          * __di-container.php__: definition to be used by the DI Container to instantiate the classes used by the Simplex engine; it is integrated by ANY file with the same name found under the __private/local/simplex__ folder
+                          * __middleware.php__: middleware queue to be processed by the Dispatcher, can be overridden setting _MIDDLEWARE_QUEUE_PATH_ value into _private\local\simplex\config\constants.php_
+                      * __errors__: HTML files to be displayed in case of HTTP errors raised by the request
+                      * __templates__: ready to use Twig templates for backend areas with CRUDL functionalities
+          * all the other Composer libraries used by the application
 * __public__: all files that CAN be accessed by browser
     * __local__: files developed for the application such as compiled css files and javascript files
-    * __share__: libraries installed through npm, Yarn, and any other third-part javascript and css asset
-        * __package.json__: npm/Yarn configuration file, requires Bootstrap and jQuery latest plus other useful libraries, customize at need
-            * TODO libraries list
+    * __share__: libraries installed from npm and any other third-part frontend javascript and css asset
+        * __package.json__: npm configuration file, requires Bootstrap and jQuery latest plus other useful libraries, customize at need
     * __.htaccess__: redirects ALL requests beginning with "public/" to _index.php_ except the ones for files really existing into filesystem (css, js, etc.)
 * __.gitignore__: in a development/production flow I commit file to a private repository form the development site and pull them into the production one; this .gitignore file excludes some Simplex folders/files from commit
 * __.htaccess__: root Apache directives
-    * sets environment variables that are readable into PHP code
-        * based on domain:
-            * ENVIRONMENT: development | production
-        * how to read them: Apache renames them prepending 'REDIRECT_' (since every route is redirected to public/index.php), so use for example `getenv('REDIRECT_ENVIRONMENT')`
     * redirects ALL requests for the root directory to public/index.php
 * __composer.json__:
     * sets vendor directory to _private/share/packagist_
@@ -605,7 +605,7 @@ So here are folders and files as installed from Simplex, from the installation r
     * requires the Simplex package (which takes care of requiring the other needed packages)
 * __index.php__: application bootstrap file, since it is stored into site root all PHP includes in every file work with absolute path form site root, see "Application Flow" above for details
 * __sass.sh__: soft link to the helper script _private/share/packagist/vukbgit/simplex/bin/sass.sh_ to compile Sass files, see the _private/local/simplex/config/sass.config_ explanation above for details
-* __yarn.sh__: soft link to the helper script _private/share/packagist/vukbgit/simplex/bin/yarn.sh_ to manage yarn packages into _public/share_ folder (instead of the predefined node_modules one), call it `./yarn.sh yarn-command`, i.e `./yarn.sh install foolibrary` to perform the installation into _local/share/foolibrary_
+* __npm.sh__: soft link to the helper script _public/share/npm.sh_ to manage npm packages into _public/share_ folder, call it `./npm.sh npm-command`, i.e `./npm.sh install foolibrary` to perform the installation into _local/share/node_modules/foolibrary_
 
 ## Migration from v1 to v2 ##
 

@@ -9,11 +9,14 @@ use jblond\TwigTrans\Translation;
 
 /*
 * Class to extract translations from templates
-* @param string $operation
-* @param string $context: share ! local if not specified both are included
 */
 class TranslationsExtractor extends ControllerAbstract
 {
+    /*
+    * Extracts translations
+    * @param string $operation
+    * @param string $context: share | local if not specified both are included
+    */
     public function extractTranslations(string $operation, string $context = null)
     {
         switch ($operation) {

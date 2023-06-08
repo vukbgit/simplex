@@ -10,7 +10,7 @@
        }
     ],
     "require": {
-        "php": ">=8.0",
+        "php": ">=8.2",
         "ext-gettext": "*",
         "php-di/php-di": ">=6.0",
         "laminas/laminas-diactoros": ">=2.11",
@@ -19,7 +19,7 @@
         "middlewares/request-handler": ">=2.0",
         "filp/whoops": ">=2.14",
         "kint-php/kint": ">=4.1",
-        "narrowspark/http-emitter": ">=1.0",
+        "httpsoft/http-emitter": ">=1.1",
         "oscarotero/middleland": ">=1.0",
         "twig/twig": ">=3.4",
         "twig/intl-extra": ">=3.4",
@@ -49,13 +49,14 @@
         ]
     },
     "bin": [
-        "bin/npm.sh",
-        "bin/yarn.sh",
-        "bin/sass.sh",
+        "bin/clean-cache.sh",
+        "bin/composer.sh",
+        "bin/git-push-all.sh",
         "bin/git-setup-dev.sh",
         "bin/git-setup-prod.sh",
-        "bin/update-all.sh",
-        "bin/git-push-all.sh",
-        "bin/clean-cache.sh"
+        "bin/npm.sh",
+        "bin/sass.sh",
+        "bin/translations.sh",
+        "bin/update-all.sh"
     ]
 }

@@ -10,7 +10,7 @@ use Simplex\FastRouteMiddleware;
 use Laminas\Diactoros\Response;
 use Middlewares\RequestHandler;
 use Middleland\Dispatcher;
-use Narrowspark\HttpEmitter\SapiEmitter;
+use HttpSoft\Emitter\SapiEmitter;
 //ADDITIONAL FUNCTIONALITIES
 //template engine
 use Twig\Loader\FilesystemLoader;
@@ -24,6 +24,8 @@ use \Simplex\PixieExtended;
 use \Simplex\Authentication;
 //translations
 use Simplex\TranslationsExtractor;
+//refactor
+use Simplex\Refactor;
 //spreadsheets read/write
 use Simplex\SpreadsheetReaderWriter;
 //mailer
@@ -67,6 +69,9 @@ return array_merge(
         //translations
         'translationsExtractor' => create(TranslationsExtractor::class)
             ->constructor(get('DIContainer'), get('response'), get('templateEngine'), get('cookieManager')),
+        //translations
+        'refactor' => create(Refactor::class)
+            ->constructor(),
         /*******************************
         * STOP MINIMAL FUNCTIONALITIES *
         *******************************/

@@ -1,6 +1,8 @@
 #!/bin/bash
-
-echo "Have you checked and customized .gitignore file?"
+#bootstrap
+source "${BASH_SOURCE%/*}/bootstrap.sh"
+#confirm
+outputMessage "H" "Have you checked and customized .gitignore file?"
 select yn in "Yes" "No"; do
     case $yn in
     Yes ) 

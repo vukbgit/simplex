@@ -9,34 +9,11 @@ define('BRAND', '');
 //characters to be used for emails obfuscation
 define("MAIL_AT_REPLACEMENT","xxx");
 define("MAIL_DOT_REPLACEMENT","§§§");
-/**************
-* ENVIRONMENT *
-**************/
+/******************
+* WEB ENVIRONMENT *
+******************/
 define('HOST', $_SERVER['HTTP_HOST'] ?? null);
-define('ABS_PATH_TO_ROOT', str_replace('/private/local/simplex/config', '', __DIR__));
-//development | production or any other value set into root .htaccess file
-if(getenv('REDIRECT_ENVIRONMENT')) {
-    define('ENVIRONMENT', getenv('REDIRECT_ENVIRONMENT'));
-} else {
-    echo 'No evironment defined, you must set up root .htaccess';
-    exit;
-}
-define('PRIVATE_SHARE_BASE_DIR', sprintf('%s/private/share', ABS_PATH_TO_ROOT));
-define('PRIVATE_SHARE_PACKAGIST_DIR', sprintf('%s/packagist', PRIVATE_SHARE_BASE_DIR));
-define('PRIVATE_SHARE_SIMPLEX_DIR', sprintf('%s/vukbgit/simplex', PRIVATE_SHARE_PACKAGIST_DIR));
-define('PRIVATE_SHARE_DIR', sprintf('%s/src', PRIVATE_SHARE_SIMPLEX_DIR));
-define('PRIVATE_LOCAL_DIR', sprintf('%s/private/local/simplex', ABS_PATH_TO_ROOT));
-define('SHARE_CONFIG_DIR', sprintf('%s/config', PRIVATE_SHARE_DIR));
-define('LOCAL_CONFIG_DIR', sprintf('%s/config', PRIVATE_LOCAL_DIR));
 define('MIDDLEWARE_QUEUE_PATH', sprintf('%s/middleware.php', SHARE_CONFIG_DIR));
-define('PUBLIC_SHARE_DIR', 'public/share');
-define('PUBLIC_LOCAL_DIR', 'public/local');
-define('PUBLIC_LOCAL_SIMPLEX_DIR', sprintf('%s/simplex', PUBLIC_LOCAL_DIR));
-/*****************
-* CACHE & ERRORS *
-*****************/
-//temporary files folder (i.e. for caching)
-define('TMP_DIR', sprintf('%s/../tmp', ABS_PATH_TO_ROOT));
 //folder with HTTP errors pages
 define('ERROR_DIR', sprintf('%s/errors', PRIVATE_SHARE_DIR));
 /**********

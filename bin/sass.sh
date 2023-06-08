@@ -1,4 +1,6 @@
 #!/bin/bash
+#bootstrap
+source "${BASH_SOURCE%/*}/bootstrap.sh"
 #turn argoments into an array of ids to compile
 ids=( "$@" )
 argsNum=${#ids[@]}
@@ -36,14 +38,14 @@ for row in "${scssFiles[@]}"; do
                 tmpPath+="$folder/"
                 #check if current folder does not exists
                 if [ ! -d  "$tmpPath" ]; then
-                    echo "creating $tmpPath folder..."
+                    outputMessage "H" "creating $tmpPath folder..."
                     #create cuurent folder
                     mkdir $tmpPath
                 fi
             #reached the file level
             else
                 #compile the file
-                echo "compiling $target..."
+                outputMessage "H" "compiling $target..."
                 sass --load-path=public/share/node_modules --load-path=private "${scssFileDefinition[1]}" "$target" --style=compressed;
             fi
         done
