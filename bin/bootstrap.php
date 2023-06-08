@@ -104,6 +104,15 @@ define('LOCAL_CONFIG_DIR', sprintf('%s/config', PRIVATE_LOCAL_DIR));
 define('PUBLIC_SHARE_DIR', 'public/share');
 define('PUBLIC_LOCAL_DIR', 'public/local');
 define('PUBLIC_LOCAL_SIMPLEX_DIR', sprintf('%s/simplex', PUBLIC_LOCAL_DIR));
+//folder where Twig template engine starts looking for templates files
+//namespaced into twig as @share
+define('SHARE_TEMPLATES_DIR', PRIVATE_SHARE_DIR);
+//namespaced into twig as @local
+define('LOCAL_TEMPLATES_DIR', PRIVATE_LOCAL_DIR);
+//twig template files extension
+define('TEMPLATES_EXTENSION', 'twig');
+//twig folder to search for default action template, path from the controller folder
+define('TEMPLATES_DEFAULT_FOLDER', 'templates');
 /*********************
  * LOCAL ENVIRONMENT *
  ********************/

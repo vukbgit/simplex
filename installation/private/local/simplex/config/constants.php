@@ -38,18 +38,6 @@ define('SESSION_COOKIE_SECURE', $sessionCookieSecure);
 **********/
 //cookies default duration  in minutes (525600 minutes = 1 year)
 define('COOKIE_DURATION', 525600 * 5);
-/************
-* TEMPLATES *
-************/
-//folder where Twig template engine starts looking for templates files
-//namespaced into twig as @share
-define('SHARE_TEMPLATES_DIR', PRIVATE_SHARE_DIR);
-//namespaced into twig as @local
-define('LOCAL_TEMPLATES_DIR', PRIVATE_LOCAL_DIR);
-//twig template files extension
-define('TEMPLATES_EXTENSION', 'twig');
-//twig folder to search for default action template, path from the controller folder
-define('TEMPLATES_DEFAULT_FOLDER', 'templates');
 /******
 * ERP *
 ******/

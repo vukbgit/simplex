@@ -122,6 +122,30 @@ $refactor->searchPatternDeleteLine(
   $exclude = [],
   $filesNames = ['constants.php']
 );
+$refactor->searchPatternDeleteLine(
+  'SHARE_TEMPLATES_DIR',
+  $folders = ['private/local/simplex/config'],
+  $exclude = [],
+  $filesNames = ['constants.php']
+);
+$refactor->searchPatternDeleteLine(
+  'LOCAL_TEMPLATES_DIR',
+  $folders = ['private/local/simplex/config'],
+  $exclude = [],
+  $filesNames = ['constants.php']
+);
+$refactor->searchPatternDeleteLine(
+  'TEMPLATES_EXTENSION',
+  $folders = ['private/local/simplex/config'],
+  $exclude = [],
+  $filesNames = ['constants.php']
+);
+$refactor->searchPatternDeleteLine(
+  'TEMPLATES_DEFAULT_FOLDER',
+  $folders = ['private/local/simplex/config'],
+  $exclude = [],
+  $filesNames = ['constants.php']
+);
 $refactor->searchPatternReplace(
   "if(getenv('REDIRECT_ENVIRONMENT')) {
     define('ENVIRONMENT', getenv('REDIRECT_ENVIRONMENT'));
