@@ -1,3 +1,8 @@
+## 3.0.3 (June 08, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.0.2 -> 3.0.3
+- exclude local constants inclusion
+- fix: type in config ini draft
+
 ## 3.0.2 (June 08, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.0.1 -> 3.0.2
 - readme
