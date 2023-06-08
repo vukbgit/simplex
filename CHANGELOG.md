@@ -1,3 +1,7 @@
+## 3.0.1 (June 08, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.0.0 -> 3.0.1
+- upgrade to v3.0 process
+
 ## 3.0.0 (June 08, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 2.2.100 -> 3.0.0
 - version 3.0.0
