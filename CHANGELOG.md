@@ -1,3 +1,7 @@
+## 3.0.5 (June 08, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.0.4 -> 3.0.5
+- fix: bootstrap
+
 ## 3.0.4 (June 08, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.0.3 -> 3.0.4
 - fix: local constants inclusion
