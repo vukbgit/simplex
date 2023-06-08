@@ -1,3 +1,7 @@
+## 3.0.2 (June 08, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.0.1 -> 3.0.2
+- readme
+
 ## 3.0.1 (June 08, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.0.0 -> 3.0.1
 - upgrade to v3.0 process
