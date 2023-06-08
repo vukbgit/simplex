@@ -104,9 +104,14 @@ define('LOCAL_CONFIG_DIR', sprintf('%s/config', PRIVATE_LOCAL_DIR));
 define('PUBLIC_SHARE_DIR', 'public/share');
 define('PUBLIC_LOCAL_DIR', 'public/local');
 define('PUBLIC_LOCAL_SIMPLEX_DIR', sprintf('%s/simplex', PUBLIC_LOCAL_DIR));
+/*********************
+ * LOCAL ENVIRONMENT *
+ ********************/
+//some functionality of local environment can be disabled - especially from CLI scripts by setting into calling script $disableLocal to true
+define('DISABLE_LOCAL', (isset($disableLocal) && $disableLocal));
 //include from local namespace constants definition files
 //it can be disabled to avoid collision during refactoring scripts
-if(!isset($includeLocalContants) || $includeLocalContants) {
+if(!DISABLE_LOCAL) {
   requireFromFiles(sprintf('%s/private/local/simplex', ABS_PATH_TO_ROOT), 'constants.php');
 }
 /************

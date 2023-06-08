@@ -121,6 +121,8 @@ return array_merge(
         * STOP ADDITIONAL FUNCTIONALITIES *
         **********************************/
     ],
-    //search definitions into local namespace
-    mergeArrayFromFiles(PRIVATE_LOCAL_DIR, 'di-container.php')
+    //search definitions into local namespace (unless local environment is "disabeld", see bin/bootstrap.php)
+    if(!DISABLE_LOCAL) {
+      mergeArrayFromFiles(PRIVATE_LOCAL_DIR, 'di-container.php')
+    }
 );
