@@ -1,3 +1,7 @@
+## 3.0.10 (June 13, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.0.9 -> 3.0.10
+- fix: erp sidebar
+
 ## 3.0.9 (June 08, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.0.8 -> 3.0.9
 - templates constants
