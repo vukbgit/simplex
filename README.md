@@ -9,6 +9,7 @@ A tool for web developers
 * [Terminology](#Terminology)
 * [Pre-Installation - Upgrade Jobs](#Pre-Installation---Upgrade-Jobs)
 * [Installation](#Installation)
+* [Upgrade](#Upgrade)
 * [Post-Installation Jobs](#Post-Installation-Jobs)
 * [Area set up](#Area-set-up)
     * [Backend / ERP](#Backend--ERP)
@@ -142,6 +143,12 @@ Simplex will:
 
 For details see [Folders and Files Structure](#Folders-and-Files-Structure) below
 
+## Upgrade ##
+
+If you upgrade from Simplex 2.x you must run manually the first refactor PHP script (_private/share/packagist/vukbgit/simplex/refactor/3.0.0.php_) on the command line using the appropriate PHP binary for your environment, for example:
+
+        php8.2 private/share/packagist/vukbgit/simplex/refactor/3.0.0.php
+
 ## Post-Installation Jobs ##
 
 * _config.ini_: 
@@ -154,7 +161,7 @@ For details see [Folders and Files Structure](#Folders-and-Files-Structure) belo
     * or passing to the called script the -i option followed by the absolute/relative path to the ini config file, i.e. `simplex-script.sh -i path/to/config.ini`
 * _/.htaccess_:
   * set default redirections, i.e _/backend_ to _/backend/sign-in-form_; in any case either you're going to define a route for the plain domain request or you redirect domain request to a default route (i.e. `RewriteRule ^/?$ /my-default-route [R,L]`); for routes definitiosn see below
-* __index.php__
+* __index.php__: set `$pathToIniConfig` to the absolute o relativ path to ini config file
 * install __public__ packages:
     * the _public\share\package.json_ file contains some NPM packages for:
         * the whole application:
