@@ -1361,7 +1361,7 @@ $(document).ready(function() {
     customValidation (function): function to be executed at the end of form submit
     onFieldError (function name): function to be executed on field object whe an error occours
     locales (bool): whether there is at least one localized field
-    assets (list): ['richTextEditor', 'fileUpload', 'dateTimePicker', 'dateTimeRangePicker', 'passwordGenerator', 'richSelect', 'colorPicker'] list of the field types included into form that need some asset to be included
+    assets (list): ['richTextEditor', 'fileUpload', 'dateTimePicker', 'passwordGenerator', 'richSelect', 'colorPicker'] list of the field types included into form that need some asset to be included
     passwordGenerator (object): password generator config object, properties:
         generateRoute (string): route for generating password, it must be mapped and must return the string with the generated password
     
@@ -1381,9 +1381,6 @@ $(document).ready(function() {
     {# assets #}
     {% if 'dateTimePicker' in config.assets %}
         {{ selfMacros.dateTimePickerAssets(context) }}
-    {% endif %}
-    {% if 'dateTimeRangePicker' in config.assets %}
-        {{ selfMacros.dateTimePickerAssets(context, true) }}
     {% endif %}
     {% if 'richTextEditor' in config.assets %}
         {{ selfMacros.richTextEditorAssets(context) }}
