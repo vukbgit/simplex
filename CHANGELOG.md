@@ -1,3 +1,7 @@
+## 3.0.12 (June 14, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.0.11 -> 3.0.12
+- purged date range inpuit references
+
 ## 3.0.11 (June 14, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.0.10 -> 3.0.11
 - readme
