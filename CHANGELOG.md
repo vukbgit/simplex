@@ -1,3 +1,7 @@
+## 3.1.1 (June 16, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.1.0 -> 3.1.1
+- fix: translations folder
+
 ## 3.1.0 (June 16, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.0.14 -> 3.1.0
 - support for models with uuid primary key
