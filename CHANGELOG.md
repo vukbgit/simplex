@@ -1,3 +1,7 @@
+## 3.1.0 (June 16, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.0.14 -> 3.1.0
+- support for models with uuid primary key
+
 ## 3.0.14 (June 14, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.0.13 -> 3.0.14
 - doc: localized route draft
