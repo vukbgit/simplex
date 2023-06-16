@@ -2,6 +2,8 @@
 declare(strict_types=1);
 //bootstrap
 require_once __DIR__ . '/bootstrap.php';
+//folder for translations po and mo files
+define('TRANSLATIONS_DIR', sprintf('%s/locales', PRIVATE_LOCAL_DIR));
 /*******************
 * SCRIPT ARGUMENTS *
 *******************/
