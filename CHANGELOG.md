@@ -1,3 +1,7 @@
+## 3.2.0 (June 18, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.1.1 -> 3.2.0
+- erp sidebar voice extra css classes
+
 ## 3.1.1 (June 16, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.1.0 -> 3.1.1
 - fix: translations folder
