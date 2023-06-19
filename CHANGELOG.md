@@ -1,3 +1,8 @@
+## 3.2.1 (June 19, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.2.0 -> 3.2.1
+- crudl draft
+- locale date formatting template filters
+
 ## 3.2.0 (June 18, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.1.1 -> 3.2.0
 - erp sidebar voice extra css classes
