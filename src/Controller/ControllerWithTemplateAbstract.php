@@ -335,24 +335,42 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         ********/
         /* formats a date with locale awareness
         */
-        $this->addTemplateFunction('dateLocale', function(string $date, string $format = null): string{
+        $this->addTemplateFunction('dateLocale', function(string $date, string $format = null): string {
             $date = \DateTime::createFromFormat('Y-m-d', $date);
             if(!$format) {
-                return $date->format($this->language->dateFormat->PHP);
+              return $date->format($this->language->dateFormat->PHP);
             } else {
-                $timestamp = (int) $date->format('U');
-                return strftime($format, $timestamp);
+              /*$timestamp = (int) $date->format('U');
+              return strftime($format, $timestamp);*/
+              $fmt = datefmt_create(
+                sprintf('%s_%s', $this->language->{'ISO-639-1'}, $this->language->{'ISO-3166-1-2'}),
+                \IntlDateFormatter::FULL,
+                \IntlDateFormatter::FULL,
+                null,
+                null,
+                $format
+              );
+              return datefmt_format($fmt, $date);
             }
         });
         /* formats a date with locale awareness
         */
-        $this->addTemplateFunction('datetimeLocale', function(string $date, string $format = null): string{
+        $this->addTemplateFunction('datetimeLocale', function(string $date, string $format = null) {
             $date = \DateTime::createFromFormat('Y-m-d H:i:s', $date);
             if(!$format) {
                 return $date->format($this->language->dateTimeFormat->PHP);
             } else {
-                $timestamp = (int) $date->format('U');
-                return strftime($format, $timestamp);
+                /*$timestamp = (int) $date->format('U');
+                return strftime($format, $timestamp);*/
+                $fmt = datefmt_create(
+                sprintf('%s_%s', $this->language->{'ISO-639-1'}, $this->language->{'ISO-3166-1-2'}),
+                \IntlDateFormatter::FULL,
+                \IntlDateFormatter::FULL,
+                null,
+                null,
+                $format
+              );
+              return datefmt_format($fmt, $date);
             }
         });
         $this->addTemplateFunction(
