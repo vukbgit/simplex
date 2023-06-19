@@ -29,11 +29,13 @@ return (object) [
                 'total' => false
             ],
             //input filter see https://www.php.net/manual/en/filter.filters.php
-            'inputFilter' => [
+            //for safe environments like backends, to save rich text
+            'inputFilter' => FILTER_UNSAFE_RAW
+            //for unsafe environments but content must be decoded before using in HTML
+            /*'inputFilter' => [
               'filter' => FILTER_SANITIZE_SPECIAL_CHARS,
               'flags' => FILTER_FLAG_NO_ENCODE_QUOTES //do not encode single ' and double " quotes
-            ],
-            'flags' => FILTER_NULL_ON_FAILURE
+            ],*/
         ],
         'DECIMAL-FIELD' => (object) [
             'table' => (object)[
@@ -46,7 +48,7 @@ return (object) [
             'inputFilter' => [
               'filter' => FILTER_VALIDATE_REGEXP,
               'options' => ['regexp'=>sprintf('/%s/', FLOAT_REGEX)],
-              'flags' => FILTER_NULL_ON_FAILURE //for nullable fields set to null otherwise woll be saved as 0
+              'flags' => FILTER_NULL_ON_FAILURE //for nullable fields set to null otherwise will be saved as 0
             ]
         ],
         'DATE-FIELD' => (object) [
@@ -62,7 +64,7 @@ return (object) [
                 //anglo-saxon date format
                 'options' => ['regexp'=>'/^[0-9]{4}-[0-9]{2}-[0-9]{4}$/']
                 //italian format
-                'options' => ['regexp'=>'/^[0-9]{2}-[0-9]{2}-[0-9]{4}$/']
+                //'options' => ['regexp'=>'/^[0-9]{2}-[0-9]{2}-[0-9]{4}$/']
             ],
         ],
         //position field is automatically handled
