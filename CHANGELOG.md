@@ -1,3 +1,7 @@
+## 3.2.2 (June 21, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.2.1 -> 3.2.2
+- fix: table row begin macro
+
 ## 3.2.1 (June 19, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.2.0 -> 3.2.1
 - crudl draft
