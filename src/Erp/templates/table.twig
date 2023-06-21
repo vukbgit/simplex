@@ -102,17 +102,18 @@
 </nav>
     {% endblock tableNavBar %}
     {% if records|length %}
-        {% if navigations.bulkActions|length %}
-            {% set bulkActionsLabel = 'selected records bulk actions'|trans %}
+      {% if navigations.bulkActions|length %}
+        {% if (_context.model.getConfig().bulkActionsKey ?? _context.model.getConfig().primaryKey) %}
+          {% set bulkActionsLabel = 'selected records bulk actions'|trans %}
 <form method="post" id="bulk-actions-form" action="" class="form-inline">
     <input type="hidden" name="bulk_action_records_ids" id="bulk_action_records_ids">
     <nav class="navbar navbar-light bg-light justify-content-start w-100">
         <span class="me-3">
-            {{ bulkActionsLabel }}:
+          {{ bulkActionsLabel }}:
         </span>
         <div class="btn-group" role="group" aria-label="{{ bulkActionsLabel }}">
-            {% for actionKey, actionProperties in navigations.bulkActions %}
-                {% set actionLabel = getLabel('actions', actionKey) %}
+          {% for actionKey, actionProperties in navigations.bulkActions %}
+            {% set actionLabel = getLabel('actions', actionKey) %}
             <button
                 type="submit"
                 id="button-{{ actionKey }}"
@@ -122,7 +123,7 @@
                 data-confirm="{{ getLabel('alerts', 'bulk_confirm')|format(actionLabel)|escape('html_attr') }}"
                 {% endif %}
                 >{{ actionLabel }}</button>
-                {% if actionProperties.blank %}
+            {% if actionProperties.blank %}
                 <script type="text/javascript">
                   $(document).ready(function() {
                     $('#button-{{ actionKey }}').click(function() {
@@ -130,8 +131,8 @@
                     })
                   })
                 </script>
-                {% endif %}
-            {% endfor %}
+            {% endif %}
+          {% endfor %}
         </div>
     </nav>
     <div class="w-100 collapse" id="bulk-warning">
@@ -141,7 +142,12 @@
         </div>
     </div>
 </form>
+        {% else %}
+        <div class="alert alert-danger">
+        {{ 'For bulk actions to work you must define into model either a primaryKey or a bulkActionsKey property' }}
+        </div>
         {% endif %}
+      {% endif %}
 <table class="{% block tableClass %}table table-sm table-hover table-responsive-sm erp-table{% endblock %}">
     <caption>{{- getLabel('table', 'caption')|format(records|length) -}}</caption>
     <thead class="table-light">

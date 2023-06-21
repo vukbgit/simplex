@@ -49,11 +49,17 @@
     </form>
 {% endmacro %}
 
+{#
+If any bulk action is configured diplays checkbox whose value is the record property by te name of either primaryKey or bulkActionsKey model property
+#}
 {% macro displayRowBegin(context, loop, record) %}
   {% if context.navigations.bulkActions|length %}
     <td class="align-middle">
         <div>
-            <input type="checkbox" name="bulk_action_records_ids[]" value="{{ attribute(record, context.model.getConfig().primaryKey ?? '') }}">
+            <input
+              type="checkbox"
+              name="bulk_action_records_ids[]"
+              value="{{ attribute(record, context.model.getConfig().bulkActionsKey ?? context.model.getConfig().primaryKey ?? '') }}">
         </div>
     </td>
   {% endif %}
