@@ -53,7 +53,7 @@
   {% if context.navigations.bulkActions|length %}
     <td class="align-middle">
         <div>
-            <input type="checkbox" name="bulk_action_records_ids[]" value="{{ attribute(record, context.model.getConfig().primaryKey) }}">
+            <input type="checkbox" name="bulk_action_records_ids[]" value="{{ attribute(record, context.model.getConfig().primaryKey ?? '') }}">
         </div>
     </td>
   {% endif %}
