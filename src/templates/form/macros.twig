@@ -804,6 +804,7 @@ NOTE: for checkbox group config.mandatory means that at least one input must be 
 
 {# displays a date time picker block
 @param hash config: hash for field properties (see setFieldAttributes macro explanation) plus specific properties (see displayDateTimePicker)
+- noFormatHelp: do not automatically display format into help (in case of custom format manipulation)
 #}
 {% macro displayDateTimePickerGroup(config) %}
     {% import _self as selfMacros %}
@@ -811,7 +812,9 @@ NOTE: for checkbox group config.mandatory means that at least one input must be 
     {% set config = updateProperty(config, 'format', format) %}
     {% set id = (config.id ?? config.name)|formatIdforJs %}
     {% set help = [config.help] ?? null %}
-    {% set help = ['Format: %s'|format(format)]|merge(help) %}
+    {% if config.noFormatHelp is not defined or config.noFormatHelp is same as false %}
+      {% set help = ['Format: %s'|format(format)]|merge(help) %}
+    {% endif %}
     {% set config = updateProperty(config, 'help', help) %}
         {{ selfMacros.displayFormGroup(config, id) }}
         {{ selfMacros.displayLabel(config) }}
