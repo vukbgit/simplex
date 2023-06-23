@@ -1,3 +1,7 @@
+## 3.4.0 (June 23, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.3.0 -> 3.4.0
+- noFormatHelp datetimepicker option
+
 ## 3.3.0 (June 21, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.2.2 -> 3.3.0
 - feat: ERP bulk actions
