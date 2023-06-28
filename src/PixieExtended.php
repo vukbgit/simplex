@@ -33,6 +33,10 @@ class PixieExtended extends QueryBuilderHandler
              'mysql' => 'CHAR',
              'pgsql' => 'TEXT'
          ],
+         'singleQuoteEscapePattern' => [
+             'mysql' => "\'",
+             'pgsql' => "''"
+         ],
      ];
      
      /**
@@ -41,12 +45,26 @@ class PixieExtended extends QueryBuilderHandler
       private $buildingQuery;
      
     /**
-    * Checks whether connection is alive
-    * @return bool
+    * Gets a driver option by name
+    * @param boolstring $optionName
+    * @return mixed option value or null
     **/
     public function getDriverOption($optionName)
     {
-        return $this->optionsByDriver[$optionName][$this->getConnection()->getAdapter()] ?? null;
+      return $this->optionsByDriver[$optionName][$this->getConnection()->getAdapter()] ?? null;
+    }
+    
+    /**
+    * Gets a driver options
+    * @return array
+    **/
+    public function getDriverOptions(): array
+    {
+      $options = [];
+      foreach($this->optionsByDriver as $optionName => $driversValues) {
+        $options[$optionName] = $driversValues[$this->getConnection()->getAdapter()];
+      }
+      return $options;
     }
     
     /**
@@ -115,6 +133,20 @@ class PixieExtended extends QueryBuilderHandler
     public function sql(): string
     {
         return $this->getQuery()->getRawSql();
+    }
+
+    /**
+    * Escapes single quotes
+    * @param string $string
+    * @return string string with single quotes escaped
+    **/
+    public function escapeSingleQuotes(string $string): string
+    {
+        return str_replace(
+          "'",
+          $this->getDriverOption('singleQuoteEscapePattern'),
+          $string
+        );
     }
 
     /**

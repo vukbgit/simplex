@@ -647,16 +647,16 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
         //clean multiple white spaces
         $filterString = preg_replace('/\h{2,}/iu', ' ', $filterString);    
         //search for "" quotes
-        $quotedTokensNumber = preg_match_all('/"([\w\.\h?]+)"/iu', $filterString, $quotedTokens);
+        $quotedTokensNumber = preg_match_all('/"([\w\.\'\h?]+)"/iu', $filterString, $quotedTokens);
         if($quotedTokensNumber > 0) {
-            $filterString = preg_replace('/"[\w\.\h?]+"/iu', '', $filterString);    
+            $filterString = preg_replace('/"[\w\.\'\h?]+"/iu', '', $filterString);    
         }
-        preg_match_all('/[\w\-\.]+/i', $filterString, $notQuotedTokens);
+        preg_match_all('/[\w\-\.\']+/i', $filterString, $notQuotedTokens);
         $filterTokens = array_merge($quotedTokens[1], $notQuotedTokens[0]);
         //create a grouped where for the filter
         $filterWhere = [];
         foreach ($filterTokens as $filterToken) {
-            $filterToken = trim($filterToken);
+            $filterToken = $this->model->getQuery()->escapeSingleQuotes(trim($filterToken));
             if(!$filterToken) {
                 continue;
             }
