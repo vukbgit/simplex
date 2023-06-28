@@ -1,3 +1,8 @@
+## 3.4.1 (June 28, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.4.0 -> 3.4.1
+- fix: escape single quote in table filter tokens
+- fix: escape single quote in table filter tokens
+
 ## 3.4.0 (June 23, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.3.0 -> 3.4.0
 - noFormatHelp datetimepicker option
