@@ -523,7 +523,7 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
                 break;
                 //filter
                 case 'filter':
-                    $this->replaceListFilter($input->filter);
+                    $this->replaceListFilter(html_entity_decode($input->filter));
                 break;
                 //custom conditions
                 case 'custom_conditions':
