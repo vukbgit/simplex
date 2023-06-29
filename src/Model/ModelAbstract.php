@@ -375,6 +375,14 @@ abstract class ModelAbstract
             $this->query->limit($limit);
         }
         $records = $this->query->get();
+        //decode fields
+        foreach($records as &$record) {
+          foreach($record as &$fieldValue) {
+            if(is_string($fieldValue)) {
+              $fieldValue = html_entity_decode($fieldValue);
+            }
+          }
+        }
         //localized fields
         $records = $this->extractLocales($records);
         //xx($records);
