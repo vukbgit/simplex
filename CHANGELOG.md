@@ -1,3 +1,7 @@
+## 3.4.2 (June 29, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.4.1 -> 3.4.2
+- fix: HTML decode by default model records
+
 ## 3.4.1 (June 28, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.4.0 -> 3.4.1
 - fix: escape single quote in table filter tokens
