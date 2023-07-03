@@ -1,3 +1,7 @@
+## 3.4.3 (July 03, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.4.2 -> 3.4.3
+- feat: PHPMailerExtended multiple recipient addresses
+
 ## 3.4.2 (June 29, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.4.1 -> 3.4.2
 - fix: HTML decode by default model records
