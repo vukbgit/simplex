@@ -49,7 +49,7 @@ class PHPMailerExtended extends PHPMailer
     /**
      * Sends an email
      * @param string $from
-     * @param string $to
+     * @param string $to: recipient address, multiple addresses must use semicolon (;) as separator
      * @param string $subject
      * @param string $body: html body, text version gets automatically extracted
      * @param string $fromName
@@ -69,7 +69,10 @@ class PHPMailerExtended extends PHPMailer
         $this->setFrom($from, $fromName);
         $this->addReplyTo($replyTo ?? $from, $replyToName ?? $fromName);
         //recipients
-        $this->addAddress($to, $toName);
+        $tos = explode(';', $to);
+        foreach($tos as $to) {
+          $this->addAddress(trim($to), $toName);
+        }
         foreach((array) $cc as $ccAddress) {
             $this->addCC($ccAddress);
         }
