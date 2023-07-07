@@ -41,6 +41,11 @@ class FastRouteMiddleware implements MiddlewareInterface
     private $routesDefinitions;
 
     /**
+     * @var array current resolved route properties
+     */
+    private $route;
+
+    /**
      * Set the Dispatcher instance and optionally the response factory to return the error responses.
      * @param string $environment: 'development': no cache used | any other value routes are cached
      * @param array $routes: array of routes definition
@@ -88,6 +93,8 @@ class FastRouteMiddleware implements MiddlewareInterface
         $route = $this->router->dispatch($request->getMethod(), rawurldecode($request->getUri()->getPath()));
         //add routes definitions to parameters
         $route[2]['routesDefinitions'] = $this->routesDefinitions;
+        //store route
+        $this->route = $route;
         //handle errors
         if ($route[0] === Dispatcher::NOT_FOUND) {
             return $this->responseFactory->createResponse(404);
@@ -125,5 +132,15 @@ class FastRouteMiddleware implements MiddlewareInterface
     protected function setHandler(ServerRequestInterface $request, $handler): ServerRequestInterface
     {
         return $request->withAttribute($this->attribute, $handler);
+    }
+    
+    /**
+     * Gets current route
+     *
+     * @return array
+     */
+    public function getRoute(): array
+    {
+        return $this->route;
     }
 }
