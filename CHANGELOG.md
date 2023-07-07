@@ -1,3 +1,7 @@
+## 3.5.0 (July 07, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.4.3 -> 3.5.0
+- feat: route middleware current rout stored
+
 ## 3.4.3 (July 03, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.4.2 -> 3.4.3
 - feat: PHPMailerExtended multiple recipient addresses
