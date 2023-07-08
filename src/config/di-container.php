@@ -90,19 +90,18 @@ return array_merge(
         'dbDriver' => function(){
             $config = require sprintf('%s/db.php', LOCAL_CONFIG_DIR);
             if(!isset($config[ENVIRONMENT])) {
-                throw new \Exception(sprintf('There is no databsae configuration for current environment \'%s\'', ENVIRONMENT));
+                throw new \Exception(sprintf('There is no database configuration for current environment \'%s\'', ENVIRONMENT));
             }
             return $config[ENVIRONMENT]['driver'];
         },
         'dbConfig' => function(){
             $config = require sprintf('%s/db.php', LOCAL_CONFIG_DIR);
             if(!isset($config[ENVIRONMENT])) {
-                throw new \Exception(sprintf('There is no databsae configuration for current environment \'%s\'', ENVIRONMENT));
+                throw new \Exception(sprintf('There is no database configuration for current environment \'%s\'', ENVIRONMENT));
             }
             return $config[ENVIRONMENT];
         },
         'pixieConnection' => create(PixieConnectionExtended::class)
-            //->constructor('mysql', get('dbConfig'), 'QB'),
             ->constructor(get('dbDriver'), get('dbConfig'), 'QB'),
         'queryBuilder' => create(PixieExtended::class)
             ->constructor(get('pixieConnection')),
