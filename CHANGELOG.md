@@ -1,3 +1,7 @@
+## 3.5.1 (July 08, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.5.0 -> 3.5.1
+- typos
+
 ## 3.5.0 (July 07, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.4.3 -> 3.5.0
 - feat: route middleware current rout stored
