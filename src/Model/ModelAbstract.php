@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Simplex\Model;
 
 use Simplex\PixieExtended;
+use Simplex\PixieConnectionExtended;
 use function Simplex\getInstanceNamespace;
 use function Simplex\getInstancePath;
 use function Simplex\loadLanguages;
@@ -95,6 +96,31 @@ abstract class ModelAbstract
     public function getQuery(): PixieExtended
     {
         return $this->query;
+    }
+    
+    /**
+    * Replaces the query instance with another connection
+    * @param string $driver
+    * @param string $userName
+    * @param string $password
+    * @param string $database
+    * @return void
+    */
+    public function setQuery(string $driver, string $userName, string $password, string $database): void
+    {
+      $this->query = new PixieExtended(
+      new PixieConnectionExtended(
+        $driver,
+        [
+          'host' => 'localhost',
+          'username' => $userName,
+          'password' => $password,
+          'database' => $database,
+          'charset'   => 'utf8',
+          'collation' => 'utf8_unicode_ci',
+        ]
+      )
+    );;
     }
     
     /**
