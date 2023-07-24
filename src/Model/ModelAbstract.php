@@ -243,7 +243,7 @@ abstract class ModelAbstract
                     $errorCode = '23000';
                     $errorType = 'duplicate_entry';
                     //extract field name
-                    preg_match("/Key \(([0-9a-zA-Z_]+)\)/", $errorMessage, $matches);
+                    preg_match("/Key \(([0-9a-zA-Z_ ,]+)\)/", $errorMessage, $matches);
                     $data = [$matches[1]];
                 }
                 //failed foreign key constraint
