@@ -1,3 +1,7 @@
+## 3.6.1 (July 24, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.6.0 -> 3.6.1
+- fix default error handler
+
 ## 3.6.0 (July 10, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.5.1 -> 3.6.0
 - feat: change model connection parameters runtime
