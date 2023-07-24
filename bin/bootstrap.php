@@ -86,7 +86,7 @@ switch(ENVIRONMENT) {
       break;
     }
     break;
-    case 'production':
+    default:
         $whoops->pushHandler(new \Simplex\ErrorHandler);
     break;
 }
