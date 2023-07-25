@@ -1,3 +1,7 @@
+## 3.6.3 (July 25, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.6.2 -> 3.6.3
+- fix: get erp ancestors only if authenticated
+
 ## 3.6.2 (July 24, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.6.1 -> 3.6.2
 - fix duplicate entry regexp
