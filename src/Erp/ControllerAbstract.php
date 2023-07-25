@@ -91,7 +91,9 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
         //store model
         //$this->storeModel();
         //store ancestors
-        $this->storeAncestors();
+        if($this->isAuthenticated()) {
+          $this->storeAncestors();
+        }
         //get cookie stored user options
         $this->subjectCookie = $this->getSubjectCookie();
         //load navigation
