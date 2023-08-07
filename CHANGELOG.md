@@ -1,3 +1,7 @@
+## 3.6.4 (August 07, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.6.3 -> 3.6.4
+- fix: check template filter/function existence before adding
+
 ## 3.6.3 (July 25, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.6.2 -> 3.6.3
 - fix: get erp ancestors only if authenticated
