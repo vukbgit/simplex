@@ -7,20 +7,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Simplex\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-23 10:21+0100\n"
-"PO-Revision-Date: 2021-11-23 10:38+0100\n"
+"POT-Creation-Date: 2023-08-13 18:08+0200\n"
+"PO-Revision-Date: 2023-08-13 18:11+0200\n"
 "Language: it_IT\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Last-Translator: \n"
 "Language-Team: \n"
-"X-Generator: Poedit 3.0\n"
+"X-Generator: Poedit 2.4.2\n"
 
 #. line 19
 #. line 30
 #. line 29
 #. line 28
+#. line 24
 msgid "list"
 msgstr "elenco"
 
@@ -41,6 +42,7 @@ msgstr "annulla"
 #. line 38
 #. line 41
 #. line 40
+#. line 36
 msgid "Record saved"
 msgstr "Riga salvata"
 
@@ -59,6 +61,7 @@ msgstr "Manca il vaore per la chiave esterna obbligatoria %s"
 #. line 33
 #. line 46
 #. line 51
+#. line 47
 msgid "sort ascending"
 msgstr "imposta ordine alfabetico ascendente"
 
@@ -142,6 +145,9 @@ msgstr "Prego, effettuare l'accesso"
 #. line 32
 #. line 33
 #. line 34
+#. line 32
+#. line 33
+#. line 34
 msgid "Username"
 msgstr "Nome Utente"
 
@@ -203,6 +209,8 @@ msgstr "Nome utente errato"
 #. line 55
 #. line 56
 #. line 57
+#. line 56
+#. line 57
 msgid "Password"
 msgstr "Password errata"
 
@@ -230,6 +238,7 @@ msgstr "corrente"
 #. line 26
 #. line 30
 #. line 41
+#. line 70
 msgid "Sign out"
 msgstr "Esci"
 
@@ -249,6 +258,7 @@ msgstr "Esci"
 #. line 81
 #. line 84
 #. line 47
+#. line 49
 msgid "Close"
 msgstr "Chiudi"
 
@@ -263,31 +273,6 @@ msgstr "numero massimo di file: %s"
 msgid "no limit"
 msgstr "nessun limite"
 
-#. line 417
-#. line 427
-#. line 464
-#. line 704
-#. line 798
-#. line 833
-#. line 1043
-msgid "Control Code"
-msgstr "Codice di Verifica"
-
-#. line 434
-#. line 444
-#. line 481
-#. line 721
-#. line 815
-#. line 850
-#. line 1065
-msgid ""
-"Type code displayed into image, if you are not able to read the code click "
-"on the reload icon to generate a new image"
-msgstr ""
-"Digitare il codice visualizzato nell'immagine, se non siete in grado di "
-"leggere il codice cliccate sull'icona di caricamento per generare una nuova "
-"immagine"
-
 #. line 753
 #. line 752
 #. line 776
@@ -296,6 +281,7 @@ msgstr ""
 #. line 1447
 #. line 1224
 #. line 1588
+#. line 1658
 msgid "The value you entered for this field is invalid."
 msgstr "Il valore digitato per questo campo non è valido."
 
@@ -349,6 +335,8 @@ msgstr "Il valore digitato per questo campo non è valido."
 #. line 21
 #. line 53
 #. line 56
+#. line 82
+#. line 84
 msgid "Filter"
 msgstr "Filtra"
 
@@ -364,6 +352,7 @@ msgstr "lunghezza massima: %s caratteri"
 #. line 1375
 #. line 1152
 #. line 1516
+#. line 1586
 msgid "Please fill out this field"
 msgstr "Prego, compilare questo campo"
 
@@ -375,6 +364,7 @@ msgstr "Prego, compilare questo campo"
 #. line 1378
 #. line 1155
 #. line 1519
+#. line 1589
 msgid "Please enter an email address"
 msgstr "Prego, digitare un indirizzo di posta elettronica"
 
@@ -386,6 +376,7 @@ msgstr "Prego, digitare un indirizzo di posta elettronica"
 #. line 1381
 #. line 1158
 #. line 1522
+#. line 1592
 msgid "Please enter a URL"
 msgstr "Prego, digitare un URL"
 
@@ -397,6 +388,7 @@ msgstr "Prego, digitare un URL"
 #. line 1384
 #. line 1161
 #. line 1525
+#. line 1595
 #, php-format
 msgid ""
 "Please lengthen this text to %s characters or more. You are currently using "
@@ -413,6 +405,7 @@ msgstr ""
 #. line 1387
 #. line 1164
 #. line 1528
+#. line 1598
 #, php-format
 msgid ""
 "Please short this text to no more than %s characters. You are currently "
@@ -429,6 +422,7 @@ msgstr ""
 #. line 1390
 #. line 1167
 #. line 1531
+#. line 1601
 msgid "Please enter a number"
 msgstr "Prego, digitare un numero"
 
@@ -440,6 +434,7 @@ msgstr "Prego, digitare un numero"
 #. line 1393
 #. line 1170
 #. line 1534
+#. line 1604
 msgid "Please select a valid value"
 msgstr "Prego, selezionare un valore valido"
 
@@ -451,6 +446,7 @@ msgstr "Prego, selezionare un valore valido"
 #. line 1396
 #. line 1173
 #. line 1537
+#. line 1607
 #, php-format
 msgid "Please select a value that is no more than %s"
 msgstr "Prego, selezionare un valore che non sia maggiore di %s"
@@ -463,6 +459,7 @@ msgstr "Prego, selezionare un valore che non sia maggiore di %s"
 #. line 1399
 #. line 1176
 #. line 1540
+#. line 1610
 #, php-format
 msgid "Please select a value that is no less than %s"
 msgstr "Prego, selezionare un valore che non sia minore di %s"
@@ -475,6 +472,7 @@ msgstr "Prego, selezionare un valore che non sia minore di %s"
 #. line 1402
 #. line 1179
 #. line 1543
+#. line 1613
 msgid "Please match the requested format"
 msgstr "Prego, conformarsi al formato richiesto"
 
@@ -483,6 +481,7 @@ msgstr "Prego, conformarsi al formato richiesto"
 #. line 96
 #. line 141
 #. line 193
+#. line 196
 msgid "No records saved"
 msgstr "Nessuna riga salvata"
 
@@ -536,6 +535,7 @@ msgstr "azioni di massa sulle righe selezionate"
 
 #. line 50
 #. line 99
+#. line 140
 msgid "you need to select at least one record"
 msgstr "è necessario selezionare almeno una riga"
 
@@ -546,10 +546,12 @@ msgid "Missing sequence for primary key"
 msgstr "Sequence mancante per chiave primaria"
 
 #. line 25
+#. line 41
 msgid "filter help"
 msgstr "aiuto filtro"
 
 #. line 28
+#. line 44
 #, php-format
 msgid ""
 "separate multiple search terms by spaces\n"
@@ -565,9 +567,43 @@ msgstr ""
 "          "
 
 #. line 55
+#. line 83
 msgid "Reset"
 msgstr "Azzera"
 
 #. line 1294
+#. line 1318
 msgid "Insert new record"
 msgstr "Inserisci nuovo record"
+
+msgid "reset sorting"
+msgstr "azzera ordinamento"
+
+#, php-format
+msgid "maximum number of results: %d"
+msgstr "numero massimo di risultati: %d"
+
+#. line 417
+#. line 427
+#. line 464
+#. line 704
+#. line 798
+#. line 833
+#. line 1043
+#~ msgid "Control Code"
+#~ msgstr "Codice di Verifica"
+
+#. line 434
+#. line 444
+#. line 481
+#. line 721
+#. line 815
+#. line 850
+#. line 1065
+#~ msgid ""
+#~ "Type code displayed into image, if you are not able to read the code "
+#~ "click on the reload icon to generate a new image"
+#~ msgstr ""
+#~ "Digitare il codice visualizzato nell'immagine, se non siete in grado di "
+#~ "leggere il codice cliccate sull'icona di caricamento per generare una "
+#~ "nuova immagine"

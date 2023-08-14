@@ -10,41 +10,36 @@ use function Simplex\getInstancePath;
 use function Simplex\loadLanguages;
 
 /*
-* class that rapresents a model, an atomic structure of data stored in a database
-*/
-abstract class ModelAbstract
+ * class that rapresents a model, an atomic structure of data stored in a database
+ */
+abstract class ModelAbstract extends BaseModelAbstract
 {
     /**
-    * @var PixieExtended
-    */
+     * @var PixieExtended
+     */
     protected $query;
 
     /**
-    * @var object
-    * configuration object for model
-    */
-    protected $config;
-
-    /**
-    * @var bool
-    * whether model has a position field
-    */
+     * @var bool
+     * whether model has a position field
+     */
     public $hasPositionField;
     
     /**
-    * @var string
-    * String to mark text cloned fields with
-    */
+     * @var string
+     * String to mark text cloned fields with
+     */
     private $cloneMark = '*';
     
     /**
-    * Constructor
-    * @param PixieExtended $query
-    */
+     * Constructor
+     * @param PixieExtended $query
+     */
     public function __construct(PixieExtended $query)
     {
-        $this->query = $query;
-        $this->loadConfig();
+      parent::__construct('database');
+      $this->query = $query;
+      
     }
 
     /*********
@@ -52,60 +47,41 @@ abstract class ModelAbstract
     *********/
 
     /**
-    * Loads and check config
-    */
-    private function loadConfig()
+     * Parses config
+     */
+    protected function parseConfig()
     {
-        //config file must be into class-folder/config/model.php
-        $configPath = sprintf('%s/config/model.php', getInstancePath($this));
-        //check path
-        if(!is_file($configPath)) {
-            throw new \Exception(sprintf('configuration file \'%s\' for model %s is not a valid path', $configPath, getInstanceNamespace($this)));
-        }
-        $config = require($configPath);
-        //check that config is an object
-        if(!is_object($config)) {
-            throw new \Exception(sprintf('configuration file \'%s\' for model %s must return an object', $configPath, getInstanceNamespace($this)));
-        }
-        //check table
-        if(!isset($config->table)) {
-            throw new \Exception(sprintf('configuration loaded from file \'%s\' for model %s must contain a \'table\' property', $configPath, getInstanceNamespace($this)));
-        }
-        //check primary key
-        /*if(!isset($config->primaryKey)) {
-            throw new \Exception(sprintf('configuration loaded from file \'%s\' for model %s must contain a \'primaryKey\' property', $configPath, getInstanceNamespace($this)));
-        }else*/if(is_array($config->primaryKey)) {
-            throw new \Exception(sprintf('Simplex model does not support composite primary keys, model %s configuration defined in %s must expose a single primary key', getInstanceNamespace($this), $configPath));
-        }
-        //has position field
-        $this->hasPositionField = isset($config->position) && isset($config->position->field) && $config->position->field;
-        $this->config = $config;
+      $configPath = $this->buildConfigPath();
+      //check table
+      if(!isset($this->config->table)) {
+        throw new \Exception(sprintf('configuration loaded from file \'%s\' for model %s must contain a \'table\' property', $configPath, getInstanceNamespace($this)));
+      }
+      //check primary key
+      /*if(!isset($this->config->primaryKey)) {
+          throw new \Exception(sprintf('configuration loaded from file \'%s\' for model %s must contain a \'primaryKey\' property', $configPath, getInstanceNamespace($this)));
+      }else*/if(is_array($this->config->primaryKey)) {
+        throw new \Exception(sprintf('Simplex model does not support composite primary keys, model %s configuration defined in %s must expose a single primary key', getInstanceNamespace($this), $configPath));
+      }
+      //has position field
+      $this->hasPositionField = isset($this->config->position) && isset($this->config->position->field) && $this->config->position->field;
     }
     
     /**
-    * Returns the config object
-    */
-    public function getConfig(): object
-    {
-        return $this->config;
-    }
-    
-    /**
-    * Returns the query instance
-    */
+     * Returns the query instance
+     */
     public function getQuery(): PixieExtended
     {
         return $this->query;
     }
     
     /**
-    * Replaces the query instance with another connection
-    * @param string $driver
-    * @param string $userName
-    * @param string $password
-    * @param string $database
-    * @return void
-    */
+     * Replaces the query instance with another connection
+     * @param string $driver
+     * @param string $userName
+     * @param string $password
+     * @param string $database
+     * @return void
+     */
     public function setQuery(string $driver, string $userName, string $password, string $database): void
     {
       $this->query = new PixieExtended(
@@ -124,8 +100,8 @@ abstract class ModelAbstract
     }
     
     /**
-    * Returns the table defined
-    */
+     * Returns the table defined
+     */
     public function table(): string
     {
         return $this->config->table;
@@ -379,7 +355,7 @@ abstract class ModelAbstract
     *                fields aliases
     *                fields based on runtime variables
     */
-    public function get(array $where = [], array $order = [], int $limit = null, array $extraFields = [])
+    public function get(array $where = [], array $order = [], int $limit = null, array $extraFields = []): array
     {
         //table
         $this->query

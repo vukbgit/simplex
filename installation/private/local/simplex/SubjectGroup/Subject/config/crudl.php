@@ -101,4 +101,6 @@ return (object) [
       ['data_domanda', 'DESC'],
     ],
     */
+    /*//list query limit
+    'queryLimit' => 100,
 ];

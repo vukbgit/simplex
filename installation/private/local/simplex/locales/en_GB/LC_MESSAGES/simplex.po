@@ -3,24 +3,25 @@
 # This file is distributed under the same license as the Simplex package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Simplex\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-23 10:21+0100\n"
-"PO-Revision-Date: 2021-11-23 10:32+0100\n"
-"Language: en_GB\n"
+"POT-Creation-Date: 2023-08-13 18:08+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"X-Generator: Poedit 3.0\n"
 
 #. line 19
 #. line 30
 #. line 29
 #. line 28
+#. line 24
 msgid "list"
 msgstr "list"
 
@@ -41,6 +42,7 @@ msgstr "cancel"
 #. line 38
 #. line 41
 #. line 40
+#. line 36
 msgid "Record saved"
 msgstr "Record saved"
 
@@ -59,6 +61,7 @@ msgstr "Missing value for mandatory foreign key %s"
 #. line 33
 #. line 46
 #. line 51
+#. line 47
 msgid "sort ascending"
 msgstr "sort ascending"
 
@@ -130,6 +133,9 @@ msgstr "Please sign in"
 #. line 32
 #. line 33
 #. line 34
+#. line 32
+#. line 33
+#. line 34
 msgid "Username"
 msgstr "Username"
 
@@ -183,6 +189,8 @@ msgstr "Wrong username"
 #. line 55
 #. line 56
 #. line 57
+#. line 56
+#. line 57
 msgid "Password"
 msgstr "Password"
 
@@ -210,6 +218,7 @@ msgstr "current"
 #. line 26
 #. line 30
 #. line 41
+#. line 70
 msgid "Sign out"
 msgstr "Sign out"
 
@@ -227,6 +236,7 @@ msgstr "Sign out"
 #. line 81
 #. line 84
 #. line 47
+#. line 49
 msgid "Close"
 msgstr "Close"
 
@@ -241,28 +251,6 @@ msgstr "maximum number of files: %s"
 msgid "no limit"
 msgstr "no limit"
 
-#. line 417
-#. line 464
-#. line 704
-#. line 798
-#. line 833
-#. line 1043
-msgid "Control Code"
-msgstr "Control Code"
-
-#. line 434
-#. line 481
-#. line 721
-#. line 815
-#. line 850
-#. line 1065
-msgid ""
-"Type code displayed into image, if you are not able to read the code click "
-"on the reload icon to generate a new image"
-msgstr ""
-"Type code displayed into image, if you are not able to read the code click "
-"on the reload icon to generate a new image"
-
 #, php-format
 msgid "maximum length %s characters"
 msgstr "maximum length %s characters"
@@ -274,6 +262,7 @@ msgstr "maximum length %s characters"
 #. line 1447
 #. line 1224
 #. line 1588
+#. line 1658
 msgid "The value you entered for this field is invalid."
 msgstr "The value you entered for this field is invalid."
 
@@ -319,6 +308,8 @@ msgstr "The value you entered for this field is invalid."
 #. line 21
 #. line 53
 #. line 56
+#. line 82
+#. line 84
 msgid "Filter"
 msgstr "Filter"
 
@@ -329,6 +320,7 @@ msgstr "Filter"
 #. line 1375
 #. line 1152
 #. line 1516
+#. line 1586
 msgid "Please fill out this field"
 msgstr "Please fill out this field"
 
@@ -339,6 +331,7 @@ msgstr "Please fill out this field"
 #. line 1378
 #. line 1155
 #. line 1519
+#. line 1589
 msgid "Please enter an email address"
 msgstr "Please enter an email address"
 
@@ -349,6 +342,7 @@ msgstr "Please enter an email address"
 #. line 1381
 #. line 1158
 #. line 1522
+#. line 1592
 msgid "Please enter a URL"
 msgstr "Please enter a URL"
 
@@ -359,6 +353,7 @@ msgstr "Please enter a URL"
 #. line 1384
 #. line 1161
 #. line 1525
+#. line 1595
 #, php-format
 msgid ""
 "Please lengthen this text to %s characters or more. You are currently using "
@@ -374,6 +369,7 @@ msgstr ""
 #. line 1387
 #. line 1164
 #. line 1528
+#. line 1598
 #, php-format
 msgid ""
 "Please short this text to no more than %s characters. You are currently "
@@ -389,6 +385,7 @@ msgstr ""
 #. line 1390
 #. line 1167
 #. line 1531
+#. line 1601
 msgid "Please enter a number"
 msgstr "Please enter a number"
 
@@ -399,6 +396,7 @@ msgstr "Please enter a number"
 #. line 1393
 #. line 1170
 #. line 1534
+#. line 1604
 msgid "Please select a valid value"
 msgstr "Please select a valid value"
 
@@ -409,6 +407,7 @@ msgstr "Please select a valid value"
 #. line 1396
 #. line 1173
 #. line 1537
+#. line 1607
 #, php-format
 msgid "Please select a value that is no more than %s"
 msgstr "Please select a value that is no more than %s"
@@ -420,6 +419,7 @@ msgstr "Please select a value that is no more than %s"
 #. line 1399
 #. line 1176
 #. line 1540
+#. line 1610
 #, php-format
 msgid "Please select a value that is no less than %s"
 msgstr "Please select a value that is no less than %s"
@@ -431,6 +431,7 @@ msgstr "Please select a value that is no less than %s"
 #. line 1402
 #. line 1179
 #. line 1543
+#. line 1613
 msgid "Please match the requested format"
 msgstr "Please match the requested format"
 
@@ -444,6 +445,7 @@ msgstr "fields marked with * are mandatory"
 #. line 96
 #. line 141
 #. line 193
+#. line 196
 msgid "No records saved"
 msgstr "No records saved"
 
@@ -492,6 +494,7 @@ msgstr "selected records bulk actions"
 
 #. line 50
 #. line 99
+#. line 140
 msgid "you need to select at least one record"
 msgstr "you need to select at least one record"
 
@@ -502,10 +505,12 @@ msgid "Missing sequence for primary key"
 msgstr "Missing sequence for primary key"
 
 #. line 25
+#. line 41
 msgid "filter help"
 msgstr "filter help"
 
 #. line 28
+#. line 44
 #, php-format
 msgid ""
 "separate multiple search terms by spaces\n"
@@ -521,9 +526,40 @@ msgstr ""
 "          "
 
 #. line 55
+#. line 83
 msgid "Reset"
 msgstr "Reset"
 
 #. line 1294
+#. line 1318
 msgid "Insert new record"
 msgstr "Insert new record"
+
+msgid "reset sorting"
+msgstr ""
+
+#, php-format
+msgid "maximum number of results: %d"
+msgstr ""
+
+#. line 417
+#. line 464
+#. line 704
+#. line 798
+#. line 833
+#. line 1043
+#~ msgid "Control Code"
+#~ msgstr "Control Code"
+
+#. line 434
+#. line 481
+#. line 721
+#. line 815
+#. line 850
+#. line 1065
+#~ msgid ""
+#~ "Type code displayed into image, if you are not able to read the code "
+#~ "click on the reload icon to generate a new image"
+#~ msgstr ""
+#~ "Type code displayed into image, if you are not able to read the code "
+#~ "click on the reload icon to generate a new image"

@@ -1,0 +1,17 @@
+{% macro fileBrowserAssets(iconSet) %}
+  <link rel="stylesheet" href="{{ 'file-icon-vectors/dist/file-icon-%s.min.css'|format(iconSet|default('classic'))|pathToNpmAsset }}" />
+{% endmacro %}
+
+{% macro displayItemTypeIcon(iconClassTemplate, splFileInfo, customIcons) %}
+  {% set fileExtension = splFileInfo.isDir() ? 'folder' : splFileInfo.getExtension() %}
+  {% set iconClass = attribute(customIcons, fileExtension) ?? iconClassTemplate|format(fileExtension) %}
+  <span class="{{ iconClass }}"></span>
+{% endmacro %}
+
+{% macro displayItemNameLink(splFileInfo) %}
+  {% if splFileInfo.isDir() %}
+    {{ splFileInfo.getBasename() }}
+  {% elseif splFileInfo.isFile() %}
+  <a href="/{{ splFileInfo.getPathname() }}" target="_blank">{{ splFileInfo.getBasename() }}</a>
+  {% endif %}
+{% endmacro %}

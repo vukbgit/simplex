@@ -315,7 +315,9 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         },
         ['is_safe' => ['html']]);
         //convert metric byte units
-        $this->addTemplateFunction('convertByteUnit', function(float $value, string $fromUnit, string $toUnit = ''): string{
+        //$fromUnit must be in short notation and can refer to metric system (kB, MB, GB, TB, PB, …) or binary (KiB, MiB, GiB, TiB, PiB, …)
+        //NOTE: if no value is provided for $fromUnit the unit is bytes
+        $this->addTemplateFunction('convertByteUnit', function(float $value, string $fromUnit = '', string $toUnit = ''): string{
             return \ByteUnits\parse(sprintf('%s%s', $value, $fromUnit))->format($toUnit, ' ');
         });
         //ucwords wrapper

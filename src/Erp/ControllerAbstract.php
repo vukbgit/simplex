@@ -208,8 +208,21 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
         if(!is_file($configPath)) {
             throw new \Exception(sprintf('configuration CRUDL file \'%s\' for subject %s is not a valid path', $configPath, getInstanceNamespace($this)));
         }
+        $config = require($configPath);
+        //check that config is an object
+        if(!is_object($config)) {
+          throw new \Exception(sprintf('CRUD configuration file \'%s\' for controller %s must return an object', $configPath, getInstanceNamespace($this)));
+        }
+        //check fields property
+        if(!isset($config->fields)) {
+          throw new \Exception(sprintf('CRUD configuration loaded from file \'%s\' for controller %s must contain a \'fields\' property', $configPath, getInstanceNamespace($this)));
+        }
+        //list query limit
+        if(isset($config->queryLimit) && is_int($config->queryLimit)) {
+          $this->queryLimit = $config->queryLimit;
+        }
         //store config
-        $this->CRUDLConfig = require $configPath;
+        $this->CRUDLConfig = $config;
     }
     
     /**
@@ -423,11 +436,11 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
     {
         if(isset($this->subjectCookie->sorting) && !empty($this->subjectCookie->sorting)) {
             $sorting = $this->subjectCookie->sorting;
-        } elseif($this->model->hasPositionField) {
+        } elseif($this->model->hasDb && $this->model->hasPositionField) {
             $sorting = [[$this->model->getConfig()->position->field]];
         } elseif(isset($this->getCRUDLConfig()->listOrderBy)) {
             $sorting = $this->getCRUDLConfig()->listOrderBy;
-        } elseif($this->model->getConfig()->primaryKey) {
+        } elseif($this->model->hasDb && $this->model->getConfig()->primaryKey) {
             $sorting = [[$this->model->getConfig()->primaryKey]];
         } else {
             $sorting = [];
@@ -439,7 +452,7 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
             $this->extraFields
         );
         //xx($this->model->sql());
-        if($this->model->hasPositionField) {
+        if($this->model->hasDb && $this->model->hasPositionField) {
             $numRecords = count($records);
             for ($i=0; $i < $numRecords; $i++) {
                 //move up?
@@ -602,7 +615,7 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
         $CRUDLConfig = $CRUDLConfig ?? $this->CRUDLConfig;
         $where = [];
         //localized table
-        if(isset($CRUDLConfig->localized) && $CRUDLConfig->localized) {
+        if($this->model->hasDb && isset($CRUDLConfig->localized) && $CRUDLConfig->localized) {
             $where[] = ['language_code', $this->language->{'ISO-639-1'}];
         }
         //filter
@@ -617,10 +630,15 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
             }
         }    
         if($filterString) {
-            $where[] = $this->buildFilterWhere($CRUDLConfig, $filterString);
+            $filterWhere = $this->buildFilterWhere($CRUDLConfig, $filterString);
+            if($this->model->hasDb) {
+              $where[] = $filterWhere;
+            } elseif($this->model->hasFs) {
+              $where = array_merge($where, $filterWhere);
+            }
         }
         //parent primary key
-        if(!empty($this->ancestors)) {
+        if($this->model->hasDb && !empty($this->ancestors)) {
             $parent = end($this->ancestors)->model;
             $parentConfig = $parent->getConfig();
             //check parent primary key into route
@@ -628,6 +646,10 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
             $ancestorSubjectKey = end($ancestorsChain);
             $parentPrimaryKey = $this->getAncestorPrimaryKeyFromRoute($ancestorSubjectKey, $parentConfig);
             $where[] = [$parentPrimaryKey->field, $parentPrimaryKey->value];
+        }
+        //filesystem masks
+        if($this->model->hasFs && isset($this->model->getConfig()->masks)) {
+          $where = array_merge($where, $this->model->getConfig()->masks);
         }
         $this->buildListWhereCustomConditions($where);
         //forget filter
@@ -655,52 +677,60 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
         }
         preg_match_all('/[\w\-\.\']+/i', $filterString, $notQuotedTokens);
         $filterTokens = array_merge($quotedTokens[1], $notQuotedTokens[0]);
-        //create a grouped where for the filter
-        $filterWhere = [];
-        foreach ($filterTokens as $filterToken) {
+        //database model
+        if($this->model->hasDb) {
+          //create a grouped where for the filter
+          $filterWhere = [];
+          foreach ($filterTokens as $filterToken) {
             $filterToken = $this->model->getQuery()->escapeSingleQuotes(trim($filterToken));
             if(!$filterToken) {
-                continue;
+              continue;
             }
             //loop config fields
             $tokenFields = [
               'grouped' => true
             ];
             foreach ((array) $CRUDLConfig->fields as $fieldName => $fieldConfig) {
-                if(!isset($fieldConfig->table->filter) || $fieldConfig->table->filter) {
-                    $tokenFields[] = [
-                      'logical' => 'OR',
-                      $this->model->rawField(
-                        sprintf(
-                            'CAST(%1$s%2$s%1$s AS %3$s) %4$s \'%%%5$s%%\'',
-                            $this->model->getQuery()->getDriverOption('labelDelimiter'),
-                            $fieldName,
-                            $this->model->getQuery()->getDriverOption('likeOperatorTextCastDataType'),
-                            $this->model->getQuery()->getDriverOption('caseInsensitiveLikeOperator'),
-                            $filterToken
-                        )
-                      )
-                    ];
-                }
+              if(!isset($fieldConfig->table->filter) || $fieldConfig->table->filter) {
+                $tokenFields[] = [
+                  'logical' => 'OR',
+                  $this->model->rawField(
+                    sprintf(
+                      'CAST(%1$s%2$s%1$s AS %3$s) %4$s \'%%%5$s%%\'',
+                      $this->model->getQuery()->getDriverOption('labelDelimiter'),
+                      $fieldName,
+                      $this->model->getQuery()->getDriverOption('likeOperatorTextCastDataType'),
+                      $this->model->getQuery()->getDriverOption('caseInsensitiveLikeOperator'),
+                      $filterToken
+                    )
+                  )
+                ];
+              }
             }
             $filterWhere[] = $tokenFields;
-        }
-        //filter string has a value
-        if(count($filterTokens) > 0) {
-          //no filter fields defined => query must fail
-          if(empty($filterWhere)) {
-            $where = [[$this->model->rawField('0'), null]];
-          } else {
-            $where = array_merge(
-              [
-                'grouped' => true,
-                'logical' => 'AND',
-              ],
-              $filterWhere
-            );
+          }
+          //filter string has a value
+          if(count($filterTokens) > 0) {
+            //no filter fields defined => query must fail
+            if(empty($filterWhere)) {
+              $where = [[$this->model->rawField('0'), null]];
+            } else {
+              $where = array_merge(
+                [
+                  'grouped' => true,
+                  'logical' => 'AND',
+                ],
+                $filterWhere
+              );
+            }
           }
         }
-        //xx($where);
+        //file system model
+        if($this->model->hasFs) {
+          foreach($filterTokens as $filterToken) {
+            $where[] = sprintf('*%s*', $filterToken);
+          }
+        }
         return $where;
     }
     

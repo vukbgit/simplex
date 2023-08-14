@@ -20,6 +20,8 @@ use Simplex\VanillaCookieExtended;
 //query builder
 use \Simplex\PixieConnectionExtended;
 use \Simplex\PixieExtended;
+//file browser
+use Nette\Utils\Finder;
 //authentication
 use \Simplex\Authentication;
 //translations
@@ -105,6 +107,8 @@ return array_merge(
             ->constructor(get('dbDriver'), get('dbConfig'), 'QB'),
         'queryBuilder' => create(PixieExtended::class)
             ->constructor(get('pixieConnection')),
+        //file browser
+        'fileBrowser' => create(Finder::class),
         //authentication
         'simplexAuthenticationMiddleware' => create(Authentication\Middleware::class)
             ->constructor(get('DIContainer'), get('cookieManager')),
