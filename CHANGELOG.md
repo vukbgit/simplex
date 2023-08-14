@@ -1,3 +1,7 @@
+## 3.7.0 (August 14, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.6.4 -> 3.7.0
+- feat: file system model
+
 ## 3.6.4 (August 07, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.6.3 -> 3.6.4
 - fix: check template filter/function existence before adding
