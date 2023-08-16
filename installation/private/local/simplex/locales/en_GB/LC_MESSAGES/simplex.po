@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Simplex\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-13 18:08+0200\n"
+"POT-Creation-Date: 2023-08-16 15:29+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -136,6 +136,9 @@ msgstr "Please sign in"
 #. line 32
 #. line 33
 #. line 34
+#. line 32
+#. line 33
+#. line 34
 msgid "Username"
 msgstr "Username"
 
@@ -187,6 +190,8 @@ msgstr "Wrong username"
 #. line 55
 #. line 54
 #. line 55
+#. line 56
+#. line 57
 #. line 56
 #. line 57
 #. line 56
@@ -308,6 +313,8 @@ msgstr "The value you entered for this field is invalid."
 #. line 21
 #. line 53
 #. line 56
+#. line 82
+#. line 84
 #. line 82
 #. line 84
 msgid "Filter"
@@ -542,24 +549,8 @@ msgstr ""
 msgid "maximum number of results: %d"
 msgstr ""
 
-#. line 417
-#. line 464
-#. line 704
-#. line 798
-#. line 833
-#. line 1043
-#~ msgid "Control Code"
-#~ msgstr "Control Code"
+msgid "No records match filter criteria"
+msgstr ""
 
-#. line 434
-#. line 481
-#. line 721
-#. line 815
-#. line 850
-#. line 1065
-#~ msgid ""
-#~ "Type code displayed into image, if you are not able to read the code "
-#~ "click on the reload icon to generate a new image"
-#~ msgstr ""
-#~ "Type code displayed into image, if you are not able to read the code "
-#~ "click on the reload icon to generate a new image"
+msgid "Use filter to search for records"
+msgstr ""

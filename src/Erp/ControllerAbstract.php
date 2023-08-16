@@ -487,7 +487,11 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
         //check list query modifiers
         $this->setListQueryModifiers();
         //get model list
-        $records = $this->getList();
+        if(!isset($this->getCRUDLConfig()->queryOnFilter) || !$this->getCRUDLConfig()->queryOnFilter || (isset($this->getSubjectCookie()->filter) && $this->getSubjectCookie()->filter)) {
+          $records = $this->getList();
+        } else {
+          $records = [];
+        }
         //xx($this->model->sql());
         $this->setTemplateParameter('records', $records);
         //render

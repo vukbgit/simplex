@@ -62,12 +62,12 @@
 
 {% block pageContent %}
     {{ parent() }}
+    {% set fieldsFilter = attribute(attribute(areaCookie, subject), 'filter') ?? null %}
     {% block tableIntro %}
     {% endblock %}
     {% block tableNavBar %}
 <nav class="navbar navbar-light bg-light justify-content-start" id="list-navbar">
       {% block tableFilter %}
-        {% set fieldsFilter = attribute(attribute(areaCookie, subject), 'filter') ?? null %}
   <div>
     {% if searchFields|length %}
     <form method="post" action="" class="" id="default-filter-form">
@@ -192,8 +192,16 @@
     {% endif %}
 </table>
     {% else %}
-<div class="alert alert-info" role="alert">
-{% trans 'No records saved' %}
+<div class="alert alert-secondary h-100 p-5 text-center text-white fs-1" role="alert">
+      {% if fieldsFilter %}
+        {% trans 'No records match filter criteria' %}
+      {% else %}
+        {% if CRUDLConfig.queryOnFilter %}
+          {% trans 'Use filter to search for records' %}
+        {% else %}
+          {% trans 'No records saved' %}
+        {% endif %}
+      {% endif %}
 </div>
     {% endif %}
 {% endblock pageContent %}
