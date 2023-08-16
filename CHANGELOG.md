@@ -1,3 +1,7 @@
+## 3.7.1 (August 16, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.7.0 -> 3.7.1
+- feat: ERP records on filter only
+
 ## 3.7.0 (August 14, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.6.4 -> 3.7.0
 - feat: file system model
