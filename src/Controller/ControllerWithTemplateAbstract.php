@@ -980,7 +980,7 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
     protected function processRecordsetForInput(
         string $valueField,
         $labelTokens,
-        array $recordset,
+        iterable $recordset,
         string $languageCode = null,
         $valueProperty = 'value',
         $labelProperty = 'label',
@@ -988,18 +988,39 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
     ): array
     {
         $items = [];
-        foreach ((array) $recordset as $record) {
-            $label = $this->buildRecordTokensLabel($labelTokens, $record, $languageCode);
-            $item = (object) [
-                $valueProperty => $record->$valueField,
-                $labelProperty => $label
-            ];
-            if(!empty($extraFields)) {
-                foreach ($extraFields as $extraField) {
-                    $item->$extraField = $record->$extraField;
-                }
+        $recordType = null;
+        foreach ($recordset as $record) {
+          //check record type
+          if($recordType === null) {
+            //file object
+            if(get_class($record) == 'SplFileInfo' || get_parent_class($record) == 'SplFileInfo') {
+              $recordType = 'file';
+            } else {
+              $recordType = 'dbRecord';
             }
-            $items[] = $item;
+          }
+          //value
+          switch ($recordType) {
+            case 'dbRecord':
+              $value = $record->$valueField;
+              $label = $this->buildRecordTokensLabel($labelTokens, $record, $languageCode);
+              break;
+            case 'file':
+              $value = $label = $record->getFilename();
+              break;
+          }
+          //label
+          //item
+          $item = (object) [
+              $valueProperty => $value,
+              $labelProperty => $label
+          ];
+          if(!empty($extraFields)) {
+              foreach ($extraFields as $extraField) {
+                  $item->$extraField = $record->$extraField;
+              }
+          }
+          $items[] = $item;
         }
         return $items;
     }

@@ -62,7 +62,8 @@
 
 {% block pageContent %}
     {{ parent() }}
-    {% set fieldsFilter = attribute(attribute(areaCookie, subject), 'filter') ?? null %}
+    {% set defaultFilterValue = attribute(attribute(areaCookie, subject), 'filter') ?? null %}
+    {% set customFilterValue = attribute(attribute(areaCookie, subject), 'custom_conditions') ?? null %}
     {% block tableIntro %}
     {% endblock %}
     {% block tableNavBar %}
@@ -78,7 +79,7 @@
         </div>
         <div class="col">
           <div class="input-group">
-              <input name="filter" value="{{ fieldsFilter }}" type="search"
+              <input name="filter" value="{{ defaultFilterValue }}" type="search"
           class="form-control form-control-sm" placeholder="{{ 'Filter'|trans }}" aria-label="{{ 'Filter'|trans }}">
               <button class="btn btn-sm btn-outline-warning" type="reset">{{ 'Reset'|trans }}</button>
               <button class="btn btn-sm btn-outline-success" type="submit">{{ 'Filter'|trans }}</button>
@@ -193,7 +194,7 @@
 </table>
     {% else %}
 <div class="alert alert-secondary h-100 p-5 text-center text-white fs-1" role="alert">
-      {% if fieldsFilter %}
+      {% if (defaultFilterValue or customFilterValue) %}
         {% trans 'No records match filter criteria' %}
       {% else %}
         {% if CRUDLConfig.queryOnFilter %}

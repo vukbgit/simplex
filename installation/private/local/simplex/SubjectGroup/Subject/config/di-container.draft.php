@@ -11,13 +11,18 @@ use function DI\get;
 require 'variables.php';
 //definitions array
 return [
-    sprintf('%s-controller', $subject) => create(sprintf('%s\Controller', $subjectNamespace))
-        ->constructor(
-            get('DIContainer'),
-            get('response'),
-            get('templateEngine'),
-            get('cookieManager')
-        ),
-    sprintf('%s-model', $subject) => create(sprintf('%s\Model', $subjectNamespace))
-        ->constructor(get('queryBuilder')),
+  //db model
+  sprintf('%s-model', $subject) => create(sprintf('%s\Model', $subjectNamespace))
+    ->constructor(get('queryBuilder')),
+  //file system model
+  sprintf('%s-model', $subject) => create(sprintf('%s\Model', $subjectNamespace))
+    ->constructor(),
+  //ERP controller
+  sprintf('%s-controller', $subject) => create(sprintf('%s\Controller', $subjectNamespace))
+    ->constructor(
+      get('DIContainer'),
+      get('response'),
+      get('templateEngine'),
+      get('cookieManager')
+    ),
 ];

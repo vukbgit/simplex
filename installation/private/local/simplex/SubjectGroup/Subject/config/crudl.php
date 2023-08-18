@@ -68,6 +68,17 @@ return (object) [
             ],
         ],
         //position field is automatically handled
+        //FILE SYSTEM SOURCE FIELDS (CRITERIA)
+        //currently used for default table filter
+        //field name (= criteria) can be: name, extension, mTime (= modification time), size
+        /*'CRITERION' => (object) [
+          'table' => (object)[
+            //boolean defaults to true
+            'filter' => true,
+            //boolean defaults to false
+            'total' => false
+          ],
+        ],*/
     ],
     /*to build a label when subject is ancestor each element can be:
     * - a field name to extract value from ancestor record
@@ -80,6 +91,10 @@ return (object) [
         'FIELD-NAME',
         'STRING-TOKEN'
     ],*/
+    //perform list query only by filter
+    //'queryOnFilter' => true,
+    //maximum number of list query results
+    //'queryLimit' => 100,
     /*//fields to be marked during cloning
     'clone' => [
         'FIELD-NAME',

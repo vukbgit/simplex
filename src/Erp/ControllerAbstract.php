@@ -487,12 +487,11 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
         //check list query modifiers
         $this->setListQueryModifiers();
         //get model list
-        if(!isset($this->getCRUDLConfig()->queryOnFilter) || !$this->getCRUDLConfig()->queryOnFilter || (isset($this->getSubjectCookie()->filter) && $this->getSubjectCookie()->filter)) {
+        if(!isset($this->getCRUDLConfig()->queryOnFilter) || !$this->getCRUDLConfig()->queryOnFilter || $this->isFiltered()) {
           $records = $this->getList();
         } else {
           $records = [];
         }
-        //xx($this->model->sql());
         $this->setTemplateParameter('records', $records);
         //render
         $this->renderTemplate(sprintf(
@@ -527,38 +526,39 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
         ];
         $input = filter_input_array(INPUT_POST, $fieldsDefinitions);
         if($input) {
-            $input = (object) $input;
-            switch ($input->modifier) {
-                //sorting
-                case 'sort':
-                  if($input->field) {
-                    $sorting = [
-                      [$input->field, strtoupper($input->direction)]
-                    ];
-                  } else {
-                    $sorting = [];
+          $input = (object) $input;
+          switch ($input->modifier) {
+            //sorting
+            case 'sort':
+              if($input->field) {
+                $sorting = [
+                  [$input->field, strtoupper($input->direction)]
+                ];
+              } else {
+                $sorting = [];
+              }
+                $this->replaceListSort($sorting);
+            break;
+            //filter
+            case 'filter':
+                $filter = html_entity_decode($input->filter);
+                $this->replaceListFilter($filter);
+            break;
+            //custom conditions
+            case 'custom_conditions':
+              if($input->custom_conditions !== null) {
+                $custom_conditions = array_filter(
+                  $input->custom_conditions,
+                  function($item) {
+                    return $item !== null && $item !== '';
                   }
-                    $this->replaceListSort($sorting);
-                break;
-                //filter
-                case 'filter':
-                    $this->replaceListFilter(html_entity_decode($input->filter));
-                break;
-                //custom conditions
-                case 'custom_conditions':
-                  if($input->custom_conditions !== null) {
-                    $custom_conditions = array_filter(
-                      $input->custom_conditions,
-                      function($item) {
-                        return $item !== null && $item !== '';
-                      }
-                    );
-                  } else {
-                    $custom_conditions = null;
-                  }
-                    $this->replaceListCustomConditions($custom_conditions);
-                break;
-            }
+                );
+              } else {
+                $custom_conditions = null;
+              }
+              $this->replaceListCustomConditions($custom_conditions);
+            break;
+          }
         }
     }
     
@@ -610,6 +610,33 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
     }
     
     /**
+    * Checks whether list is filtered
+    * @retrun bool
+    */
+    protected function isFiltered()
+    {
+      $subjectCookie = $this->getSubjectCookie();
+      return
+        (isset($subjectCookie->filter) && $subjectCookie->filter)
+        || 
+        (
+          isset($subjectCookie->custom_conditions)
+          &&
+          is_object($subjectCookie->custom_conditions)
+          &&
+          !empty(get_object_vars($subjectCookie->custom_conditions))
+          &&
+          array_reduce(
+            array_values(get_object_vars($subjectCookie->custom_conditions)),
+            function($carry, $item) {
+              return $carry + ($item ? 1 : 0);
+            },
+            0
+          )
+        );
+    }
+    
+    /**
     * Builds list query where based on modifiers
     * @param object $CRUDLConfig to use a different CRUD configuration
     * @return array as accepted by Pixie query builder
@@ -624,22 +651,22 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
         }
         //filter
         if(!$filterString) {
-            $subjectCookie = $this->getSubjectCookie();
-            if(isset($subjectCookie->filter) && $subjectCookie->filter) {
-                $filterString = $subjectCookie->filter;
-            }
-            //forget filter
-            if((defined('FORGET_ALL_FILTERS') && !isset($CRUDLConfig->forgetFilter) && FORGET_ALL_FILTERS) || (isset($CRUDLConfig->forgetFilter) && $CRUDLConfig->forgetFilter === true )) {
-              $this->replaceListFilter('');
-            }
+          $subjectCookie = $this->getSubjectCookie();
+          if(isset($subjectCookie->filter) && $subjectCookie->filter) {
+            $filterString = $subjectCookie->filter;
+          }
+          //forget filter
+          if((defined('FORGET_ALL_FILTERS') && !isset($CRUDLConfig->forgetFilter) && FORGET_ALL_FILTERS) || (isset($CRUDLConfig->forgetFilter) && $CRUDLConfig->forgetFilter === true )) {
+            $this->replaceListFilter('');
+          }
         }    
         if($filterString) {
-            $filterWhere = $this->buildFilterWhere($CRUDLConfig, $filterString);
-            if($this->model->hasDb) {
-              $where[] = $filterWhere;
-            } elseif($this->model->hasFs) {
-              $where = array_merge($where, $filterWhere);
-            }
+          $filterWhere = $this->buildFilterWhere($CRUDLConfig, $filterString);
+          if($this->model->hasDb) {
+            $where[] = $filterWhere;
+          } elseif($this->model->hasFs) {
+            $where = array_merge($where, $filterWhere);
+          }
         }
         //parent primary key
         if($this->model->hasDb && !empty($this->ancestors)) {
@@ -653,7 +680,7 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
         }
         //filesystem masks
         if($this->model->hasFs && isset($this->model->getConfig()->masks)) {
-          $where = array_merge($where, $this->model->getConfig()->masks);
+          $where = array_merge_recursive($where, $this->model->getConfig()->masks);
         }
         $this->buildListWhereCustomConditions($where);
         //forget filter
@@ -732,7 +759,14 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
         //file system model
         if($this->model->hasFs) {
           foreach($filterTokens as $filterToken) {
-            $where[] = sprintf('*%s*', $filterToken);
+            foreach ((array) $CRUDLConfig->fields as $fieldName => $fieldConfig) {
+              if(!isset($fieldConfig->table->filter) || $fieldConfig->table->filter) {
+                if(!isset($where[$fieldName])) {
+                  $where[$fieldName] = [];
+                }
+                $where[$fieldName][] = sprintf('*%s*', $filterToken);
+              }
+            }
           }
         }
         return $where;
@@ -1363,9 +1397,14 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
           $where,
           $orderBy ?? $this->CRUDLConfig->autocomplete->orderBy ?? []
       );
-      //xx($this->model->sql());
+      $valueField = null;
+      if($this->model->hasDb) {
+        $valueField = $this->model->getconfig()->primaryKey;
+      } elseif($this->model->hasFs) {
+        $valueField = '';
+      }
       $records = $this->processRecordsetForInput(
-        $this->model->getconfig()->primaryKey,
+        $valueField,
         $labelFields ?? $this->CRUDLConfig->autocomplete->labelFields ?? [],
         $records,
         null,

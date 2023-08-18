@@ -4,8 +4,9 @@ declare(strict_types=1);
 namespace Simplex\Local\SUBJECT\NAMESPACE;
 
 /*
-* Partners controller
+* Model
 */
 class Model extends \Simplex\Model\ModelAbstract
+//class Model extends \Simplex\Model\FileSystemModelAbstract
 {
 }
