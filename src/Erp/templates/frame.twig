@@ -82,11 +82,20 @@ $(document).ready(function(){
     {# sidebar #}
   <nav class="bg-dark text-light sidebar{% if not sideBarOpened %} closed{% endif %}" id="sidebar">
         <div class="sidebar-sticky">
-            <nav class="nav flex-column" id="navigation-top">
+      {#
+        customSideBarMenu is an array (it can be set into area template) whose elements are:
+        0 => block name
+        0 => full path to template that contains block
+      #}
+      {% if customSideBarMenu %}
+        {{ block(customSideBarMenu[0], customSideBarMenu[1]) }}
+      {% else %}
+          <nav class="nav flex-column" id="navigation-top">
         {% for voiceKey, voiceProperties in navigations.area %}
             {{ navigationMacros.displaySidebarVoice(routeParameters, voiceKey, voiceProperties, areaNavigationLabels, 'navigation-top', 1) }}
         {% endfor %}
-            </nav>
+          </nav>
+      {% endif %}
         </div>
     </nav>
     {% endif %}
