@@ -1,3 +1,7 @@
+## 3.7.3 (August 19, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.7.2 -> 3.7.3
+- rich select parameters
+
 ## 3.7.2 (August 18, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.7.1 -> 3.7.2
 - feat: file system based model improvements
