@@ -1,3 +1,7 @@
+## 3.8.0 (August 19, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.7.4 -> 3.8.0
+- ERP logo link
+
 ## 3.7.4 (August 19, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.7.3 -> 3.7.4
 - side bar custom menu
