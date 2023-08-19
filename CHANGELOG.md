@@ -1,3 +1,7 @@
+## 3.8.1 (August 19, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.8.0 -> 3.8.1
+- logo link into draft
+
 ## 3.8.0 (August 19, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.7.4 -> 3.8.0
 - ERP logo link
