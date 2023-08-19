@@ -451,6 +451,12 @@ $(document).ready(function() {
         ajax: {
             url: '{{ config.remoteDataRoute }}',
             dataType: 'json',
+        {% if config.beforeSend %}
+            beforeSend: {{ config.beforeSend }},
+        {% endif %}
+        {% if config.success %}
+            success: {{ config.success }},
+        {% endif %}
             data: function (params) {
         {% if config.remoteDataRouteExtraParameters and (config.remoteDataRouteExtraParameters|length > 1 or config.remoteDataRouteExtraParameters|first) %}
             {% for parameter, value in config.remoteDataRouteExtraParameters %}
