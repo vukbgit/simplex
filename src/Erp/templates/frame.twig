@@ -42,8 +42,14 @@ $(document).ready(function(){
     <div class="navbar-brand">
     {% block headerLogo %}
         {{ parent() }}
+        {% if logoLink %}
+        <a href="{{ logoLink }}">
+        {% endif %}
         {% if logoPath %}
         <img src="{{ logoPath }}" alt="{{ brand }}" class="logo">
+        {% endif %}
+        {% if logoLink %}
+        </a>
         {% endif %}
     {% endblock %}
     {% block headerTitle %}
