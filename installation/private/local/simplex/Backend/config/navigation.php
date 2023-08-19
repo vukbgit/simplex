@@ -9,14 +9,16 @@
 ],
 */
 return [
-    'area' => [
-        'SUBJECT-KEY' => (object) [
-            'route' => '/ROUTE/TO/SUBJECT/ACTION',
-            'permissions' => ['PERMISSION-KEY'],
-            'icon' => 'ICON-CLASS',
-            'navigation' => [
-                
-            ]
-        ]
+  'area' => [
+    'SUBJECT-KEY' => (object) [
+      //route can be relative or an URL
+      'route' => '/ROUTE',
+      //target => '_blank'
+      'permissions' => ['PERMISSION-KEY'],
+      'icon' => 'ICON-CLASS',
+      'navigation' => [
+          
+      ]
     ]
+  ]
 ];

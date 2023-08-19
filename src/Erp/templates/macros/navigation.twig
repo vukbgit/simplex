@@ -18,6 +18,7 @@
         <div class="nav-item d-block" id="{{ voiceId }}">
             <a
             href="{{ voiceProperties.route|default('#') }}"
+            {% if voiceProperties.target %}target="{{ voiceProperties.target }}"{% endif %}
             id="{{ voiceLabelId }}"
             class="
               nav-link {{ 'pl-%d'|format((level + 1)) }}
