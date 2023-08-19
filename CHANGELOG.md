@@ -1,3 +1,7 @@
+## 3.7.4 (August 19, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.7.3 -> 3.7.4
+- side bar custom menu
+
 ## 3.7.3 (August 19, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.7.2 -> 3.7.3
 - rich select parameters
