@@ -1,3 +1,7 @@
+## 3.9.1 (August 22, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.9.0 -> 3.9.1
+- readme
+
 ## 3.9.0 (August 19, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.8.1 -> 3.9.0
 - sidebar navigation voice target
