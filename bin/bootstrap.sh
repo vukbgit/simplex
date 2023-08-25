@@ -3,7 +3,8 @@
 # outputs message formatted according to type
 # OPTIONS
 # $1 message type: D (=default)| S (=success) | E (=error)| H (=highlight)
-# $2 message
+# $2 message: color codes can be inserted into string for inline color by escaping color variables, i.e \${HC} but third parameter must be set to true
+# $3 inlineColors: enable interpretation of backslash escapes on message echo (to evaluate color variables) but in this case message characters like round parenthsys or apostrophe must be backlash escaped
 function outputMessage() {
   RED='\033[0;31m'
   GREEN='\033[0;32m'
@@ -20,10 +21,15 @@ function outputMessage() {
   
   messageType=$1
   message=$2
+  inlineColors=${3:-false}
   color="${messageType}C"
   #type color
   printf ${!color}
-  echo $message
+  if $inlineColors; then
+    eval echo -e "$message"
+  else
+    echo "$message"
+  fi
   #back to default color
   printf $DC
 }
