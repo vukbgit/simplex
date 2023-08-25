@@ -1,3 +1,7 @@
+## 3.9.2 (August 25, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.9.1 -> 3.9.2
+- bash scripts message function
+
 ## 3.9.1 (August 22, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.9.0 -> 3.9.1
 - readme
