@@ -2,7 +2,7 @@
 #=============================================
 # outputs message formatted according to type
 # OPTIONS
-# $1 message type: D (=default)| S (=success) | E (=error)| H (=highlight)
+# $1 message type: D (=default)| S (=success) | E (=error) | H (=highlight) | U (=undertone)
 # $2 message: color codes can be inserted into string for inline color by escaping color variables, i.e \${HC} but third parameter must be set to true
 # $3 inlineColors: enable interpretation of backslash escapes on message echo (to evaluate color variables) but in this case message characters like round parenthsys or apostrophe must be backlash escaped
 function outputMessage() {
@@ -10,6 +10,7 @@ function outputMessage() {
   GREEN='\033[0;32m'
   ORANGE='\033[0;33m'
   LIGHT_GRAY='\033[0;37m'
+  DARK_GRAY='\033[0;90m'
   DEFAULT_COLOR=$LIGHT_GRAY
   DC=$DEFAULT_COLOR
   HIGHLIGHT_COLOR=$ORANGE
@@ -18,6 +19,8 @@ function outputMessage() {
   EC=$ERROR_COLOR
   SUCCESS_COLOR=$GREEN
   SC=$SUCCESS_COLOR
+  UNDERTONE_COLOR=$DARK_GRAY
+  UC=$UNDERTONE_COLOR
   
   messageType=$1
   message=$2
