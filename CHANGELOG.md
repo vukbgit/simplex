@@ -1,3 +1,7 @@
+## 3.9.3 (August 28, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.9.2 -> 3.9.3
+- added undertone color to bash scripts
+
 ## 3.9.2 (August 25, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.9.1 -> 3.9.2
 - bash scripts message function
