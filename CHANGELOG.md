@@ -1,3 +1,7 @@
+## 3.9.4 (August 29, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.9.3 -> 3.9.4
+- fix: multiple files upload field preview
+
 ## 3.9.3 (August 28, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.9.2 -> 3.9.3
 - added undertone color to bash scripts
