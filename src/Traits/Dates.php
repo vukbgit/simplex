@@ -86,4 +86,60 @@ trait Dates {
       }
       return $months;
     }
+    
+    /**
+     * Gets a locale week day name 
+     * @param int $weekDayIndex from 0 = sunday to 6 = saturday
+     * @param string $format:
+     *                  E = 3 letters short (i.e. Sun)
+     *                  EEEE = full (i.e. Sunday)
+     *                  EEEEE = 1 letters short (i.e. S)
+     *                  EEEEEE = 2 letters short (i.e. Su)
+     */
+    protected function getLocaleWeekDayName(int $weekDayIndex, $format = 'EEEE'): string
+    {
+      $weekDaysIndexes = [
+        0 => 'sunday',
+        1 => 'monday',
+        2 => 'tuesday',
+        3 => 'wednesday',
+        4 => 'thursday',
+        5 => 'friday',
+        6 => 'saturday',
+      ];
+      $date = new \DateTime('next ' . $weekDaysIndexes[$weekDayIndex]);
+      $fmt = new \IntlDateFormatter(
+        null,
+        \IntlDateFormatter::FULL,
+        \IntlDateFormatter::FULL,
+        null,
+        null,
+        $format
+      );
+      return $fmt->format($date);
+    }
+    
+    /**
+     * Gets locale week days names indexed by week day index into an array
+     * @param int $sundayIndex
+     * @param int $firstIndex index of first day, usually 0 or 1
+     * @param string $format:
+     *                  E|EE|EEE = 3 letters short (i.e. Sun)
+     *                  EEEE = full (i.e. Sunday)
+     *                  EEEEE = 1 letters short (i.e. S)
+     * @see https://unicode-org.github.io/icu/userguide/format_parse/datetime/#datetime-format-syntax
+     */
+    protected function getLocaleWeekDaysNames($sundayIndex = 0, $firstIndex = 0, $format = 'EEEE'): array
+    {
+      $weekDays = [];
+      for ($innerIndex = 0; $innerIndex <= 6 ; $innerIndex++) {
+        $returnIndex = $innerIndex + $sundayIndex;
+        if($returnIndex > (6 + $firstIndex)) {
+          $returnIndex = $returnIndex - (6 + $firstIndex);
+        }
+        $weekDays[$returnIndex] = $this->getLocaleWeekDayName($innerIndex, $format);
+      }
+      ksort($weekDays);
+      return $weekDays;
+    }
 }
