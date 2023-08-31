@@ -1,3 +1,7 @@
+## 3.9.5 (August 31, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.9.4 -> 3.9.5
+- form group extra css classes
+
 ## 3.9.4 (August 29, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.9.3 -> 3.9.4
 - fix: multiple files upload field preview
