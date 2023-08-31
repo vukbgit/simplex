@@ -1,3 +1,7 @@
+## 3.9.6 (August 31, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.9.5 -> 3.9.6
+- feat: Date trait get locale week days names method
+
 ## 3.9.5 (August 31, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.9.4 -> 3.9.5
 - form group extra css classes
