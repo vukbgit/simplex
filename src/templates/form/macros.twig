@@ -1291,6 +1291,9 @@ NOTE: javascript validation function creates automatically if needed, this macro
     {% if customClasses %}
         {% set classes = classes|merge([customClasses]) %}
     {% endif %}
+    {% if config.groupCustomClasses %}
+        {% set classes = classes|merge(config.groupCustomClasses) %}
+    {% endif %}
     <div class="{{ classes|join(' ') }}" id="{{ '%s-container'|format(inputId) }}">
 {% endmacro %}
 
