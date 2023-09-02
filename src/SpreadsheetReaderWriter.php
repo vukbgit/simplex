@@ -59,7 +59,7 @@ class SpreadsheetReaderWriter
             foreach ($sheet->getRowIterator() as $row) {
                 //headers row
                 if($firstRowIsHEaders && $rowsToObjects && $i === 0) {
-                    $headersRow = $row->toArray();
+                    $headersRow = array_map('trim', $row->toArray());
                     $i++;
                     continue;
                 }
@@ -69,12 +69,7 @@ class SpreadsheetReaderWriter
                 if($firstRowIsHEaders && $rowsToObjects) {
                     $rowObject = new \stdClass;
                     foreach($headersRow as $j => $header) {
-                      //in case of empty cells at the and of the header row
-                      if(!isset($cellsArray[$j])) {
-                        continue(2);
-                      } else {
                         $rowObject->$header = $cellsArray[$j];
-                      }
                     }
                     $rows[] = $rowObject;
                 } else {
@@ -198,11 +193,7 @@ class SpreadsheetReaderWriter
         $this->addHeadersRow($headersRow);
         //rows
         foreach ($rows as $row) {
-          if(is_array($row)) {
-            $this->addRowFromArray($row);
-          } elseif (is_object($row)) {
             $this->addRowFromObject($row);
-          }
         }
         //close
         $this->writer->close();
