@@ -1,3 +1,7 @@
+## 3.9.7 (September 05, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.9.6 -> 3.9.7
+- fix: dates trait week days names
+
 ## 3.9.6 (August 31, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.9.5 -> 3.9.6
 - feat: Date trait get locale week days names method
