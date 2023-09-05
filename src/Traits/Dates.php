@@ -89,7 +89,7 @@ trait Dates {
     
     /**
      * Gets a locale week day name 
-     * @param int $weekDayIndex from 0 = sunday to 6 = saturday
+     * @param int $weekDayIndex from 1 = monday to 7 = sunday (ISO week days)
      * @param string $format:
      *                  E = 3 letters short (i.e. Sun)
      *                  EEEE = full (i.e. Sunday)
@@ -99,13 +99,13 @@ trait Dates {
     protected function getLocaleWeekDayName(int $weekDayIndex, $format = 'EEEE'): string
     {
       $weekDaysIndexes = [
-        0 => 'sunday',
         1 => 'monday',
         2 => 'tuesday',
         3 => 'wednesday',
         4 => 'thursday',
         5 => 'friday',
         6 => 'saturday',
+        7 => 'sunday',
       ];
       $date = new \DateTime('next ' . $weekDaysIndexes[$weekDayIndex]);
       $fmt = new \IntlDateFormatter(
@@ -121,19 +121,20 @@ trait Dates {
     
     /**
      * Gets locale week days names indexed by week day index into an array
-     * @param int $sundayIndex
+     * @param int $mondayIndex, default 1 (ISO week days)
      * @param int $firstIndex index of first day, usually 0 or 1
      * @param string $format:
      *                  E|EE|EEE = 3 letters short (i.e. Sun)
      *                  EEEE = full (i.e. Sunday)
      *                  EEEEE = 1 letters short (i.e. S)
-     * @see https://unicode-org.github.io/icu/userguide/format_parse/datetime/#datetime-format-syntax
+     * day indexes: @see https://en.wikipedia.org/wiki/ISO_week_date
+     * format: @see https://unicode-org.github.io/icu/userguide/format_parse/datetime/#datetime-format-syntax
      */
-    protected function getLocaleWeekDaysNames($sundayIndex = 0, $firstIndex = 0, $format = 'EEEE'): array
+    protected function getLocaleWeekDaysNames($mondayIndex = 1, $firstIndex = 1, $format = 'EEEE'): array
     {
       $weekDays = [];
-      for ($innerIndex = 0; $innerIndex <= 6 ; $innerIndex++) {
-        $returnIndex = $innerIndex + $sundayIndex;
+      for ($innerIndex = 1; $innerIndex <= 7 ; $innerIndex++) {
+        $returnIndex = $innerIndex + $mondayIndex - 1;
         if($returnIndex > (6 + $firstIndex)) {
           $returnIndex = $returnIndex - (6 + $firstIndex);
         }
