@@ -1,3 +1,7 @@
+## 3.9.8 (September 07, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.9.7 -> 3.9.8
+- feat: file system model sorting by type
+
 ## 3.9.7 (September 05, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.9.6 -> 3.9.7
 - fix: dates trait week days names
