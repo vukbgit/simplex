@@ -229,9 +229,61 @@ abstract class FileSystemModelAbstract extends BaseModelAbstract
   }
   
   /**
+   * Compare entries by type ascending (folders firts, then files)
+   * @param \SplFileInfo $splFileInfo1
+   * @param \SplFileInfo $splFileInfo2
+   * @return int
+   *  -1 $splFileInfo1 before $splFileInfo2
+   *   0 $splFileInfo1 same as $splFileInfo2
+   *   1 $splFileInfo1 after $splFileInfo2
+   */
+  protected function compareEntriesByTypeAsc(\SplFileInfo $splFileInfo1, \SplFileInfo $splFileInfo2)
+  {
+    $splFileInfo1Type = $splFileInfo1->getType();
+    $splFileInfo2Type = $splFileInfo2->getType();
+    if($splFileInfo1Type == $splFileInfo2Type) {
+      return 0;
+    } else {
+      if($splFileInfo1Type == 'dir') {
+        return -1;
+      } else {
+        return 1;
+      }
+    }
+  }
+  
+  /**
+   * Compare entries by type descending (files firts, then folders)
+   * @param \SplFileInfo $splFileInfo1
+   * @param \SplFileInfo $splFileInfo2
+   * @return int
+   *  -1 $splFileInfo2 before $splFileInfo1
+   *   0 $splFileInfo1 same as $splFileInfo2
+   *   1 $splFileInfo2 after $splFileInfo1
+   */
+  protected function compareEntriesByTypeDesc(\SplFileInfo $splFileInfo1, \SplFileInfo $splFileInfo2)
+  {
+    $splFileInfo1Type = $splFileInfo1->getType();
+    $splFileInfo2Type = $splFileInfo2->getType();
+    if($splFileInfo1Type == $splFileInfo2Type) {
+      return 0;
+    } else {
+      if($splFileInfo1Type == 'dir') {
+        return 1;
+      } else {
+        return -1;
+      }
+    }
+  }
+  
+  /**
    * Compare entries by name ascending
    * @param \SplFileInfo $splFileInfo1
    * @param \SplFileInfo $splFileInfo2
+   * @return int
+   *  -1 $splFileInfo1 before $splFileInfo2
+   *   0 $splFileInfo1 same as $splFileInfo2
+   *   1 $splFileInfo1 after $splFileInfo2
    */
   protected function compareEntriesByNameAsc(\SplFileInfo $splFileInfo1, \SplFileInfo $splFileInfo2)
   {
@@ -242,6 +294,10 @@ abstract class FileSystemModelAbstract extends BaseModelAbstract
    * Compare entries by name descending
    * @param \SplFileInfo $splFileInfo1
    * @param \SplFileInfo $splFileInfo2
+   * @return int
+   *  -1 $splFileInfo2 before $splFileInfo1
+   *   0 $splFileInfo1 same as $splFileInfo2
+   *   1 $splFileInfo2 after $splFileInfo1
    */
   protected function compareEntriesByNameDesc(\SplFileInfo $splFileInfo1, \SplFileInfo $splFileInfo2)
   {
