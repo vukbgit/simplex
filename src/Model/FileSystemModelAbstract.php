@@ -31,8 +31,17 @@ abstract class FileSystemModelAbstract extends BaseModelAbstract
   }
   
   /**
+   * Gets current path to folder
+   */
+  public function getPathToFolder()
+  {
+    $pathTofolder = filter_input(INPUT_GET, 'ptf', FILTER_UNSAFE_RAW, FILTER_FLAG_PATH_REQUIRED);
+    return $pathTofolder ? urldecode($pathTofolder) : $this->config->rootFolder;
+  }
+  
+  /**
    * Gets a recordset
-   * @param array $where: files mask, defaults to ['*']
+   * @param array $masks: files mask, defaults to ['*']
    * @param array $order: array of arrays, each with 1 element (field name, direction defaults to 'ASC') or 2 elements (field name, order 'ASC' | 'DESC') 
    *              NOTE: only first element is considered, that is sorting is performed over only one field at a time
    * @param int $limit: passed from Controller but handled directly into table template (because Finder doesn't offer internal limit and the result is not processed here to save memory but passed directly to template)
@@ -41,11 +50,7 @@ abstract class FileSystemModelAbstract extends BaseModelAbstract
   public function get(array $masks = [], array $order = [], int $limit = null, array $extraFields = []): iterable
   {
     //path to folder
-    $pathTofolder = $this->config->rootFolder;
-    $subFolder = filter_input(INPUT_GET, 'sf', FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED);
-    if($subFolder) {
-      $pathTofolder .= $subFolder;
-    }
+    $pathTofolder = $this->getPathToFolder();
     //iterator
     $directoryIterator = new \FilesystemIterator($pathTofolder, \FilesystemIterator::SKIP_DOTS);
     //masks

@@ -493,6 +493,9 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
           $records = [];
         }
         $this->setTemplateParameter('records', $records);
+        if($this->model->hasFs) {
+          $this->stp('pathToFolder', $this->model->getPathToFolder());
+        }
         //render
         $this->renderTemplate(sprintf(
             '@local/%s/%s/list.%s',

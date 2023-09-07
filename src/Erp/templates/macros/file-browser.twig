@@ -9,9 +9,43 @@
 {% endmacro %}
 
 {% macro displayItemNameLink(splFileInfo) %}
+  {% import _self as selfMacros %}
   {% if splFileInfo.isDir() %}
-    {{ splFileInfo.getBasename() }}
+    {{ selfMacros.displayFolderNameLink(splFileInfo.getPathname(), splFileInfo.getBasename()) }}
   {% elseif splFileInfo.isFile() %}
   <a href="/{{ splFileInfo.getPathname() }}" target="_blank">{{ splFileInfo.getBasename() }}</a>
+  {% endif %}
+{% endmacro %}
+
+{% macro displayFolderNameLink(pathTofolder, label) %}
+  {% set url = '%s?ptf=%s'|format(getUri(), pathTofolder|url_encode) %}
+  <a href="{{ url }}">
+    {{ label }}
+  </a>
+{% endmacro %}
+
+{% macro displayBreadcrumb(context) %}
+  {% import _self as selfMacros %}
+  {% set rootPath = context.model.getConfig().rootFolder|split('/') %}
+  {% set pathToFolder = context.pathToFolder|split('/') %}
+  {% set pathToFolderRelative = pathToFolder[rootPath|length:] %}
+  {% if pathToFolderRelative|length %}
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+      {{ selfMacros.displayFolderNameLink(rootPath|join('/'), rootPath|last) }}
+      </li>
+    {% for folder in pathToFolderRelative %}
+      {% if not loop.last %}
+      <li class="breadcrumb-item">
+      {{ selfMacros.displayFolderNameLink(pathToFolder[0:(rootPath|length + loop.index)]|join('/'), folder) }}
+      {% else %}
+      <li class="breadcrumb-item active" aria-current="page">
+        {{ folder }}
+      {% endif %}
+      </li>
+    {% endfor %}
+    </ol>
+  </nav>
   {% endif %}
 {% endmacro %}
