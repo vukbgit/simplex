@@ -1,3 +1,7 @@
+## 3.9.9 (September 07, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.9.8 -> 3.9.9
+- feat: file browser folders navigation
+
 ## 3.9.8 (September 07, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.9.7 -> 3.9.8
 - feat: file system model sorting by type
