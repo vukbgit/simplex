@@ -1,3 +1,7 @@
+## 3.9.11 (September 08, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.9.10 -> 3.9.11
+- fix: uuid model batch insert
+
 ## 3.9.10 (September 07, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.9.9 -> 3.9.10
 
