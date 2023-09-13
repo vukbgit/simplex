@@ -1,3 +1,7 @@
+## 3.9.13 (September 13, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.9.12 -> 3.9.13
+- feat: custom message severity in save ERP operations
+
 ## 3.9.12 (September 09, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.9.11 -> 3.9.12
 - fix: model with uuid insert
