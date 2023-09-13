@@ -1029,7 +1029,8 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
                 $messageCode = 'save_success';
             }
             if($messageCode) {
-                $this->setSubjectAlert('success', (object) ['code' => $messageCode]);
+              $messageSeverity = $saveProcessing->messageSeverity ?? 'success';
+              $this->setSubjectAlert($messageSeverity, (object) ['code' => $messageCode]);
             }
         } catch(\Exception $exception) {
             //if something went wrong and record has been inserted, delete it, because maybe something went wrong with locales or uploads
@@ -1082,7 +1083,8 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
                 $messageCode = 'save_success';
             }
             if($messageCode) {
-                $this->setSubjectAlert('success', (object) ['code' => $messageCode]);
+              $messageSeverity = $saveProcessing->messageSeverity ?? 'success';
+              $this->setSubjectAlert($messageSeverity, (object) ['code' => $messageCode]);
             }
         } catch(\Exception $exception) {
             $error = $this->model->handleException($exception);
