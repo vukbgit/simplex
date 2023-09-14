@@ -1,3 +1,7 @@
+## 3.9.14 (September 14, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.9.13 -> 3.9.14
+- fix: field minimun length help
+
 ## 3.9.13 (September 13, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.9.12 -> 3.9.13
 - feat: custom message severity in save ERP operations
