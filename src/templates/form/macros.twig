@@ -1210,6 +1210,9 @@ for autocomplete see https://developer.mozilla.org/en-US/docs/Web/HTML/Attribute
     {% if config.readonly %}
     readonly="" 
     {% endif %}
+    {% if config.minlength %}
+    minlength="{{ config.minlength }}" 
+    {% endif %}
     {% if config.maxlength %}
     maxlength="{{ config.maxlength }}" 
     {% endif %}
@@ -1354,6 +1357,9 @@ $(document).ready(function() {
 {% macro displayHelp(config) %}
     {% if config.hideHelp is not defined or config.hideHelp == false %}
         {% set help = config.help ? (config.help is iterable ? config.help : [config.help]) : [] %}
+        {% if config.minlength %}
+            {% set help = help|merge(['minimum length %s characters'|trans|format(config.minlength)]) %}
+        {% endif %}
         {% if config.maxlength %}
             {% set help = help|merge(['maximum length %s characters'|trans|format(config.maxlength)]) %}
         {% endif %}
