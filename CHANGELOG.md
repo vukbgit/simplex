@@ -1,3 +1,7 @@
+## 3.9.15 (September 20, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.9.14 -> 3.9.15
+- full calendar events
+
 ## 3.9.14 (September 14, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.9.13 -> 3.9.14
 - fix: field minimun length help
