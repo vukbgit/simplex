@@ -19,8 +19,8 @@ document.addEventListener('DOMContentLoaded', function() {
    calendar = new FullCalendar.Calendar(calendarEl, {
      locale: '{{ attribute(context.language, 'ISO-639-1') }}',
  {% for option, value in options %}
-  {# events options need to be displayed without quotes #}
-  {% if option in ['eventClick', 'eventMouseEnter', 'eventMouseLeave', 'eventSourceSuccess', 'eventClassNames', 'viewWillUnmount', 'viewDidMount', 'viewClassNames'] %}
+  {# options whose value is a javascript function to be called need to be displayed without quotes #}
+  {% if option in ['eventClick', 'eventMouseEnter', 'eventMouseLeave', 'eventSourceSuccess', 'eventClassNames', 'eventContent', 'eventDidMount', 'eventWillUnmount', 'viewWillUnmount', 'viewDidMount', 'viewClassNames'] %}
    {{ option }}: {{ value }},
   {% else %}   
    {{ option }}: {{ value|varToJs }},
