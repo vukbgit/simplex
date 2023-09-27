@@ -147,7 +147,8 @@ class Refactor
       )
     );
     //loop files
-    foreach((array) $files as $path => $fileInfo) {
+    foreach((array) $files as $fileInfo) {
+      $path = $fileInfo->getRealPath();
       $content = file_get_contents($path);
       if(
         (!$reverse && strpos($content, $pattern) === false)
@@ -186,7 +187,8 @@ class Refactor
     $files = $this->searchPatternInFiles($pattern, $folders, $exclude, $filesNames);
     //loop files
     $found = false;
-    foreach((array) $files as $path => $fileInfo) {
+    foreach((array) $files as $fileInfo) {
+      $path = $fileInfo->getRealPath();
       //read content
       $content = file_get_contents($path);
       switch ($operation) {
@@ -237,7 +239,8 @@ class Refactor
     //search pattern
     $files = $this->searchPatternInFiles($pattern, $folders, $exclude, $filesNames);
     //loop files
-    foreach((array) $files as $path => $fileInfo) {
+    foreach((array) $files as $fileInfo) {
+      $path = $fileInfo->getRealPath();
       //read into lines
       $lines = file($path);
       //loop lines
@@ -430,13 +433,14 @@ class Refactor
           $pattern
         )
       );
-      foreach(array_keys($files) as $path) {
+      //foreach(array_keys($files) as $path) {
+      foreach($files as $fileInfo) {
+        $path = $fileInfo->getRealPath();
         $this->outputMessage(
-        'd',
-        $path
-      );
+          'd',
+          $path
+        );
       }
-      
     }
   }
   

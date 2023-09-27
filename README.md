@@ -145,7 +145,10 @@ For details see [Folders and Files Structure](#Folders-and-Files-Structure) belo
 
 ## Upgrade ##
 
-If you upgrade from Simplex 2.x you must run manually the first refactor PHP script (_private/share/packagist/vukbgit/simplex/refactor/3.0.0.php_) on the command line using the appropriate PHP binary for your environment, for example:
+If you upgrade from Simplex 2.x you must:
+
+* follow [Pre-Installation - Upgrade Jobs](#Pre-Installation---Upgrade-Jobs)
+* run manually the first refactor PHP script (_private/share/packagist/vukbgit/simplex/refactor/3.0.0.php_) on the command line using the appropriate PHP binary for your environment, for example:
 
         php8.2 private/share/packagist/vukbgit/simplex/refactor/3.0.0.php
 
