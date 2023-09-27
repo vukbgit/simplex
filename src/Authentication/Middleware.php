@@ -613,7 +613,7 @@ class Middleware implements MiddlewareInterface
           `username` varchar(48) NOT NULL,
           `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
           `userdata` text NOT NULL,
-          PRIMARY KEY (`key`),
+          PRIMARY KEY (`key`)
         );
 EOT;
         $query->query($sql);
