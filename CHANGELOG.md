@@ -1,3 +1,7 @@
+## 3.9.16 (September 27, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.9.15 -> 3.9.16
+- fix: refactor
+
 ## 3.9.15 (September 20, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.9.14 -> 3.9.15
 - full calendar events
