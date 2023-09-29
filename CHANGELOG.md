@@ -1,3 +1,7 @@
+## 3.10.0 (September 29, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.9.17 -> 3.10.0
+- feat: db geometry data type
+
 ## 3.9.17 (September 27, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.9.16 -> 3.9.17
 - fix: persistent login table
