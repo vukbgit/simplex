@@ -26,6 +26,12 @@ abstract class ModelAbstract extends BaseModelAbstract
     public $hasPositionField;
     
     /**
+     * @var bool
+     * whether model has a geometry data type fields
+     */
+    public $hasGeometryFields;
+    
+    /**
      * @var string
      * String to mark text cloned fields with
      */
@@ -64,6 +70,8 @@ abstract class ModelAbstract extends BaseModelAbstract
       }
       //has position field
       $this->hasPositionField = isset($this->config->position) && isset($this->config->position->field) && $this->config->position->field;
+      //has geometry fields
+      $this->hasGeometryFields = isset($this->config->geometryFields) && is_array($this->config->geometryFields) && !empty($this->config->geometryFields);
     }
     
     /**
@@ -459,13 +467,15 @@ abstract class ModelAbstract extends BaseModelAbstract
     */
     public function insert(array &$fieldsValues)
     {
-        //insert record
-        $primaryKeyValue = $this->query
-            ->table($this->table())
-            ->insert($fieldsValues);
-        //add primary key to values
-        $fieldsValues[$this->config->primaryKey] = $primaryKeyValue;
-        return $primaryKeyValue;
+      //geometry fields
+      $this->buildGeometryFieldsSaveSql($fieldsValues);
+      //insert record
+      $primaryKeyValue = $this->query
+          ->table($this->table())
+          ->insert($fieldsValues);
+      //add primary key to values
+      $fieldsValues[$this->config->primaryKey] = $primaryKeyValue;
+      return $primaryKeyValue;
     }
     
     /*********
@@ -479,16 +489,18 @@ abstract class ModelAbstract extends BaseModelAbstract
     */
     public function update($primaryKeyValue = null, array &$fieldsValues = [])
     {
-        $this->query
-            ->table($this->table());
-        if($primaryKeyValue) {
-            $this->query
-                ->where($this->config->primaryKey, $primaryKeyValue);
-        }
-        $this->query
-            ->update($fieldsValues);
-        //add primary key to values
-        $fieldsValues[$this->config->primaryKey] = $primaryKeyValue;
+      //geometry fields
+      $this->buildGeometryFieldsSaveSql($fieldsValues);
+      $this->query
+          ->table($this->table());
+      if($primaryKeyValue) {
+          $this->query
+              ->where($this->config->primaryKey, $primaryKeyValue);
+      }
+      $this->query
+          ->update($fieldsValues);
+      //add primary key to values
+      $fieldsValues[$this->config->primaryKey] = $primaryKeyValue;
     }
     
     /*********
@@ -1000,5 +1012,44 @@ EOT;
         $events[] = $event;
       }
       return $events;
+    }
+    
+    /******************
+    * GEOMETRY FIELDS *
+    ******************/
+    
+    /**
+    * builds SQL to save geometry fields
+    */
+    public function buildGeometryFieldsSaveSql(&$fieldsValues)
+    {
+      if($this->hasGeometryFields) {
+        //values are associative array -> not batch insert
+        if(!array_is_list($fieldsValues)) {
+          $batchInsert = false;
+          $tmpFieldsValues = [$fieldsValues];
+        } else {
+          $batchInsert = true;
+          $tmpFieldsValues = $fieldsValues;
+        }
+        foreach($tmpFieldsValues as &$tmpFieldValue) {
+          foreach($this->config->geometryFields as $fieldName => $dataType) {
+            if(isset($tmpFieldValue[$fieldName])) {
+              $value = $tmpFieldValue[$fieldName];
+              switch ($dataType) {
+                case 'point':
+                  list($latitude, $longitude) = explode(',', $value);
+                  $tmpFieldValue[$fieldName] = $this->rawField(sprintf('POINT(%s, %s)', $latitude, $longitude));
+                break;
+              }
+            }
+          }
+        }
+        if(!$batchInsert) {
+          $fieldsValues = $tmpFieldsValues[0];
+        } else {
+          $fieldsValues = $tmpFieldsValues;
+        }
+      }
     }
 }

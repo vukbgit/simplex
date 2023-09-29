@@ -29,6 +29,8 @@ abstract class ModelAbstractWithUuid extends ModelAbstract
       //in case of batch insert default primary key value should be set to uuid()
         $primaryKeyValue = null;
       }
+      //geometry fields
+      $this->buildGeometryFieldsSaveSql($fieldsValues);
       //insert record(s)
       $this->query
         ->table($this->table())
