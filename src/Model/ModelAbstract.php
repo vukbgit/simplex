@@ -467,6 +467,8 @@ abstract class ModelAbstract extends BaseModelAbstract
     */
     public function insert(array &$fieldsValues)
     {
+      //values are indexed array -> batch insert
+      $batchInsert = array_is_list($fieldsValues);
       //geometry fields
       $this->buildGeometryFieldsSaveSql($fieldsValues);
       //insert record
@@ -474,7 +476,9 @@ abstract class ModelAbstract extends BaseModelAbstract
           ->table($this->table())
           ->insert($fieldsValues);
       //add primary key to values
-      $fieldsValues[$this->config->primaryKey] = $primaryKeyValue;
+      if(!$batchInsert) {
+        $fieldsValues[$this->config->primaryKey] = $primaryKeyValue;
+      }
       return $primaryKeyValue;
     }
     

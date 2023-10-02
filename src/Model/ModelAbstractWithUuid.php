@@ -21,8 +21,10 @@ abstract class ModelAbstractWithUuid extends ModelAbstract
     */
     public function insert(array &$fieldsValues)
     {
+      //values are not indexed array -> batch insert
+      $batchInsert = array_is_list($fieldsValues);
       //values are associative array -> not batch insert
-      if(!array_is_list($fieldsValues)) {
+      if(!$batchInsert) {
         $primaryKeyValue = $this->query->query('SELECT UUID() AS uuid')->get()[0]->uuid;
         $fieldsValues[$this->config->primaryKey]  = $primaryKeyValue;
       } else {
