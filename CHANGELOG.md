@@ -1,3 +1,7 @@
+## 3.10.1 (October 02, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.10.0 -> 3.10.1
+- fix: model batch insert
+
 ## 3.10.0 (September 29, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.9.17 -> 3.10.0
 - feat: db geometry data type
