@@ -17,7 +17,7 @@
 #}
 {% block body %}
 <div class="container-fluid d-flex align-items-center py-5 text-center">
-    <form class="mx-auto needs-validation" id="form-sign-in" method="post" action="{{ routeParameters.signInUrl }}">
+    <form class="mx-auto needs-validation" id="form-sign-in" method="post" action="{{ routeParameters.authentication.urls.signIn ?? routeParameters.signInUrl }}">
     {% block loginLogo %}
         {% if logoPath %}
         <img class="mb-4 img-fluid logo" src="{{ logoPath }}" alt="">

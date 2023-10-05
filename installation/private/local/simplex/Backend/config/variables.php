@@ -21,6 +21,7 @@ $authentication = (object) [
     'action' => 'verify',
     'urls' => (object) [
         'signInForm' => $signInFormRoute,
+        'signIn' => $signInRoute,
         'signOut' => $signOutRoute,
         'successDefault' => $successfulSignInRoute,
     ],

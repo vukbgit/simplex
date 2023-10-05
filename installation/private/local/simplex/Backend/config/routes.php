@@ -33,7 +33,6 @@ return [
             [
                 'action' => 'sign-in-form',
                 'area' => $area,
-                'signInUrl' => $signInRoute,
                 'authentication' => $authentication,
             ]
         ]

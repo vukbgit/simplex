@@ -15,6 +15,7 @@ use Aura\Auth\Exception\UsernameNotFound;
 use Aura\Auth\Exception\PasswordIncorrect;
 use Aura\Auth\Verifier\PasswordVerifier;
 use function Simplex\slugToPSR1Name;
+use function Simplex\loadLanguages;
 
 /**
  * Routing Middleware that uses nikic/fastroute
@@ -139,6 +140,12 @@ class Middleware implements MiddlewareInterface
         if(!in_array($authenticationParameters->action, $this->actions)) {
             throw new \Exception(sprintf('Authentication action \'%s\' not allowed', $authenticationParameters->action));
         }
+        //process urls
+        foreach($authenticationParameters->urls as &$url) {
+          $url = $this->parseAuthenticationRoute($url);
+        }
+        $routeParameters->authentication = $authenticationParameters;
+        $request = $request->withAttribute('parameters', $routeParameters);
         //perform action
         $this->setAuthFactory();
         $this->{slugToPSR1Name($authenticationParameters->action, 'method')}($authenticationParameters);
@@ -468,7 +475,7 @@ class Middleware implements MiddlewareInterface
           if(!isset($authenticationParameters->urls->successDefault)) {
             throw new \Exception('Route definition for sign-in-form must include "successDefault" url');
           } else {
-            $this->setAuthenticationStatus(true, 4, $authenticationParameters->urls->successDefault);
+            $this->setAuthenticationStatus(true, 4, $this->parseAuthenticationRoute($authenticationParameters->urls->successDefault));
           }
         } else {
         //verify from other route, do no redirect
@@ -726,5 +733,17 @@ EOT;
         }
         $userData->permissions = $userPermissions;
         $this->setUserData((array) $userData);
+    }
+    
+    /**
+     * Parses an authentication route
+     * @param string $route
+     **/
+    private function parseAuthenticationRoute(string $route)
+    {
+      //check lang parameter
+      $languageCode = $this->request->getAttributes()['parameters']->lang ?? current(get_object_vars(loadLanguages('local')))->{'ISO-639-1'};
+      $route = str_replace('{lang}', $languageCode, $route);
+      return $route;
     }
 }
