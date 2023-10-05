@@ -50,6 +50,8 @@ abstract class ControllerWithoutCRUDLAbstract extends ControllerWithTemplateAbst
     {
         //Parent jobs
         parent::doBeforeActionExecution($request);
+        //store subject
+        $this->storeSubject();
         //build common template helpers
         $this->buildCommonTemplateHelpers();
         //load navigation
@@ -68,7 +70,7 @@ abstract class ControllerWithoutCRUDLAbstract extends ControllerWithTemplateAbst
     */
     protected function storeSubject()
     {
-        $this->subject = $this->routeParameters->subject;
+      $this->subject = $this->routeParameters->subject;
     }
 
     /**
@@ -168,6 +170,7 @@ abstract class ControllerWithoutCRUDLAbstract extends ControllerWithTemplateAbst
     */
     protected function setCommonTemplateParameters()
     {
+        $this->setTemplateParameter('subject', $this->subject);
         $this->setTemplateParameter('userData', $this->getAuthenticatedUserData());
     }
     
