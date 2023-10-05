@@ -1,3 +1,7 @@
+## 3.10.2 (October 05, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.10.1 -> 3.10.2
+- localized authentication routes
+
 ## 3.10.1 (October 02, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.10.0 -> 3.10.1
 - fix: model batch insert
