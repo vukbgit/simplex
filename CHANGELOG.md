@@ -1,3 +1,7 @@
+## 3.10.3 (October 05, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.10.2 -> 3.10.3
+- erp store subject for ControllerWithoutCRUDL also
+
 ## 3.10.2 (October 05, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.10.1 -> 3.10.2
 - localized authentication routes
