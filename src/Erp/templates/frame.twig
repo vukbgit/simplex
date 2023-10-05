@@ -18,7 +18,11 @@ $(document).ready(function(){
         const sideBarState = $('#sidebar').hasClass(className) ? 0 : 1;
         //setAreaCookie(area,  'sideBarClosed', sideBarClosed)
         $.get(
-          '{{ '/%s%s/set-side-bar-state?s='|format(area, subject ? '/%s'|format(subject) : null) }}' + sideBarState
+          '{{ '/%s%s%s/set-side-bar-state?s='|format(
+            area,
+            routeParameters.lang ? '/%s'|format(routeParameters.lang) : null,
+            subject ? '/%s'|format(subject) : null
+          ) }}' + sideBarState
         )
     });
   })
