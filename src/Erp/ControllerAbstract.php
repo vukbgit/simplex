@@ -396,6 +396,7 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
     {
         $this->setTemplateParameter('_GET', $_GET);
         $this->setTemplateParameter('_POST', $_POST);
+        $this->setTemplateParameter('subject', $this->subject);
         $this->setTemplateParameter('userData', $this->getAuthenticatedUserData());
         $this->setTemplateParameter('model', $this->model);
         $this->setTemplateParameter('ancestors', $this->ancestors);
