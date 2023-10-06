@@ -18,9 +18,6 @@ class Controller extends ControllerWithTemplateAbstract
      */
     protected function signInForm()
     {
-        //check mandatory route parameters
-        $mandatoryParameters = ['signInUrl'];
-        $this->checkRouteParameters($mandatoryParameters);
         //render
         $templatePath = sprintf('@local/%s/%s/sign-in-form.twig', slugToPSR1Name($this->area, 'class'), TEMPLATES_DEFAULT_FOLDER);
         $this->renderTemplate($templatePath);
