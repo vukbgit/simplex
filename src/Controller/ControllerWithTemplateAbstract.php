@@ -933,7 +933,7 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         //set value
         $property = $propertyValue;
         //set area cookie
-        $this->cookie->setAreaCookie($this->area, $topPropertyName, $areaCookie);
+        $this->cookie->setAreaCookie($this->area, $topPropertyName, $areaCookie->$topPropertyName);
         //update template parameter
         $this->setTemplateParameter('areaCookie', $areaCookie);
     }
