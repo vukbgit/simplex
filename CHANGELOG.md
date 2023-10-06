@@ -1,3 +1,7 @@
+## 3.10.6 (October 06, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.10.5 -> 3.10.6
+- sign in form
+
 ## 3.10.5 (October 05, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.10.4 -> 3.10.5
 - set-side-bar-state route
