@@ -1,3 +1,7 @@
+## 3.10.8 (October 07, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.10.7 -> 3.10.8
+- fix: store subject
+
 ## 3.10.7 (October 06, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.10.6 -> 3.10.7
 - fix setAreaCookieArray method
