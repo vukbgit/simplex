@@ -70,7 +70,9 @@ abstract class ControllerWithoutCRUDLAbstract extends ControllerWithTemplateAbst
     */
     protected function storeSubject()
     {
-      $this->subject = $this->routeParameters->subject;
+      if(isset($this->routeParameters->subject)) {
+        $this->subject = $this->routeParameters->subject;
+      }
     }
 
     /**
