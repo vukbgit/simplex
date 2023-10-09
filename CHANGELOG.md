@@ -1,3 +1,7 @@
+## 3.10.9 (October 09, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.10.8 -> 3.10.9
+- fix: persistent logout and user permissions
+
 ## 3.10.8 (October 07, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.10.7 -> 3.10.8
 - fix: store subject
