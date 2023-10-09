@@ -815,7 +815,7 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
     /**
      * Loads area navigation
      */
-    protected function loadAreaNavigation()
+    protected function loadAreaNavigation(ServerRequestInterface $request = null)
     {
         //check path
         $pathConstant = sprintf('%s_NAVIGATION_PATH', strtoupper($this->area));
@@ -823,7 +823,7 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
             throw new \Exception(sprintf('constant %s *MUST* be defined for current area and must be a valid path', $pathConstant));
         }
         //load navigation
-        $this->loadNavigation(constant($pathConstant));
+        $this->loadNavigation(constant($pathConstant), $request);
         //check that there is one navigation named 'area'
         if(!isset($this->navigations['area'])) {
             throw new \Exception('There MUST be a loaded navigation named \'area\'');

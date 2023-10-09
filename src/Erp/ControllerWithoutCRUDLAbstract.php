@@ -58,7 +58,7 @@ abstract class ControllerWithoutCRUDLAbstract extends ControllerWithTemplateAbst
         if($this->isAuthenticated()) {
             //area navigation which is *always* needed for ERP 
             $this->loadSubjectConfig();
-            $this->loadAreaNavigation();
+            $this->loadAreaNavigation($this->request);
             $this->checkActionPermission();
         }
         //set template parameters

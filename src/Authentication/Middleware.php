@@ -508,7 +508,7 @@ class Middleware implements MiddlewareInterface
                   ->where('key', $persistentLoginKey)
                   ->delete();
               } else {
-                $validPersistentLogin = false;
+                $validPersistentLogin = true;
                 //update
                 $newPersistentLoginKey = $this->generatePersistentLoginKey();
                 $query
@@ -550,19 +550,32 @@ class Middleware implements MiddlewareInterface
      **/
     private function signOut(object $authenticationParameters)
     {
-        $returnCode = 0;
-        //check urls
-        $mandatoryUrls = ['signInForm'];
-        foreach ($mandatoryUrls as $parameter) {
-            if(!isset($authenticationParameters->urls->$parameter) || !$authenticationParameters->urls->$parameter) {
-                throw new \Exception(sprintf('Current route definition MUST contain a \'handler\'[1][\'authentication\']->urls->%s parameter', $parameter));
-            }
+      $returnCode = 0;
+      //check urls
+      $mandatoryUrls = ['signInForm'];
+      foreach ($mandatoryUrls as $parameter) {
+        if(!isset($authenticationParameters->urls->$parameter) || !$authenticationParameters->urls->$parameter) {
+          throw new \Exception(sprintf('Current route definition MUST contain a \'handler\'[1][\'authentication\']->urls->%s parameter', $parameter));
         }
-        //sign out
-        $logoutService = $this->authFactory->newLogoutService();
-        $auth = $this->authFactory->newInstance();
-        $logoutService->logout($auth);
-        $this->setAuthenticationStatus(false, $returnCode, $authenticationParameters->urls->signInForm);
+      }
+      //sign out
+      $logoutService = $this->authFactory->newLogoutService();
+      $auth = $this->authFactory->newInstance();
+      $logoutService->logout($auth);
+      $this->setAuthenticationStatus(false, $returnCode, $authenticationParameters->urls->signInForm);
+      //delete persistent login
+      if(isset($authenticationParameters->persistentLogin)) {
+        $persistentLoginKey = $this->cookie->getAreaCookie($this->area, 'plk');
+        //xx($persistentLoginKey);
+        //cookie with key
+        if($persistentLoginKey) {
+          $query = $this->DIContainer->get('queryBuilder');
+          $persistentLogin = $query
+            ->table($this->persistentLoginsTableName)
+            ->where('key', $persistentLoginKey)
+            ->delete();
+        }
+      }
     }
     
     /**
