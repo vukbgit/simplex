@@ -1,3 +1,7 @@
+## 3.10.10 (October 18, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.10.9 -> 3.10.10
+- feat: dynamic error handler
+
 ## 3.10.9 (October 09, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.10.8 -> 3.10.9
 - fix: persistent logout and user permissions
