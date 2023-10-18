@@ -76,20 +76,22 @@ require_once sprintf('%s/private/share/packagist/autoload.php', ABS_PATH_TO_ROOT
 $whoops = new \Whoops\Run(null);
 //exception handler
 switch(ENVIRONMENT) {
-    case 'development':
+  case 'development':
     switch (SAPI_TYPE) {
       case 'cli':
-        $whoops->pushHandler(new \Whoops\Handler\PlainTextHandler);
-      break;
+        $errorHandlerClass = '\Whoops\Handler\PlainTextHandler';
+        break;
       case 'web':
-        $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
+        $errorHandlerClass = $developmentErrorHandlerClass ?? '\Whoops\Handler\PrettyPageHandler';
       break;
     }
-    break;
-    default:
-        $whoops->pushHandler(new \Simplex\ErrorHandler);
-    break;
+  break;
+  default:
+    $errorHandlerClass = $defaultErrorHandlerClass ?? '\Simplex\ErrorHandler';
+  break;
 }
+$errorHandler = new $errorHandlerClass;
+$whoops->pushHandler($errorHandler);
 $whoops->register();
 /********
 * PATHS *
