@@ -129,11 +129,9 @@
       class="action-link-{{ voiceKey }}{% if actionProperties.linkClass is defined  %} {{ actionProperties.linkClass }}{% endif %}"
     {% if actionProperties.target is defined  %} target="{{ actionProperties.target }}"{% endif %}
       title="{{- actionLabel|escape('html_attr') -}}"
-    >
-        {% if actionProperties.hideLabel is not defined or actionProperties.hideLabel == false %}
+    >{% if actionProperties.hideLabel is not defined or actionProperties.hideLabel == false %}
             {{- actionLabel -}}
-        {% endif %}
-    </a>
+        {% endif %}</a>
     {% endif %}
 {% endmacro %}
 
