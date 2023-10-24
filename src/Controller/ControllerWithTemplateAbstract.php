@@ -502,10 +502,15 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         });
         
         /* gets a record field value according to current language
-        * @param string $key: a specific property key of the language object to be returned
+        * @param array $field: localized field values
+        * @param array $defaultLanguageCode: ISO-639-1 language code to default translation in case there is no value for current language
         */
-        $this->addTemplateFunction('getLocaleRecordValue', function(array $field = null){
-            return $field[$this->language->{'ISO-639-1'}] ?? null;
+        $this->addTemplateFunction('getLocaleRecordValue', function(array $field = null, string $defaultLanguageCode = ''){
+            if(!$defaultLanguageCode) {
+              return $field[$this->language->{'ISO-639-1'}] ?? null;
+            } else {
+              return $field[$this->language->{'ISO-639-1'}] ? $field[$this->language->{'ISO-639-1'}] : ($field[$defaultLanguageCode] ?? null);
+            }
         });
         
         /* alias of getLocaleRecordValue
