@@ -1,3 +1,7 @@
+## 3.10.13 (October 24, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.10.12 -> 3.10.13
+- feat: default BS class for action links
+
 ## 3.10.12 (October 24, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.10.11 -> 3.10.12
 - fix: extra space in action link
