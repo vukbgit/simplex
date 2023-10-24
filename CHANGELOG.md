@@ -1,3 +1,7 @@
+## 3.10.12 (October 24, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.10.11 -> 3.10.12
+- fix: extra space in action link
+
 ## 3.10.11 (October 24, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.10.10 -> 3.10.11
 - feat: default language for locale field record value
