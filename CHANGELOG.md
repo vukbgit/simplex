@@ -1,3 +1,7 @@
+## 3.10.15 (October 27, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.10.14 -> 3.10.15
+- feat ucfirst template filter
+
 ## 3.10.14 (October 27, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.10.13 -> 3.10.14
 - fix: id for subject gloabal navigation nav
