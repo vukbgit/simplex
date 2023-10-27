@@ -1,3 +1,7 @@
+## 3.10.14 (October 27, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.10.13 -> 3.10.14
+- fix: id for subject gloabal navigation nav
+
 ## 3.10.13 (October 24, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.10.12 -> 3.10.13
 - feat: default BS class for action links
