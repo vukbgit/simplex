@@ -320,6 +320,10 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         $this->addTemplateFunction('convertByteUnit', function(float $value, string $fromUnit = '', string $toUnit = ''): string{
             return \ByteUnits\parse(sprintf('%s%s', $value, $fromUnit))->format($toUnit, ' ');
         });
+        //ucfirst wrapper
+        $this->addTemplateFilter('ucfirst', function(string $string): string{
+            return ucfirst($string);
+        });
         //ucwords wrapper
         $this->addTemplateFilter('ucwords', function(string $string, string $separators = " \t\r\n\f\v"): string{
             return ucwords($string, $separators);
