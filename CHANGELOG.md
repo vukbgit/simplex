@@ -1,3 +1,7 @@
+## 3.11.1 (October 30, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.10.15 -> 3.11.1
+- feat: API based model
+
 ## 3.10.15 (October 27, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.10.14 -> 3.10.15
 - feat ucfirst template filter
