@@ -16,7 +16,7 @@ abstract class BaseModelAbstract implements ModelInterface
   /**
    * possible data sources
    */
-  private const POSSIBLESOURCES = ['database', 'fileSystem'];
+  private const POSSIBLESOURCES = ['database', 'fileSystem', 'api'];
   
   /**
     * @var string data source
@@ -32,6 +32,11 @@ abstract class BaseModelAbstract implements ModelInterface
     * @var bool whether model has a file system as source
     */
   public $hasFs;
+
+  /**
+    * @var bool whether model has an external API as source
+    */
+  public $hasApi;
   
   /**
     * @var object
@@ -53,6 +58,7 @@ abstract class BaseModelAbstract implements ModelInterface
       $this->source = $source;
       $this->hasDb = $this->source === 'database';
       $this->hasFs = $this->source === 'fileSystem';
+      $this->hasApi = $this->source === 'api';
       $this->loadConfig();
     }
   }
@@ -68,6 +74,7 @@ abstract class BaseModelAbstract implements ModelInterface
   {
     return sprintf('%s/config/model.php', getInstancePath($this));
   }
+  
   /**
    * Loads and check config
    */
