@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace Simplex\Model;
 
-use function Simplex\getInstanceNamespace;
-
 /*
  * class that rapresents a model based on an API
  */
