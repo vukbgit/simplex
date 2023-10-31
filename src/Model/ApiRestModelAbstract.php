@@ -34,6 +34,10 @@ abstract class ApiRestModelAbstract extends ApiModelAbstract
     if(!isset($this->config->endpoint)) {
       throw new \Exception(sprintf('configuration loaded from file \'%s\' for model %s must contain an \'endpoint\' property', $configPath, getInstanceNamespace($this)));
     }
+    //check primary key
+    if(!isset($this->config->primaryKey)) {
+      throw new \Exception(sprintf('configuration loaded from file \'%s\' for model %s must contain a \'primaryKey\' property', $configPath, getInstanceNamespace($this), $configPath));
+    }
     //check URIs
     if(!isset($this->config->getUri)) {
       throw new \Exception(sprintf('configuration loaded from file \'%s\' for model %s must contain a \'getUri\' property (to retrieve list of items)', $configPath, getInstanceNamespace($this)));
@@ -98,4 +102,12 @@ abstract class ApiRestModelAbstract extends ApiModelAbstract
     return $this->getConfig()->getUriProperty ? $response->{$this->getConfig()->getUriProperty} : $response;
   }
 
+  /**
+   * Gets a record
+   * @param array $where: where conditions, see get() method for details
+   */
+  public function first(array $where = [])
+  {
+      return current($this->get($where));
+  }
 }
