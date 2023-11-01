@@ -1,3 +1,8 @@
+## 3.11.4 (November 01, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.11.3 -> 3.11.4
+- stubs for LSP editors
+- stubs for LSP editors
+
 ## 3.11.3 (October 31, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.11.2 -> 3.11.3
 - API rest model
