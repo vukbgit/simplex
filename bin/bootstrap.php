@@ -52,6 +52,7 @@ if(!is_file($pathToIniConfig)) {
   exit(formatMessage('error', sprintf('invalid path "<i>%s</i>" to ini config file, exit', $pathToIniConfig)));
 } else {
   //extract ini values as constants
+  //NOTE: to make LSP capable editors aware of them, the must be addedd to stubs/global-constants.php
   foreach(parse_ini_file($pathToIniConfig) as $name => $value) {
     define($name, $value);
   }
