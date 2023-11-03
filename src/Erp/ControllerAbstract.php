@@ -885,8 +885,14 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
     protected function extractPrimaryKeyValueFromInput(&$input)
     {
         $primaryKeyField = $this->model->getConfig()->primaryKey;
-        $primaryKeyValue = $input[$primaryKeyField];
-        unset($input[$primaryKeyField]);
+        //deal with different flavours of input
+        if(is_array($input)) {
+          $primaryKeyValue = $input[$primaryKeyField];
+          unset($input[$primaryKeyField]);
+        } elseif(is_object($input)) {
+          $primaryKeyValue = $input->$primaryKeyField;
+          unset($input->$primaryKeyField);
+        }
         return $primaryKeyValue;
     }
     
@@ -914,7 +920,7 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
             }
         );
         //deal with localized fields
-        if($this->model->hasLocales()) {
+        if($this->model->hasDb && $this->model->hasLocales()) {
             $modelLocales = $this->model->getConfig()->locales ?? [];
             foreach ($inputFieldsFilters as $fieldName => $inputFilter) {
                 //localized field
@@ -932,7 +938,7 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
         }
         $input = filter_input_array(INPUT_POST, $inputFieldsFilters);
         //position field
-        if($this->model->hasPositionField) {
+        if($this->model->hasDb && $this->model->hasPositionField) {
             $modelPosition = $this->model->getConfig()->position;
             $positionField = $modelPosition->field;
             if(!$input[$positionField]) {
@@ -951,7 +957,7 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
         foreach (array_keys((array) $this->languages) as $languageCode) {
             $inputLocales[$languageCode] = [];
         }
-        if($this->model->hasLocales()) {
+        if($this->model->hasDb && $this->model->hasLocales()) {
             foreach ($input as $fieldName => $fieldLocalesValues) {
                 if(in_array($fieldName, $modelLocales)) {
                     if(is_array($fieldLocalesValues)) {
@@ -967,7 +973,7 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
         $primaryKeyValue = $this->extractPrimaryKeyValueFromInput($input);
         //add eventual model upload fields
         $uploadsInput = null;
-        if($this->model->hasUploads()) {
+        if($this->model->hasDb && $this->model->hasUploads()) {
             $uploadsFilters = [];
             foreach ($this->model->getUploadKeys() as $uploadKey) {
                 $uploadsFilters[$uploadKey] = [
@@ -999,11 +1005,11 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
             //save record
             $primaryKeyValue = $this->model->insert($fieldsData->saveFieldsValues);
             //save locales
-            if($this->model->hasLocales()) {
+            if($this->model->hasDb && $this->model->hasLocales()) {
                 $this->model->saveLocales($primaryKeyValue, $fieldsData->saveLocalesFieldsValues);
             }
             //save uploads
-            if($this->model->hasUploads()) {
+            if($this->model->hasDb && $this->model->hasUploads()) {
                 $this->model->saveUploadsFiles($primaryKeyValue, $fieldsData->uploadsValues);
             }
             //post save processing
@@ -1061,11 +1067,11 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
                 $this->model->update($fieldsData->primaryKeyValue, $fieldsData->saveFieldsValues);
             }
             //save locales
-            if($this->model->hasLocales()) {
+            if($this->model->hasDb && $this->model->hasLocales()) {
                 $this->model->saveLocales($fieldsData->primaryKeyValue, $fieldsData->saveLocalesFieldsValues);
             }
             //save uploads
-            if($this->model->hasUploads()) {
+            if($this->model->hasDb && $this->model->hasUploads()) {
                 $this->model->saveUploadsFiles($fieldsData->primaryKeyValue, $fieldsData->uploadsValues);
             }
             //post save processing
