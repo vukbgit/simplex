@@ -1,3 +1,7 @@
+## 3.11.6 (November 03, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.11.5 -> 3.11.6
+- API REST model
+
 ## 3.11.5 (November 03, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.11.4 -> 3.11.5
 - API rest model and CRUD
