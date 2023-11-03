@@ -672,7 +672,7 @@ EOT;
      * Sets user data both in session and request
      * @param array $userData: if passed it is stored into session
      **/
-    protected function setUserData($userData = null)
+    public function setUserData($userData = null)
     {
         //set into session
         if($userData) {

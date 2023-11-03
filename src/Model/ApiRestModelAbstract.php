@@ -75,9 +75,9 @@ abstract class ApiRestModelAbstract extends ApiModelAbstract
   /**
   * Makes a request
   * @param string $method
-  * @param string $request: l'operazione API specifica da chiamare (es: issues)
+  * @param string $request
   * @param object $body
-  * @return json risposta o false in caso di errore
+  * @return mixed json response or false in case of error
   **/
   protected function makeRequest(string $method, string $request, $body = null)
   {
@@ -95,30 +95,47 @@ abstract class ApiRestModelAbstract extends ApiModelAbstract
           );
         return json_decode($response->getBody()->getContents());
     } catch (\GuzzleHttp\Exception\ServerException | \GuzzleHttp\Exception\ConnectException | \GuzzleHttp\Exception\ClientException $e) {
-      if(ENVIRONMENT == 'development') {
+      /*if(ENVIRONMENT == 'development') {
+        x($e);
         x($url);
         x($method);
         x($headers);
         x($body);
         x($e->getMessage(),1);
-        x($e->getResponse()->getBody()->getContents(),1);
-      }
-      return false;
+        xx($e->getResponse()->getBody()->getContents(),1);
+      } else {
+        xx($e->getMessage(),1);
+      }*/
+      return (object) [
+        'error' => true,
+        'message' => $e->getMessage()
+      ];
     }
   }
 
   /**
    * Builds where guessing standard behaviour, to be overriden when necessary
+   * @param string $operation
    * @param string $url
    * @param array $where: where conditions, array of arrays, each contains field name and field value
    */
-  public function buildWhere(string $url, array $where = [])
+  public function buildWhere(string $operation, string $url, array $where = [])
   {
+    $operationConfig = $this->getOperationConfiguration('get');
+    $urlParameters = [];
     foreach($where as $field) {
+      list($fieldName, $fieldValue) = $field;
       //primary key added as url token
-      if($field[0] == $this->getconfig()->primaryKey) {
+      if($fieldName == $this->getconfig()->primaryKey) {
         $url = $this->addPrimaryKeyValueToUrl($url, $field[1]);
       }
+      //url parameter
+      if(isset($operationConfig->urlParameters) && in_array($fieldName, $operationConfig->urlParameters)) {
+        $urlParameters[$fieldName] = $fieldValue;
+      }
+    }
+    if(!empty($urlParameters)) {
+      $url .= '?' . http_build_query($urlParameters);
     }
     return $url;
   }
@@ -142,14 +159,14 @@ abstract class ApiRestModelAbstract extends ApiModelAbstract
    * @param int $limit: passed from Controller but handled directly into table template (because Finder doesn't offer internal limit and the result is not processed here to save memory but passed directly to template)
    * @param array $extraFields: no effect
    */
-  public function get(array $where = [], array $order = [], int $limit = null, array $extraFields = []): iterable
+  public function get(array $where = [], array $order = [], int $limit = null, array $extraFields = []): iterable|object
   {
     //check configuration
     $operationConfig = $this->getOperationConfiguration('get');
     //build url
     $url = $operationConfig->uri;
     if(!empty($where)) {
-      $url = $this->buildWhere($url, $where);
+      $url = $this->buildWhere('get', $url, $where);
     }
     //request
     $response = $this->makeRequest(
@@ -157,7 +174,7 @@ abstract class ApiRestModelAbstract extends ApiModelAbstract
       $url
     );
     //response
-    return $operationConfig->responseProperty ? $response->{$operationConfig->responseProperty} : $response;
+    return isset($operationConfig->responseProperty) && $operationConfig->responseProperty && isset($response->{$operationConfig->responseProperty}) ? $response->{$operationConfig->responseProperty} : $response;
   }
 
   /**
@@ -166,7 +183,8 @@ abstract class ApiRestModelAbstract extends ApiModelAbstract
    */
   public function first(array $where = [])
   {
-    return current($this->get($where));
+    $records = $this->get($where);
+    return is_array($records) ? reset($records) : $records;
   }
 
   /**
@@ -185,6 +203,7 @@ abstract class ApiRestModelAbstract extends ApiModelAbstract
       $url,
       (object) $fieldsValues
     );
+    return isset($operationConfig->responseProperty) && $operationConfig->responseProperty && isset($response->{$operationConfig->responseProperty}) ? $response->{$operationConfig->responseProperty} : $response;
   }
 
   /**
@@ -208,6 +227,7 @@ abstract class ApiRestModelAbstract extends ApiModelAbstract
       $url,
       (object) $fieldsValues
     );
+    return isset($operationConfig->responseProperty) && $operationConfig->responseProperty && isset($response->{$operationConfig->responseProperty}) ? $response->{$operationConfig->responseProperty} : $response;
   }
 
   /**

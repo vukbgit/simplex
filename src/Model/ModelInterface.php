@@ -15,5 +15,5 @@ interface ModelInterface
    *                for database model = any other field to get in addition to the ones defined into table/view for example:
    *                for filesystem model = no effect
    */
-  public function get(array $where = [], array $order = [], int $limit = null, array $extraFields = []): iterable;
+  public function get(array $where = [], array $order = [], int $limit = null, array $extraFields = []): iterable|object;
 } 

@@ -44,6 +44,6 @@ abstract class ApiModelAbstract extends BaseModelAbstract
    * @param int $limit: passed from Controller but handled directly into table template (because Finder doesn't offer internal limit and the result is not processed here to save memory but passed directly to template)
    * @param array $extraFields: no effect
    */
-  abstract public function get(array $where = [], array $order = [], int $limit = null, array $extraFields = []): iterable;
+  abstract public function get(array $where = [], array $order = [], int $limit = null, array $extraFields = []): iterable|object;
 
 }
