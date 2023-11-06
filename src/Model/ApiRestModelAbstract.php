@@ -125,6 +125,18 @@ abstract class ApiRestModelAbstract extends ApiModelAbstract
     $urlParameters = [];
     foreach($where as $field) {
       list($fieldName, $fieldValue) = $field;
+      //uri placeholder
+      $replacedIntoUrl = 0;
+      $url = preg_replace(
+        sprintf('/{%s}/', $fieldName),
+        (string) $fieldValue,
+        $url,
+        -1,
+        $replacedIntoUrl
+      );
+      if($replacedIntoUrl === 1) {
+        continue;
+      }
       //primary key added as url token
       if($fieldName == $this->getconfig()->primaryKey) {
         $url = $this->addPrimaryKeyValueToUrl($url, $field[1]);
@@ -149,6 +161,32 @@ abstract class ApiRestModelAbstract extends ApiModelAbstract
   protected function addPrimaryKeyValueToUrl(string $url, $primaryKeyValue): string
   {
     return $url .= '/' . $primaryKeyValue;
+  }
+
+  /**
+   * Performs an operation
+   * @param string $operation
+   * @param array $where: filter conditions, see buildWhere() method for details
+   * @param object $fieldsValues
+   */
+  public function do(string $operation, array $where = [], object $fieldsValues = new \stdClass)
+  {
+    //check configuration
+    $operationConfig = $this->getOperationConfiguration($operation);
+    //build url
+    $url = $operationConfig->uri;
+    //where
+    if(!empty($where)) {
+      $url = $this->buildWhere($operation, $url, $where);
+    }
+    //request
+    $response = $this->makeRequest(
+      $operationConfig->method,
+      $url,
+      $fieldsValues
+    );
+    //response
+    return isset($operationConfig->responseProperty) && $operationConfig->responseProperty && isset($response->{$operationConfig->responseProperty}) ? $response->{$operationConfig->responseProperty} : $response;
   }
 
   /**
@@ -191,7 +229,7 @@ abstract class ApiRestModelAbstract extends ApiModelAbstract
    * Insert a record
    * @param object $fieldsValues
    */
-  public function insert(object &$fieldsValues = new \stdClass)
+  public function insert(object $fieldsValues = new \stdClass)
   {
     //check configuration
     $operationConfig = $this->getOperationConfiguration('insert');
@@ -201,7 +239,7 @@ abstract class ApiRestModelAbstract extends ApiModelAbstract
     $response = $this->makeRequest(
       $operationConfig->method,
       $url,
-      (object) $fieldsValues
+      $fieldsValues
     );
     return isset($operationConfig->responseProperty) && $operationConfig->responseProperty && isset($response->{$operationConfig->responseProperty}) ? $response->{$operationConfig->responseProperty} : $response;
   }
@@ -211,7 +249,7 @@ abstract class ApiRestModelAbstract extends ApiModelAbstract
    * @param mixed $primaryKeyValue
    * @param object $fieldsValues
    */
-  public function update($primaryKeyValue = null, object &$fieldsValues = new \stdClass)
+  public function update($primaryKeyValue = null, object $fieldsValues = new \stdClass)
   {
     //check configuration
     $operationConfig = $this->getOperationConfiguration('update');
@@ -225,7 +263,7 @@ abstract class ApiRestModelAbstract extends ApiModelAbstract
     $response = $this->makeRequest(
       $operationConfig->method,
       $url,
-      (object) $fieldsValues
+      $fieldsValues
     );
     return isset($operationConfig->responseProperty) && $operationConfig->responseProperty && isset($response->{$operationConfig->responseProperty}) ? $response->{$operationConfig->responseProperty} : $response;
   }
