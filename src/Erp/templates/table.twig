@@ -11,21 +11,11 @@
 {% endfor %}
 
 {% block head %}
-    {{ parent() }}
-    {% if searchFields|length %}
-      {{ include(getInstanceTemplate(null, 'labels.twig'), {'labels': labels}, with_context = true) }}
+  {{ parent() }}
+  {% if searchFields|length %}
+    {{ include(getInstanceTemplate(null, 'labels.twig'), {'labels': labels}, with_context = true) }}
     <script type="text/javascript">
       $(document).ready(function() {
-        {#% set searchFields = [] %}
-        {% for fieldName, fieldConfig in CRUDLConfig.fields %}
-          {% if fieldConfig.table.filter %}
-            {% set fieldLabel = getLabel(subject, 'fields', fieldName) %}
-            {% if fieldLabel is null %}
-            alert('{{ 'no label for filter field %s'|format(fieldName)|escape('js') }}')
-            {% endif %}
-            {% set searchFields = searchFields|merge([getLabel(subject, 'fields', fieldName)]) %}
-          {% endif %}
-        {% endfor %#}
         {% set fieldsLabels = [] %}
         {% for fieldName in searchFields %}
           {% set fieldLabel = getLabel(subject, 'fields', fieldName) %}
@@ -57,20 +47,20 @@
         })
       })
     </script>
-    {% endif %}
+  {% endif %}
 {% endblock %}
 
 {% block pageContent %}
-    {{ parent() }}
-    {% set defaultFilterValue = attribute(attribute(areaCookie, subject), 'filter') ?? null %}
-    {% set customFilterValue = attribute(attribute(areaCookie, subject), 'custom_conditions') ?? null %}
-    {% block tableIntro %}
-    {% endblock %}
-    {% block tableNavBar %}
+  {{ parent() }}
+  {% set defaultFilterValue = attribute(attribute(areaCookie, subject), 'filter') ?? null %}
+  {% set customFilterValue = attribute(attribute(areaCookie, subject), 'custom_conditions') ?? null %}
+  {% block tableIntro %}
+  {% endblock %}
+  {% block tableNavBar %}
 <nav class="navbar navbar-light bg-light justify-content-start" id="list-navbar">
-      {% block tableFilter %}
+    {% block tableFilter %}
   <div>
-    {% if searchFields|length %}
+      {% if searchFields|length %}
     <form method="post" action="" class="" id="default-filter-form">
       <input type="hidden" name="modifier" value="filter">
       <div class="row">
@@ -80,16 +70,16 @@
         <div class="col">
           <div class="input-group">
               <input name="filter" value="{{ defaultFilterValue }}" type="search"
-          class="form-control form-control-sm" placeholder="{{ 'Filter'|trans }}" aria-label="{{ 'Filter'|trans }}">
+                class="form-control form-control-sm" placeholder="{{ 'Filter'|trans }}" aria-label="{{ 'Filter'|trans }}">
               <button class="btn btn-sm btn-outline-warning" type="reset">{{ 'Reset'|trans }}</button>
               <button class="btn btn-sm btn-outline-success" type="submit">{{ 'Filter'|trans }}</button>
           </div>  
         </div>
       </div>
     </form>
-    {% endif %}
-        {% block tableFilterCaption %}
-        {% endblock tableFilterCaption %}
+      {% endif %}
+      {% block tableFilterCaption %}
+      {% endblock tableFilterCaption %}
     <script type="text/javascript">
         $(document).ready(function(){
             $('#default-filter-form button[type="reset"]').click(function(){
@@ -99,13 +89,13 @@
         });
     </script>
   </div>
-      {% endblock tableFilter %}
+    {% endblock tableFilter %}
 </nav>
-    {% endblock tableNavBar %}
-    {% if records|length %}
-      {% if navigations.bulkActions|length %}
-        {% if (_context.model.getConfig().bulkActionsKey ?? _context.model.getConfig().primaryKey) %}
-          {% set bulkActionsLabel = 'selected records bulk actions'|trans %}
+  {% endblock tableNavBar %}
+  {% if records|length %}
+    {% if navigations.bulkActions|length %}
+      {% if (_context.model.getConfig().bulkActionsKey ?? _context.model.getConfig().primaryKey) %}
+        {% set bulkActionsLabel = 'selected records bulk actions'|trans %}
 <form method="post" id="bulk-actions-form" action="" class="form-inline">
     <input type="hidden" name="bulk_action_records_ids" id="bulk_action_records_ids">
     <nav class="navbar navbar-light bg-light justify-content-start w-100">
@@ -143,12 +133,12 @@
         </div>
     </div>
 </form>
-        {% else %}
+      {% else %}
         <div class="alert alert-danger">
         {{ 'For bulk actions to work you must define into model either a primaryKey or a bulkActionsKey property' }}
         </div>
-        {% endif %}
       {% endif %}
+    {% endif %}
 <table class="{% block tableClass %}table table-sm table-hover table-responsive-sm erp-table{% endblock %}">
     <caption>
       {{- getLabel('table', 'caption')|format(records|length) -}}
@@ -194,6 +184,7 @@
 </table>
     {% else %}
 <div class="alert alert-secondary h-100 p-5 text-center text-white fs-1" role="alert">
+    {% block tableNoResults %}
       {% if (defaultFilterValue or customFilterValue) %}
         {% trans 'No records match filter criteria' %}
       {% else %}
@@ -203,6 +194,7 @@
           {% trans 'No records saved' %}
         {% endif %}
       {% endif %}
+    {% endblock tableNoResults %}
 </div>
-    {% endif %}
+  {% endif %}
 {% endblock pageContent %}
