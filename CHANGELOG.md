@@ -1,3 +1,7 @@
+## 3.11.8 (November 09, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.11.7 -> 3.11.8
+- ERP table tableNoResults block
+
 ## 3.11.7 (November 06, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.11.6 -> 3.11.7
 - API REST model
