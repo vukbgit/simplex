@@ -448,13 +448,8 @@ class Middleware implements MiddlewareInterface
     /**
      * Performs verification
      * @param object $authenticationParameters
-     * @return int :
-     * 1 = missing field
-     * 2 = wrong username
-     * 3 = wrong password
-     * 4 = correct sign in
      */
-    private function verify(object $authenticationParameters)
+    protected function verify(object $authenticationParameters)
     {
       $returnCode = 0;
       $isSignInFormRoute = $this->request->getAttributes()['parameters']->action == 'sign-in-form';

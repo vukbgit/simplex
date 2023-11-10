@@ -125,6 +125,11 @@ abstract class ControllerAbstract
         $this->checkRouteParameters(['action', 'area']);
         //store area
         $this->area = $this->routeParameters->area;
+        //area runtime script
+        $areaRuntimeScript = sprintf('%s_RUNTIME_SCRIPT', strtoupper($this->area));
+        if(defined($areaRuntimeScript)) {
+          include_once(constant($areaRuntimeScript));
+        }
         //store route action
         $this->action = $this->routeParameters->action;
         //check language
