@@ -1,3 +1,7 @@
+## 3.11.9 (November 10, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.11.8 -> 3.11.9
+- area runtime script
+
 ## 3.11.8 (November 09, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.11.7 -> 3.11.8
 - ERP table tableNoResults block
