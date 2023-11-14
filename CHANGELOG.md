@@ -1,3 +1,7 @@
+## 3.12.0 (November 14, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.11.10 -> 3.12.0
+- feat: mjml email templates dependencies
+
 ## 3.11.10 (November 14, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.11.9 -> 3.11.10
 - fix: area runtime script
