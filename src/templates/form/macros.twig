@@ -265,21 +265,12 @@ NOTE: to perform validation Simplex does not use browser built in but a pattern 
 {% endmacro %}
 
 {# rich text field
-language packages must be downloaded from https://www.tiny.cloud/get-tiny/language-packages/ and saved into /public/share/rich-text-editor/locales/
 @param hash context: the calling template context object
-@param hash config: hash for field properties (see setFieldAttributes macro explanation) except for specific rich text options which can be set as a config.options hash
+@param hash config: hash for field properties (see setFieldAttributes macro explanation)
 #}
 {% macro displayRichTextEditor(context, config) %}
     {% import _self as selfMacros %}
     {# check locale file path #}
-    {% set languageCode = attribute(context.language, 'ISO-639-1') %}
-    {% set localePath = 'rich-text-editor/locales/%s.js'|format(languageCode)|pathToShareAsset %}
-    {% if isFile(localePath) == false %}
-        {% set config = updateProperty(config, 'validation', updateProperty(config.validation, 'invalidMessage', 'TinyMCE local file missing in %s'|format(localePath))) %}
-        {% set loadLocale = false %}
-    {% else %}
-        {% set loadLocale = true %}
-    {% endif %}
     {% set classes = config.classes ?? [] %}
     {% set classes = ['rich-text-editor']|merge(classes) %}
     {% set config = updateProperty(config, 'classes', classes) %}
@@ -306,30 +297,14 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
         <div class="col-12 col-sm-{{ config.cols[1] }}">
         {% endif %}
         
-        {{ selfMacros.displayTextarea(inputConfig) }}
+        {{ selfMacros.displayInput('hidden', inputConfig) }}
         {{ selfMacros.displayHelp(config) }}
         
         {% if config.cols is defined %}
         </div>
         {% endif %}
         
-        <script type="text/javascript">
-            var options = {
-                selector: '#{{ inputConfig.id }}',
-        {% if loadLocale %}
-                language: '{{ languageCode }}',
-                language_url: '{{ localePath }}',
-        {% endif %}
-        {% if config.disabled or config.readonly %}
-                readonly: true,
-        {% endif %}
-        {# rich text editor specific options #}
-        {% for option,value in config.options %}
-            '{{ option }}': {{ value|varToJs }},
-        {% endfor %}
-            }
-            tinymce.init(options);
-        </script>
+        <trix-editor input="{{ inputConfig.id }}"></trix-editor>
     </div>
     {% endfor %}
 {% endmacro %}
@@ -1803,13 +1778,8 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
 #}
 {% macro richTextEditorAssets(context) %}
 <!-- rich text textarea -->
-<script src="{{ 'tinymce/tinymce.min.js'|pathToNpmAsset }}"></script>
-<style type="text/css">
-/*tinyMCE fullscreen*/
-div.mce-fullscreen {
-    z-index:10000;
-}
-</style>
+<link rel="stylesheet" type="text/css" href="{{ 'trix/dist/trix.css'|pathToNpmAsset }}">
+<script type="text/javascript" src="{{ 'trix/dist/trix.umd.min.js'|pathToNpmAsset }}"></script>
 {% endmacro %}
 
 {# file upload 

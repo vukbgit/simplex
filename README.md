@@ -174,7 +174,7 @@ If you upgrade from Simplex 2.x you must:
         * backends or enterprise web applications (ERP) mostly (even if they can be useful also in frontend development):
             * [bootstrap-fileinput](https://plugins.krajee.com/file-input): for asyncronous file upload. NOTE: as for 2019-11-12 version is frozen to 5.0.4 due to a bug in auto upload
             * [flatpickr](https://github.com/flatpickr/flatpickr): for date time picker
-            * [tinymce](https://github.com/tinymce/tinymce-dist): for richtext input
+            * [trix](https://github.com/basecamp/trix): for richtext input
             * [select2](https://select2.org): for richselect input with autocomplete, with [select2-theme-bootstrap5](https://github.com/angel-vladov/select2-theme-bootstrap5) for skinning
             * [hamburgers](https://github.com/jonsuh/hamburgers): CSS hamburger animated icons
             * [fullcalendar](https://github.com/fullcalendar/fullcalendar): full-sized event calendar

@@ -10,11 +10,11 @@
         "hamburgers": ">=1.2",
         "jquery": "latest",
         "js-cookie": ">=3.0",
-        "tinymce": ">=6.0",
         "select2": ">=4",
         "select2-theme-bootstrap5": ">=0.1",
         "flatpickr": ">=4.6",
         "fullcalendar": ">=5.11",
-        "mjml": ">=4.14.1"
+        "mjml": ">=4.14.1",
+        "trix": ">=2.0.7"
     }
 }
