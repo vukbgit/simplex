@@ -32,3 +32,10 @@ fieldset {
     cursor: pointer;
   }
 }
+//richform
+trix-toolbar {
+  //hide file tools with attach button
+  .trix-button-group--file-tools {
+    display: none !important;
+  }
+}

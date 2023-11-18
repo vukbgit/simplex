@@ -305,6 +305,14 @@ NOTE: to perform validation Simplex does not use browser built in but a pattern 
         {% endif %}
         
         <trix-editor input="{{ inputConfig.id }}"></trix-editor>
+        <script>
+          $(document).ready(function() {
+            addEventListener("trix-file-accept", function(event) {
+              console.log('do not attach!');
+              event.preventDefault();
+            })        
+          });
+        </script>
     </div>
     {% endfor %}
 {% endmacro %}
