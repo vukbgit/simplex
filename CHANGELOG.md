@@ -1,3 +1,7 @@
+## 3.12.1 (November 18, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.12.0 -> 3.12.1
+- mjml twig extension
+
 ## 3.12.0 (November 14, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.11.10 -> 3.12.0
 - feat: mjml email templates dependencies
