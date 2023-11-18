@@ -1,3 +1,7 @@
+## 3.12.3 (November 18, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.12.2 -> 3.12.3
+- prevent trix attach file
+
 ## 3.12.2 (November 18, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.12.1 -> 3.12.2
 - discontinued tinymce support in favour of trix
