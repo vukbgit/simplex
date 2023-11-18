@@ -1,3 +1,7 @@
+## 3.12.2 (November 18, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.12.1 -> 3.12.2
+- discontinued tinymce support in favour of trix
+
 ## 3.12.1 (November 18, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.12.0 -> 3.12.1
 - mjml twig extension
