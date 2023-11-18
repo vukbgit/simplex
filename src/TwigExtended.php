@@ -11,6 +11,8 @@ use Twig\Extra\Intl\IntlExtension;
 use jblond\TwigTrans\Translation;
 use Aptoma\Twig\Extension\MarkdownExtension;
 use Aptoma\Twig\Extension\MarkdownEngine;
+use \Qferrer\Mjml\Renderer\BinaryRenderer;
+use \Qferrer\Mjml\Twig\MjmlExtension;
 
 /*
 * Subclass of Twig tmeplate engine (https://twig.symfony.com) to add some functionalities
@@ -56,6 +58,11 @@ class TwigExtended extends Environment
     //markdown support
     $markdownEngine = new MarkdownEngine\MichelfMarkdownEngine();
     $this->addExtension(new MarkdownExtension($markdownEngine));
+    //mjml email templates support
+    $renderer = new BinaryRenderer(PUBLIC_SHARE_DIR . '/node_modules/mjml/bin/mjml');
+    // $api = new \Qferrer\Mjml\Http\CurlApi('my-app-id','my-secret-key');
+    // $renderer = new \Qferrer\Mjml\Renderer\ApiRenderer($api);
+    $this->addExtension(new MjmlExtension($renderer));
     //set context variable
     $this->addExtension(new class extends \Twig\Extension\AbstractExtension {
       public function getFunctions() {
