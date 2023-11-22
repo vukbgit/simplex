@@ -1,3 +1,7 @@
+## 3.12.4 (November 22, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.12.3 -> 3.12.4
+- trix version
+
 ## 3.12.3 (November 18, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.12.2 -> 3.12.3
 - prevent trix attach file
