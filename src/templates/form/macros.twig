@@ -1786,8 +1786,10 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
 #}
 {% macro richTextEditorAssets(context) %}
 <!-- rich text textarea -->
-<link rel="stylesheet" type="text/css" href="{{ 'trix/dist/trix.css'|pathToNpmAsset }}">
-<script type="text/javascript" src="{{ 'trix/dist/trix.umd.min.js'|pathToNpmAsset }}"></script>
+{# <link rel="stylesheet" type="text/css" href="{{ 'trix/dist/trix.css'|pathToNpmAsset }}">
+<script type="text/javascript" src="{{ 'trix/dist/trix.umd.min.js'|pathToNpmAsset }}"></script> #}
+<link rel="stylesheet" type="text/css" href="{{ '@mixtint/trix/dist/trix.css'|pathToNpmAsset }}">
+<script type="text/javascript" src="{{ '@mixtint/trix/dist/trix.js'|pathToNpmAsset }}"></script>
 {% endmacro %}
 
 {# file upload 

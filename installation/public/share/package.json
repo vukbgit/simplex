@@ -1,20 +1,20 @@
 {
-    "name": "simplex",
-    "description": "Simplex dev app",
-    "license": "MIT",
-    "dependencies": {
-        "bootstrap": ">=5",
-        "bootstrap-fileinput": ">=5.2",
-        "spectrum-colorpicker2": ">=2.0.10",
-        "flag-icons": ">=6.5",
-        "hamburgers": ">=1.2",
-        "jquery": "latest",
-        "js-cookie": ">=3.0",
-        "select2": ">=4",
-        "select2-theme-bootstrap5": ">=0.1",
-        "flatpickr": ">=4.6",
-        "fullcalendar": ">=5.11",
-        "mjml": ">=4.14.1",
-        "trix": ">=2.0.7"
-    }
+  "name": "simplex",
+  "description": "Simplex dev app",
+  "license": "MIT",
+  "dependencies": {
+    "bootstrap": ">=5",
+    "bootstrap-fileinput": ">=5.2",
+    "spectrum-colorpicker2": ">=2.0.10",
+    "flag-icons": ">=6.5",
+    "hamburgers": ">=1.2",
+    "jquery": "latest",
+    "js-cookie": ">=3.0",
+    "select2": ">=4",
+    "select2-theme-bootstrap5": ">=0.1",
+    "flatpickr": ">=4.6",
+    "fullcalendar": ">=5.11",
+    "mjml": ">=4.14.1",
+    "@mixtint/trix": ">=1.3.1-5"
+  }
 }
