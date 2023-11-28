@@ -1,3 +1,7 @@
+## 3.12.7 (November 28, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.12.6 -> 3.12.7
+- ERP table query limit warning
+
 ## 3.12.6 (November 28, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.12.5 -> 3.12.6
 - default ERP list query order
