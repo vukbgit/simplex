@@ -1,3 +1,7 @@
+## 3.12.5 (November 28, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.12.4 -> 3.12.5
+- model custom view
+
 ## 3.12.4 (November 22, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.12.3 -> 3.12.4
 - trix version
