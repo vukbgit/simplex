@@ -55,6 +55,11 @@
   {% set defaultFilterValue = attribute(attribute(areaCookie, subject), 'filter') ?? null %}
   {% set customFilterValue = attribute(attribute(areaCookie, subject), 'custom_conditions') ?? null %}
   {% block tableIntro %}
+    {% if CRUDLConfig.queryLimit and records|length == CRUDLConfig.queryLimit %}
+    <div class="alert alert-warning">
+      {{ 'Query limit of %d records reached, consider filtering records'|trans|format(CRUDLConfig.queryLimit) }}
+    </div>
+    {% endif %}
   {% endblock %}
   {% block tableNavBar %}
 <nav class="navbar navbar-light bg-light justify-content-start" id="list-navbar">

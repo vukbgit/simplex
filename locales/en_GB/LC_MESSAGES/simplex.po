@@ -3,19 +3,19 @@
 # This file is distributed under the same license as the Simplex package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Simplex\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-14 11:16+0200\n"
-"PO-Revision-Date: 2023-09-14 11:21+0200\n"
-"Language: en_GB\n"
+"POT-Creation-Date: 2023-11-28 10:18+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"X-Generator: Poedit 2.4.2\n"
 
 #. line 19
 #. line 30
@@ -142,6 +142,12 @@ msgstr "Please sign in"
 #. line 32
 #. line 33
 #. line 34
+#. line 32
+#. line 33
+#. line 34
+#. line 32
+#. line 33
+#. line 34
 msgid "Username"
 msgstr "Username"
 
@@ -201,6 +207,10 @@ msgstr "Wrong username"
 #. line 57
 #. line 56
 #. line 57
+#. line 56
+#. line 57
+#. line 56
+#. line 57
 msgid "Password"
 msgstr "Password"
 
@@ -230,6 +240,7 @@ msgstr "current"
 #. line 41
 #. line 70
 #. line 76
+#. line 80
 msgid "Sign out"
 msgstr "Sign out"
 
@@ -275,6 +286,7 @@ msgstr "maximum length %s characters"
 #. line 1588
 #. line 1658
 #. line 1673
+#. line 1656
 msgid "The value you entered for this field is invalid."
 msgstr "The value you entered for this field is invalid."
 
@@ -326,6 +338,10 @@ msgstr "The value you entered for this field is invalid."
 #. line 84
 #. line 83
 #. line 85
+#. line 78
+#. line 80
+#. line 78
+#. line 80
 msgid "Filter"
 msgstr "Filter"
 
@@ -338,6 +354,7 @@ msgstr "Filter"
 #. line 1516
 #. line 1586
 #. line 1601
+#. line 1584
 msgid "Please fill out this field"
 msgstr "Please fill out this field"
 
@@ -350,6 +367,7 @@ msgstr "Please fill out this field"
 #. line 1519
 #. line 1589
 #. line 1604
+#. line 1587
 msgid "Please enter an email address"
 msgstr "Please enter an email address"
 
@@ -362,6 +380,7 @@ msgstr "Please enter an email address"
 #. line 1522
 #. line 1592
 #. line 1607
+#. line 1590
 msgid "Please enter a URL"
 msgstr "Please enter a URL"
 
@@ -374,6 +393,7 @@ msgstr "Please enter a URL"
 #. line 1525
 #. line 1595
 #. line 1610
+#. line 1593
 #, php-format
 msgid ""
 "Please lengthen this text to %s characters or more. You are currently using "
@@ -391,6 +411,7 @@ msgstr ""
 #. line 1528
 #. line 1598
 #. line 1613
+#. line 1596
 #, php-format
 msgid ""
 "Please short this text to no more than %s characters. You are currently "
@@ -408,6 +429,7 @@ msgstr ""
 #. line 1531
 #. line 1601
 #. line 1616
+#. line 1599
 msgid "Please enter a number"
 msgstr "Please enter a number"
 
@@ -420,6 +442,7 @@ msgstr "Please enter a number"
 #. line 1534
 #. line 1604
 #. line 1619
+#. line 1602
 msgid "Please select a valid value"
 msgstr "Please select a valid value"
 
@@ -432,6 +455,7 @@ msgstr "Please select a valid value"
 #. line 1537
 #. line 1607
 #. line 1622
+#. line 1605
 #, php-format
 msgid "Please select a value that is no more than %s"
 msgstr "Please select a value that is no more than %s"
@@ -445,6 +469,7 @@ msgstr "Please select a value that is no more than %s"
 #. line 1540
 #. line 1610
 #. line 1625
+#. line 1608
 #, php-format
 msgid "Please select a value that is no less than %s"
 msgstr "Please select a value that is no less than %s"
@@ -458,6 +483,7 @@ msgstr "Please select a value that is no less than %s"
 #. line 1543
 #. line 1613
 #. line 1628
+#. line 1611
 msgid "Please match the requested format"
 msgstr "Please match the requested format"
 
@@ -522,6 +548,7 @@ msgstr "selected records bulk actions"
 #. line 99
 #. line 140
 #. line 141
+#. line 136
 msgid "you need to select at least one record"
 msgstr "you need to select at least one record"
 
@@ -533,11 +560,13 @@ msgstr "Missing sequence for primary key"
 
 #. line 25
 #. line 41
+#. line 31
 msgid "filter help"
 msgstr "filter help"
 
 #. line 28
 #. line 44
+#. line 34
 #, php-format
 msgid ""
 "separate multiple search terms by spaces\n"
@@ -555,12 +584,14 @@ msgstr ""
 #. line 55
 #. line 83
 #. line 84
+#. line 79
 msgid "Reset"
 msgstr "Reset"
 
 #. line 1294
 #. line 1318
 #. line 1330
+#. line 1313
 msgid "Insert new record"
 msgstr "Insert new record"
 
@@ -580,3 +611,8 @@ msgstr "Use filter to search for records"
 #, php-format
 msgid "minimum length %s characters"
 msgstr "minimum length %s characters"
+
+#. line 60
+#, php-format
+msgid "Query limit of %d records reached, consider filtering records"
+msgstr ""
