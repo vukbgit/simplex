@@ -1,3 +1,7 @@
+## 3.12.6 (November 28, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.12.5 -> 3.12.6
+- default ERP list query order
+
 ## 3.12.5 (November 28, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.12.4 -> 3.12.5
 - model custom view
