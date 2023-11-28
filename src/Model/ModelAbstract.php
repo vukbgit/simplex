@@ -116,11 +116,27 @@ abstract class ModelAbstract extends BaseModelAbstract
     }
     
     /**
-    * Returns the defined view or at least table
-    */
-    public function view(): string
+     * Returns the defined view or at least table
+     * @param string $view
+     */
+    public function view(string $view = ''): string
     {
-        return $this->config->view ? (($this->hasLocales() || (isset($this->config->useLocalizedView) && $this->config->useLocalizedView)) ? sprintf('%s_locales', $this->config->view) : $this->config->view) : $this->config->table;
+      //return $this->config->view ? (($this->hasLocales() || (isset($this->config->useLocalizedView) && $this->config->useLocalizedView)) ? sprintf('%s_locales', $this->config->view) : $this->config->view) : $this->config->table;
+      //custom view
+      if($view) {
+        return $view;
+      //default views
+      } elseif(isset($this->config->view)) {
+        //localized view
+        if($this->hasLocales() || (isset($this->config->useLocalizedView) && $this->config->useLocalizedView)) {
+          return sprintf('%s_locales', $this->config->view);
+        } else {
+          return $this->config->view;
+        }
+      //table
+      } else {
+        return $this->config->table;
+      }
     }
     
     /**
@@ -362,12 +378,13 @@ abstract class ModelAbstract extends BaseModelAbstract
     * @param array $extraFields: any other field to get in addition to the ones defined into table/view for example:
     *                fields aliases
     *                fields based on runtime variables
+    * @param string $view
     */
-    public function get(array $where = [], array $order = [], int $limit = null, array $extraFields = []): array
+    public function get(array $where = [], array $order = [], int $limit = null, array $extraFields = [], string $view = ''): array
     {
         //table
         $this->query
-            ->table($this->view())
+            ->table($this->view($view))
             ->select('*');
         if(!empty($extraFields)) {
           $this->query
@@ -453,7 +470,8 @@ abstract class ModelAbstract extends BaseModelAbstract
     */
     public function first(array $where = [])
     {
-        return current($this->get($where));
+      $view = $this->config->view_first ?? '';
+      return current($this->get($where, [], null, [], $view));
     }
     
     /********
