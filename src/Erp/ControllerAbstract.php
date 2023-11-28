@@ -440,8 +440,9 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
             $sorting = [[$this->model->getConfig()->position->field]];
         } elseif(isset($this->getCRUDLConfig()->listOrderBy)) {
             $sorting = $this->getCRUDLConfig()->listOrderBy;
-        } elseif($this->model->hasDb && $this->model->getConfig()->primaryKey) {
-            $sorting = [[$this->model->getConfig()->primaryKey]];
+        //ordering by primary key adds slows query
+        /*} elseif($this->model->hasDb && $this->model->getConfig()->primaryKey) {
+            $sorting = [[$this->model->getConfig()->primaryKey]];*/
         } else {
             $sorting = [];
         }
