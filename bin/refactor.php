@@ -36,7 +36,11 @@ switch ($phase) {
     break;
     case 'post':
       //get pre update version
-      $previousVersion = trim(file_get_contents($currentVersionFilePath));
+      if(is_file($currentVersionFilePath)) {
+        $previousVersion = trim(file_get_contents($currentVersionFilePath));
+      } else {
+        $previousVersion = '2.0';
+      }
       //check if previous version is lower than current
       if(version_compare($previousVersion, $currentVersion, '<')) {
         om('h', sprintf('simplex version upgrade from %s to %s', $previousVersion, $currentVersion));
@@ -70,7 +74,9 @@ switch ($phase) {
           om('s', sprintf('log for version %s saved into %s', $fileVersion, $pathToLogFile));
         }
       }
-      //remove version file
-    unlink($currentVersionFilePath);
+    //remove version file
+    if(is_file($currentVersionFilePath)) {
+      unlink($currentVersionFilePath);
+    }
   break;
 }

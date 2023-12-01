@@ -151,21 +151,23 @@ For details see [Folders and Files Structure](#Folders-and-Files-Structure) belo
 
 ## Upgrade ##
 
-If you upgrade from Simplex 2.x you must:
+If you upgrade from a version less than 3.13 a you must:
 
 * follow [Pre-Installation - Upgrade Jobs](#Pre-Installation---Upgrade-Jobs)
-* add into composer.json to the "scripts" array the refactoring scripts:
+* add into composer.json to the "scripts" array the post update refactoring script:
 
-    "pre-update-cmd": [
-      "Simplex\\Refactor::preRefactoring"
-    ],
-    "post-update-cmd": [
-      "Simplex\\Refactor::postRefactoring"
-    ]
+      "post-update-cmd": [
+        "Simplex\\Refactor::postRefactoring"
+      ]
 
 * run the `composer upgrade` command
 * look into output for any message that requires an action
 * eventually examine the refactoring logs saved into _private/local/log_
+* add into composer.json to the "scripts" array the pre update refactoring script:
+
+      "pre-update-cmd": [
+        "Simplex\\Refactor::preRefactoring"
+      ]
 
 ## Post-Installation Jobs ##
 
