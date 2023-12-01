@@ -1,3 +1,7 @@
+## 3.13.0 (December 01, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.12.9 -> 3.13.0
+- readme typo
+
 ## 3.12.9 (December 01, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.12.8 -> 3.12.9
 - refactoring
