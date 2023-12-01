@@ -1,11 +1,7 @@
 <?php
-declare(strict_types=1);
-use function outputMessage as om;
-//do not include local constants to avoid collisions
-$disableLocal = true;
-//bootstrap
-require_once __DIR__ . '/../bin/bootstrap.php'; 
-$refactor = $DIContainer->get('refactor');
+/**
+ * Refactor files get included into bin/refactor.php which passes $refactor object
+ */
 $refactor->setVerbose(true);
 $refactor->setDryRun(false);
 //delete config ini draft
@@ -24,7 +20,7 @@ $refactor->copyFile(
   PRIVATE_SHARE_SIMPLEX_DIR . '/installation/index.php',
   ABS_PATH_TO_ROOT . '/index.php'
 );
-om('e', 'ATTENTION: you must set into index.php relative path to ini config file ($pathToIniConfig variable)');
+$refactor->outputMessage('e', 'ATTENTION: you must set into index.php relative path to ini config file ($pathToIniConfig variable)');
 //filter
 $refactor->searchPatternInLinesReplace(
   'FILTER_SANITIZE_STRING',

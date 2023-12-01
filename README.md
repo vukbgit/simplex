@@ -100,32 +100,38 @@ Before installing from scratch or upgrading from 2.x:
 Create a composer.json in the root folder:
 
     {
-        "type": "project",
-        "name": "vuk/simplex",
-        "description": "Simplex app",
-        "license": "MIT",
-        "require": {
-            "vukbgit/simplex": "^3.0"
-        },
-        "config": {
-            "vendor-dir": "private/share/packagist",
-            "bin-dir": "./"
-        },
-        "autoload": {
-            "psr-4": {
-                "Simplex\\Local\\": "private/local/simplex"
-            }
-        },
-        "scripts": {
-           "post-create-project-cmd": [
-               "SlowProg\\CopyFile\\ScriptHandler::copy"
-           ]
-       },
-       "extra": {
-           "copy-file": {
-               "private/share/packagist/vukbgit/simplex/installation/": "."
-           }
-       }
+      "type": "project",
+      "name": "vuk/simplex",
+      "description": "Simplex app",
+      "license": "MIT",
+      "require": {
+        "vukbgit/simplex": "^3.0"
+      },
+      "config": {
+        "vendor-dir": "private/share/packagist",
+        "bin-dir": "./"
+      },
+      "autoload": {
+        "psr-4": {
+          "Simplex\\Local\\": "private/local/simplex"
+        }
+      },
+      "scripts": {
+        "post-create-project-cmd": [
+          "SlowProg\\CopyFile\\ScriptHandler::copy"
+        ],
+        "pre-update-cmd": [
+          "Simplex\\Refactor::preRefactoring"
+        ],
+        "post-update-cmd": [
+          "Simplex\\Refactor::postRefactoring"
+        ]
+      },
+      "extra": {
+        "copy-file": {
+          "private/share/packagist/vukbgit/simplex/installation/": "."
+        }
+      }
     }
 
 Notes: for version constraint (^3.0) check last tag on github repository or non-develop version number on packagist.
@@ -148,9 +154,18 @@ For details see [Folders and Files Structure](#Folders-and-Files-Structure) belo
 If you upgrade from Simplex 2.x you must:
 
 * follow [Pre-Installation - Upgrade Jobs](#Pre-Installation---Upgrade-Jobs)
-* run manually the first refactor PHP script (_private/share/packagist/vukbgit/simplex/refactor/3.0.0.php_) on the command line using the appropriate PHP binary for your environment, for example:
+* add into composer.json to the "scripts" array the refactoring scripts:
 
-        php8.2 private/share/packagist/vukbgit/simplex/refactor/3.0.0.php
+    "pre-update-cmd": [
+      "Simplex\\Refactor::preRefactoring"
+    ],
+    "post-update-cmd": [
+      "Simplex\\Refactor::postRefactoring"
+    ]
+
+* run the `composer upgrade` command
+* look into output for any message that requires an action
+* eventually examine the refactoring logs saved into _private/local/log_
 
 ## Post-Installation Jobs ##
 

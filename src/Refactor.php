@@ -23,6 +23,38 @@ class Refactor
   private $dryRun = true;
   
   /**
+   * Calls refactors, to be inserted as post-update-cmd script into root composer.json
+   * @param bool $verbose
+   */
+  private static function refactoring(string $phase)
+  {
+    $command = sprintf(
+      '%s %s/../bin/refactor.php %s',
+      $_SERVER['_'],
+      __DIR__,
+      $phase
+    );
+    passthru($command);
+  }
+    
+  /**
+   * Calls refactors, to be inserted as post-update-cmd script into root composer.json
+   * @param bool $verbose
+   */
+  public static function preRefactoring()
+  {
+    self::refactoring('pre');
+  }
+    /**
+   * Calls refactors, to be inserted as post-update-cmd script into root composer.json
+   * @param bool $verbose
+   */
+  public static function postRefactoring()
+  {
+    self::refactoring('post');
+  }
+  
+  /**
    * Set verbosity
    * @param bool $verbose
    */
@@ -147,7 +179,7 @@ class Refactor
       )
     );
     //loop files
-    foreach((array) $files as $fileInfo) {
+    foreach((array) $files as $i => $fileInfo) {
       $path = $fileInfo->getRealPath();
       $content = file_get_contents($path);
       if(
@@ -155,7 +187,8 @@ class Refactor
         ||
         ($reverse && strpos($content, $pattern) !== false)
       ) {
-        unset($files[$path]);
+        //unset($files[$path]);
+        unset($files[$i]);
       }
     }
     return $files;
