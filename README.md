@@ -647,7 +647,7 @@ So here are folders and files as installed from Simplex, from the installation r
 * __sass.sh__: soft link to the helper script _private/share/packagist/vukbgit/simplex/bin/sass.sh_ to compile Sass files, see the _private/local/simplex/config/sass.config_ explanation above for details
 * __npm.sh__: soft link to the helper script _public/share/npm.sh_ to manage npm packages into _public/share_ folder, call it `./npm.sh npm-command`, i.e `./npm.sh install foolibrary` to perform the installation into _local/share/node_modules/foolibrary_
 
-## Migration from v1 to v2 ##
+## Migration from v2 to v3 ##
 
 * index.php: Zend -> Laminas
 *  FILTER_SANITIZE_STRING -> FILTER_SANITIZE_SPECIAL_CHARS:
