@@ -1,3 +1,7 @@
+## 3.12.9 (December 01, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.12.8 -> 3.12.9
+- refactoring
+
 ## 3.12.8 (December 01, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.12.7 -> 3.12.8
 - refactoring flow
