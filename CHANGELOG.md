@@ -1,3 +1,7 @@
+## 3.13.2 (December 04, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.13.1 -> 3.13.2
+- richtext input into container
+
 ## 3.13.1 (December 04, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.13.0 -> 3.13.1
 - readme
