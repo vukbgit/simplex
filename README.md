@@ -151,7 +151,7 @@ For details see [Folders and Files Structure](#Folders-and-Files-Structure) belo
 
 ## Upgrade ##
 
-If you upgrade from a version less than 3.13 a you must:
+### From 2.x version ###
 
 * follow [Pre-Installation - Upgrade Jobs](#Pre-Installation---Upgrade-Jobs)
 * add into composer.json to the "scripts" array the post update refactoring script:
@@ -168,6 +168,21 @@ If you upgrade from a version less than 3.13 a you must:
       "pre-update-cmd": [
         "Simplex\\Refactor::preRefactoring"
       ]
+
+### From a 3.x version less than 3.13 ###
+
+* add into composer.json to the "scripts" array the pre and post update refactoring script:
+
+      "pre-update-cmd": [
+        "Simplex\\Refactor::preRefactoring"
+      ],
+      "post-update-cmd": [
+        "Simplex\\Refactor::postRefactoring"
+      ]
+
+* run the `composer upgrade` command
+* look into output for any message that requires an action
+* eventually examine the refactoring logs saved into _private/local/log_z
 
 ## Post-Installation Jobs ##
 
