@@ -300,19 +300,19 @@ NOTE: to perform validation Simplex does not use browser built in but a pattern 
         {{ selfMacros.displayInput('hidden', inputConfig) }}
         {{ selfMacros.displayHelp(config) }}
         
+          <trix-editor input="{{ inputConfig.id }}"></trix-editor>
+          <script>
+            $(document).ready(function() {
+              addEventListener("trix-file-accept", function(event) {
+                console.log('do not attach!');
+                event.preventDefault();
+              })        
+            });
+          </script>
         {% if config.cols is defined %}
         </div>
         {% endif %}
         
-        <trix-editor input="{{ inputConfig.id }}"></trix-editor>
-        <script>
-          $(document).ready(function() {
-            addEventListener("trix-file-accept", function(event) {
-              console.log('do not attach!');
-              event.preventDefault();
-            })        
-          });
-        </script>
     </div>
     {% endfor %}
 {% endmacro %}
