@@ -355,7 +355,7 @@ NOTE: to perform validation Simplex does not use browser built in but a pattern 
               toolbarAdaptive: false,
             }|merge(options) %}
           <script>
-            const editor = Jodit.make(
+            Jodit.make(
               '#{{ inputConfig.id }}',
               {
           {% for option,value in options %}
