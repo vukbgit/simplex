@@ -4,7 +4,6 @@ declare(strict_types=1);
 use function outputMessage as om;
 //bootstrap
 include __DIR__ . '/bootstrap.php';
-om('h', sprintf('Refactoring phase %s', strtoupper($argv[1])));
 $refactor = $DIContainer->get('refactor');
 //skip in production
 if(ENVIRONMENT !== 'development') {
@@ -14,7 +13,7 @@ if(ENVIRONMENT !== 'development') {
   ));
 }
 //phase
-$phases = ['pre', 'post'];
+$phases = ['pre', 'post', 'test'];
 if(!isset($argv[1]) || !in_array($argv[1], $phases)) {
   exit(formatMessage(
     'e',
@@ -23,6 +22,16 @@ if(!isset($argv[1]) || !in_array($argv[1], $phases)) {
 } else {
   $phase = $argv[1];
 }
+//check test
+if($phase == 'test' && (!isset($argv[2]) || !is_file(sprintf('%s/%s.php', Simplex\Refactor::REFACTOR_DIR, $argv[2])))) {
+  exit(formatMessage(
+    'e',
+    sprintf('when script %s first argument "phase" is "test" second argument must be a version with a corresponding file into refactors folder "%s"', $argv[0], Simplex\Refactor::REFACTOR_DIR)
+  ));
+} else {
+  $testFile = sprintf('%s/%s.php', Simplex\Refactor::REFACTOR_DIR, $argv[2]);
+}
+om('h', sprintf('Refactoring phase %s', strtoupper($phase)));
 //get version
 $currentVersion = \Composer\InstalledVersions::getVersion('vukbgit/simplex');
 //version file path
@@ -33,50 +42,56 @@ switch ($phase) {
     om('h', sprintf('before update simplex is at version %s (saved into %s)', $currentVersion, $currentVersionFilePath));
     //save version
     file_put_contents($currentVersionFilePath, $currentVersion);
-    break;
-    case 'post':
-      //get pre update version
-      if(is_file($currentVersionFilePath)) {
-        $previousVersion = trim(file_get_contents($currentVersionFilePath));
-      } else {
-        $previousVersion = '2.0';
-      }
-      //check if previous version is lower than current
-      if(version_compare($previousVersion, $currentVersion, '<')) {
-        om('h', sprintf('simplex version upgrade from %s to %s', $previousVersion, $currentVersion));
-        //get refactor files
-        $refactor = $DIContainer->get('refactor');
-        $files = $refactor->getRefactorFiles($previousVersion, $currentVersion);
-        foreach((array) $files as $path => $fileInfo) {
-          $fileVersion = $fileInfo->getBasename('.php');
-          om('d', sprintf('executing refactor script for version %s', $fileVersion));
-          ob_start();
-          include $fileInfo->getRealPath();
-          $log = ob_get_contents();
-          ob_flush();
-          ob_end_clean();
-          //save log file
-          $pathToLogFolder = sprintf(
-            '%s/log',
-            PRIVATE_LOCAL_DIR
-          );
-          $pathToLogFile = sprintf(
-            '%s/refactor-%s.log',
-            $pathToLogFolder,
-            $fileVersion
-          );
-          if(!is_dir($pathToLogFolder)) {
-            mkdir($pathToLogFolder);
-          }
-          //clean log 
-          $log = preg_replace('/\033\[0;[0-9]{2}m/', '', $log);
-          file_put_contents($pathToLogFile, $log);
-          om('s', sprintf('log for version %s saved into %s', $fileVersion, $pathToLogFile));
+  break;
+  case 'post':
+    //get pre update version
+    if(is_file($currentVersionFilePath)) {
+      $previousVersion = trim(file_get_contents($currentVersionFilePath));
+    } else {
+      $previousVersion = '2.0';
+    }
+    //check if previous version is lower than current
+    if(version_compare($previousVersion, $currentVersion, '<')) {
+      om('h', sprintf('simplex version upgrade from %s to %s', $previousVersion, $currentVersion));
+      //get refactor files
+      $refactor = $DIContainer->get('refactor');
+      $files = $refactor->getRefactorFiles($previousVersion, $currentVersion);
+      foreach((array) $files as $path => $fileInfo) {
+        $fileVersion = $fileInfo->getBasename('.php');
+        om('d', sprintf('executing refactor script for version %s', $fileVersion));
+        ob_start();
+        include $fileInfo->getRealPath();
+        $log = ob_get_contents();
+        ob_flush();
+        ob_end_clean();
+        //save log file
+        $pathToLogFolder = sprintf(
+          '%s/log',
+          PRIVATE_LOCAL_DIR
+        );
+        $pathToLogFile = sprintf(
+          '%s/refactor-%s.log',
+          $pathToLogFolder,
+          $fileVersion
+        );
+        if(!is_dir($pathToLogFolder)) {
+          mkdir($pathToLogFolder);
         }
+        //clean log 
+        $log = preg_replace('/\033\[0;[0-9]{2}m/', '', $log);
+        file_put_contents($pathToLogFile, $log);
+        om('s', sprintf('log for version %s saved into %s', $fileVersion, $pathToLogFile));
       }
+    }
     //remove version file
     if(is_file($currentVersionFilePath)) {
       unlink($currentVersionFilePath);
     }
+  break;
+  case 'test':
+    om('h', sprintf('testing refactor file %s', $testFile));
+    $refactor = $DIContainer->get('refactor');
+    $refactor->setDryRun(true);
+    include $testFile;
   break;
 }

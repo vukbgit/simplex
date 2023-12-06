@@ -23,6 +23,12 @@ class Refactor
   private $dryRun = true;
   
   /**
+   * Do not make changes
+   * @var bool $dryRun
+   */
+  const REFACTOR_DIR = PRIVATE_SHARE_SIMPLEX_DIR . '/refactor';
+  
+  /**
    * Calls refactors, to be inserted as post-update-cmd script into root composer.json
    * @param bool $verbose
    */
@@ -139,7 +145,8 @@ class Refactor
   public function getRefactorFiles(string $minVersion, string $maxVersion)
   {
     $files = Finder::findFiles('*')
-      ->in(PRIVATE_SHARE_SIMPLEX_DIR . '/refactor')
+      //->in(PRIVATE_SHARE_SIMPLEX_DIR . '/refactor')
+      ->in(SELF::REFACTOR_DIR)
       ->collect();
     foreach((array) $files as $path => $fileInfo) {
       $fileVersion = $fileInfo->getBasename('.php');

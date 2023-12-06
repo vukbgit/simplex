@@ -266,10 +266,12 @@ NOTE: to perform validation Simplex does not use browser built in but a pattern 
 
 {# rich text field
 @param hash context: the calling template context object
-@param hash config: hash for field properties (see setFieldAttributes macro explanation)
+@param hash config: hash for field properties (see setFieldAttributes macro explanation) plus an "options" property for any extra specific editor option (see https://xdsoft.net/jodit/docs/classes/config.Config.html)
 #}
 {% macro displayRichTextEditor(context, config) %}
     {% import _self as selfMacros %}
+    {% set options = config.options ?? {} %}
+    {% set config = deleteProperty(config, 'options') %}
     {# check locale file path #}
     {% set classes = config.classes ?? [] %}
     {% set classes = ['rich-text-editor']|merge(classes) %}
@@ -296,18 +298,71 @@ NOTE: to perform validation Simplex does not use browser built in but a pattern 
         {% if config.cols is defined %}
         <div class="col-12 col-sm-{{ config.cols[1] }}">
         {% endif %}
-        
-        {{ selfMacros.displayInput('hidden', inputConfig) }}
+        {{ selfMacros.displayTextarea(inputConfig) }}
         {{ selfMacros.displayHelp(config) }}
-        
-          <trix-editor input="{{ inputConfig.id }}"></trix-editor>
+          {# all buttons as of version 4.0.0-beta.61
+            buttons: [
+              //font-style
+              ['bold', 'italic', 'underline', 'strikethrough', 'eraser'],
+              //list
+              ['ul', 'ol'],
+              //font
+              ['font', 'fontsize', 'paragraph', 'classSpan', 'lineHeight'],
+              //script
+              ['superscript', 'subscript'],
+              //media
+              ['file', 'image', 'video'],
+              //state
+              ['spellcheck'],
+              //clipboard
+              ['cut', 'copy', 'paste', 'selectall', 'copyformat'],
+              //insert
+              ['hr', 'table', 'link', 'symbols'],
+              //indent
+              ['indent', 'outdent', 'left'],
+              //color
+              ['brush'],
+              //history
+              ['undo', 'redo'],
+              //search
+              ['find'],
+              //source
+              ,['source'],
+              //other
+              ['fullsize', 'preview', 'print'],
+              //info
+              ['about'],
+            ],
+          #}
+            {% set defaultButtonsGroups = [
+              ['bold', 'italic', 'underline', 'strikethrough'],
+              ['ul', 'ol'],
+              ['cut', 'copy', 'paste'],
+              ['indent', 'outdent', 'left', 'right', 'center', 'justify'],
+              ['undo', 'redo'],
+              ['source','fullsize', 'preview'],
+              ['about'],
+            ] %}
+            {% set buttons = [] %}
+            {% for group in defaultButtonsGroups %}
+              {% if not loop.last %}
+                {% set group = group|merge(['|']) %}
+              {% endif %}
+              {% set buttons = buttons|merge(group) %}
+            {% endfor %}
+            {% set options = {
+              buttons: buttons,
+              toolbarAdaptive: false,
+            }|merge(options) %}
           <script>
-            $(document).ready(function() {
-              addEventListener("trix-file-accept", function(event) {
-                console.log('do not attach!');
-                event.preventDefault();
-              })        
-            });
+            const editor = Jodit.make(
+              '#{{ inputConfig.id }}',
+              {
+          {% for option,value in options %}
+            {{ option }}: {{ value|varToJs }},
+          {% endfor %}
+              }
+            );
           </script>
         {% if config.cols is defined %}
         </div>
@@ -1786,10 +1841,24 @@ language packages must be downloaded from https://www.tiny.cloud/get-tiny/langua
 #}
 {% macro richTextEditorAssets(context) %}
 <!-- rich text textarea -->
-{# <link rel="stylesheet" type="text/css" href="{{ 'trix/dist/trix.css'|pathToNpmAsset }}">
-<script type="text/javascript" src="{{ 'trix/dist/trix.umd.min.js'|pathToNpmAsset }}"></script> #}
-<link rel="stylesheet" type="text/css" href="{{ '@mixtint/trix/dist/trix.css'|pathToNpmAsset }}">
-<script type="text/javascript" src="{{ '@mixtint/trix/dist/trix.js'|pathToNpmAsset }}"></script>
+<link type="text/css" rel="stylesheet" href="{{ 'jodit/es2021/jodit.min.css'|pathToNpmAsset }}" />
+<script type="text/javascript" src="{{ 'jodit/es2021/jodit.min.js'|pathToNpmAsset }}"></script>
+{# problem with dependencies in v4 alpha
+  <script type="importmap">
+	{
+		"imports": {
+			"autobind-decorator": "https://unpkg.com/autobind-decorator@2.4.0/lib/esm/index.js"
+		}
+	}
+</script>
+<link type="text/css" rel="stylesheet" href="{{ 'jodit/es2021/jodit.min.css'|pathToNpmAsset }}" />
+<script type="module">
+	import { Jodit } from '{{ 'jodit/esm/index.js'|pathToNpmAsset }}';
+	/*Jodit.make('#editor', {
+		width: 600,
+		height: 400
+	});*/
+</script> #}
 {% endmacro %}
 
 {# file upload 
