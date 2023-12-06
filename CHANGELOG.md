@@ -1,3 +1,7 @@
+## 3.14.2 (December 06, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.14.1 -> 3.14.2
+- localized richtext editor
+
 ## 3.14.1 (December 06, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.14.0 -> 3.14.1
 - switch rich text editor to Jodit
