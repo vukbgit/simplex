@@ -4,7 +4,6 @@ declare(strict_types=1);
 use function outputMessage as om;
 //bootstrap
 include __DIR__ . '/bootstrap.php';
-$refactor = $DIContainer->get('refactor');
 //skip in production
 if(ENVIRONMENT !== 'development') {
   exit(formatMessage(
@@ -55,6 +54,7 @@ switch ($phase) {
       om('h', sprintf('simplex version upgrade from %s to %s', $previousVersion, $currentVersion));
       //get refactor files
       $refactor = $DIContainer->get('refactor');
+      $refactor->setDryRun(false);
       $files = $refactor->getRefactorFiles($previousVersion, $currentVersion);
       foreach((array) $files as $path => $fileInfo) {
         $fileVersion = $fileInfo->getBasename('.php');

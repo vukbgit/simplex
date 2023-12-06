@@ -71,7 +71,7 @@ class Refactor
   
   /**
    * Set dry run
-   * @param bool $verbose
+   * @param bool $dryRun
    */
   public function setDryRun(bool $dryRun)
   {
@@ -579,5 +579,67 @@ class Refactor
         );
       }
     }
+  }
+
+  /**
+   * Installs a NPM package
+   * @param string $packageName
+   * @param string $packageVersionConstraint: everything after the @
+   * @see https://docs.npmjs.com/cli/v10/configuring-npm/package-json
+   * @return void
+   */
+  public function installNpmPackage(
+    string $packageName,
+    string $packageVersionConstraint = null
+  ): void
+  {
+    //package
+    $command = sprintf(
+      '%s/npm.sh i %s',
+      ABS_PATH_TO_ROOT,
+      $packageName,
+    );
+    //version
+    if($packageVersionConstraint) {
+      $command = sprintf(
+        '%s@"%s"',
+        $command,
+        $packageVersionConstraint
+      );
+    }
+    //dry run
+    if($this->dryRun) {
+      $command = sprintf(
+        '%s --dry-run',
+        $command
+      );
+    }
+    passthru($command);
+  }
+
+  /**
+   * Removess a NPM package
+   * @param string $packageName
+   * @see https://docs.npmjs.com/cli/v10/configuring-npm/package-json
+   * @return void
+   */
+  public function removeNpmPackage(
+    string $packageName
+  ): void
+  {
+    //package
+    $command = sprintf(
+      '%s/npm.sh remove %s',
+      ABS_PATH_TO_ROOT,
+      $packageName,
+    );
+    //dry run
+    if($this->dryRun) {
+      $command = sprintf(
+        '%s --dry-run',
+        $command
+      );
+    }
+    passthru($command);
   }
 }

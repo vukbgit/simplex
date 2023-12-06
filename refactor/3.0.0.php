@@ -3,7 +3,6 @@
  * Refactor files get included into bin/refactor.php which passes $refactor object
  */
 $refactor->setVerbose(true);
-$refactor->setDryRun(false);
 //delete config ini draft
 $refactor->deleteFile(
   ABS_PATH_TO_ROOT . '/config.draft.ini'
