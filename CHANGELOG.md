@@ -1,3 +1,7 @@
+## 3.14.1 (December 06, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.14.0 -> 3.14.1
+- switch rich text editor to Jodit
+
 ## 3.14.0 (December 06, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.13.2 -> 3.14.0
 - moved rich text editor from Trix to Jodit
