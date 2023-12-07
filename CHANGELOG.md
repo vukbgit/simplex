@@ -1,3 +1,8 @@
+## 3.14.4 (December 07, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.14.3 -> 3.14.4
+- force version refactoring
+- default rich text editor tools
+
 ## 3.14.3 (December 07, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.14.2 -> 3.14.3
 - erp for default button css class
