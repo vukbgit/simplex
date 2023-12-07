@@ -11,7 +11,7 @@ if(ENVIRONMENT !== 'development') {
     'simplex version change refactoring is applied only in development environment'
   ));
 }
-//phase
+//phase (first script argument)
 $phases = ['pre', 'post', 'test'];
 if(!isset($argv[1]) || !in_array($argv[1], $phases)) {
   exit(formatMessage(
@@ -21,18 +21,27 @@ if(!isset($argv[1]) || !in_array($argv[1], $phases)) {
 } else {
   $phase = $argv[1];
 }
-//check test
-if($phase == 'test' && (!isset($argv[2]) || !is_file(sprintf('%s/%s.php', Simplex\Refactor::REFACTOR_DIR, $argv[2])))) {
-  exit(formatMessage(
-    'e',
-    sprintf('when script %s first argument "phase" is "test" second argument must be a version with a corresponding file into refactors folder "%s"', $argv[0], Simplex\Refactor::REFACTOR_DIR)
-  ));
-} else {
-  $testFile = sprintf('%s/%s.php', Simplex\Refactor::REFACTOR_DIR, $argv[2]);
-}
 om('h', sprintf('Refactoring phase %s', strtoupper($phase)));
-//get version
-$currentVersion = \Composer\InstalledVersions::getVersion('vukbgit/simplex');
+switch ($phase) {
+  case 'test':
+    //second argument is version of refactor file to be tested
+    if(!isset($argv[2]) || !is_file(sprintf('%s/%s.php', Simplex\Refactor::REFACTOR_DIR, $argv[2]))) {
+      exit(formatMessage(
+        'e',
+        sprintf('when script %s first argument "phase" is "test" second argument must be a version with a corresponding file into refactors folder "%s"', $argv[0], Simplex\Refactor::REFACTOR_DIR)
+      ));
+    } else {
+      $testFile = sprintf('%s/%s.php', Simplex\Refactor::REFACTOR_DIR, $argv[2]);
+    }
+  break;
+  case 'pre':
+    //second argument is minimum version of refactor file to be executed
+    $currentVersion = $argv[2] ?? \Composer\InstalledVersions::getVersion('vukbgit/simplex');
+  break;
+  case 'post':
+    $currentVersion = \Composer\InstalledVersions::getVersion('vukbgit/simplex');
+  break;
+}
 //version file path
 $currentVersionFilePath = TMP_DIR . '/simplex-version';
 //manage phase
