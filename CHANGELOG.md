@@ -1,3 +1,7 @@
+## 3.14.3 (December 07, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.14.2 -> 3.14.3
+- erp for default button css class
+
 ## 3.14.2 (December 06, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.14.1 -> 3.14.2
 - localized richtext editor
