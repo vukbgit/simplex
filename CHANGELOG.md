@@ -1,3 +1,7 @@
+## 3.14.9 (December 21, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.14.8 -> 3.14.9
+- change of static ERP image modification methods according to Spatie\Image v3
+
 ## 3.14.8 (December 21, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.14.7 -> 3.14.8
 - frontend class definition
