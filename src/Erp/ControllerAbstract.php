@@ -1337,10 +1337,12 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
      * @param int $height
      * @param int $cropMethodConstantName: name of constant of the Spatie\Image\Manipulations class: FIT_CONTAIN, FIT_MAX, FIT_FILL, FIT_STRETCH, FIT_CROP (see https://spatie.be/docs/image/v1/image-manipulations/resizing-images#fit)
      */
-    protected static function fitImage($path, $width, $height, $cropMethodConstantName = 'FIT_MAX')
+    //protected static function fitImage($path, $width, $height, $cropMethodConstantName = 'FIT_MAX')
+    protected static function fitImage($path, $width, $height, $cropMethodConstantName = 'Fit::Contain')
     {
         Image::load($path)
-           ->fit(constant('Spatie\Image\Manipulations::' . $cropMethodConstantName), $width, $height)
+           //->fit(constant('Spatie\Image\Manipulations::' . $cropMethodConstantName), $width, $height)
+           ->fit(constant('Spatie\Image\Enums\\' . $cropMethodConstantName), $width, $height)
            ->save();
     }
     
