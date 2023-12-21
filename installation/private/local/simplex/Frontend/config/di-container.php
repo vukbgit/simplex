@@ -11,11 +11,11 @@ use function DI\get;
 use Simplex\Local\Frontend;
 //definitions array
 return [
-    Frontend\Controller::class => create()
-        ->constructor(
-            get('DIContainer'),
-            get('response'),
-            get('templateEngine'),
-            get('cookieManager')
-        )
+  'frontend-controller' => create(Frontend\Controller::class)
+    ->constructor(
+      get('DIContainer'),
+      get('response'),
+      get('templateEngine'),
+      get('cookieManager')
+    )
 ];

@@ -15,7 +15,6 @@
 * Parameters defined into route pattern overload handler parameters with the same name
 */
 //handlers namespaces
-use Simplex\Local\Frontend;
 //current area in slug form
 $area = 'frontend';
 //definitions array
@@ -24,7 +23,7 @@ return [
         'method' => 'GET',
         'route' => '[/]',
         'handler' => [
-            Frontend\Controller::class,
+          'frontend-controller',
             [
                 'area' => $area,
                 'action' => 'home'
