@@ -196,7 +196,7 @@ For details see [Folders and Files Structure](#Folders-and-Files-Structure) belo
     * or passing to the called script the -i option followed by the absolute/relative path to the ini config file, i.e. `simplex-script.sh -i path/to/config.ini`
 * _/.htaccess_:
   * set default redirections, i.e _/backend_ to _/backend/sign-in-form_; in any case either you're going to define a route for the plain domain request or you redirect domain request to a default route (i.e. `RewriteRule ^/?$ /my-default-route [R,L]`); for routes definitiosn see below
-* __index.php__: set `$pathToIniConfig` to the absolute o relativ path to ini config file
+* __index.php__: set `$pathToIniConfig` to the absolute o relative path to ini config file
 * install __public__ packages:
     * the _public\share\package.json_ file contains some NPM packages for:
         * the whole application:
@@ -505,13 +505,7 @@ The following steps show how to set up an ERP subject, that is a subject which i
 
             /opt/php-7.3.5/bin/php private/share/packagist/vukbgit/simplex/bin/translations.php update local
             
-    * at installation time it is also created the script _private/local/simplex/bin/translations.sh_ that can be used to shortcut translation process:
-        * edit the file and set the PHP binary path according to your system
-        * soft link the script into webroot, for example:
-        
-                ln -s private/local/simplex/bin/translations.sh translations.sh
-                
-        * call it from webroot, for example:
+    * at installation time it is also created in the root folder the script _translations.sh_ that can be used to shortcut translation process, call it from root folder this way:
 
                 ./translations.sh update local
 * __database__: Simplex encourages a localization ready database architecture, even when site uses just one language (see [Subject set up](#Subject-set-up) > _database architecture_)
