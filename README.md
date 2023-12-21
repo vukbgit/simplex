@@ -218,7 +218,6 @@ For details see [Folders and Files Structure](#Folders-and-Files-Structure) belo
         * `./npm.sh install`
     * packages are installed under _\public\share\node_modules_
 * local __configuration__: file _private\local\simplex\config\constants.php_ defines some PHP constants, most of them regard paths and it should not be necessary to modify them unless you plan to change the filesystem structure Simplex relies on; informations to be set for the local application (tech email, brand name...) are grouped into the _LOCAL_ block at the top of the script
-* __database__ configuration: in case application connects to a database edit file _private\local\simplex\config\db.php_; database accounts are organized by _ENVIRONMENT_ constant values (see __.htaccess_ _ above), so you can have different accounts for development and production
 * __languages__: 
     * file _private\local\simplex\config\languages.json_ defines used languages, contains by default definitions for English and Italian, add as many as required; language selection works this way:
         * if current route contains a 'lang' parameter (tipically a part of the route itself for multilanguage sites) that language is used
@@ -312,7 +311,7 @@ This is the Backend folder structure:
         * _composer.sh_: to use composer with a PHP versione different from the system default one
     * _config_: application configuration files
         * _constants.php_: application brand label and tech email (to be showed into exceltions) must be set, other values are meinly paths that should not be necessary to change
-        * _db.php_: database account settings
+        * _db.php_: database account settings (takes data from _config.ini_)
         * _languages.json_: languages available to application, first one is used as default, shipped with Italian (default for most of my applications) and English, customize at need
         * _sass.config_: used by the web root _sass.sh_ bash script to speed up SASS files compilation, shipped with some ready to use common paths, see file for details on format
     * _sql_: this folder might contain useful text files with SQL commands and snippets
@@ -615,7 +614,7 @@ So here are folders and files as installed from Simplex, from the installation r
                 * __composer.sh__: allows to use composer with a PHP version different from the system default one used by the PHP CLI application, useful on a system with multiple PHP versions installed; it's a good idea to soft link it into root
             * __config__: configuration files for whole application to be customized
                 * __constants.php__: environment constants, quite self explanatory, some of them should be set right after installation; NOTE: most of the regards paths Simplex uses for inclusions, it shouldn't be necessary to change them; if so beware that a pair of paths are hard coded into _index.php_ prior to including this file and should be changed manually
-                * __db.php__: database configuration, returns a PHP object, to be compiled if application uses a database (see file for details)
+                * __db.php__: database configuration, returns a PHP object, gets configuration from _config.ini_
                 * __di-container.php__: definition to be used by the DI Container to instantiate the classes used by the application; it integrates __private/local/share/vukbgit/simplex/src/config/di-container.php/__ which stores the definitions for classes used by the Simplex engine
                 * __languages.json__: languages used by the application, indexed by a custom key (the one proposed is the ISO-639-1 two letters code); if the route passes a "language" parameter, language is searched for otherwise first one defined (defaults to English) it's used
                 * __sass.config__: custom format file to speed up Sass files compilation using the _sass.sh_ script: you can define for each file to be compiled a custom id (any string) and source and destination paths, so you you ca use the shell and call from the root folder `sass file-id` to compile the minified CSS version
