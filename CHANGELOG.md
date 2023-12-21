@@ -1,3 +1,7 @@
+## 3.14.7 (December 21, 2023)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.14.6 -> 3.14.7
+- readme
+
 ## 3.14.6 (December 21, 2023)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.14.5 -> 3.14.6
 - readme
