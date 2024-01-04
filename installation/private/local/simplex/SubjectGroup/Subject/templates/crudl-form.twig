@@ -57,6 +57,25 @@
       'locales' : languages#}
     }
   ) }}
+  {# integer #}
+  {{ formMacros.displayInputGroup(
+      'number',
+      {
+          'name': 'FIELD-NAME',
+          'value': record.FIELD-NAME,
+          'label': getLabel(subject, 'fields', 'FIELD-NAME'),
+          'help': getLabel(subject, 'fields', 'FIELD-NAME_help'),
+          'autofocus': false,
+          'disabled': action == 'delete-form',
+          'maxlength': false,
+          'autocomplete': '',
+          'class': '',
+          'validation': {
+              'required': true,
+              'pattern': ''
+          },
+      }
+  ) }}
   {# decimal #}
   {{ formMacros.displayInputGroup(
       'number',
