@@ -297,9 +297,22 @@ Simplex is shipped with an ERP namespace draft and uses it to build backends and
   * into _public/share/jodit/Application.php_ remove the exception from _checkAuthentication_ method and add eventual authentication logic
   * copy _public/share/jodit/default.config.php_ as _public/share/jodit/config.php_
   * create a folder for uploaded images into public path, i.e. _public/local/simplex/richTextUploads_
-  * if using a cvs system exclude folder from commits, i.e. for Git:
-    * create a _public/local/simplex/richTextUploads/.gitignore_ file
-    * paste into file:
+  * if using a cvs system
+    * include jodit in commit, edit _public/share/jodit/.gitignore.php_:
+
+                composer.lock
+                .idea/
+
+                tests/_data/
+                tests/_output/
+                tests/_support/
+                tests/acceptance/
+                tests/files/
+
+
+    * exclude folder from commits, i.e. for Git:
+      * create a _public/local/simplex/richTextUploads/.gitignore_ file
+      * paste into file:
 
                 # Ignore everything in this directory
                 *
