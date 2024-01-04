@@ -1,3 +1,9 @@
+## 3.14.13 (January 04, 2024)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.14.12 -> 3.14.13
+- readme
+- Merge branch 'release-3.14.12' into development
+- readme
+
 ## 3.14.12 (January 04, 2024)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.14.11 -> 3.14.12
 - readme
