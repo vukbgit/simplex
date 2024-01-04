@@ -1,3 +1,7 @@
+## 3.14.12 (January 04, 2024)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.14.11 -> 3.14.12
+- readme
+
 ## 3.14.11 (January 02, 2024)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.14.10 -> 3.14.11
 - CRUD numeric input draft
