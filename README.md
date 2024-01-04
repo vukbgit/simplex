@@ -169,8 +169,15 @@ For details see [Folders and Files Structure](#Folders-and-Files-Structure) belo
         "Simplex\\Refactor::preRefactoring"
       ]
 
+* if necessary add to .gitignore `private/local/simplex/log/`
+
 ### From a 3.x version less than 3.13 ###
 
+* take note of current version, i.e. `./composer.sh show vukbgit/simplex`
+* update composer packages: `./composer.sh update`
+* call refactor.php for PRE stage with old version, i.e.: `php8.2 private/share/packagist/vukbgit/simplex/bin/refactor.php pre 3.4.0`
+* call refactor.php for POST stage, i.e.: `php8.2 private/share/packagist/vukbgit/simplex/bin/refactor.php post`
+* look into output and logs for any message that requires an action
 * add into composer.json to the "scripts" array the pre and post update refactoring script:
 
       "pre-update-cmd": [
@@ -179,10 +186,8 @@ For details see [Folders and Files Structure](#Folders-and-Files-Structure) belo
       "post-update-cmd": [
         "Simplex\\Refactor::postRefactoring"
       ]
-
-* run the `composer upgrade` command
-* look into output for any message that requires an action
-* eventually examine the refactoring logs saved into _private/local/log_z
+    
+* if necessary add to .gitignore `private/local/simplex/log/`
 
 ## Post-Installation Jobs ##
 
@@ -276,6 +281,50 @@ Simplex is shipped with an ERP namespace draft and uses it to build backends and
     * sign-in: `./sass.sh si`
     * backedn: `./sass.sh be`
 * set up the _subject_ called by the $successfulSignInRoute route (see "Subject set-up below"):
+* to integrate jodit uploader:
+  * into root folder run `./composer.sh  create-project --no-dev jodit/connector public/share/jodit`
+  * add to any rich text input the (built by a displayRichTextEditor macro) configuration to display upload related Jodit buttons (i.e. image) and uploader path:
+
+                ...
+                options: {
+                  buttons: 'bold, italic, underline, strikethrough | ul, ol | cut, copy, paste | indent, outdent, left, right, center, justify | link | image | undo, redo | source,fullsize, preview | about',
+                  uploader: {
+                    url: '/public/share/jodit/index.php?action=fileUpload',
+                  }
+                }
+                ...
+
+  * into _public/share/jodit/Application.php_ remove the exception from _checkAuthentication_ method and add eventual authentication logic
+  * copy _public/share/jodit/default.config.php_ as _public/share/jodit/config.php_
+  * create a folder for uploaded images into public path, i.e. _public/local/simplex/richTextUploads_
+  * if using a cvs system exclude folder from commits, i.e. for Git:
+    * create a _public/local/simplex/richTextUploads/.gitignore_ file
+    * paste into file:
+
+                # Ignore everything in this directory
+                *
+                !.gitignore
+      
+  * edit _public/share/jodit/config.php_ and:
+    * set up sources folders, i.e.
+
+                $basePath = '/public/local/simplex/';
+                $richTextUploadFolder = $basePath . 'Foo/richTextUploads';
+
+                $config = [
+                    'sources' => [
+                      'default' => [
+                        'root' => $_SERVER['DOCUMENT_ROOT'] . $richTextUploadFolder,
+                        'baseurl' => ((isset($_SERVER['HTTPS']) and $_SERVER['HTTPS']) ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $richTextUploadFolder . '/',
+                        'extensions' => [
+                          'jpg',
+                          'png',
+                        ]
+                      ],
+                    ],
+                ]
+
+      * edit other options such as access control
 
 This is the Backend folder structure:
 * _private/local/simplex_
