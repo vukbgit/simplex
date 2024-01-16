@@ -1335,14 +1335,12 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
      * @param string $path
      * @param int $width
      * @param int $height
-     * @param int $cropMethodConstantName: name of constant of the Spatie\Image\Manipulations class: FIT_CONTAIN, FIT_MAX, FIT_FILL, FIT_STRETCH, FIT_CROP (see https://spatie.be/docs/image/v1/image-manipulations/resizing-images#fit)
+     * @param int $fitMethodConstantName: name of constant of the Spatie\Image\Enums\Fit class: Fit::Contain, Fit::Max, Fit::Fill, Fit::Stretch, Fit::Crop (see https://spatie.be/docs/image/v2/image-manipulations/resizing-images#content-fit)
      */
-    //protected static function fitImage($path, $width, $height, $cropMethodConstantName = 'FIT_MAX')
-    protected static function fitImage($path, $width, $height, $cropMethodConstantName = 'Fit::Contain')
+    protected static function fitImage($path, $width, $height, $fitMethodConstantName = 'Fit::Contain')
     {
         Image::load($path)
-           //->fit(constant('Spatie\Image\Manipulations::' . $cropMethodConstantName), $width, $height)
-           ->fit(constant('Spatie\Image\Enums\\' . $cropMethodConstantName), $width, $height)
+           ->fit(constant('Spatie\Image\Enums\\' . $fitMethodConstantName), $width, $height)
            ->save();
     }
     
@@ -1350,16 +1348,16 @@ abstract class ControllerAbstract extends ControllerWithoutCRUDLAbstract
      * Resizes (proprtionally to fit into a box of given width and ratio) and crops an image
      * @param string $path
      * @param int $width
-     * @param float $imageRatio: $width / $height
-     * @param string $cropMethodConstantName: name of constant of the Spatie\Image\Manipulations class: CROP_TOP_LEFT, CROP_TOP, CROP_TOP_RIGHT, CROP_LEFT, CROP_CENTER, CROP_RIGHT, CROP_BOTTOM_LEFT, CROP_BOTTOM, CROP_BOTTOM_RIGHT (see https://docs.spatie.be/image/v1/image-manipulations/resizing-images/#crop)
+     * @param int $height
+     * @param string $cropMethodConstantName: name of constant of the Spatie\Image\Enums\CropPosition class: CropPosition::TopLeft, CropPosition::Top, CropPosition::TopRight, CropPosition::Left, CropPosition::Center, CropPosition::Right, CropPosition::BottomLeft, CropPosition::Bottom, CropPosition::BottomRight (see https://spatie.be/docs/image/v2/image-manipulations/resizing-images#content-crop)
      */
-    protected static function resizeAndCropImage($path, $width, $imageRatio, $cropMethodConstantName)
+    protected static function resizeAndCropImage($path, $width, $height, $cropMethodConstantName)
     {
-        $height = $width / $imageRatio;
         Image::load($path)
            ->width($width)
            ->height($height)
-           ->crop(constant('Spatie\Image\Manipulations::' . $cropMethodConstantName), $width, $height)
+           //->crop(constant('Spatie\Image\Manipulations::' . $cropMethodConstantName), $width, $height)
+           ->crop($width, $height, constant('Spatie\Image\Enums::' . $cropMethodConstantName))
            ->save();
     }
     
