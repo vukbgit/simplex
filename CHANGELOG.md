@@ -1,3 +1,7 @@
+## 3.14.15 (January 16, 2024)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.14.14 -> 3.14.15
+- ERP top navbar
+
 ## 3.14.14 (January 16, 2024)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.14.13 -> 3.14.14
 - ERP image processing
