@@ -32,15 +32,15 @@ $(document).ready(function(){
 {% set sideBarOpened = (areaCookie.sideBarState is not defined or areaCookie.sideBarState == '1') and (hideSideBar is not defined or hideSideBar is same as(false)) %}
 
 {% block body %}
-    {{ parent() }}
+  {{ parent() }}
 <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap justify-content-start p-0 shadow" id="navbar-top">
-    {% if hideSideBar == false %}
-    <div id="sidebar-hat">
+  {% if hideSideBar == false %}
+  <div id="sidebar-hat">
   <button type="button" name="button" class="pf-c-button hamburger hamburger--collapse{% if sideBarOpened %} is-active{% endif %}" id="sidebar-toggle">
-            <span class="hamburger-box">
-                <span class="hamburger-inner"></span>
-            </span>
-        </button>
+    <span class="hamburger-box">
+      <span class="hamburger-inner"></span>
+    </span>
+  </button>
     </div>
     {% endif %}
     <div class="navbar-brand">
@@ -59,31 +59,48 @@ $(document).ready(function(){
     {% block headerTitle %}
         {{ parent() }}
         {% if hideHeaderTitle is not defined or hideHeaderTitle == false %}
+          {% set title = '%s :: %s'|format(brand, area) %}
         <h1 class="h2">
-        {{ '%s :: %s'|format(brand, area) }}
+        {{ title }}
         </h1>
         {% endif %}
     {% endblock %}
     </div>
-    <div class="d-flex flex-grow-1 justify-content-end align-items-center">
+    {% set topNavbarBP = 'md' %}
+    <div class="navbar navbar-expand-{{ topNavbarBP }} flex-fill" id="top-navbar-container">
+      <div class="container-fluid justify-content-end">
+        <button class="navbar-toggler " type="button" data-bs-toggle="offcanvas" data-bs-target="#top-navbar" aria-controls="top-navbar" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="offcanvas offcanvas-end" id="top-navbar">
+          <div class="offcanvas-header">
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>    
+          <div class="offcanvas-body d-flex flex-column flex-{{ topNavbarBP }}-row justify-content-start align-items-end justify-content-{{ topNavbarBP }}-end align-items-{{ topNavbarBP }}-center">
     {% if constant('ENVIRONMENT') == 'development' %}
-      <div class="me-3 icon-erp-development text-warning"></div>
+            <div class="me-3 icon-erp-development text-warning"></div>
     {% endif %}
     {% block headerUser %}
       {{ parent() }}
       {% if hideHeaderUser == false %}
-      <div>{{ userData.username }}</div>
-      <i class="icon-erp-user"></i>
-      <ul class="navbar-nav px-3">
-          <li class="nav-item text-nowrap">
-              <a class="nav-link" href="{{ routeParameters.authentication.urls.signOut }}">
-                  {{ 'Sign out'|trans }}
+            <div class="mb-3 mb-{{ topNavbarBP }}-0">
+              {{ userData.username }}
+              <i class="icon-erp-user"></i>
+            </div>
+            <ul class="navbar-nav px-3">
+              <li class="nav-item text-nowrap">
+                <a class="nav-link" href="{{ routeParameters.authentication.urls.signOut }}">
+                  {% set text = 'Sign out'|trans %}
+                    {{ text }}
                   <i class="icon-erp-sign-out"></i>
-              </a>
-          </li>
-      </ul>
+                </a>
+              </li>
+            </ul>
       {% endif %}
     {% endblock %}
+          </div>
+        </div>
+      </div>
     </div>
 </nav>
 
