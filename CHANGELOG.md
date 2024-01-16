@@ -1,3 +1,7 @@
+## 3.14.14 (January 16, 2024)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.14.13 -> 3.14.14
+- ERP image processing
+
 ## 3.14.13 (January 04, 2024)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.14.12 -> 3.14.13
 - readme
