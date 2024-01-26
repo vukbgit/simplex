@@ -28,14 +28,14 @@
     {% endif %}
         <h1 class="h3 mb-3 font-weight-normal">{{ signIntitle }}</h1>
         <div class="form-row">
-            <div class="col-12">
+            <div class="col-12 position-relative">
                 <label for="username" class="visually-hidden">{% trans "Username" %}</label>
     {{ formMacros.displayInputbyTipe(
             usernameFieldType|default('text'),
             {
                 'name': 'username',
                 'placeholder': 'Username'|trans,
-                'autofocus': true,
+                'autofocus': false,
                 'autocomplete': 'username',
                 'validation': {
                     'required': true,
@@ -52,7 +52,7 @@
             }
     ) }}
             </div>
-            <div class="col-12">
+            <div class="col-12 position-relative">
                 <label for="password" class="visually-hidden">{% trans "Password" %}</label>
     {{ formMacros.displayInputPassword(
             {
