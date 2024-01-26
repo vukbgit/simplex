@@ -469,6 +469,18 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
                 }
             }
         );
+        //clean uploaded file name from timestamp
+        $this->addTemplateFilter(
+          'cleanOutputFileName',
+          function(string $fileName){
+            $cleanedFileName = preg_replace(
+              '/_[0-9]+(\.[a-zA-z]{2,4})$/',
+              '$1',
+              $fileName
+            );
+            return $cleanedFileName;
+          }
+        );
         //processes a template for a file upload preview
         $this->addTemplateFunction(
             'formatUploadPreviewTemplate',
