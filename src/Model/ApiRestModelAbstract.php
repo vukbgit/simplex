@@ -17,6 +17,11 @@ abstract class ApiRestModelAbstract extends ApiModelAbstract
   protected $client;
 
   /**
+   * @var object lasat request
+   **/
+  protected $lastRequest;
+
+  /**
    * Constructor
    */
   public function __construct(GuzzleHttp\ClientInterface $client)
@@ -73,17 +78,41 @@ abstract class ApiRestModelAbstract extends ApiModelAbstract
   abstract protected function buildHeaders(): array;
 
   /**
+  * Saves last request
+  * @param string $method
+  * @param string $url
+  * @param array $headers
+  * @param object $body
+  **/
+  protected function saveLastRequest(string $method, string $url, array $headers, $body = null) {
+    $this->lastRequest = (object) [
+      'method' => $method,
+      'url' => $url,
+      'headers' => $headers,
+      'body' => $body
+    ];
+  }
+
+  /**
+  * Gets last request
+  **/
+  public function getLastRequest() {
+    return $this->lastRequest;
+  }
+
+  /**
   * Makes a request
   * @param string $method
   * @param string $request
   * @param object $body
   * @return mixed json response or false in case of error
   **/
-  protected function makeRequest(string $method, string $request, $body = null)
+  protected function makeRequest(string $method, string $request, object $body = null)
   {
     $url = sprintf('%s%s', $this->getConfig()->endpoint, $request);
     $headers = $this->buildHeaders();
     $body = json_encode($body);
+    $this->saveLastRequest($method, $url, $headers, $body);
     try {
         $response = $this->client->request(
           $method,
