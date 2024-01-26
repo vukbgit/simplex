@@ -1,3 +1,7 @@
+## 3.14.18 (January 26, 2024)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.14.17 -> 3.14.18
+- last request infos for REST API model
+
 ## 3.14.17 (January 26, 2024)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.14.16 -> 3.14.17
 - feat: template filter to clean uploaded file name
