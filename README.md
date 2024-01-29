@@ -16,6 +16,7 @@ A tool for web developers
 * [Subject set up](#subject-set-up)
 * [Debugging](#debugging)
 * [Internazionalization](#internazionalization)
+* [Emails](#Emails)
 * [Icon Fonts](#Icon-Fonts)
 * [Development to Production](#development-to-production)
 * [Simplex Logic overview](#simplex-logic-overview)
@@ -208,6 +209,7 @@ For details see [Folders and Files Structure](#Folders-and-Files-Structure) belo
             * [bootstrap 5](https://getbootstrap.com)
             * [jquery latest](http://jquery.com/)
             * [js-cookie](https://github.com/js-cookie/js-cookie): javascript library to handle cookies
+            * [mjml](https://www.npmjs.com/package/mjml): for responsive emails creation
         * backends or enterprise web applications (ERP) mostly (even if they can be useful also in frontend development):
             * [bootstrap-fileinput](https://plugins.krajee.com/file-input): for asyncronous file upload. NOTE: as for 2019-11-12 version is frozen to 5.0.4 due to a bug in auto upload
             * [flatpickr](https://github.com/flatpickr/flatpickr): for date time picker
@@ -570,6 +572,10 @@ The following steps show how to set up an ERP subject, that is a subject which i
 
                 ./translations.sh update local
 * __database__: Simplex encourages a localization ready database architecture, even when site uses just one language (see [Subject set up](#Subject-set-up) > _database architecture_)
+
+## Emails ##
+
+Simplex uses [mjml](https://www.npmjs.com/package/mjml) integrated into Twig templates by means of [mjml-php](https://github.com/qferr/mjml-php) to build responsive emails. A starting templates is provided into _private/local/simplex/templates/emails/base.twig_
 
 ## Icon Fonts ##
 

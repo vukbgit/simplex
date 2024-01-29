@@ -1,0 +1,27 @@
+{% apply mjml_to_html %}
+{# <mj-include path="public/local/simplex/css/email/base.min.css" type="css" /> #}
+<mjml>
+  <mj-body background-color="#f0f0f0">
+    <mj-section background-color="#fff">
+      <mj-column >
+        <mj-image align="center" width="XXX" src="https://{{ constant('HOST') }}/public/local/corporate/XXX" />
+      </mj-column>
+    </mj-section>
+    <mj-section background-color="#fff">
+      <mj-column>
+  {% block content %}
+  {% endblock %}
+      </mj-column>
+    </mj-section>
+    <mj-section css-class="footer">
+      <mj-column>
+  {% block footer %}
+        <mj-text>
+          FOOTER TEXT
+        </mj-text>
+  {% endblock %}
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>
+{% endapply %}
