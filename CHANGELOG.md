@@ -1,3 +1,7 @@
+## 3.14.21 (January 29, 2024)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.14.20 -> 3.14.21
+- fix: sign in form redirect
+
 ## 3.14.20 (January 29, 2024)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.14.19 -> 3.14.20
 - mjml email template
