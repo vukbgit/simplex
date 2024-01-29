@@ -17,9 +17,14 @@ abstract class ApiRestModelAbstract extends ApiModelAbstract
   protected $client;
 
   /**
-   * @var object lasat request
+   * @var object last request
    **/
   protected $lastRequest;
+
+  /**
+   * @var object last response
+   **/
+  protected $lastResponse;
 
   /**
    * Constructor
@@ -101,6 +106,23 @@ abstract class ApiRestModelAbstract extends ApiModelAbstract
   }
 
   /**
+  * Saves last response
+  * @param object $body
+  **/
+  protected function saveLastResponse($body = null) {
+    $this->lastResponse = (object) [
+      'body' => $body
+    ];
+  }
+
+  /**
+  * Gets last request
+  **/
+  public function getlastResponse() {
+    return $this->lastResponse;
+  }
+
+  /**
   * Makes a request
   * @param string $method
   * @param string $request
@@ -122,7 +144,9 @@ abstract class ApiRestModelAbstract extends ApiModelAbstract
             'body' => $body
             ]
           );
-        return json_decode($response->getBody()->getContents());
+        $body = $response->getBody()->getContents();
+        $this->saveLastResponse($body);
+        return json_decode($body);
     } catch (\GuzzleHttp\Exception\ServerException | \GuzzleHttp\Exception\ConnectException | \GuzzleHttp\Exception\ClientException $e) {
       /*if(ENVIRONMENT == 'development') {
         x($e);
