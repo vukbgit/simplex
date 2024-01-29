@@ -1,3 +1,7 @@
+## 3.14.19 (January 29, 2024)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.14.18 -> 3.14.19
+- API REST model last response
+
 ## 3.14.18 (January 26, 2024)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.14.17 -> 3.14.18
 - last request infos for REST API model
