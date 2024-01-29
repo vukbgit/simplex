@@ -532,9 +532,9 @@ class Middleware implements MiddlewareInterface
             $this->setAuthenticationStatus(true, 4);
           } else {
             $this->setAuthenticationStatus(false, $returnCode, $authenticationParameters->urls->signInForm);
+            //store current route for redirect
+            $this->cookie->setAreaCookie($this->area, 'redirectToAfterLogin', $this->request->getUri()->getPath());
           }
-          //store current route for redirect
-          $this->cookie->setAreaCookie($this->area, 'redirectToAfterLogin', $this->request->getUri()->getPath());
         }
       }
     }
