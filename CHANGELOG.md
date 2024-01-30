@@ -1,3 +1,7 @@
+## 3.14.24 (January 30, 2024)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.14.23 -> 3.14.24
+- feat: override globa alerts labels at subject level
+
 ## 3.14.23 (January 30, 2024)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.14.22 -> 3.14.23
 - feat: overriding global actions labels at subject level
