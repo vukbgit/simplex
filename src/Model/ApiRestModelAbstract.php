@@ -284,7 +284,8 @@ abstract class ApiRestModelAbstract extends ApiModelAbstract
    */
   public function insert(object $fieldsValues = new \stdClass)
   {
-    //check configuration
+    //check configurations
+    $modelConfig = $this->getConfig();
     $operationConfig = $this->getOperationConfiguration('insert');
     //build url
     $url = $operationConfig->uri;
@@ -294,7 +295,16 @@ abstract class ApiRestModelAbstract extends ApiModelAbstract
       $url,
       $fieldsValues
     );
-    return isset($operationConfig->responseProperty) && $operationConfig->responseProperty && isset($response->{$operationConfig->responseProperty}) ? $response->{$operationConfig->responseProperty} : $response;
+    return
+      isset($operationConfig->responseProperty)
+      &&
+      $operationConfig->responseProperty
+      &&
+      isset($response->{$operationConfig->responseProperty})
+      &&
+      isset($response->{$operationConfig->responseProperty}->{$modelConfig->primaryKey})
+      ? $response->{$operationConfig->responseProperty}->{$modelConfig->primaryKey}
+      : $response;
   }
 
   /**
