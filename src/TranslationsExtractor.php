@@ -128,9 +128,10 @@ class TranslationsExtractor extends ControllerAbstract
         $package = 'Simplex';
         $pathToCacheFolder = $this->buildPathToTranslationsCache();
         $pathToFile = sprintf('%s/%s', $pathToCacheFolder, $domain);
+        $privateLocalDir = PRIVATE_LOCAL_DIR;
         echo 'GENERATING STARTING POT FILE...' . PHP_EOL;
         $command = <<<EOT
-find {$this->buildPathToTranslationsCache()} -type f \( -name '*.php' \) -print | xargs xgettext -c --default-domain={$domain} -p {$pathToCacheFolder} --from-code=UTF-8 --no-location  -L PHP -d {$domain} --package-name={$package} - && mv {$pathToFile}.po {$pathToFile}.pot
+find {$this->buildPathToTranslationsCache()} {$privateLocalDir} -type f \( -name '*.php' \) -print | xargs xgettext -c --default-domain={$domain} -p {$pathToCacheFolder} --from-code=UTF-8 --no-location  -L PHP -d {$domain} --package-name={$package} - && mv {$pathToFile}.po {$pathToFile}.pot
 EOT;
         passthru($command, $output);
         if($output == 0) {
@@ -213,8 +214,9 @@ EOT;
         ];
         $pathToCacheFolder = $this->buildPathToTranslationsCache();
         $pathToPotFile = sprintf('%s/%s.pot', $pathToCacheFolder, $domain);
+        $privateLocalDir = PRIVATE_LOCAL_DIR;
         $commands = <<<EOT
-find {$this->buildPathToTranslationsCache()} -type f \( -name '*.php' \) -print | xargs xgettext -c --default-domain={$domain} -p {$paths[$context]->poFolder} --from-code=UTF-8 --no-location -L PHP -d {$domain} --package-name={$package} -j - && msgattrib --set-obsolete --ignore-file={$pathToPotFile} -o {$paths[$context]->poFile} {$paths[$context]->poFile}
+find {$this->buildPathToTranslationsCache()} {$privateLocalDir} -type f \( -name '*.php' \) -print | xargs xgettext -c --default-domain={$domain} -p {$paths[$context]->poFolder} --from-code=UTF-8 --no-location -L PHP -d {$domain} --package-name={$package} -j - && msgattrib --set-obsolete --ignore-file={$pathToPotFile} -o {$paths[$context]->poFile} {$paths[$context]->poFile}
 EOT;
         //if local context cat the share po file and regenerate the mo file to incorporate any new share translation
         if($context == 'local' && is_file($pathToSharePoFile)) {
