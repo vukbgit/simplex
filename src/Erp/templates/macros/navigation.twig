@@ -65,7 +65,7 @@
                     class="nav-link{% if voiceProperties.isActive %} active{% endif %} text-capitalize"
                 {% if voiceProperties.target %}target="{{ voiceProperties.target }}"{% endif %}
                 >
-                {{- getLabel('actions', voiceKey) -}}
+                {{- getActionLabel(voiceKey) -}}
                 </a>
             </li>
           {% endif %}
@@ -99,7 +99,7 @@
                     {% endif %}
                     {% set voiceProperties = updateProperty(voiceProperties, 'linkClass', class) %}
                 <li class="nav-item">
-                    {% set actionLabel = parseRecordActionRoute(getLabel('actions', voiceKey), record) %}
+                    {% set actionLabel = parseRecordActionRoute(getActionLabel(voiceKey), record) %}
                     {{ selfMacros.displayRecordActionLink(voiceKey, voiceProperties, actionLabel, record, baseRoute) }}
                 </li>
                 {% endfor %}

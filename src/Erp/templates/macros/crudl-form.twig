@@ -10,7 +10,7 @@
 ##}
 {% macro displayDefaultButtons(context, backAction) %}
 <div class="form-group erp-form-default-buttons" role="group">
-    <a href="{{ context._POST.callingFormRoute ?? buildRouteToActionFromRoot(backAction ?? 'list') }}" class="btn btn-light text-capitalize">{{ getLabel('actions', 'cancel') }}</a>
-    <button type="submit" class="btn btn-success text-capitalize">{{ getLabel('actions', context.action) }}</button>
+    <a href="{{ context._POST.callingFormRoute ?? buildRouteToActionFromRoot(backAction ?? 'list') }}" class="btn btn-light text-capitalize">{{ getActionLabel('cancel') }}</a>
+    <button type="submit" class="btn btn-success text-capitalize">{{ getActionLabel(context.action) }}</button>
 </div>
 {% endmacro %}

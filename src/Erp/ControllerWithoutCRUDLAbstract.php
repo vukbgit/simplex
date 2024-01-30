@@ -216,6 +216,15 @@ abstract class ControllerWithoutCRUDLAbstract extends ControllerWithTemplateAbst
         /*********
         * LABELS *
         *********/
+        //builds an action label
+        $this->addTemplateFunction(
+            'getActionLabel',
+            function($actionKey) {
+              //search into subject
+              $label = $this->getLabel($this->subject, 'actions', $actionKey) ?? $this->getLabel('actions', $actionKey);
+              return $label;
+            }
+        );
         //builds an ancestor label
         $this->addTemplateFunction(
             'buildAncestorRecordLabel',

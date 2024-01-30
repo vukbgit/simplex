@@ -109,7 +109,7 @@
         </span>
         <div class="btn-group" role="group" aria-label="{{ bulkActionsLabel }}">
           {% for actionKey, actionProperties in navigations.bulkActions %}
-            {% set actionLabel = getLabel('actions', actionKey) %}
+            {% set actionLabel = getActionLabel(actionKey) %}
             <button
                 type="submit"
                 id="button-{{ actionKey }}"

@@ -69,7 +69,7 @@ If any bulk action is configured diplays checkbox whose value is the record prop
   {% import '@share/Erp/templates/macros/navigation.twig' as navigationMacros %}
   {# record visible actions #}
   {% for actionKey, actionProperties in context.navigations.recordVisibleActions %}
-    {% set actionLabel = parseRecordActionRoute(getLabel('actions', actionKey), record) %}
+    {% set actionLabel = parseRecordActionRoute(getActionLabel(actionKey), record) %}
   <td class="record-action text-right">
     {{ navigationMacros.displayRecordActionLink(actionKey, actionProperties, actionLabel, record)}}
   </td>
@@ -83,7 +83,7 @@ If any bulk action is configured diplays checkbox whose value is the record prop
       </a>
       <div class="dropdown-menu" aria-labelledby="{{ dropdownId }}">
     {% for actionKey, actionProperties in context.navigations.recordHiddenActions %}
-      {% set actionLabel = parseRecordActionRoute(getLabel('actions', actionKey), record) %}
+      {% set actionLabel = parseRecordActionRoute(getActionLabel(actionKey), record) %}
       {% set actionProperties = updateProperty(actionProperties, 'linkClass', 'dropdown-item') %}
       {{ navigationMacros.displayRecordActionLink(actionKey, actionProperties, actionLabel, record)}}
     {% endfor %}

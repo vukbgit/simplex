@@ -7,7 +7,13 @@
     'FIELD-NAME': 'FIELD-LABEL'|trans,
   }
 }) %}
+{# to override global actions labels #}
+{#% set labels = setLabels('SUBJECT-KEY', {
+  'actions': {
+    'GLOBAL-ACTION-KEY': 'overridden label'
+  }
+}) %#}
 {# for record actions defined into navigation.php placeholders enclosed by curly brackets {} will be substituded by field values found into record #}
 {#% set labels = setLabels('actions', {
-  'SUBJECT-KEY': 'ACTION-LABEL ({FIELD-NAME})'|trans
+  'SUBJECT-ACTION-KEY': 'ACTION-LABEL ({FIELD-NAME})'|trans
 }) %#}
