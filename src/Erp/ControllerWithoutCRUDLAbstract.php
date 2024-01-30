@@ -225,6 +225,15 @@ abstract class ControllerWithoutCRUDLAbstract extends ControllerWithTemplateAbst
               return $label;
             }
         );
+        //builds an alert label
+        $this->addTemplateFunction(
+            'getAlertLabel',
+            function($alertCode) {
+              //search into subject
+              $label = $this->getLabel($this->subject, 'alerts', $alertCode) ?? $this->getLabel('alerts', $alertCode);
+              return $label;
+            }
+        );
         //builds an ancestor label
         $this->addTemplateFunction(
             'buildAncestorRecordLabel',

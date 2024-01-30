@@ -13,6 +13,12 @@
     'GLOBAL-ACTION-KEY': 'overridden label'
   }
 }) %#}
+{# to override global alerts labels #}
+{#% set labels = setLabels('SUBJECT-KEY', {
+  'alerts': {
+    'GLOBAL-ALERT-KEY': 'overridden label'
+  }
+}) %#}
 {# for record actions defined into navigation.php placeholders enclosed by curly brackets {} will be substituded by field values found into record #}
 {#% set labels = setLabels('actions', {
   'SUBJECT-ACTION-KEY': 'ACTION-LABEL ({FIELD-NAME})'|trans
