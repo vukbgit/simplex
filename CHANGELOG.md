@@ -1,3 +1,7 @@
+## 3.14.27 (January 31, 2024)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.14.26 -> 3.14.27
+- ERP sidebar toggle labels, refactor and translations
+
 ## 3.14.26 (January 31, 2024)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.14.25 -> 3.14.26
 - feat: ERP sidebar toggle labels
