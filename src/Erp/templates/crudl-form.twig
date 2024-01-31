@@ -8,6 +8,7 @@
     {% set nextActionRoute = buildRouteToActionFromRoot(nextAction) %}
     <form method="post" action="{{ nextActionRoute }}"
     id="save-form" class="needs-validation form-with-validation crudl-form"
+    {% block curdlFormExtraAttributes %}{% endblock %}
     >
     {# primary key field(s) #}
     {{ crudlFormMacros.displayPrimaryKeyInput(_context, model) }}
