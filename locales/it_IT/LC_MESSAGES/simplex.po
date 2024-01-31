@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Simplex\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-28 10:18+0000\n"
-"PO-Revision-Date: 2023-11-28 11:31+0100\n"
-"Language: it\n"
+"POT-Creation-Date: 2024-01-31 12:28+0100\n"
+"PO-Revision-Date: 2024-01-31 12:29+0100\n"
+"Language: it_IT\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -160,6 +160,12 @@ msgstr "Prego, effettuare l'accesso"
 #. line 32
 #. line 33
 #. line 34
+#. line 32
+#. line 33
+#. line 34
+#. line 32
+#. line 33
+#. line 34
 msgid "Username"
 msgstr "Nome Utente"
 
@@ -231,6 +237,10 @@ msgstr "Nome utente errato"
 #. line 57
 #. line 56
 #. line 57
+#. line 56
+#. line 57
+#. line 56
+#. line 57
 msgid "Password"
 msgstr "Password errata"
 
@@ -261,6 +271,7 @@ msgstr "corrente"
 #. line 70
 #. line 76
 #. line 80
+#. line 95
 msgid "Sign out"
 msgstr "Esci"
 
@@ -306,6 +317,7 @@ msgstr "nessun limite"
 #. line 1658
 #. line 1673
 #. line 1656
+#. line 1712
 msgid "The value you entered for this field is invalid."
 msgstr "Il valore digitato per questo campo non è valido."
 
@@ -369,6 +381,10 @@ msgstr "Il valore digitato per questo campo non è valido."
 #. line 80
 #. line 78
 #. line 80
+#. line 78
+#. line 80
+#. line 78
+#. line 80
 msgid "Filter"
 msgstr "Filtra"
 
@@ -387,6 +403,7 @@ msgstr "lunghezza massima: %s caratteri"
 #. line 1586
 #. line 1601
 #. line 1584
+#. line 1640
 msgid "Please fill out this field"
 msgstr "Prego, compilare questo campo"
 
@@ -401,6 +418,7 @@ msgstr "Prego, compilare questo campo"
 #. line 1589
 #. line 1604
 #. line 1587
+#. line 1643
 msgid "Please enter an email address"
 msgstr "Prego, digitare un indirizzo di posta elettronica"
 
@@ -415,6 +433,7 @@ msgstr "Prego, digitare un indirizzo di posta elettronica"
 #. line 1592
 #. line 1607
 #. line 1590
+#. line 1646
 msgid "Please enter a URL"
 msgstr "Prego, digitare un URL"
 
@@ -429,6 +448,7 @@ msgstr "Prego, digitare un URL"
 #. line 1595
 #. line 1610
 #. line 1593
+#. line 1649
 #, php-format
 msgid ""
 "Please lengthen this text to %s characters or more. You are currently using "
@@ -448,6 +468,7 @@ msgstr ""
 #. line 1598
 #. line 1613
 #. line 1596
+#. line 1652
 #, php-format
 msgid ""
 "Please short this text to no more than %s characters. You are currently "
@@ -467,6 +488,7 @@ msgstr ""
 #. line 1601
 #. line 1616
 #. line 1599
+#. line 1655
 msgid "Please enter a number"
 msgstr "Prego, digitare un numero"
 
@@ -481,6 +503,7 @@ msgstr "Prego, digitare un numero"
 #. line 1604
 #. line 1619
 #. line 1602
+#. line 1658
 msgid "Please select a valid value"
 msgstr "Prego, selezionare un valore valido"
 
@@ -495,6 +518,7 @@ msgstr "Prego, selezionare un valore valido"
 #. line 1607
 #. line 1622
 #. line 1605
+#. line 1661
 #, php-format
 msgid "Please select a value that is no more than %s"
 msgstr "Prego, selezionare un valore che non sia maggiore di %s"
@@ -510,6 +534,7 @@ msgstr "Prego, selezionare un valore che non sia maggiore di %s"
 #. line 1610
 #. line 1625
 #. line 1608
+#. line 1664
 #, php-format
 msgid "Please select a value that is no less than %s"
 msgstr "Prego, selezionare un valore che non sia minore di %s"
@@ -525,6 +550,7 @@ msgstr "Prego, selezionare un valore che non sia minore di %s"
 #. line 1613
 #. line 1628
 #. line 1611
+#. line 1667
 msgid "Please match the requested format"
 msgstr "Prego, conformarsi al formato richiesto"
 
@@ -633,6 +659,7 @@ msgstr "Azzera"
 #. line 1318
 #. line 1330
 #. line 1313
+#. line 1369
 msgid "Insert new record"
 msgstr "Inserisci nuovo record"
 
@@ -659,3 +686,11 @@ msgid "Query limit of %d records reached, consider filtering records"
 msgstr ""
 "Il numero massimo di %d risultati è stato raggiunto, valutare se utilizzare "
 "il filtro"
+
+#. line 43
+msgid "open"
+msgstr "apri"
+
+#. line 44
+msgid "close"
+msgstr "chiudi"

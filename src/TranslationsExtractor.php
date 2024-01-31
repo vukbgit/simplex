@@ -25,14 +25,14 @@ class TranslationsExtractor extends ControllerAbstract
                 //Twig cache
                 $this->generateTemplatesCaches($context);
                 //generate pot file
-                $this->generateStartingPotFile();
+                $this->generateStartingPotFile($context);
             break;
             //generate po files for each language to update translations
             case 'update':
                 //Twig cache
                 $this->generateTemplatesCaches($context);
                 //generate pot file
-                $this->generateStartingPotFile();
+                $this->generateStartingPotFile($context);
                 //generate pot file
                 $this->generateUpdatedPoFile($context);
             break;
@@ -121,14 +121,15 @@ class TranslationsExtractor extends ControllerAbstract
     
     /**
     * Generate .pot file to start a new translation
+    * @param string $context: share | local
     **/
-    private function generateStartingPotFile()
+    private function generateStartingPotFile(string $context)
     {
         $domain = 'simplex';
         $package = 'Simplex';
         $pathToCacheFolder = $this->buildPathToTranslationsCache();
         $pathToFile = sprintf('%s/%s', $pathToCacheFolder, $domain);
-        $privateLocalDir = PRIVATE_LOCAL_DIR;
+        $privateLocalDir = $context == 'local' ? PRIVATE_LOCAL_DIR : '';
         echo 'GENERATING STARTING POT FILE...' . PHP_EOL;
         $command = <<<EOT
 find {$this->buildPathToTranslationsCache()} {$privateLocalDir} -type f \( -name '*.php' \) -print | xargs xgettext -c --default-domain={$domain} -p {$pathToCacheFolder} --from-code=UTF-8 --no-location  -L PHP -d {$domain} --package-name={$package} - && mv {$pathToFile}.po {$pathToFile}.pot
@@ -214,7 +215,7 @@ EOT;
         ];
         $pathToCacheFolder = $this->buildPathToTranslationsCache();
         $pathToPotFile = sprintf('%s/%s.pot', $pathToCacheFolder, $domain);
-        $privateLocalDir = PRIVATE_LOCAL_DIR;
+        $privateLocalDir = $context == 'local' ? PRIVATE_LOCAL_DIR : '';
         $commands = <<<EOT
 find {$this->buildPathToTranslationsCache()} {$privateLocalDir} -type f \( -name '*.php' \) -print | xargs xgettext -c --default-domain={$domain} -p {$paths[$context]->poFolder} --from-code=UTF-8 --no-location -L PHP -d {$domain} --package-name={$package} -j - && msgattrib --set-obsolete --ignore-file={$pathToPotFile} -o {$paths[$context]->poFile} {$paths[$context]->poFile}
 EOT;

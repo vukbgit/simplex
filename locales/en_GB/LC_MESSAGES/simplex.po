@@ -3,19 +3,19 @@
 # This file is distributed under the same license as the Simplex package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Simplex\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-28 10:18+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"POT-Creation-Date: 2024-01-31 12:28+0100\n"
+"PO-Revision-Date: 2024-01-31 12:28+0100\n"
+"Language: en_GB\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"X-Generator: Poedit 2.4.2\n"
 
 #. line 19
 #. line 30
@@ -148,6 +148,12 @@ msgstr "Please sign in"
 #. line 32
 #. line 33
 #. line 34
+#. line 32
+#. line 33
+#. line 34
+#. line 32
+#. line 33
+#. line 34
 msgid "Username"
 msgstr "Username"
 
@@ -211,6 +217,10 @@ msgstr "Wrong username"
 #. line 57
 #. line 56
 #. line 57
+#. line 56
+#. line 57
+#. line 56
+#. line 57
 msgid "Password"
 msgstr "Password"
 
@@ -241,6 +251,7 @@ msgstr "current"
 #. line 70
 #. line 76
 #. line 80
+#. line 95
 msgid "Sign out"
 msgstr "Sign out"
 
@@ -287,6 +298,7 @@ msgstr "maximum length %s characters"
 #. line 1658
 #. line 1673
 #. line 1656
+#. line 1712
 msgid "The value you entered for this field is invalid."
 msgstr "The value you entered for this field is invalid."
 
@@ -342,6 +354,10 @@ msgstr "The value you entered for this field is invalid."
 #. line 80
 #. line 78
 #. line 80
+#. line 78
+#. line 80
+#. line 78
+#. line 80
 msgid "Filter"
 msgstr "Filter"
 
@@ -355,6 +371,7 @@ msgstr "Filter"
 #. line 1586
 #. line 1601
 #. line 1584
+#. line 1640
 msgid "Please fill out this field"
 msgstr "Please fill out this field"
 
@@ -368,6 +385,7 @@ msgstr "Please fill out this field"
 #. line 1589
 #. line 1604
 #. line 1587
+#. line 1643
 msgid "Please enter an email address"
 msgstr "Please enter an email address"
 
@@ -381,6 +399,7 @@ msgstr "Please enter an email address"
 #. line 1592
 #. line 1607
 #. line 1590
+#. line 1646
 msgid "Please enter a URL"
 msgstr "Please enter a URL"
 
@@ -394,6 +413,7 @@ msgstr "Please enter a URL"
 #. line 1595
 #. line 1610
 #. line 1593
+#. line 1649
 #, php-format
 msgid ""
 "Please lengthen this text to %s characters or more. You are currently using "
@@ -412,6 +432,7 @@ msgstr ""
 #. line 1598
 #. line 1613
 #. line 1596
+#. line 1652
 #, php-format
 msgid ""
 "Please short this text to no more than %s characters. You are currently "
@@ -430,6 +451,7 @@ msgstr ""
 #. line 1601
 #. line 1616
 #. line 1599
+#. line 1655
 msgid "Please enter a number"
 msgstr "Please enter a number"
 
@@ -443,6 +465,7 @@ msgstr "Please enter a number"
 #. line 1604
 #. line 1619
 #. line 1602
+#. line 1658
 msgid "Please select a valid value"
 msgstr "Please select a valid value"
 
@@ -456,6 +479,7 @@ msgstr "Please select a valid value"
 #. line 1607
 #. line 1622
 #. line 1605
+#. line 1661
 #, php-format
 msgid "Please select a value that is no more than %s"
 msgstr "Please select a value that is no more than %s"
@@ -470,6 +494,7 @@ msgstr "Please select a value that is no more than %s"
 #. line 1610
 #. line 1625
 #. line 1608
+#. line 1664
 #, php-format
 msgid "Please select a value that is no less than %s"
 msgstr "Please select a value that is no less than %s"
@@ -484,6 +509,7 @@ msgstr "Please select a value that is no less than %s"
 #. line 1613
 #. line 1628
 #. line 1611
+#. line 1667
 msgid "Please match the requested format"
 msgstr "Please match the requested format"
 
@@ -592,6 +618,7 @@ msgstr "Reset"
 #. line 1318
 #. line 1330
 #. line 1313
+#. line 1369
 msgid "Insert new record"
 msgstr "Insert new record"
 
@@ -615,4 +642,12 @@ msgstr "minimum length %s characters"
 #. line 60
 #, php-format
 msgid "Query limit of %d records reached, consider filtering records"
-msgstr ""
+msgstr "Query limit of %d records reached, consider filtering records"
+
+#. line 43
+msgid "open"
+msgstr "open"
+
+#. line 44
+msgid "close"
+msgstr "close"
