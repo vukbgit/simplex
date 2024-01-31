@@ -143,6 +143,25 @@ $hamburger-layer-spacing       : 6px !default;
     .hamburger {
         //margin-top:$hamburger-layer-spacing / 2;
         margin-top: calc($hamburger-layer-spacing / 2);
+        .status {
+          margin-left: 10px;
+          &.opened {
+            display:none;
+          }
+          &.closed {
+            display:block;
+          }
+        }
+        &.is-active {
+          .status {
+            &.opened {
+              display:block;
+            }
+            &.closed {
+              display:none;
+            }
+          }
+        }
     }
 }
 $hamburger-height: $hamburger-layer-height * 3 + $hamburger-layer-spacing * 3;
