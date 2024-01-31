@@ -1,3 +1,7 @@
+## 3.14.26 (January 31, 2024)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.14.25 -> 3.14.26
+- feat: ERP sidebar toggle labels
+
 ## 3.14.25 (January 30, 2024)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.14.24 -> 3.14.25
 - fix: extract gettext translations from local PHP files
