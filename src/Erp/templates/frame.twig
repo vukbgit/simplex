@@ -40,8 +40,10 @@ $(document).ready(function(){
     <span class="hamburger-box">
       <span class="hamburger-inner"></span>
     </span>
+    {% if sideBarToggleLabels %}
     <span class="status closed">{{ 'open'|trans }}</span>
     <span class="status opened">{{ 'close'|trans }}</span>
+    {% endif %}
   </button>
     </div>
     {% endif %}
