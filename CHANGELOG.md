@@ -1,3 +1,7 @@
+## 3.14.29 (February 01, 2024)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.14.28 -> 3.14.29
+- fix: ERP sidebar toggle labels default
+
 ## 3.14.28 (January 31, 2024)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.14.27 -> 3.14.28
 - feat: template block for crudl form extra attributes
