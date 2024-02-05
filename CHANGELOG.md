@@ -1,3 +1,7 @@
+## 3.14.31 (February 05, 2024)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.14.30 -> 3.14.31
+- datetime picker input data attributes
+
 ## 3.14.30 (February 05, 2024)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.14.29 -> 3.14.30
 - datetime picker input data attributes
