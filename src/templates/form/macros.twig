@@ -778,7 +778,7 @@ NOTE: for checkbox group config.mandatory means that at least one input must be 
   {% set classes = ['form-control', 'datetimepicker-input']|merge(classes) %}
   {% set config = updateProperty(config, 'classes', classes) %}
   {# data-input needed for flatpickr + buttons #}
-  {% set config = updateProperty(config, 'data', config.data|merge({'input': null})) %}
+  {% set config = updateProperty(config, 'data', config.data|default({})|merge({'input': null})) %}
   <div class="input-group datetime-picker flatpickr" id="{{ containerId }}">
     {{ selfMacros.displayInputText(config) }}
     {% set icon = isDatePicker or isDateTimePicker ? 'calendar' : 'clock' %}
