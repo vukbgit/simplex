@@ -32,8 +32,9 @@ class SpreadsheetReaderWriter
     * @param string $type: csv | xlsx, if null it is guessed by file itself
     * @param bool $firstRowIsHEaders
     * @param bool $rowsToObjects: turn rows arrays into object, it works only if $firstRowIsHEaders is true (otherwise thera are no properties to be used for the object)
+    * @param bool $formatData: whether formatting should be applied to cell values by PhpOffice\PhpSpreadsheet\Worksheet::toArray call
     */
-    public function read(string $path, string $type = null, bool $firstRowIsHEaders = true, bool $rowsToObjects = false)
+    public function read(string $path, string $type = null, bool $firstRowIsHEaders = true, bool $rowsToObjects = false, bool $formatData = true)
     {
         switch ($type) {
             case 'csv':
@@ -61,7 +62,7 @@ class SpreadsheetReaderWriter
           * @param bool $returnCellRef False - Return a simple array of rows and columns indexed by number counting from zero
           *                               True - Return rows and columns indexed by their actual row and column IDs
           */
-          $rows = $spreadsheet->getSheet($sheetIndex)->toArray(null, true, true, false);
+          $rows = $spreadsheet->getSheet($sheetIndex)->toArray(null, true, $formatData, false);
           //headers row
           if($firstRowIsHEaders) {
             $headers = array_shift($rows);
