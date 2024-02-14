@@ -1,3 +1,7 @@
+## 3.14.32 (February 14, 2024)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.14.31 -> 3.14.32
+- spreadsheet cell value formatting
+
 ## 3.14.31 (February 05, 2024)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.14.30 -> 3.14.31
 - datetime picker input data attributes
