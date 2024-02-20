@@ -1,3 +1,7 @@
+## 3.14.33 (February 20, 2024)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.14.32 -> 3.14.33
+- fix: spreadsheet
+
 ## 3.14.32 (February 14, 2024)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.14.31 -> 3.14.32
 - spreadsheet cell value formatting
