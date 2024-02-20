@@ -167,7 +167,7 @@ class SpreadsheetReaderWriter
       if(!empty($headersRow)) {
         $numCols = count($headersRow);
         for($x = 1;$x <= $numCols; $x++) {
-          $sheet->setCellValueByColumnAndRow($x, $y, $headersRow[$x - 1]);
+          $sheet->setCellValue([$x, $y], $headersRow[$x - 1]);
         }
         $headerRow = 1;
         $y++;
@@ -181,7 +181,7 @@ class SpreadsheetReaderWriter
         //loop cells
         $x = 1;
         foreach($row as $value) {
-          $sheet->setCellValueByColumnAndRow($x, $y, $value);
+          $sheet->setCellValue([$x, $y], $value);
           //$sheet->getStyle([$x,$y])->getAlignment()->setWrapText(true);
           $x++;
         }
