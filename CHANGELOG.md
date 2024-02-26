@@ -1,3 +1,7 @@
+## 3.14.35 (February 26, 2024)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.14.34 -> 3.14.35
+- fix: ERP navbar dark
+
 ## 3.14.34 (February 22, 2024)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.14.33 -> 3.14.34
 - fix erp save form button group
