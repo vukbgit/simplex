@@ -10,11 +10,12 @@
   /* font-size: 120%; */
 }
 
-.icon-brands-facebook { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#x01ca;&nbsp;'); }
+.icon-brands-facebook-1 { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#x01ca;&nbsp;'); }
 .icon-brands-googleplus { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#x01cb;&nbsp;'); }
-.icon-brands-linkedin { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#x01cc;&nbsp;'); }
+.icon-brands-linkedin-1 { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#x01cc;&nbsp;'); }
 .icon-brands-twitter { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#x01cd;&nbsp;'); }
 .icon-brands-whatsapp { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#x01ce;&nbsp;'); }
 .icon-brands-pdf { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#x01cf;&nbsp;'); }
 .icon-brands-youtube { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#x01d0;&nbsp;'); }
 .icon-brands-instagram { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#x01d1;&nbsp;'); }
+.icon-brands-x { *zoom: expression( this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#x01d2;&nbsp;'); }

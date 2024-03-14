@@ -8,7 +8,7 @@
   "glyphs": [
     {
       "uid": "c99e966e3d22ec0b9d8678fd524e5512",
-      "css": "facebook",
+      "css": "facebook-1",
       "code": 458,
       "src": "elusive"
     },
@@ -20,7 +20,7 @@
     },
     {
       "uid": "09cad6e46ec29b279626434802012bba",
-      "css": "linkedin",
+      "css": "linkedin-1",
       "code": 460,
       "src": "elusive"
     },
@@ -60,6 +60,20 @@
       },
       "search": [
         "instagram"
+      ]
+    },
+    {
+      "uid": "62d52f2bb0183f0a7e0069596042308b",
+      "css": "x",
+      "code": 466,
+      "src": "custom_icons",
+      "selected": true,
+      "svg": {
+        "path": "M118.4 120L411.6 547.5 124.6 880 188.2 880 439.7 588.4 639.7 880 880 880 573.6 433.4 844 120 780.6 120 545.5 392.3 358.7 120 118.4 120ZM194.3 160L337.6 160 804.1 840 660.8 840 194.3 160Z",
+        "width": 1000
+      },
+      "search": [
+        "x"
       ]
     }
   ]
