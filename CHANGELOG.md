@@ -1,3 +1,7 @@
+## 3.14.38 (March 19, 2024)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.14.37 -> 3.14.38
+- ERP main container
+
 ## 3.14.37 (March 19, 2024)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.14.36 -> 3.14.37
 - ERP navigation
