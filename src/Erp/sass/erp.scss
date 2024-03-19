@@ -66,3 +66,23 @@ main {
 .icon-erp-development {
   font-size: 2rem;
 }
+//fullcalendar
+@media(max-width: 767px) {
+  .fc-toolbar.fc-header-toolbar {
+    display: flex;
+    flex-direction: column;
+  }
+  .fc-toolbar.fc-header-toolbar .fc-left {
+    order: 3;
+  }
+  .fc-toolbar.fc-header-toolbar .fc-center {
+    order: 1;
+  }
+  .fc-toolbar.fc-header-toolbar .fc-right {
+    order: 2;
+  }
+  .fc-toolbar-chunk {
+    margin-bottom: 5px;
+  }
+}
+
