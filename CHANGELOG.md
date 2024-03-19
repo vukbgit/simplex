@@ -1,3 +1,7 @@
+## 3.14.39 (March 19, 2024)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.14.38 -> 3.14.39
+- fullcalendar css
+
 ## 3.14.38 (March 19, 2024)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.14.37 -> 3.14.38
 - ERP main container
