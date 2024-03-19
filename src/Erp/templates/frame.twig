@@ -4,34 +4,97 @@
 
 {% block head %}
   {{ parent() }}
+  {% set sideBarBP = sideBarBP is defined ? sideBarBP : 'md' %}
+  {% set sideBarWidth = sideBarWidth is defined ? sideBarWidth : '300px' %}
+  {% set sideBarOpened = (areaCookie.sideBarState is not defined or areaCookie.sideBarState == '1') ? 1 : 0 %}
+  {% set switchUrl = '/%s%s%s/set-side-bar-state?s='|format(
+      area,
+      routeParameters.lang ? '/%s'|format(routeParameters.lang) : null,
+      subject ? '/%s'|format(subject) : null
+    ) %}
 <script>
+let windowWidth = null;
 $(document).ready(function(){
-    /**
-    * Sidebar state (open/close) handler on hamburger click
-    **/
-    $('#sidebar-toggle').click(function(){
-        var className = 'closed';
-        $('#sidebar').toggleClass(className);
-        $('#sidebar-toggle').toggleClass('is-active');
-        $('main').toggleClass('wide');
-        //var sideBarClosed = $('#sidebar').hasClass(className) ? true : false;
-        const sideBarState = $('#sidebar').hasClass(className) ? 0 : 1;
-        //setAreaCookie(area,  'sideBarClosed', sideBarClosed)
-        $.get(
-          '{{ '/%s%s%s/set-side-bar-state?s='|format(
-            area,
-            routeParameters.lang ? '/%s'|format(routeParameters.lang) : null,
-            subject ? '/%s'|format(subject) : null
-          ) }}' + sideBarState
-        )
-    });
-  })
+  const mdBP = Number(getComputedStyle(document.body)
+    .getPropertyValue('--bs-breakpoint-{{ sideBarBP }}').replace('px', ''));
+  toggleSideBarByWindowWidth({{ sideBarOpened }});
+  /**
+  * Sidebar state (open/close) handler on hamburger click
+  **/
+  $('#sidebar-toggle').click(function(){
+    /*var className = 'closed';
+    $('#sidebar').toggleClass(className);
+    $('#sidebar-toggle').toggleClass('is-active');
+    $('main').toggleClass('wide');
+    const sideBarState = $('#sidebar').hasClass(className) ? 0 : 1;
+    $.get(
+        "{{ switchUrl }}" + sideBarState
+    )*/
+    const nextSideBarState = $('#sidebar').hasClass('closed') ? 1 : 0;
+    toggleSideBar(nextSideBarState);
+  });
+
+  $( window ).on( "resize", function() {
+    toggleSideBarByWindowWidth();
+  } );
+
+  //0 = closed, 1 = opened
+  function toggleSideBar(sideBarState) {
+    const mobile = windowWidth < mdBP;
+    switch(sideBarState) {
+      //closed
+      case 0:
+        $('#sidebar').addClass('closed');
+        $('#sidebar').hide();
+        $('#sidebar-toggle').removeClass('is-active');
+        if(mobile) {
+          $('main').show();
+        }
+      break;
+      //opened
+      case 1:
+        $('#sidebar').removeClass('closed');
+        $('#sidebar').show();
+        $('#sidebar-toggle').addClass('is-active');
+        if(mobile) {
+          $('main').hide();
+        }
+      break;
+    }
+    $.get(
+      "{{ switchUrl }}" + sideBarState
+    )
+  }
+
+  function toggleSideBarByWindowWidth(startingDesktopState) {
+    const newWindowWidth = $( window ).width();
+    if(newWindowWidth != windowWidth) {
+      windowWidth = newWindowWidth;
+      const mobile = windowWidth < mdBP;
+      const topNavbar = $('#top-navbar').detach();
+      if(mobile) {
+        $('#sidebar').css('position', 'fixed');
+        $('#sidebar').css('width', windowWidth + 'px');
+        $('#sidebar .sidebar-sticky').append(topNavbar);
+      } else {
+        $('#sidebar').css('position', 'static');
+        $('#sidebar').css('width', '{{ sideBarWidth }}');
+        $('#navbar-top').append(topNavbar);
+      }
+      toggleSideBar(mobile ? 0 : (startingDesktopState ?? 1));
+    }
+  }
+
+})
 </script>
 {% endblock head %}
 
-{% set sideBarOpened = (areaCookie.sideBarState is not defined or areaCookie.sideBarState == '1') and (hideSideBar is not defined or hideSideBar is same as(false)) %}
-
 {% block body %}
+  {% set sideBarBP = sideBarBP is defined ? sideBarBP : false %}
+  {% set sideBarWidth = sideBarWidth is defined ? sideBarWidth : '300px' %}
+  {% set sideBarOpened = (areaCookie.sideBarState is not defined or areaCookie.sideBarState == '1') %}
+  {% set hideSideBar = (hideSideBar is defined and hideSideBar is same as(true)) %}
+
   {{ parent() }}
 <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap justify-content-start p-0 shadow" id="navbar-top" data-bs-theme="dark">
   {% if hideSideBar == false %}
@@ -41,101 +104,108 @@ $(document).ready(function(){
       <span class="hamburger-inner"></span>
     </span>
     {% if sideBarToggleLabels %}
-    <span class="status closed">{{ 'open'|trans }}</span>
-    <span class="status opened">{{ 'close'|trans }}</span>
+    <span class="status closed">{% trans %}open{% endtrans %}</span>
+    <span class="status opened">{% trans %}close{% endtrans %}</span>
     {% endif %}
   </button>
     </div>
-    {% endif %}
-    <div class="navbar-brand">
-    {% block headerLogo %}
+  {% endif %}
+    <div class="navbar-brand d-flex align-items-center">
+  {% block headerLogo %}
         {{ parent() }}
-        {% if logoLink %}
+    {% if logoLink %}
         <a href="{{ logoLink }}">
-        {% endif %}
-        {% if logoPath %}
+    {% endif %}
+    {% if logoPath %}
         <img src="{{ logoPath }}" alt="{{ brand }}" class="logo">
-        {% endif %}
-        {% if logoLink %}
+    {% endif %}
+    {% if logoLink %}
         </a>
-        {% endif %}
-    {% endblock %}
-    {% block headerTitle %}
+    {% endif %}
+  {% endblock %}
+  {% block headerTitle %}
         {{ parent() }}
-        {% if hideHeaderTitle is not defined or hideHeaderTitle == false %}
-          {% set title = '%s :: %s'|format(brand, area) %}
+    {% if hideHeaderTitle is not defined or hideHeaderTitle == false %}
+      {% set title = '%s :: %s'|format(brand, area) %}
         <h1 class="h2">
         {{ title }}
         </h1>
-        {% endif %}
-    {% endblock %}
-    </div>
-    {% set topNavbarBP = 'md' %}
-    <div class="navbar navbar-expand-{{ topNavbarBP }} flex-fill" id="top-navbar-container">
-      <div class="container-fluid justify-content-end">
-        <button class="navbar-toggler " type="button" data-bs-toggle="offcanvas" data-bs-target="#top-navbar" aria-controls="top-navbar" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="offcanvas offcanvas-end" id="top-navbar">
-          <div class="offcanvas-header">
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-          </div>    
-          <div class="offcanvas-body d-flex flex-column flex-{{ topNavbarBP }}-row justify-content-start align-items-end justify-content-{{ topNavbarBP }}-end align-items-{{ topNavbarBP }}-center">
-    {% if constant('ENVIRONMENT') == 'development' %}
-            <div class="me-3 icon-erp-development text-warning"></div>
     {% endif %}
-    {% block headerUser %}
+  {% endblock %}
+    </div>
+  {% set topNavbarBP = 'md' %}
+    {# <div class="navbar navbar-expand-{{ topNavbarBP }} flex-fill" id="top-navbar-container"> #}
+      <div class="container-fluid justify-content-end mt-4 mt-{{ sideBarBP }}-0" id="top-navbar">
+          <div class="d-flex
+            flex-column justify-content-center align-items-start
+            flex-{{ sideBarBP }}-row justify-content-{{ sideBarBP }}-start align-items-{{ sideBarBP }}-center">
+  {% if constant('ENVIRONMENT') == 'development' %}
+            <div class="me-3 icon-erp-development text-warning"></div>
+  {% endif %}
+  {% block headerUser %}
       {{ parent() }}
-      {% if hideHeaderUser == false %}
-            <div class="mb-3 mb-{{ topNavbarBP }}-0">
+    {% if hideHeaderUser == false %}
+            <div class="">
               {{ userData.username }}
               <i class="icon-erp-user"></i>
             </div>
-            <ul class="navbar-nav px-3">
+            <ul class="navbar-nav px-0 px-{{ sideBarBP }}-3">
               <li class="nav-item text-nowrap">
-                <a class="nav-link" href="{{ routeParameters.authentication.urls.signOut }}">
+                <a class="nav-link border-0" href="{{ routeParameters.authentication.urls.signOut }}">
                   {% set text = 'Sign out'|trans %}
                     {{ text }}
                   <i class="icon-erp-sign-out"></i>
                 </a>
               </li>
             </ul>
-      {% endif %}
-    {% endblock %}
+    {% endif %}
+  {% endblock %}
           </div>
-        </div>
       </div>
-    </div>
+    {# </div> #}
 </nav>
 
-<div class="container-fluid">
-    {% if sideBarOpened or hideSideBar == false %}
+<div class="d-flex">
+  {% if not hideSideBar %}
     {# sidebar #}
-  <nav class="bg-dark text-light sidebar{% if not sideBarOpened %} closed{% endif %}" id="sidebar">
+  <nav class="bg-dark text-light sidebar
+    {% if not sideBarOpened %} closed{% endif %}
+    {# {% if sideBarBP  %}d-none d-{{ sideBarBP }}-block{% endif %} #}
+    {# {% if sideBarBP  %}position-fixed position-{{ sideBarBP }}-static
+    {% else %}position-static{% endif %} #}
+    "
+    style="display:none; min-width:{{ sideBarWidth }};"
+    id="sidebar"
+  >
         <div class="sidebar-sticky">
       {#
         customSideBarMenu is an array (it can be set into area template) whose elements are:
         0 => block name
         0 => full path to template that contains block
       #}
-      {% if customSideBarMenu %}
-        {{ block(customSideBarMenu[0], customSideBarMenu[1]) }}
-      {% else %}
+    {% if customSideBarMenu %}
+      {{ block(customSideBarMenu[0], customSideBarMenu[1]) }}
+    {% else %}
           <nav class="nav flex-column" id="navigation-top">
-        {% for voiceKey, voiceProperties in navigations.area %}
-            {{ navigationMacros.displaySidebarVoice(routeParameters, voiceKey, voiceProperties, areaNavigationLabels, 'navigation-top', 1) }}
-        {% endfor %}
+      {% for voiceKey, voiceProperties in navigations.area %}
+        {{ navigationMacros.displaySidebarVoice(routeParameters, voiceKey, voiceProperties, areaNavigationLabels, 'navigation-top', 1) }}
+      {% endfor %}
           </nav>
-      {% endif %}
+    {% endif %}
         </div>
     </nav>
-    {% endif %}
+  {% endif %}
     {# main content #}
-<main role="main" class="{% if not sideBarOpened or hideSideBar %} wide{% endif %}">
-    {% block subjectHeader %}
-    {% endblock %}
-    {% block pageContent %}
-    {% endblock %}
+<main
+  role="main"
+  class="ms-0 px-3
+  {# {% if sideBarBP %}ms-0 ms-{{ sideBarBP }}-auto{% endif %}
+  {% if not sideBarOpened or hideSideBar %} wide{% endif %} #}
+  ">
+  {% block subjectHeader %}
+  {% endblock %}
+  {% block pageContent %}
+  {% endblock %}
     </main>
 </div>
 {% endblock %}
