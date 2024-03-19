@@ -1,3 +1,7 @@
+## 3.14.37 (March 19, 2024)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.14.36 -> 3.14.37
+- ERP navigation
+
 ## 3.14.36 (March 14, 2024)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.14.35 -> 3.14.36
 - brands icons
