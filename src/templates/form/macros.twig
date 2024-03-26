@@ -88,7 +88,7 @@
     {% set numberType = config.numberType ?? 'integer' %}
     {# format value according to locale #}
     {% set formatAttributes = config.formatAttributes ?? {} %}
-    {% set value = config.value ? config.value|format_number(formatAttributes) : null %}
+    {% set value = config.value is not null ? config.value|format_number(formatAttributes) : null %}
     {% set config = updateProperty(config, 'value', value) %}
     {# integer #}
     {% if numberType == 'integer' %}
