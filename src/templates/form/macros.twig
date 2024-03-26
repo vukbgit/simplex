@@ -108,13 +108,15 @@
         {% set precision = config.precision ?? localeconv.frac_digits %}
         {% set validation = config.validation ?? {} %}
         {% set integerPrecision = config.integerPrecision ? '{1,%d}'|format(config.integerPrecision) : '+' %}
-        {% set validation = updateProperty(validation, 'pattern', '^%s[0-9%s]%s(%s{1}[0-9]{1,%d}){0,1}$'|format(
-          config.allowNegative ? '-?' : '',
-          localeconv.thousands_sep,
-          integerPrecision,
-          localeconv.decimal_point,
-          precision
-        )) %}
+        {% if not validation.pattern %}
+          {% set validation = updateProperty(validation, 'pattern', '^%s[0-9%s]%s(%s{1}[0-9]{1,%d}){0,1}$'|format(
+            config.allowNegative ? '-?' : '',
+            localeconv.thousands_sep,
+            integerPrecision,
+            localeconv.decimal_point,
+            precision
+          )) %}
+        {% endif %}
         {% set config = updateProperty(config, 'validation', validation) %}
     {% endif %}
     {# set inputmode #}
