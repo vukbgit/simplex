@@ -1,3 +1,7 @@
+## 3.14.41 (March 26, 2024)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.14.40 -> 3.14.41
+- number input zero value
+
 ## 3.14.40 (March 26, 2024)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.14.39 -> 3.14.40
 - decimal input pattern
