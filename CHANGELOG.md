@@ -1,3 +1,7 @@
+## 3.14.42 (March 27, 2024)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.14.41 -> 3.14.42
+- upload input change event
+
 ## 3.14.41 (March 26, 2024)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.14.40 -> 3.14.41
 - number input zero value
