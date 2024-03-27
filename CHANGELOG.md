@@ -1,3 +1,8 @@
+## 3.14.43 (March 27, 2024)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.14.42 -> 3.14.43
+- ERP uploaded files template with custom model
+- not all ERP upload fields mandatory during save
+
 ## 3.14.42 (March 27, 2024)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.14.41 -> 3.14.42
 - upload input change event
