@@ -484,7 +484,7 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
         //processes a template for a file upload preview
         $this->addTemplateFunction(
             'formatUploadPreviewTemplate',
-            function($uploadKey, $fileName, $previewTemplate){
+            function($uploadKey, $fileName, $previewTemplate, $modelName = null){
                 //file name
                 $previewTemplate = preg_replace(
                     '/@name/',
@@ -492,10 +492,11 @@ abstract class ControllerWithTemplateAbstract extends ControllerAbstract
                     $previewTemplate
                 );
                 //get field output keys
-                foreach ($this->model->getUploadKeyOutputs($uploadKey) as $outputKey) {
+                $model = $modelName ? $this->$modelName : $this->model;
+                foreach ($model->getUploadKeyOutputs($uploadKey) as $outputKey) {
                     $previewTemplate = preg_replace(
                         sprintf('/@%s/', $outputKey),
-                        sprintf('%s', $this->model->getPublicOutputFilePath($uploadKey, $outputKey, $fileName)),
+                        sprintf('%s', $model->getPublicOutputFilePath($uploadKey, $outputKey, $fileName)),
                         $previewTemplate
                     );
                 }

@@ -1127,7 +1127,7 @@ NOTE: for checkbox group config.mandatory means that at least one input must be 
 {% if config.value %}
     initialPreview: [
     {% for fileName in config.value|split('|') %}
-        '{{ formatUploadPreviewTemplate(uploadKey, fileName, config.previewTemplate) }}',
+        '{{ formatUploadPreviewTemplate(uploadKey, fileName, config.previewTemplate, config.modelName ?? null) }}',
     {% endfor %}
     ],
     initialPreviewConfig: [
