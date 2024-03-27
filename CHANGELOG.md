@@ -1,3 +1,7 @@
+## 3.14.44 (March 27, 2024)
+- chore: updated package.json, updated CHANGELOG.md, bumped 3.14.43 -> 3.14.44
+- hide ERP upload input zoom icon
+
 ## 3.14.43 (March 27, 2024)
 - chore: updated package.json, updated CHANGELOG.md, bumped 3.14.42 -> 3.14.43
 - ERP uploaded files template with custom model
