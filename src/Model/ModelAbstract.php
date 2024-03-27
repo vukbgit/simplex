@@ -861,8 +861,10 @@ EOT;
         }*/
         //loop uploads
         foreach ($this->getUploadKeys() as $uploadKey) {
+          if(isset($uploadsValues->$uploadKey)) {
             $filesList = $uploadsValues->$uploadKey ? explode('|', $uploadsValues->$uploadKey) : null;
             $this->saveUploadFiles($primaryKeyValue, $uploadKey, $filesList);
+          }
         }
     }
     
