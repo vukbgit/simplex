@@ -1028,7 +1028,8 @@ NOTE: for checkbox group config.mandatory means that at least one input must be 
         * @param array filesList: list of files objects
         **/
         setFiles: function(inputId, filesList) {
-            $('#' + inputId).val(filesList.join('|'));
+          //notify to jQuery by firing the change event
+          $('#' + inputId).val(filesList.join('|')).change();
         },
         /**
         * appends an uploaded file to files list into the hidden input
